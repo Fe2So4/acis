@@ -1,6 +1,7 @@
 'use strict'
 
 import { app, BrowserWindow } from 'electron'
+import '../renderer/store'
 
 /**
  * Set `__static` path to static files in production
@@ -22,12 +23,12 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     height: 563,
     useContentSize: true,
-    width: 1000,
-    frame: process.env.NODE_ENV === 'development',
-    webPreferences: {
-      nodeIntegration: true,
-      webviewTag: true
-    }
+    width: 1000
+    // frame: process.env.NODE_ENV === 'development',
+    // webPreferences: {
+    //   nodeIntegration: true,
+    //   webviewTag: true
+    // }
   })
 
   mainWindow.loadURL(winURL)
