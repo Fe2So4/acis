@@ -6,7 +6,8 @@
  */
 
 /* eslint-disable */
-
+import { BrowserWindow } from 'electron';
+import path from 'path';
 // Install `electron-debug` with `devtron`
 require('electron-debug')({ showDevTools: true })
 
@@ -18,6 +19,8 @@ require('electron').app.on('ready', () => {
   //   .catch(err => {
   //     console.log('Unable to install `vue-devtools`: \n', err)
   //   })
+  // 安装vue-devtools
+  BrowserWindow.addDevToolsExtension(path.resolve(__dirname, '../../dev-tools/vue-devtools'));
 })
 
 // Require `main` process to boot app
