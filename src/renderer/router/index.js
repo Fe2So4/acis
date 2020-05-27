@@ -18,7 +18,13 @@ export default new Router({
     {
       path: '/home',
       name: 'Home',
-      component: () => import('@/views/Home/index')
+      redirect: '/home/patientInfo',
+      component: () => import('@/views/Home/index'),
+      children: [{
+        path: 'patientInfo',
+        name: 'PatientInfo',
+        component: () => import('@/views/PatientInfo/index')
+      }]
     },
     {
       path: '*',

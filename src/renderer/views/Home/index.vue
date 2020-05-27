@@ -5,14 +5,14 @@
         <Header></Header>
       </el-header>
       <el-container>
-        <el-aside width="220px">
+        <el-aside>
           <Aside></Aside>
         </el-aside>
-        <el-main>Main</el-main>
+        <el-main>
+          <router-view :key="key" />
+        </el-main>
       </el-container>
-      <el-footer height="26px">
-        当前用户：mdss
-      </el-footer>
+      <el-footer height="26px">当前用户：mdss</el-footer>
     </el-container>
   </div>
 </template>
@@ -23,10 +23,18 @@ export default {
   name: 'Home',
   data () {
     return {
+
+    }
+  },
+  computed: {
+    key () {
+      console.log(this.$route.path)
+      return this.$route.path
     }
   },
   components: {
-    Header, Aside
+    Header,
+    Aside
   }
 }
 </script>
@@ -35,7 +43,7 @@ export default {
   height: 100%;
   .el-header,
   .el-footer {
-    padding:0;
+    padding: 0;
   }
   .el-container {
     height: 100%;
@@ -45,18 +53,20 @@ export default {
     }
   }
   .el-aside {
+    background: #263754;
+    width: auto !important;
   }
   .el-main {
     flex: 1;
-    background-color: #e9eef3;
     color: #333;
     text-align: center;
-    height: calc(100%);
+    height: 100%;
   }
-  .el-footer{
-    background:#144177;
-    font:12px/26px '';
-    color:#fff;
+  .el-footer {
+    text-indent: 5px;
+    background: #144177;
+    font: 12px/26px "";
+    color: #fff;
   }
 }
 </style>
