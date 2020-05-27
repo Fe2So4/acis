@@ -5,9 +5,9 @@
 </template>
 
 <script>
-  export default {
-    name: 'aims'
-  }
+export default {
+  name: 'aims'
+}
 </script>
 
 <style>

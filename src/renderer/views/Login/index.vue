@@ -1,16 +1,16 @@
 <template>
     <div>
-        
+
     </div>
 </template>
 <script>
-      export default {
-        data () {
+export default {
+  data () {
     return {
-          }
+    }
   }
 }
-</script>  
+</script>
 <style lang="scss" scoped>
 
-</style>    
+</style>
