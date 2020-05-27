@@ -1,11 +1,11 @@
 <template>
-    <div class="patient-list">
-        list
+    <div class="operation-info">
+        手术信息
     </div>
 </template>
 <script>
 export default {
-  name: 'PatientList',
+  name: 'Operation-Info',
   data () {
     return {
     }
@@ -13,8 +13,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-    .patient-list{
+    .operation-info{
         height: 100%;
-        width:20%;
+        flex:1;
     }
 </style>

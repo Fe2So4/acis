@@ -55,12 +55,14 @@ export default {
   .el-aside {
     background: #263754;
     width: auto !important;
+    border-right: 1px solid #144177;
   }
   .el-main {
     flex: 1;
     color: #333;
-    text-align: center;
+    // text-align: center;
     height: 100%;
+    padding:0;
   }
   .el-footer {
     text-indent: 5px;

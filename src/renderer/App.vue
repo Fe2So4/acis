@@ -11,7 +11,7 @@ export default {
     this.$electron.ipcRenderer.on('route', (e, locationName) => {
       if (locationName) {
         this.$router.push({
-          'name': locationName
+          name: locationName
         })
       }
     })
