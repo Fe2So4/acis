@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import Dialog from './modules/dialog'
+import customDialogs from './modules/customDialog'
 Vue.use(Router)
 
 export default new Router({
@@ -23,7 +23,7 @@ export default new Router({
     {
       path: '*',
       redirect: '/'
-    }
-    // Dialog
+    },
+    ...customDialogs
   ]
 })

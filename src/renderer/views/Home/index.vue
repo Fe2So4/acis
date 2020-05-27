@@ -20,15 +20,14 @@ import Aside from './Aside/index'
 export default {
   name: 'home',
   data () {
-    return {
-
-    }
+    return {}
   },
   components: {
-    Header, Aside
+    Header,
+    Aside
   }
 }
-</script>  
+</script>
 <style lang="scss" scoped>
 .home {
   height: 100%;
@@ -58,4 +57,4 @@ export default {
     height: calc(100%);
   }
 }
-</style>    
+</style>

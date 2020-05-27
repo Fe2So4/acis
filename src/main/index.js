@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, Menu, ipcMain } from 'electron'
 import '../renderer/store'
 
 /**
@@ -24,11 +24,6 @@ function createWindow () {
     height: 563,
     useContentSize: true,
     width: 1000
-    // frame: process.env.NODE_ENV === 'development',
-    // webPreferences: {
-    //   nodeIntegration: true,
-    //   webviewTag: true
-    // }
   })
 
   mainWindow.loadURL(winURL)
@@ -36,6 +31,9 @@ function createWindow () {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+
+  // 隐藏菜单
+  Menu.setApplicationMenu(null)
 }
 
 app.on('ready', createWindow)
@@ -71,3 +69,37 @@ app.on('ready', () => {
   if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
 })
  */
+
+const secondaryWindows = new Set()
+const createNewWindow = (locationName, title) => {
+  let newWindow = new BrowserWindow({
+    show: false,
+    parent: mainWindow,
+    modal: true
+  })
+
+  newWindow.loadURL(winURL)
+  // newWindow.once('ready-to-show', () => {
+  //   newWindow.show()
+  // })
+
+  newWindow.on('closed', () => {
+    secondaryWindows.delete(newWindow)
+    newWindow = null
+  })
+
+  newWindow.webContents.on('did-finish-load', () => {
+    newWindow.webContents.send('route', locationName)
+  })
+
+  ipcMain.once('show-window', (e) => {
+    newWindow.setTitle(title)
+    newWindow.show()
+  })
+
+  secondaryWindows.add(newWindow)
+  return newWindow
+}
+ipcMain.on('open-new-window', (e, locationName, title) => {
+  createNewWindow(locationName, title)
+})

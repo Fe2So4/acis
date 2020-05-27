@@ -5,9 +5,18 @@
 </template>
 
 <script>
-  export default {
-    name: 'aims'
+export default {
+  name: 'aims',
+  mounted () {
+    this.$electron.ipcRenderer.on('route', (e, locationName) => {
+      if (locationName) {
+        this.$router.push({
+          'name': locationName
+        })
+      }
+    })
   }
+}
 </script>
 
 <style>
