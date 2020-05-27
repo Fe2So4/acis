@@ -54,7 +54,7 @@
         </template>
           <el-menu-item index="4-1">选项1</el-menu-item>
           <el-menu-item index="4-2">选项2</el-menu-item>
-        <el-menu-item index="4-3">选项3</el-menu-item>
+        <el-menu-item index="4-3" @click="openConfiguration">选项3</el-menu-item>
       </el-submenu>
     </el-menu>
     </div>
@@ -81,6 +81,9 @@ export default {
     },
     handleCloseMenu () {
       this.isCollapse = !this.isCollapse
+    },
+    openConfiguration () {
+      this.$electron.ipcRenderer.send('open-new-window', 'ConfigurationSystem', '系统配置')
     }
   }
 }

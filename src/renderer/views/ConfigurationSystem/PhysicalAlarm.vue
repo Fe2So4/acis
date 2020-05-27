@@ -1,11 +1,11 @@
 <template>
-<div class="configurationNormal">
-  <div>常规</div>
+<div class="PhysicalAlarm">
+  <div>体征报警选项</div>
 </div>
 </template>
 <script>
 export default {
-  name: 'ConfigurationNormal',
+  name: 'PhysicalAlarm',
   data () {
     return {}
   },
