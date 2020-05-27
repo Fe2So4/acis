@@ -9,5 +9,8 @@
     "dyw_remote": "json-server http://jsonplaceholder.typicode.com/db"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "json-server": "^0.16.1"
+  }
 }

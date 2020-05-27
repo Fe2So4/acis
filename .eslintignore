@@ -1,0 +1,6 @@
+src/renderer/packages/*.js
+packages/
+src/renderer/iconfont/*
+node_modules/*
+static/*
+src/renderer/common/print/grwebapp.js

@@ -1,16 +1,18 @@
 <template>
   <div class="home">
     <el-container>
-      <el-header height="100px">
+      <el-header height="116px">
         <Header></Header>
       </el-header>
       <el-container>
-        <el-aside width="200px">
+        <el-aside width="220px">
           <Aside></Aside>
         </el-aside>
         <el-main>Main</el-main>
       </el-container>
-      <el-footer height="20px">foot</el-footer>
+      <el-footer height="26px">
+        当前用户：mdss
+      </el-footer>
     </el-container>
   </div>
 </template>
@@ -18,9 +20,10 @@
 import Header from './Header/index'
 import Aside from './Aside/index'
 export default {
-  name: 'home',
+  name: 'Home',
   data () {
-    return {}
+    return {
+    }
   },
   components: {
     Header,
@@ -33,8 +36,7 @@ export default {
   height: 100%;
   .el-header,
   .el-footer {
-    background-color: #b3c0d1;
-    color: #333;
+    padding:0;
   }
   .el-container {
     height: 100%;
@@ -44,10 +46,6 @@ export default {
     }
   }
   .el-aside {
-    background-color: #d3dce6;
-    color: #333;
-    text-align: center;
-    line-height: 200px;
   }
   .el-main {
     flex: 1;
@@ -55,6 +53,11 @@ export default {
     color: #333;
     text-align: center;
     height: calc(100%);
+  }
+  .el-footer{
+    background:#144177;
+    font:12px/26px '';
+    color:#fff;
   }
 }
 </style>
