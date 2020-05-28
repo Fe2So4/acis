@@ -53,7 +53,7 @@ export default {
     }
   }
   .el-aside {
-    background: #263754;
+    // background: #263754;
     width: auto !important;
     border-right: 1px solid #144177;
   }
@@ -63,10 +63,12 @@ export default {
     // text-align: center;
     height: 100%;
     padding:0;
+    // min-width: 1737px;
+    // overflow-x: hidden;
   }
   .el-footer {
     text-indent: 5px;
-    background: #144177;
+    background: #f8f9fa;
     font: 12px/26px "";
     color: #fff;
   }

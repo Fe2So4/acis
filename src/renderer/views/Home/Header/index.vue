@@ -74,15 +74,15 @@ export default {
       activeIndex: 0,
       formType: '',
       formPage: null,
-      value1: '',
-      value2: '',
-      value3: '',
-      value4: '',
-      value5: '',
-      value6: '',
-      value7: '',
-      value8: '',
-      value9: ''
+      value1: null,
+      value2: null,
+      value3: null,
+      value4: null,
+      value5: null,
+      value6: null,
+      value7: null,
+      value8: null,
+      value9: null
     }
   },
   methods: {
@@ -158,7 +158,7 @@ export default {
   }
   .bottom {
     height: 26px;
-    background: #144177;
+    // background: #;
     padding-left: 182px;
     .patient-form {
       height: 100%;
