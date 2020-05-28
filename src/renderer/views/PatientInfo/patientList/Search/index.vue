@@ -249,7 +249,8 @@ export default {
 <style lang="scss" scoped>
     .search{
         font-size: 14px;
-
+        background:#f8f9fa;
+        // padding:0 0 5px 0;
         .el-button{
 
         }

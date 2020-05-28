@@ -7,7 +7,7 @@
           <div>
             <i
               class="el-icon-s-home"
-              style="color:orange;"
+              style="color:#144177;"
             />
             <span>手术室 <span>{{ 20 }}</span></span>
           </div>
@@ -40,7 +40,8 @@ export default {
     .list{
         font-size: 14px;
         height: 100%;
-        padding-bottom:80px;
+        flex:1;
+        // padding-bottom:80px;
         ul {
             height: 100%;
             li{

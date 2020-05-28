@@ -7,14 +7,14 @@
           default-active="2"
           :collapse="isCollapse"
           class="el-menu-vertical-demo"
-          active-text-color="#144177"
+          active-text-color="#fff"
           :default-openeds="['1','2','3','4']"
           @open="handleOpen"
           @close="handleClose"
         >
           <el-submenu index="1">
             <template slot="title">
-              <i class="el-icon-star-on" style="color:orange;"></i>
+              <i class="el-icon-star-on" style="color:#144177;"></i>
               <span>大事件</span>
             </template>
             <el-menu-item index="1-1">选项再加四个字</el-menu-item>
@@ -23,7 +23,7 @@
           </el-submenu>
           <el-submenu index="2">
             <template slot="title">
-              <i class="el-icon-location" style="color:orange;"></i>
+              <i class="el-icon-location" style="color:#144177;"></i>
               <span>系统集成</span>
             </template>
             <el-menu-item index="2-1">选项1</el-menu-item>
@@ -32,7 +32,7 @@
           </el-submenu>
           <el-submenu index="3">
             <template slot="title">
-              <i class="el-icon-s-marketing" style="color:orange;"></i>
+              <i class="el-icon-s-marketing" style="color:#144177;"></i>
               <span>患者操作</span>
             </template>
             <el-menu-item index="3-1">选项1</el-menu-item>
@@ -41,7 +41,7 @@
           </el-submenu>
           <el-submenu index="4">
             <template slot="title">
-              <i class="el-icon-document" style="color:orange;"></i>
+              <i class="el-icon-document" style="color:#144177;"></i>
               <span>其他</span>
             </template>
             <el-menu-item index="4-1">选项1</el-menu-item>
@@ -86,7 +86,7 @@ export default {
   .title {
     color: #000;
     line-height: 30px;
-    background: #f8f9fa;
+    // background: #f8f9fa;
     text-indent: 10px;
   }
   .nav-list {
@@ -94,6 +94,8 @@ export default {
   }
   .el-menu {
     border: 0;
+    // background:#144177;
+    // color:#fff;
     .is-active {
       // background:#409EFF;
     }

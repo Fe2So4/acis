@@ -28,6 +28,9 @@ export default {
         box-sizing: border-box;
         position:relative;
         overflow: hidden;
-        // padding:0 0 80px 0;
-    }
+        padding:0 0 106px 0;
+        display: flex;
+        flex-direction: column;
+        // justify-content: center;
+        }
 </style>

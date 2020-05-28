@@ -170,6 +170,8 @@ export default {
 .header {
   //   height: 100%;
   //   display: flex;
+  // background:#144177;
+  background:#f8f9fa;
   .top {
     border-top: 1px solid #144177;
     display: flex;
@@ -203,19 +205,19 @@ export default {
         flex-direction: column;
         justify-content: center;
         font-size: 12px;
-        color: blue;
+        color: #144177;
         .divide {
           height: 1px;
           background: #000;
           margin: 4px 0;
         }
         .cardId {
-          color: blue;
+          color: #144177;
           font-size: 14px;
         }
         .name {
           font-size: 14px;
-          color: #0000ff;
+          color: #144177;
         }
         .el-divider {
           margin: 4px 0;

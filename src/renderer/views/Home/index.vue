@@ -55,7 +55,7 @@ export default {
     }
   }
   .el-aside {
-    // background: #263754;
+    background: #f8f9fa;
     width: auto !important;
     border-right: 1px solid #144177;
   }
