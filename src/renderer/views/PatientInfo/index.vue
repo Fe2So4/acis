@@ -1,8 +1,8 @@
 <template>
-    <div class="patient-info">
-        <patient-list></patient-list>
-        <patient-detail></patient-detail>
-    </div>
+  <div class="patient-info">
+    <patient-list />
+    <patient-detail />
+  </div>
 </template>
 <script>
 import PatientList from './patientList/index'

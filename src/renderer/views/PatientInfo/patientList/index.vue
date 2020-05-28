@@ -1,7 +1,7 @@
 <template>
-    <div class="patient-list">
-        list
-    </div>
+  <div class="patient-list">
+    list
+  </div>
 </template>
 <script>
 export default {

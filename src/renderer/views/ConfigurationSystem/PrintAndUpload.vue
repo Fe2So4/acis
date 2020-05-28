@@ -1,7 +1,13 @@
 <template>
-<div class="PrintAndUpload">
-  <div>文书打印及上传设置</div>
-</div>
+  <div class="printAndUpload">
+    <el-breadcrumb
+      separator="/"
+      class="title"
+    >
+      <el-breadcrumb-item>基础配置</el-breadcrumb-item>
+      <el-breadcrumb-item>文书打印及上传设置</el-breadcrumb-item>
+    </el-breadcrumb>
+  </div>
 </template>
 <script>
 export default {
@@ -15,4 +21,13 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.printAndUpload {
+  padding: 10px;
+  .title {
+    height: 40px;
+    line-height: 30px;
+    border-bottom: solid 1px #e6e6e6;
+    padding-left: 10px;
+  }
+}
 </style>

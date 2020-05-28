@@ -1,12 +1,14 @@
 <template>
-    <div class="patient-detail">
-        <div class="title"><i class="el-icon-document"></i>患者详情</div>
-        <div class="content">
-            <basic-info></basic-info>
-            <operation-info></operation-info>
-            <operation-personnel></operation-personnel>
-        </div>
+  <div class="patient-detail">
+    <div class="title">
+      <i class="el-icon-document" />患者详情
     </div>
+    <div class="content">
+      <basic-info />
+      <operation-info />
+      <operation-personnel />
+    </div>
+  </div>
 </template>
 <script>
 import BasicInfo from './BasicInfo/index'

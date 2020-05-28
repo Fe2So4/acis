@@ -1,11 +1,11 @@
 <template>
-    <div class="operation-info">
-        手术信息
-    </div>
+  <div class="operation-info">
+    手术信息
+  </div>
 </template>
 <script>
 export default {
-  name: 'Operation-Info',
+  name: 'OperationInfo',
   data () {
     return {
     }

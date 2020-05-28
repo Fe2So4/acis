@@ -1,8 +1,16 @@
 <template>
   <div class="aside">
-    <div class="title" @click="handleCloseMenu">导航栏</div>
+    <div
+      class="title"
+      @click="handleCloseMenu"
+    >
+      导航栏
+    </div>
     <div class="nav-list">
-      <el-scrollbar style="height:100%;" class="scrollbar">
+      <el-scrollbar
+        style="height:100%;"
+        class="scrollbar"
+      >
         <el-menu
           default-active="2"
           :collapse="isCollapse"
@@ -14,39 +22,78 @@
         >
           <el-submenu index="1">
             <template slot="title">
-              <i class="el-icon-star-on" style="color:orange;"></i>
+              <i
+                class="el-icon-star-on"
+                style="color:orange;"
+              />
               <span>大事件</span>
             </template>
-            <el-menu-item index="1-1">选项再加四个字</el-menu-item>
-            <el-menu-item index="1-2">选项2</el-menu-item>
-            <el-menu-item index="1-3">选项3</el-menu-item>
+            <el-menu-item index="1-1">
+              选项再加四个字
+            </el-menu-item>
+            <el-menu-item index="1-2">
+              选项2
+            </el-menu-item>
+            <el-menu-item index="1-3">
+              选项3
+            </el-menu-item>
           </el-submenu>
           <el-submenu index="2">
             <template slot="title">
-              <i class="el-icon-location" style="color:#4eb9cf;"></i>
+              <i
+                class="el-icon-location"
+                style="color:#4eb9cf;"
+              />
               <span>系统集成</span>
             </template>
-            <el-menu-item index="2-1">选项1</el-menu-item>
-            <el-menu-item index="2-2">选项2</el-menu-item>
-            <el-menu-item index="2-3">选项3</el-menu-item>
+            <el-menu-item index="2-1">
+              选项1
+            </el-menu-item>
+            <el-menu-item index="2-2">
+              选项2
+            </el-menu-item>
+            <el-menu-item index="2-3">
+              选项3
+            </el-menu-item>
           </el-submenu>
           <el-submenu index="3">
             <template slot="title">
-              <i class="el-icon-s-marketing" style="color:#9ab5d4;"></i>
+              <i
+                class="el-icon-s-marketing"
+                style="color:#9ab5d4;"
+              />
               <span>患者操作</span>
             </template>
-            <el-menu-item index="3-1">选项1</el-menu-item>
-            <el-menu-item index="3-2">选项2</el-menu-item>
-            <el-menu-item index="3-3">选项3</el-menu-item>
+            <el-menu-item index="3-1">
+              选项1
+            </el-menu-item>
+            <el-menu-item index="3-2">
+              选项2
+            </el-menu-item>
+            <el-menu-item index="3-3">
+              选项3
+            </el-menu-item>
           </el-submenu>
           <el-submenu index="4">
             <template slot="title">
-              <i class="el-icon-document" style="color:#96bc3d;"></i>
+              <i
+                class="el-icon-document"
+                style="color:#96bc3d;"
+              />
               <span>其他</span>
             </template>
-            <el-menu-item index="4-1">选项1</el-menu-item>
-            <el-menu-item index="4-2">选项2</el-menu-item>
-            <el-menu-item index="4-3" @click="openConfiguration">选项3</el-menu-item>
+            <el-menu-item index="4-1">
+              选项1
+            </el-menu-item>
+            <el-menu-item index="4-2">
+              选项2
+            </el-menu-item>
+            <el-menu-item
+              index="4-3"
+              @click="openConfiguration"
+            >
+              选项3
+            </el-menu-item>
           </el-submenu>
         </el-menu>
       </el-scrollbar>
