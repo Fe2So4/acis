@@ -1,7 +1,7 @@
 <template>
-<div class="normalSetting">
-  <div>常规</div>
-</div>
+  <div class="normalSetting">
+    <div>常规</div>
+  </div>
 </template>
 <script>
 export default {
