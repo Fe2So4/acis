@@ -3,10 +3,14 @@
     <div class="aside">
       <el-row class="tac">
         <el-col :span="24">
-          <el-menu default-active="1-1" @open="handleOpen" @close="handleClose">
+          <el-menu
+            default-active="1-1"
+            @open="handleOpen"
+            @close="handleClose"
+          >
             <el-submenu index="1">
               <template slot="title">
-                <i class="el-icon-location"></i>
+                <i class="el-icon-location" />
                 <span>一般配置</span>
               </template>
               <el-menu-item-group>
@@ -17,12 +21,12 @@
                   :index="menuIndex(1, index+1)"
                   @click="onMenuItemClick(item.path)"
                 >
-                  {{item.text}}
+                  {{ item.text }}
                 </el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-menu-item index="2">
-              <i class="el-icon-menu"></i>
+              <i class="el-icon-menu" />
               <span slot="title">高级配置</span>
             </el-menu-item>
           </el-menu>
@@ -30,7 +34,7 @@
       </el-row>
     </div>
     <div class="container">
-      <router-view></router-view>
+      <router-view />
     </div>
   </div>
 </template>
