@@ -1,12 +1,12 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <router-view />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'aims',
+  name: 'Aims',
   mounted () {
     this.$electron.ipcRenderer.on('route', (e, locationName) => {
       if (locationName) {

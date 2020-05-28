@@ -2,40 +2,98 @@
   <div class="header">
     <div class="top">
       <div class="logo">
-        <img src="../../../assets/tq_logo.png" alt />
+        <img
+          src="../../../assets/tq_logo.png"
+          alt
+        >
       </div>
       <div class="patient-info">
-        <div class="room">09</div>
+        <div class="room">
+          09
+        </div>
         <!-- <div class="icon el-icon-user-solid"></div> -->
         <div class="detail">
-          <div class="cardId">1000000000000</div>
+          <div class="cardId">
+            1000000000000
+          </div>
           <!-- <div class="divide"></div> -->
-          <el-divider></el-divider>
-          <div class="name">吴山</div>
+          <el-divider />
+          <div class="name">
+            吴山
+          </div>
         </div>
       </div>
       <div class="patient-status">
-        <el-steps :active="1" finish-status="success" align-center>
-          <el-step title="入手术室"></el-step>
-          <el-step title="入手术室"></el-step>
-          <el-step title="入手术室"></el-step>
-          <el-step title="入手术室"></el-step>
-          <el-step title="入手术室"></el-step>
-          <el-step title="入手术室"></el-step>
-          <el-step title="入手术室"></el-step>
-          <el-step title="入手术室"></el-step>
-          <el-step title="入手术室"></el-step>
+        <el-steps
+          :active="1"
+          finish-status="success"
+          align-center
+        >
+          <el-step title="入手术室" />
+          <el-step title="入手术室" />
+          <el-step title="入手术室" />
+          <el-step title="入手术室" />
+          <el-step title="入手术室" />
+          <el-step title="入手术室" />
+          <el-step title="入手术室" />
+          <el-step title="入手术室" />
+          <el-step title="入手术室" />
         </el-steps>
         <div style="display:flex;">
-          <el-date-picker v-model="value1" type="datetime" placeholder size="mini"></el-date-picker>
-          <el-date-picker v-model="value2" type="datetime" placeholder size="mini"></el-date-picker>
-          <el-date-picker v-model="value3" type="datetime" placeholder size="mini"></el-date-picker>
-          <el-date-picker v-model="value4" type="datetime" placeholder size="mini"></el-date-picker>
-          <el-date-picker v-model="value5" type="datetime" placeholder size="mini"></el-date-picker>
-          <el-date-picker v-model="value6" type="datetime" placeholder size="mini"></el-date-picker>
-          <el-date-picker v-model="value7" type="datetime" placeholder size="mini"></el-date-picker>
-          <el-date-picker v-model="value8" type="datetime" placeholder size="mini"></el-date-picker>
-          <el-date-picker v-model="value9" type="datetime" placeholder size="mini"></el-date-picker>
+          <el-date-picker
+            v-model="value1"
+            type="datetime"
+            placeholder
+            size="mini"
+          />
+          <el-date-picker
+            v-model="value2"
+            type="datetime"
+            placeholder
+            size="mini"
+          />
+          <el-date-picker
+            v-model="value3"
+            type="datetime"
+            placeholder
+            size="mini"
+          />
+          <el-date-picker
+            v-model="value4"
+            type="datetime"
+            placeholder
+            size="mini"
+          />
+          <el-date-picker
+            v-model="value5"
+            type="datetime"
+            placeholder
+            size="mini"
+          />
+          <el-date-picker
+            v-model="value6"
+            type="datetime"
+            placeholder
+            size="mini"
+          />
+          <el-date-picker
+            v-model="value7"
+            type="datetime"
+            placeholder
+            size="mini"
+          />
+          <el-date-picker
+            v-model="value8"
+            type="datetime"
+            placeholder
+            size="mini"
+          />
+          <el-date-picker
+            v-model="value9"
+            type="datetime"
+            placeholder
+            size="mini"
+          />
         </div>
       </div>
     </div>
@@ -47,12 +105,27 @@
             :key="index"
             :class="{'active':activeIndex === index}"
             @click="handleChangeTab(index)"
-          >术前访视</li>
+          >
+            术前访视
+          </li>
         </ul>
         <div class="filter">
-          <el-select v-model="formType" placeholder>
-            <el-option label="全部" value="1">全部</el-option>
-            <el-option label="当前" value="2">当前</el-option>
+          <el-select
+            v-model="formType"
+            placeholder
+          >
+            <el-option
+              label="全部"
+              value="1"
+            >
+              全部
+            </el-option>
+            <el-option
+              label="当前"
+              value="2"
+            >
+              当前
+            </el-option>
           </el-select>
           <el-input-number
             v-model="formPage"
@@ -60,7 +133,7 @@
             @change="handleChangePage"
             :min="1"
             :max="10"
-          ></el-input-number>
+          />
         </div>
       </div>
     </div>

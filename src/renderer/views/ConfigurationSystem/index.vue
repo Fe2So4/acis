@@ -11,19 +11,17 @@
             <el-submenu index="1">
               <template slot="title">
                 <i class="el-icon-location" />
-                <span>一般配置</span>
+                <span>基础配置</span>
               </template>
-              <el-menu-item-group>
-                <!-- <template slot="title">分组一</template> -->
-                <el-menu-item
-                  v-for="(item,index) in normalList"
-                  :key="item.path"
-                  :index="menuIndex(1, index+1)"
-                  @click="onMenuItemClick(item.path)"
-                >
-                  {{ item.text }}
-                </el-menu-item>
-              </el-menu-item-group>
+              <el-menu-item
+                v-for="(item,index) in normalList"
+                :key="item.path"
+                :index="menuIndex(1, index+1)"
+                :route="item.route"
+                @click="onMenuItemClick(item.path)"
+              >
+                {{ item.text }}
+              </el-menu-item>
             </el-submenu>
             <el-menu-item index="2">
               <i class="el-icon-menu" />
@@ -41,39 +39,58 @@
 <script>
 export default {
   name: 'ConfigurationSystem',
-  computed: {
-
-  },
+  computed: {},
   data () {
     return {
       normalList: [
         {
           text: '常规',
-          path: 'NormalSetting'
+          path: 'NormalSetting',
+          route: {
+            name: 'NormalSetting'
+          }
         },
         {
           text: '液体属性选项',
-          path: 'LiquidProperties'
+          path: 'LiquidProperties',
+          route: {
+            name: 'LiquidProperties'
+          }
         },
         {
           text: '文书正反面打印配置',
-          path: 'FrontAndBackPrint'
+          path: 'FrontAndBackPrint',
+          route: {
+            name: 'FrontAndBackPrint'
+          }
         },
         {
           text: '血气分析选项',
-          path: 'BloodGasAnalysis'
+          path: 'BloodGasAnalysis',
+          route: {
+            name: 'BloodGasAnalysis'
+          }
         },
         {
           text: '体征报警选项',
-          path: 'PhysicalAlarm'
+          path: 'PhysicalAlarm',
+          route: {
+            name: 'PhysicalAlarm'
+          }
         },
         {
           text: '文书打印及上传设置',
-          path: 'PrintAndUpload'
+          path: 'PrintAndUpload',
+          route: {
+            name: 'PrintAndUpload'
+          }
         },
         {
           text: '医疗文书完整性检查',
-          path: 'DocumentIntegrity'
+          path: 'DocumentIntegrity',
+          route: {
+            name: 'DocumentIntegrity'
+          }
         }
       ]
     }
@@ -115,7 +132,7 @@ export default {
   }
   .container {
     flex: auto;
-    background: red;
+    overflow: auto;
   }
 }
 </style>

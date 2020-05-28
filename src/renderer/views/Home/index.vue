@@ -2,17 +2,19 @@
   <div class="home">
     <el-container>
       <el-header height="116px">
-        <Header></Header>
+        <Header />
       </el-header>
       <el-container>
         <el-aside>
-          <Aside></Aside>
+          <Aside />
         </el-aside>
         <el-main>
           <router-view :key="key" />
         </el-main>
       </el-container>
-      <el-footer height="26px">当前用户：mdss</el-footer>
+      <el-footer height="26px">
+        当前用户：mdss
+      </el-footer>
     </el-container>
   </div>
 </template>
