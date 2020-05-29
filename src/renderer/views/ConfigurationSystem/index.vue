@@ -1,35 +1,49 @@
 <template>
   <div class="configurationSystem">
     <div class="aside">
-      <el-row class="tac">
-        <el-col :span="24">
-          <el-menu
-            default-active="1-1"
-            @open="handleOpen"
-            @close="handleClose"
-          >
-            <el-submenu index="1">
-              <template slot="title">
-                <i class="el-icon-location" />
-                <span>基础配置</span>
-              </template>
-              <el-menu-item
-                v-for="(item,index) in normalList"
-                :key="item.path"
-                :index="menuIndex(1, index+1)"
-                :route="item.route"
-                @click="onMenuItemClick(item.path)"
-              >
-                {{ item.text }}
-              </el-menu-item>
-            </el-submenu>
-            <el-menu-item index="2">
-              <i class="el-icon-menu" />
-              <span slot="title">高级配置</span>
-            </el-menu-item>
-          </el-menu>
-        </el-col>
-      </el-row>
+      <el-scrollbar class="overflowXHidden">
+        <el-row>
+          <el-col :span="24">
+            <el-menu
+              default-active="1-1"
+              @open="handleOpen"
+              @close="handleClose"
+              class="menu"
+            >
+              <el-submenu index="1">
+                <template slot="title">
+                  <i class="el-icon-location" />
+                  <span>基础配置</span>
+                </template>
+                <el-menu-item
+                  v-for="(item,index) in normalList"
+                  :key="item.path"
+                  :index="menuIndex(1, index+1)"
+                  :route="item.route"
+                  @click="onMenuItemClick(item.path)"
+                >
+                  {{ item.text }}
+                </el-menu-item>
+              </el-submenu>
+              <el-submenu index="2">
+                <template slot="title">
+                  <i class="el-icon-menu" />
+                  <span>高级配置</span>
+                </template>
+                <el-menu-item
+                  v-for="(item,index) in superList"
+                  :key="item.path"
+                  :index="menuIndex(2, index+1)"
+                  :route="item.route"
+                  @click="onMenuItemClick(item.path)"
+                >
+                  {{ item.text }}
+                </el-menu-item>
+              </el-submenu>
+            </el-menu>
+          </el-col>
+        </el-row>
+      </el-scrollbar>
     </div>
     <div class="container">
       <router-view />
@@ -92,6 +106,36 @@ export default {
             name: 'DocumentIntegrity'
           }
         }
+      ],
+      superList: [
+        {
+          text: '常规',
+          path: 'SuperNormalSetting',
+          route: {
+            name: 'SuperNormalSetting'
+          }
+        },
+        {
+          text: '手术状态',
+          path: 'OperationStatus',
+          route: {
+            name: 'OperationStatus'
+          }
+        },
+        {
+          text: '导航菜单',
+          path: 'NavigationMenu',
+          route: {
+            name: 'NavigationMenu'
+          }
+        },
+        {
+          text: '文书菜单',
+          path: 'DocumentMenu',
+          route: {
+            name: 'DocumentMenu'
+          }
+        }
       ]
     }
   },
@@ -129,10 +173,23 @@ export default {
   flex-direction: row;
   .aside {
     flex: 200px 0 0;
+    border-right: 1px solid #e6e6e6;
+
+    .menu {
+      border-right: none;
+    }
   }
   .container {
     flex: auto;
     overflow: auto;
+  }
+}
+</style>
+<style lang="scss">
+.overflowXHidden {
+  height: 100%;
+  .el-scrollbar__wrap {
+    overflow-x: hidden;
   }
 }
 </style>

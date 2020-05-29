@@ -32,6 +32,22 @@ const customDialogs = [
         path: 'document-integrity',
         name: 'DocumentIntegrity',
         component: () => import('@/views/ConfigurationSystem/DocumentIntegrity')
+      }, {
+        path: 'super-normal-setting',
+        name: 'SuperNormalSetting',
+        component: () => import('@/views/ConfigurationSystem/SuperNormalSetting')
+      }, {
+        path: 'operation-status',
+        name: 'OperationStatus',
+        component: () => import('@/views/ConfigurationSystem/OperationStatus')
+      }, {
+        path: 'navigation-menu',
+        name: 'NavigationMenu',
+        component: () => import('@/views/ConfigurationSystem/NavigationMenu')
+      }, {
+        path: 'document-menu',
+        name: 'DocumentMenu',
+        component: () => import('@/views/ConfigurationSystem/DocumentMenu')
       }
     ]
   }

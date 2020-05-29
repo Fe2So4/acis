@@ -71,7 +71,6 @@
           </el-form-item>
         </el-col>
       </el-row>
-
       <el-row>
         <el-col :span="12">
           <el-form-item
