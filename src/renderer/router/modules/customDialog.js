@@ -50,6 +50,17 @@ const customDialogs = [
         component: () => import('@/views/ConfigurationSystem/DocumentMenu')
       }
     ]
+  },
+  {
+    path: '/event',
+    name: 'Event',
+    component: () => import('@/views/Event/index'),
+    children: [
+      {
+        path: 'anesthetic',
+        name: 'Anesthetic'
+      }
+    ]
   }
 ]
 export default customDialogs

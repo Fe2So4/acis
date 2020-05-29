@@ -57,7 +57,9 @@ export default {
   .el-aside {
     background: #f8f9fa;
     width: auto !important;
-    border-right: 1px solid #144177;
+    position: relative;
+    overflow: unset;
+    // border-right: 1px solid #144177;
   }
   .el-main {
     flex: 1;
@@ -72,7 +74,7 @@ export default {
     text-indent: 5px;
     background: #f8f9fa;
     font: 12px/26px "";
-    color: #fff;
+    // color: #;
   }
 }
 </style>

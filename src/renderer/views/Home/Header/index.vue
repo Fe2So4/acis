@@ -173,7 +173,7 @@ export default {
   // background:#144177;
   background:#f8f9fa;
   .top {
-    border-top: 1px solid #144177;
+    // border-top: 1px solid #144177;
     display: flex;
     height: 90px;
     .logo {
@@ -184,8 +184,8 @@ export default {
       display: flex;
       padding: 0 14px;
       max-width: 242px;
-      border-left: 1px solid #144177;
-      border-right: 1px solid #144177;
+      // border-left: 1px solid #144177;
+      // border-right: 1px solid #144177;
       .room {
         font: 50px/90px "";
         font-weight: 700;
@@ -239,8 +239,8 @@ export default {
       height: 100%;
       display: flex;
       justify-content: space-between;
-      border-top: 1px solid #144177;
-      border-bottom: 1px solid #144177;
+      // border-top: 1px solid #144177;
+      // border-bottom: 1px solid #144177;
       box-sizing: border-box;
       ul {
         display: flex;
@@ -249,17 +249,17 @@ export default {
           cursor: pointer;
           background: #fff;
           padding: 0 16px;
-          font-size: 12px;
+          font-size: 14px;
           line-height: 24px;
-          border-right: 1px solid #144177;
+          // border-right: 1px solid #144177;
           color: #000;
           &:first-child {
-            border-left: 1px solid #144177;
+            // border-left: 1px solid #144177;
           }
         }
         li.active {
-          background: rgba(64, 153, 240, 0.7);
-          // background:#144177;
+          // background: rgba(64, 153, 240, 0.7);
+          background:#409EFF;
           color: #fff;
         }
       }
