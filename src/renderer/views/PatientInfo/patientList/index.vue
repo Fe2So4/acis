@@ -24,7 +24,8 @@ export default {
     .patient-list{
         height: 100%;
         width:30%;
-        border-right: 1px solid #144177;
+        min-width: 522px;
+        // border-right: 1px solid #144177;
         box-sizing: border-box;
         position:relative;
         overflow: hidden;

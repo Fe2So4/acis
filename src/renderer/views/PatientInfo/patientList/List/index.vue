@@ -51,8 +51,8 @@ export default {
                     padding-left:5px;
                     justify-content: space-between;
                     line-height: 26px;
-                    border-top:1px solid #144177;
-                    border-bottom:1px solid #144177;
+                    border-top:1px solid #f8f9fa;
+                    border-bottom:1px solid #f8f9fa;
                     span>span{
                         color:#15428b;
                     }
@@ -69,7 +69,8 @@ export default {
                         width: 100px;
                         height:80px;
                         // background:rgba(64, 153, 240, 09);
-                        background:#4169e1;
+                        // background:#4169e1;
+                        background:#409EFF;
                         color:#fff;
                         text-align: center;
                         font-size: 16px;

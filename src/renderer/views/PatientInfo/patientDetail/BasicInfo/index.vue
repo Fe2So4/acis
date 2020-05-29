@@ -49,11 +49,12 @@ export default {
         font-size:14px;
         .title{
             font-size:14px;
+            background:#f8f9fa;
             line-height:26px;
             box-sizing: border-box;
             color:#15428b;
-            border-bottom:1px solid #144177;
-            border-top:1px solid #144177;
+            // border-bottom:1px solid #144177;
+            // border-top:1px solid #144177;
             text-indent: 10px;
         }
         span{

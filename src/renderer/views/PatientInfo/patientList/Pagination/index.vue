@@ -42,12 +42,12 @@ export default {
 </script>
 <style lang="scss" scoped>
     .pagination{
-        border-top:1px solid #144177;
+        // border-top:1px solid #144177;
         position: absolute;
         bottom:0;
         left:0;
         font-size: 14px;
-        background: #fff;
+        background: #f8f9fa;
         padding:10px 0;
         width: 100%;
         .top{
