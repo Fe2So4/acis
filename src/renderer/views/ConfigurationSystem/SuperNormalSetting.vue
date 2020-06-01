@@ -46,7 +46,9 @@
             </el-checkbox>
           </el-row>
           <el-row>
-            <span style="color:#606266;margin-right:10px">密码类型</span>
+            <p style="color:#606266;margin:0 0 10px 0">
+              密码类型
+            </p>
             <el-radio-group v-model="passwordType">
               <el-radio :label="1">
                 转大写
@@ -91,47 +93,141 @@
         <el-col :span="12">
           <el-row>
             <el-checkbox
-              v-model="enableSecurityChecks"
+              v-model="enableInductionRoomManagementProcedure"
             >
               是否诱导室管理程序
             </el-checkbox>
           </el-row>
           <el-row>
             <el-checkbox
-              v-model="enableSecurityChecks"
+              v-model="mergeAllCollectedData"
             >
               合并所有采集数据
             </el-checkbox>
           </el-row>
           <el-row>
             <el-checkbox
-              v-model="enableSecurityChecks"
+              v-model="showDocumentScrollbar"
             >
               是否显示医疗文书滚动条
             </el-checkbox>
           </el-row>
           <el-row>
             <el-checkbox
-              v-model="enableSecurityChecks"
+              v-model="automaticApplicationOfDefaultOperatingRoom"
             >
               自动套用默认手术间
             </el-checkbox>
           </el-row>
           <el-row>
             <el-checkbox
-              v-model="enableSecurityChecks"
+              v-model="updateTheSchedulerStatusField"
             >
               更新排班程序状态字段
             </el-checkbox>
           </el-row>
           <el-row>
             <el-checkbox
-              v-model="enableSecurityChecks"
+              v-model="enablePACUManagementProgram"
             >
               是否PACU管理程序
             </el-checkbox>
           </el-row>
         </el-col>
+      </el-row>
+      <el-row>
+        <el-checkbox
+          v-model="connectToAnaesthesiaSpecialistConsultationLibrary"
+        >
+          是否连接麻醉专家咨询库（请确认专家咨询的数据库连接已配置完成）
+        </el-checkbox>
+      </el-row>
+      <el-row>
+        <el-form
+          label-width="160px"
+          size="mini"
+        >
+          <el-form-item label="专家咨询系统网址">
+            <el-input
+              v-model="expertConsultationSystemWebsite"
+              placeholder="请输入网址"
+            />
+          </el-form-item>
+        </el-form>
+      </el-row>
+      <el-row>
+        <el-checkbox
+          v-model="turnOnInstantMessaging"
+        >
+          是否开启即时通讯（确保服务端已配置完成）
+        </el-checkbox>
+      </el-row>
+      <el-row>
+        <el-form
+          label-width="160px"
+          size="mini"
+        >
+          <el-form-item label="即时通讯服务端网址">
+            <el-input
+              v-model="instantMessagingServiceWebsite"
+              placeholder="请输入即时通讯服务端网址"
+            />
+          </el-form-item>
+        </el-form>
+      </el-row>
+      <el-row>
+        <el-form
+          label-width="160px"
+          size="mini"
+        >
+          <el-form-item label="系统自动更新方式">
+            <el-select
+              v-model="systemAutomaticUpdateMode"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in systemAutomaticUpdateModeOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </el-row>
+      <el-row>
+        <el-checkbox
+          v-model="enableProphet"
+        >
+          启用预言家
+        </el-checkbox>
+      </el-row>
+      <el-row>
+        <el-form
+          label-width="160px"
+          size="mini"
+        >
+          <el-form-item label="术中登记体征显示设置">
+            <el-select
+              v-model="intraoperativeRegisterSignDisplaySetting"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in intraoperativeRegisterSignDisplaySettingOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="onClick"
+            >
+              术中登记体征项显示配置
+            </el-button>
+          </el-form-item>
+        </el-form>
       </el-row>
     </div>
   </div>
@@ -146,11 +242,53 @@ export default {
       openSynchronous: true,
       displayStatusBar: true,
       dictionaryEntryCheck: true,
-      passwordType: 1
+      passwordType: 1,
+      writeBackHISOperationStatus: false,
+      displayPatientList: false,
+      enableRecoveryProcessManagement: false,
+      enableSecurityChecks: false,
+      enableInductionRoomManagementProcedure: false,
+      mergeAllCollectedData: false,
+      showDocumentScrollbar: false,
+      automaticApplicationOfDefaultOperatingRoom: false,
+      updateTheSchedulerStatusField: false,
+      enablePACUManagementProgram: false,
+      connectToAnaesthesiaSpecialistConsultationLibrary: false,
+      expertConsultationSystemWebsite: '',
+      turnOnInstantMessaging: false,
+      instantMessagingServiceWebsite: '',
+      systemAutomaticUpdateMode: null,
+      systemAutomaticUpdateModeOptions: [
+        {
+          label: '方式一',
+          value: 1
+        },
+        {
+          label: '方式二',
+          value: 2
+        }
+      ],
+      enableProphet: false,
+      intraoperativeRegisterSignDisplaySetting: null,
+      intraoperativeRegisterSignDisplaySettingOptions: [
+        {
+          label: '方式一',
+          value: 1
+        },
+        {
+          label: '方式二',
+          value: 2
+        }
+      ]
     }
   },
   mounted () {
     // this.$electron.ipcRenderer.send('show-window')
+  },
+  methods: {
+    onClick () {
+      this.$electron.ipcRenderer.send('open-new-window', 'IntraoperativeRegisterSignDisplaySetting', '术中登记体征项显示配置')
+    }
   }
 }
 </script>
@@ -169,6 +307,9 @@ export default {
 
     .el-row {
       margin-bottom: 18px;
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
   }
 }

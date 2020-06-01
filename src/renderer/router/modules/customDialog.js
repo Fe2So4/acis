@@ -52,6 +52,11 @@ const customDialogs = [
     ]
   },
   {
+    path: '/intraoperative-register-sign-display-setting',
+    name: 'IntraoperativeRegisterSignDisplaySetting',
+    component: () => import('@/views/ConfigurationSystem/IntraoperativeRegisterSignDisplaySetting')
+  },
+  {
     path: '/event',
     name: 'Event',
     component: () => import('@/views/Event/index'),
