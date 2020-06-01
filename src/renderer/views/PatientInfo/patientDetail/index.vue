@@ -7,11 +7,14 @@
       />患者详情
     </div>
     <div class="content">
-       <el-scrollbar style="height:100%;" class="scrollbar">
-        <basic-info></basic-info>
-        <operation-info></operation-info>
-        <operation-personnel></operation-personnel>
-       </el-scrollbar>
+      <el-scrollbar
+        style="height:100%;"
+        class="scrollbar"
+      >
+        <basic-info />
+        <operation-info />
+        <operation-personnel />
+      </el-scrollbar>
     </div>
   </div>
 </template>

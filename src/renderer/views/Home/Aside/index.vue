@@ -20,82 +20,25 @@
           @open="handleOpen"
           @close="handleClose"
         >
-          <el-submenu index="1">
+          <el-submenu
+            :index="item.index"
+            v-for="(item,index) in navList"
+            :key="index"
+          >
             <template slot="title">
               <i
-                class="el-icon-star-on"
+                :class="item.icon"
                 style="color:#144177;"
               />
-              <span>大事件</span>
+              <span>{{ item.name }}</span>
             </template>
             <el-menu-item
-              index="1-1"
-              @click="openConfiguration('Event','麻药')"
+              v-for="(_item,i) in item.subNav"
+              :key="i"
+              :index="_item.index"
+              @click="openConfiguration(_item.route,_item.name)"
             >
-              麻药
-            </el-menu-item>
-            <el-menu-item index="1-2">
-              选项2
-            </el-menu-item>
-            <el-menu-item index="1-3">
-              选项3
-            </el-menu-item>
-          </el-submenu>
-          <el-submenu index="2">
-            <template slot="title">
-              <i
-                class="el-icon-location"
-                style="color:#144177;"
-              />
-              <span>系统集成</span>
-            </template>
-            <el-menu-item index="2-1">
-              选项1
-            </el-menu-item>
-            <el-menu-item index="2-2">
-              选项2
-            </el-menu-item>
-            <el-menu-item index="2-3">
-              选项3
-            </el-menu-item>
-          </el-submenu>
-          <el-submenu index="3">
-            <template slot="title">
-              <i
-                class="el-icon-s-marketing"
-                style="color:#144177;"
-              />
-              <span>患者操作</span>
-            </template>
-            <el-menu-item index="3-1">
-              选项1
-            </el-menu-item>
-            <el-menu-item index="3-2">
-              选项2
-            </el-menu-item>
-            <el-menu-item index="3-3">
-              选项3
-            </el-menu-item>
-          </el-submenu>
-          <el-submenu index="4">
-            <template slot="title">
-              <i
-                class="el-icon-document"
-                style="color:#144177;"
-              />
-              <span>其他</span>
-            </template>
-            <el-menu-item index="4-1">
-              选项1
-            </el-menu-item>
-            <el-menu-item index="4-2">
-              选项2
-            </el-menu-item>
-            <el-menu-item
-              index="4-3"
-              @click="openConfiguration('ConfigurationSystem','系统配置')"
-            >
-              系统配置
+              {{ _item.name }}
             </el-menu-item>
           </el-submenu>
         </el-menu>
@@ -133,7 +76,18 @@ export default {
     return {
       activesNames: '',
       isCollapse: false,
-      showOverflow: false
+      showOverflow: false,
+      navList: [{
+        name: '大事件',
+        index: '1',
+        subNav: [{ name: '麻药', index: '1-1', route: 'Event' },
+          { name: '用药', index: '1-2', route: 'Event' }],
+        icon: 'el-icon-star-on'
+      },
+      { name: '系统集成', index: '2', subNav: [], icon: 'el-icon-location' },
+      { name: '患者操作', index: '3', subNav: [], icon: 'el-icon-s-data' },
+      { name: '其他', index: '4', subNav: [{ name: '系统配置', index: '4-1', route: 'ConfigurationSystem' }], icon: 'el-icon-s-tools' }
+      ]
     }
   },
   components: {

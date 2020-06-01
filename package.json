@@ -15,7 +15,8 @@
     "pack": "npm run pack:main && npm run pack:renderer",
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
-    "postinstall": "npm run lint:fix"
+    "postinstall": "npm run lint:fix",
+    "mock":"node ./mock/server.js"
   },
   "build": {
     "productName": "aims",
@@ -54,6 +55,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "element-ui": "^2.13.2",
+    "mockjs": "^1.1.0",
     "normalize.css": "^8.0.1",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",

@@ -24,6 +24,11 @@ export default new Router({
         path: 'patientInfo',
         name: 'PatientInfo',
         component: () => import('@/views/PatientInfo/index')
+      },
+      {
+        path: 'formContainer',
+        name: 'FormContainer',
+        component: () => import('@/views/FormContainer/index')
       }]
     },
     {

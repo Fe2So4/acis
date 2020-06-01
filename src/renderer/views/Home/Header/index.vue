@@ -8,7 +8,10 @@
         >
       </div>
       <div class="patient-info">
-        <div class="room">
+        <div
+          class="room"
+          @click="handleJump"
+        >
           09
         </div>
         <!-- <div class="icon el-icon-user-solid"></div> -->
@@ -144,7 +147,7 @@ export default {
   name: 'Header',
   data () {
     return {
-      activeIndex: 0,
+      activeIndex: -1,
       formType: '',
       formPage: null,
       value1: null,
@@ -161,8 +164,19 @@ export default {
   methods: {
     handleChangeTab (index) {
       this.activeIndex = index
+      this.$router.push({
+        path: '/home/formContainer',
+        query: {
+          id: index
+        }
+      })
     },
-    handleChangePage () {}
+    handleChangePage () {},
+    handleJump () {
+      this.$router.push({
+        path: '/home/patientInfo'
+      })
+    }
   }
 }
 </script>

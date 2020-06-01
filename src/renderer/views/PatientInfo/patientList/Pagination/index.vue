@@ -1,14 +1,21 @@
 <template>
   <div class="pagination">
     <div class="top">
-        <div><span>患者数量：</span>{{21}}</div>
-        <div>共{{20}}页</div>
-        <div><span>排序方式：</span>
-            <span>
-                <el-radio v-model="radio" label="1">术间</el-radio>
-                <el-radio v-model="radio" label="2">时间</el-radio>
-            </span>
-        </div>
+      <div><span>患者数量：</span>{{ 21 }}</div>
+      <div>共{{ 20 }}页</div>
+      <div>
+        <span>排序方式：</span>
+        <span>
+          <el-radio
+            v-model="radio"
+            label="1"
+          >术间</el-radio>
+          <el-radio
+            v-model="radio"
+            label="2"
+          >时间</el-radio>
+        </span>
+      </div>
     </div>
     <el-pagination
       @size-change="handleSizeChange"

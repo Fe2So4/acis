@@ -1,29 +1,39 @@
 <template>
   <div class="list">
     <ul>
-    <el-scrollbar style="height:100%;" class="scrollbar">
-      <li v-for="(item,index) in 15" :key="index">
-        <div class="list-top">
-          <div>
-            <i
-              class="el-icon-s-home"
-              style="color:#144177;"
-            />
-            <span>手术室 <span>{{ 20 }}</span></span>
+      <el-scrollbar
+        style="height:100%;"
+        class="scrollbar"
+      >
+        <li
+          v-for="(item,index) in 15"
+          :key="index"
+        >
+          <div class="list-top">
+            <div>
+              <i
+                class="el-icon-s-home"
+                style="color:#144177;"
+              />
+              <span>手术室 <span>{{ 20 }}</span></span>
+            </div>
+            <div class="status">
+              手术开始
+            </div>
           </div>
-          <div class="status">手术开始</div>
-        </div>
-        <div class="list-content">
-          <div class="room">02-1</div>
-          <div class="info">
-            <p>患者 <span>路人甲</span> <span>10000000000</span> 住院号 <span>0000204</span></p>
-            <p>手术 <span>脑袋向后旋转三周半</span></p>
-            <p>时间 <span>2020-05-28 10:55</span></p>
-            <p>术者 <span>路人甲</span> 麻醉 <span>土肥原</span></p>
+          <div class="list-content">
+            <div class="room">
+              02-1
+            </div>
+            <div class="info">
+              <p>患者 <span>路人甲</span> <span>10000000000</span> 住院号 <span>0000204</span></p>
+              <p>手术 <span>脑袋向后旋转三周半</span></p>
+              <p>时间 <span>2020-05-28 10:55</span></p>
+              <p>术者 <span>路人甲</span> 麻醉 <span>土肥原</span></p>
+            </div>
           </div>
-        </div>
-      </li>
-    </el-scrollbar>
+        </li>
+      </el-scrollbar>
     </ul>
   </div>
 </template>

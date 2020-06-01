@@ -186,38 +186,38 @@
         </el-col>
       </el-row>
       <el-row :gutter="24">
-           <el-col :span="12">
-        <span>住院科室</span>
-        <el-select
-          v-model="room"
-          size="mini"
-        >
-          <el-option
-            value="1"
-            label="1"
-          />
-          <el-option
-            value="2"
-            label="2"
-          />
-        </el-select>
-      </el-col>
-       <el-col :span="12">
-        <span>手术名称</span>
-        <el-select
-          v-model="room"
-          size="mini"
-        >
-          <el-option
-            value="1"
-            label="1"
-          />
-          <el-option
-            value="2"
-            label="2"
-          />
-        </el-select>
-      </el-col>
+        <el-col :span="12">
+          <span>住院科室</span>
+          <el-select
+            v-model="room"
+            size="mini"
+          >
+            <el-option
+              value="1"
+              label="1"
+            />
+            <el-option
+              value="2"
+              label="2"
+            />
+          </el-select>
+        </el-col>
+        <el-col :span="12">
+          <span>手术名称</span>
+          <el-select
+            v-model="room"
+            size="mini"
+          >
+            <el-option
+              value="1"
+              label="1"
+            />
+            <el-option
+              value="2"
+              label="2"
+            />
+          </el-select>
+        </el-col>
       </el-row>
     </div>
   </div>
