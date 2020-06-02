@@ -13,7 +13,7 @@
         filterable
         :filter-method="filterMethod"
         filter-placeholder="请输入城市拼音"
-        v-model="value"
+        v-model="signListSelected"
         :data="signList"
         :titles="['备选', '已选']"
         :props="{
@@ -42,7 +42,7 @@
           下移
         </el-button>
       </el-transfer>
-      <pre>{{ value }}</pre>
+      <pre>{{ signListSelected }}</pre>
     </div>
   </div>
 </template>
@@ -52,7 +52,7 @@ export default {
   name: 'IntraoperativeRegisterSignDisplaySetting',
   data () {
     return {
-      value: [],
+      signListSelected: [],
       filterMethod (query, item) {
         return item.name.indexOf(query) > -1
       },
@@ -79,24 +79,50 @@ export default {
   },
   methods: {
     onChange (list) {
-      console.log(list)
+      // console.log(list)
     },
     onRightCheckChange (keys) {
       this.rightCheckKeys = keys
     },
     moveUp () {
-      // if (this.rightCheckKeys.length === 0) {
-      //   return
-      // }
-      // const firstCheckKey = this.rightCheckKeys.slice(0, 1)
-      // const firstCheckKeyIndexInOriginal = this.value.indexOf(firstCheckKey)
-      // if (firstCheckKeyIndexInOriginal === 0) {
-      //   return
-      // }
-      // const removeItem = this.value[firstCheckKeyIndexInOriginal - 1]
-      // this.value.splice(firstCheckKeyIndexInOriginal - 1, this.rightCheckKeys.length, ...this.rightCheckKeys)
+      const reverseTwoItem = item => {
+        const firstIndex = this.signListSelected.indexOf(item)
+        if (firstIndex === 0) {
+          return false
+        }
+        const arr = this.signListSelected.slice(firstIndex - 1, firstIndex + 1)
+        arr.reverse()
+        this.signListSelected.splice(firstIndex - 1, 2, ...arr)
+        return true
+      }
+
+      const rightCheckKeys = this.getOrderedRightCheckKeys()
+      rightCheckKeys.reduce((flag, item) => flag ? reverseTwoItem(item) : flag, true)
     },
-    moveDown () {}
+    moveDown () {
+      const reverseTwoItem = item => {
+        const lastIndex = this.signListSelected.indexOf(item)
+        if (lastIndex === this.signListSelected.length - 1) {
+          return false
+        }
+        const arr = this.signListSelected.slice(lastIndex, lastIndex + 2)
+        arr.reverse()
+        this.signListSelected.splice(lastIndex, 2, ...arr)
+        return true
+      }
+      const reverseRightCheckKeys = [...this.getOrderedRightCheckKeys()].reverse()
+      reverseRightCheckKeys.reduce((flag, item) => flag ? reverseTwoItem(item) : flag, true)
+    },
+    getOrderedRightCheckKeys () {
+      const objArr = this.rightCheckKeys.reduce((arr, item) => {
+        return arr.concat([{
+          item: item,
+          index: this.signListSelected.indexOf(item)
+        }])
+      }, [])
+      objArr.sort((a, b) => a.index - b.index)
+      return objArr.reduce((arr, item) => arr.concat([item.item]), [])
+    }
   }
 }
 </script>
