@@ -31,7 +31,7 @@ server.post('/mock/reg', ({ body: { username = '', password = '' } }, res) => {
 })
 // 响应/mock/login,进行登录验证操作
 server.post('/mock/login', ({ body: { username = '', password = '' } }, res) => {
-  if (username === 'user' && password === 'user123') {
+  if (username === 'admin' && password === 'admin123') {
     res.jsonp({
       err: 0,
       auth: true,
@@ -61,7 +61,7 @@ router.render = (req, res) => {
       msg: '操作' + (status ? '成功' : '失败'),
       data: res.locals.data
     })
-  }, 1000)
+  }, 100)
 }
 server.use(jsonServer.rewriter(rules)) // 根据需要重写路由匹配规则
 server.use(router) // 安装路由

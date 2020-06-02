@@ -62,7 +62,7 @@
           style="height:100%;"
           class="scrollbar"
         >
-          <Overview />
+          <Overview :list="overviewList"/>
         </el-scrollbar>
       </div>
     </div>
@@ -87,7 +87,8 @@ export default {
       { name: '系统集成', index: '2', subNav: [], icon: 'el-icon-location' },
       { name: '患者操作', index: '3', subNav: [], icon: 'el-icon-s-data' },
       { name: '其他', index: '4', subNav: [{ name: '系统配置', index: '4-1', route: 'ConfigurationSystem' }], icon: 'el-icon-s-tools' }
-      ]
+      ],
+      overviewList: []
     }
   },
   components: {
@@ -114,7 +115,18 @@ export default {
     openConfiguration (route, name) {
       console.log(route, name, '执行')
       this.$electron.ipcRenderer.send('open-new-window', route, name)
+    },
+    getOverviewList () {
+      this.$http({
+        url: 'http://localhost:3334/mock/overview'
+      }).then(res => {
+        const data = res.data
+        this.overviewList = data.data
+      })
     }
+  },
+  mounted () {
+    this.getOverviewList()
   }
 }
 </script>

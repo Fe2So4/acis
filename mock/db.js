@@ -28,11 +28,31 @@ module.exports = () => {
     'user|10': [
       {
         'id|+1': 1,
-        nickName: '@cname(3,6)',
+        nickName: '@cname()',
         address: '@province',
         tel: '@string("number",11)',
         naughtyValue: '@integer(0,100)',
         headPortrait: '@image("100x100",@color,,,@cword)'
+      }
+    ],
+
+    // aics相关模拟接口
+    'signs|10': [
+      {
+        color: '@color()',
+        name: '@cname()',
+        value: '@integer(0,100)'
+      }
+    ],
+    'overview|15': [
+      {
+        cardNo: '@integer(1000000000,1100000000)',
+        room: '@integer(1,20)',
+        patientName: '@cname()',
+        anaesName: '@cname()',
+        doctor: '@cname()',
+        time: '@date()',
+        opeName: '@cword(4,8)'
       }
     ]
   })
