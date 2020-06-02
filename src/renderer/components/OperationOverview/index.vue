@@ -2,23 +2,23 @@
   <div class="overview">
     <ul>
       <li
-        v-for="(item,index) in 15"
+        v-for="(item,index) in list"
         :key="index"
       >
         <div class="top">
-          <span>11111111000</span>
-          <span>黄飞鸿</span>
+          <span>{{ item.cardNo }}</span>
+          <span>{{ item.patientName }}</span>
           <span>入复苏室</span>
         </div>
         <div class="content">
           <div class="room">
-            13
+            {{ item.room }}
           </div>
           <div class="info">
-            <p>麻醉：哈哈哈</p>
-            <p>医生：张可可</p>
-            <p>时间：{{ 2020-5-29 }}</p>
-            <p>术名：澳康达较大交大</p>
+            <p>麻醉：{{ item.anaesName }}</p>
+            <p>医生：{{ item.doctor }}</p>
+            <p>时间：{{ item.time }}</p>
+            <p>术名：{{ item.opeName }}</p>
           </div>
         </div>
       </li>
@@ -30,6 +30,14 @@ export default {
   data () {
     return {
 
+    }
+  },
+  props: {
+    list: {
+      type: Array,
+      default: function () {
+        return []
+      }
     }
   },
   mounted () {
