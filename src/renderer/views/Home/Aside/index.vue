@@ -62,7 +62,7 @@
           style="height:100%;"
           class="scrollbar"
         >
-          <Overview :list="overviewList"/>
+          <Overview :list="overviewList" />
         </el-scrollbar>
       </div>
     </div>

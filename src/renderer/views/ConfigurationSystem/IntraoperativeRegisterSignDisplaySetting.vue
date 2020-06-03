@@ -69,6 +69,21 @@ export default {
         }, {
           name: '体征4',
           code: '1004'
+        }, {
+          name: '体征5',
+          code: '1005'
+        }, {
+          name: '体征6',
+          code: '1006'
+        }, {
+          name: '体征7',
+          code: '1007'
+        }, {
+          name: '体征8',
+          code: '1008'
+        }, {
+          name: '体征9',
+          code: '1009'
         }
       ],
       rightCheckKeys: []

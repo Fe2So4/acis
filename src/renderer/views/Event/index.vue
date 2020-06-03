@@ -152,7 +152,7 @@
             label="单位"
             prop="unit"
           >
-           <template slot-scope="scope">
+            <template slot-scope="scope">
               <el-select
                 v-model="scope.row.unit"
                 v-if="scope.row === activeRow && scope.column.id === activeColumnId"
@@ -191,7 +191,7 @@
             label="单位"
             prop="unit"
           >
-             <template slot-scope="scope">
+            <template slot-scope="scope">
               <el-select
                 v-model="scope.row.unit"
                 v-if="scope.row === activeRow && scope.column.id === activeColumnId"
@@ -230,7 +230,7 @@
             label="单位"
             prop="unit"
           >
-          <template slot-scope="scope">
+            <template slot-scope="scope">
               <el-select
                 v-model="scope.row.unit"
                 v-if="scope.row === activeRow && scope.column.id === activeColumnId"
