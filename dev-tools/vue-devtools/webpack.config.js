@@ -1,5 +1,5 @@
 const path = require('path')
-const createConfig = require('../createConfig')
+const { createConfig } = require('@vue-devtools/build-tools')
 
 module.exports = createConfig({
   entry: {

@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import customDialogs from './modules/customDialog'
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -32,11 +32,11 @@ export default new Router({
         component: () => import('@/views/FormContainer/index')
       }]
     },
+    ...customDialogs,
     {
       path: '*',
       redirect: '/'
-    },
-    ...customDialogs
+    }
   ]
 })
 // 解决重复点击导航路由报错
@@ -44,3 +44,11 @@ const originalPush = Router.prototype.push
 Router.prototype.push = function push (location) {
   return originalPush.call(this, location).catch(err => err)
 }
+
+router.beforeEach((to, from, next) => {
+  if (to.name !== from.name) {
+    next()
+  }
+})
+
+export default router

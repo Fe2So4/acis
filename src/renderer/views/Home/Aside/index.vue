@@ -87,7 +87,7 @@ export default {
       { name: '系统集成', index: '2', subNav: [], icon: 'el-icon-location' },
       { name: '患者操作', index: '3', subNav: [], icon: 'el-icon-s-data' },
       { name: '常用功能', index: '4', subNav: [{ name: '血流动力', index: '4-1', route: 'Hemodynamics' }, { name: '模板管理', index: '4-2', route: 'TemplateManagement' }], icon: 'el-icon-monitor' },
-      { name: '其他', index: '5', subNav: [{ name: '系统配置', index: '5-1', route: 'ConfigurationSystem' }], icon: 'el-icon-s-tools' }
+      { name: '其他', index: '5', subNav: [{ name: '系统配置', index: '5-1', route: 'ConfigurationSystem' }, { name: '模板设计器', index: '5-2', route: 'TemplateDesigner' }], icon: 'el-icon-s-tools' }
       ],
       overviewList: []
     }
@@ -140,7 +140,7 @@ export default {
     line-height: 30px;
     // background: #f8f9fa;
     text-indent: 10px;
-    font-size:14px;
+    font-size: 14px;
     cursor: pointer;
   }
   .nav-list {
@@ -160,27 +160,27 @@ export default {
     text-indent: 1.5em;
     min-width: 182px;
   }
-  .ope-overview{
-  height: 100%;
-  position: absolute;
-  background: #fff;
-  // background:#f8f9fa;
-  left: 64px;
-  top:0;
-  z-index: 999;
-  width: 0;
-  // padding:10px 10px;
-  // box-sizing: border-box;
-  transition: all .3s;
-  // opacity: 0;
-  .overview-content{
-    height:calc(100% - 30px);
+  .ope-overview {
+    height: 100%;
+    position: absolute;
+    background: #fff;
+    // background:#f8f9fa;
+    left: 64px;
+    top: 0;
+    z-index: 999;
+    width: 0;
+    // padding:10px 10px;
+    // box-sizing: border-box;
+    transition: all 0.3s;
+    // opacity: 0;
+    .overview-content {
+      height: calc(100% - 30px);
+    }
   }
-}
-.ope-overview.show{
-  width: 220px;
-  opacity: 1;
-}
+  .ope-overview.show {
+    width: 220px;
+    opacity: 1;
+  }
 }
 .aside /deep/ .el-submenu__title {
   line-height: 30px;

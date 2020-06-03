@@ -3,6 +3,7 @@ const customDialogs = [
     path: '/configuration-system',
     name: 'ConfigurationSystem',
     component: () => import('@/views/ConfigurationSystem/index'),
+    redirect: { name: 'NormalSetting' },
     children: [
       {
         path: 'normal-setting',
@@ -48,6 +49,11 @@ const customDialogs = [
         path: 'document-menu',
         name: 'DocumentMenu',
         component: () => import('@/views/ConfigurationSystem/DocumentMenu')
+      }, {
+        path: '*',
+        redirect: {
+          name: 'NormalSetting'
+        }
       }
     ]
   },
@@ -55,6 +61,11 @@ const customDialogs = [
     path: '/intraoperative-register-sign-display-setting',
     name: 'IntraoperativeRegisterSignDisplaySetting',
     component: () => import('@/views/ConfigurationSystem/IntraoperativeRegisterSignDisplaySetting')
+  },
+  {
+    path: '/template-designer',
+    name: 'TemplateDesigner',
+    component: () => import('@/views/TemplateDesigner/index')
   },
   {
     path: '/event',
