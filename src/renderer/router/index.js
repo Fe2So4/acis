@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import customDialogs from './modules/customDialog'
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -31,10 +31,18 @@ export default new Router({
         component: () => import('@/views/FormContainer/index')
       }]
     },
+    ...customDialogs,
     {
       path: '*',
       redirect: '/'
-    },
-    ...customDialogs
+    }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.name !== from.name) {
+    next()
+  }
+})
+
+export default router

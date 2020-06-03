@@ -1,7 +1,7 @@
 // this script is called when the VueDevtools panel is activated.
 
-import { initDevTools } from 'src/devtools'
-import Bridge from 'src/bridge'
+import { initDevTools } from '@front'
+import Bridge from '@utils/bridge'
 
 initDevTools({
 
@@ -29,6 +29,9 @@ initDevTools({
         },
         send (data) {
           if (!disconnected) {
+            // if (process.env.NODE_ENV !== 'production') {
+            //   console.log('[chrome] devtools -> backend', data)
+            // }
             port.postMessage(data)
           }
         }

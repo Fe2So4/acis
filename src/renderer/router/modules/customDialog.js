@@ -3,6 +3,7 @@ const customDialogs = [
     path: '/configuration-system',
     name: 'ConfigurationSystem',
     component: () => import('@/views/ConfigurationSystem/index'),
+    redirect: { name: 'NormalSetting' },
     children: [
       {
         path: 'normal-setting',
@@ -48,6 +49,11 @@ const customDialogs = [
         path: 'document-menu',
         name: 'DocumentMenu',
         component: () => import('@/views/ConfigurationSystem/DocumentMenu')
+      }, {
+        path: '*',
+        redirect: {
+          name: 'NormalSetting'
+        }
       }
     ]
   },

@@ -70,11 +70,14 @@ app.on('ready', () => {
 })
  */
 
-const secondaryWindows = new Set()
+const secondaryWindows = new Map()
 const createNewWindow = (locationName, title) => {
+  if (secondaryWindows.has(title)) {
+    secondaryWindows.get(title).webContents.focus()
+    return
+  }
   let newWindow = new BrowserWindow({
     show: false,
-    parent: mainWindow,
     modal: true
   })
 
@@ -84,7 +87,7 @@ const createNewWindow = (locationName, title) => {
   // })
 
   newWindow.on('closed', () => {
-    secondaryWindows.delete(newWindow)
+    secondaryWindows.delete(title)
     newWindow = null
   })
 
@@ -92,12 +95,12 @@ const createNewWindow = (locationName, title) => {
     newWindow.webContents.send('route', locationName)
   })
 
-  ipcMain.once('show-window', (e) => {
+  ipcMain.on('show-window', (e) => {
     newWindow.setTitle(title)
     newWindow.show()
   })
 
-  secondaryWindows.add(newWindow)
+  secondaryWindows.set(title, newWindow)
   return newWindow
 }
 ipcMain.on('open-new-window', (e, locationName, title) => {

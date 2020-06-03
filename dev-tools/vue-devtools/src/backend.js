@@ -1,9 +1,17 @@
 // this is injected to the app page when the panel is activated.
 
-import { initBackend } from 'src/backend'
-import Bridge from 'src/bridge'
+import { initBackend } from '@back'
+import Bridge from '@utils/bridge'
 
 window.addEventListener('message', handshake)
+
+function sendListening () {
+  window.postMessage({
+    source: 'vue-devtools-backend-injection',
+    payload: 'listening'
+  }, '*')
+}
+sendListening()
 
 function handshake (e) {
   if (e.data.source === 'vue-devtools-proxy' && e.data.payload === 'init') {
@@ -12,7 +20,7 @@ function handshake (e) {
     let listeners = []
     const bridge = new Bridge({
       listen (fn) {
-        var listener = evt => {
+        const listener = evt => {
           if (evt.data.source === 'vue-devtools-proxy' && evt.data.payload) {
             fn(evt.data.payload)
           }
@@ -21,6 +29,9 @@ function handshake (e) {
         listeners.push(listener)
       },
       send (data) {
+        // if (process.env.NODE_ENV !== 'production') {
+        //   console.log('[chrome] backend -> devtools', data)
+        // }
         window.postMessage({
           source: 'vue-devtools-backend',
           payload: data
@@ -36,5 +47,7 @@ function handshake (e) {
     })
 
     initBackend(bridge)
+  } else {
+    sendListening()
   }
 }

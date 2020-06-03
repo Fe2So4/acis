@@ -5,10 +5,11 @@
         <el-row>
           <el-col :span="24">
             <el-menu
-              default-active="1-1"
+              :default-active="defaultActivePath"
               @open="handleOpen"
               @close="handleClose"
               class="menu"
+              router
             >
               <el-submenu index="1">
                 <template slot="title">
@@ -16,11 +17,10 @@
                   <span>基础配置</span>
                 </template>
                 <el-menu-item
-                  v-for="(item,index) in normalList"
+                  v-for="item in normalList"
                   :key="item.path"
-                  :index="menuIndex(1, index+1)"
+                  :index="item.path"
                   :route="item.route"
-                  @click="onMenuItemClick(item.path)"
                 >
                   {{ item.text }}
                 </el-menu-item>
@@ -31,11 +31,10 @@
                   <span>高级配置</span>
                 </template>
                 <el-menu-item
-                  v-for="(item,index) in superList"
+                  v-for="item in superList"
                   :key="item.path"
-                  :index="menuIndex(2, index+1)"
+                  :index="item.path"
                   :route="item.route"
-                  @click="onMenuItemClick(item.path)"
                 >
                   {{ item.text }}
                 </el-menu-item>
@@ -53,8 +52,8 @@
 <script>
 export default {
   name: 'ConfigurationSystem',
-  computed: {},
   data () {
+    // const basePath = '/configuration-system/'
     return {
       normalList: [
         {
@@ -139,10 +138,15 @@ export default {
       ]
     }
   },
+  computed: {
+    defaultActivePath () {
+      return this.normalList[0].path
+    }
+  },
   created () {
-    this.$router.push({
-      name: this.normalList[0].path
-    })
+    // this.$router.push({
+    //   name: this.normalList[0].path
+    // })
   },
   mounted () {
     this.$electron.ipcRenderer.send('show-window')
@@ -156,11 +160,6 @@ export default {
     },
     menuIndex (a, b) {
       return a + '-' + b
-    },
-    onMenuItemClick (name) {
-      this.$router.push({
-        name
-      })
     }
   }
 }
