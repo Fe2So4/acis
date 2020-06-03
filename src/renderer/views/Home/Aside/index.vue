@@ -62,7 +62,7 @@
           style="height:100%;"
           class="scrollbar"
         >
-          <Overview :list="overviewList"/>
+          <Overview :list="overviewList" />
         </el-scrollbar>
       </div>
     </div>
@@ -86,7 +86,8 @@ export default {
       },
       { name: '系统集成', index: '2', subNav: [], icon: 'el-icon-location' },
       { name: '患者操作', index: '3', subNav: [], icon: 'el-icon-s-data' },
-      { name: '其他', index: '4', subNav: [{ name: '系统配置', index: '4-1', route: 'ConfigurationSystem' }], icon: 'el-icon-s-tools' }
+      { name: '常用功能', index: '4', subNav: [{ name: '血流动力', index: '4-1', route: 'Hemodynamics' }, { name: '模板管理', index: '4-2', route: 'TemplateManagement' }], icon: 'el-icon-monitor' },
+      { name: '其他', index: '5', subNav: [{ name: '系统配置', index: '5-1', route: 'ConfigurationSystem' }], icon: 'el-icon-s-tools' }
       ],
       overviewList: []
     }

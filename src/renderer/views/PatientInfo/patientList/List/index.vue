@@ -6,7 +6,7 @@
         class="scrollbar"
       >
         <li
-          v-for="(item,index) in 15"
+          v-for="(item,index) in opeList"
           :key="index"
         >
           <div class="list-top">
@@ -15,7 +15,7 @@
                 class="el-icon-s-home"
                 style="color:#144177;"
               />
-              <span>手术室 <span>{{ 20 }}</span></span>
+              <span>手术室 <span>{{ item.opeRoom }}</span></span>
             </div>
             <div class="status">
               手术开始
@@ -23,13 +23,13 @@
           </div>
           <div class="list-content">
             <div class="room">
-              02-1
+              {{ item.room }}
             </div>
             <div class="info">
-              <p>患者 <span>路人甲</span> <span>10000000000</span> 住院号 <span>0000204</span></p>
-              <p>手术 <span>脑袋向后旋转三周半</span></p>
-              <p>时间 <span>2020-05-28 10:55</span></p>
-              <p>术者 <span>路人甲</span> 麻醉 <span>土肥原</span></p>
+              <p>患者 <span>{{ item.patientName }}</span> <span>{{ item.cardNo }}</span> 住院号 <span>{{ item.bedNo }}</span></p>
+              <p>手术 <span>{{ item.opeName }}</span></p>
+              <p>时间 <span>{{ item.datetime }}</span></p>
+              <p>术者 <span>{{ item.doctor }}</span> 麻醉 <span>{{ item.anaesName }}</span></p>
             </div>
           </div>
         </li>
@@ -38,11 +38,24 @@
   </div>
 </template>
 <script>
+import { opeList } from '@/api/patientInfo'
 export default {
   name: 'List',
   data () {
-    return {
+    return { opeList: [] }
+  },
+  methods: {
+    getOpeList () {
+      this.$http({
+        url: opeList()
+      }).then(res => {
+        const data = res.data.data
+        this.opeList = data
+      })
     }
+  },
+  mounted () {
+    this.getOpeList()
   }
 }
 </script>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>表单数据采集</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js">
+    </script>
+</head>
+<body>
+    <form id="myform" method="get"> 
+ 
+        <table width="50%" border="0"> 
+            <tr> 
+                <td> 
+            姓名：  </td> 
+                <td> 
+                    <input type="text" name="username" /></td> 
+                </tr> 
+            <tr> 
+            <td> 
+              书籍：    </td> 
+            <td> 
+              <input type="checkbox" name="book" value="01"/> 
+                    jquery 
+              <input type="checkbox" name="book" value="02"/> 
+                 java 
+              <input type="checkbox" name="book" value="03"/> 
+                 oracle    </td> 
+                </tr> 
+            <tr> 
+                  <td> 
+              性别：    </td> 
+            <td> 
+              <label> 
+              <input type="radio" name="sex" value="boy" /> 
+                 男</label> 
+              <label> 
+              <input type="radio" name="sex" value="girl" /> 
+                 女</label>    </td> 
+            </tr> 
+            <tr> 
+                <td> 
+            颜色：  </td> 
+                <td>    <label for="select"></label> 
+                 <select name="color" id="select"> 
+                <option>请选择</option> 
+                <option value="red">红</option> 
+                <option value="green">绿</option> 
+                <option value="blue">蓝</option> 
+                 </select>            </td> 
+            </tr> 
+            <tr> 
+                 <td> 
+            备注：  </td> 
+                <td> 
+            <label for="textarea"></label> 
+                <textarea name="addition" ></textarea>  </td> 
+            </tr> 
+            <tr> 
+                <td colspan="2"> 
+                <input type="button" id="set" value="填充"/> 
+            </td> 
+                <td colspan="2"> 
+                <input type="button" id="get" value="取值"/> 
+            </td> 
+                </tr> 
+        </table> 
+         
+        </form>
+</body>
+<script>
+    $(document).ready(function(){ 
+        // 初始化一个对象 该对象的属性要和form 对应的值对应 （其实这里应该是ajax请求返回的对象）
+        var obj = new Object(); 
+        obj.username ="randy"; 
+        obj.book="01,02,03"; 
+        obj.sex="girl"; 
+        obj.color="red"; 
+        obj.addition="哥写的不是代码，是Curtain"; 
+        $("#set").click(function(){ 
+             for(var attr in obj){ //通过for in遍历对象的所有属性值
+              if(typeof(obj[attr])=='function'){     //判断属性类型，必须不是function类型的属性，才能赋值到表单上              
+                continue; 
+              } 
+              var $input = $("#myform    :input[name='"+attr+"']"); //取的对应form下的对应表单
+              var type = $input.attr("type");//获取当前遍历表单的类型                
+              if(type=="checkbox" ||type=="radio"){ //如果是单选或者双选就需要处理   
+                  var avalues = obj[attr].split(","); //根据
+                  for(var v=0; v<avalues.length;v++){ 
+                    $input.each(function(i,n){ //通过jquery的each遍历这种单选或者双选的每一个选项
+                        var value = $(n).val();                         
+                        if(value == avalues[v]){                        
+                          $(n).attr("checked","checked"); //设置选中项
+                        } 
+                    }); 
+                } 
+              }else{ //为类型为type直接赋值
+                $input.val(obj[attr]); 
+              }    
+            }            
+        });
+        $('#get').click(function(){
+            var obj = {};
+            obj.username ="randy"; 
+            obj.book="01,02"; 
+            obj.sex="girl"; 
+            obj.color="red"; 
+            obj.addition="哥写的不是代码，是Curtain";
+            var $input1 = $("#myform    :input[name='book']");
+            console.log($input1)
+            for(var i = 0;i<$input1.length;i++){
+                if($input1[i].checked == true){
+                    console.log($input1[i].value)
+                }
+            }
+        }) 
+    }); 
+</script>
+</html>

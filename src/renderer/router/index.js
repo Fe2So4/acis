@@ -19,6 +19,7 @@ export default new Router({
       path: '/home',
       name: 'Home',
       redirect: '/home/patientInfo',
+      // redirect: '/login',
       component: () => import('@/views/Home/index'),
       children: [{
         path: 'patientInfo',
@@ -38,3 +39,8 @@ export default new Router({
     ...customDialogs
   ]
 })
+// 解决重复点击导航路由报错
+const originalPush = Router.prototype.push
+Router.prototype.push = function push (location) {
+  return originalPush.call(this, location).catch(err => err)
+}
