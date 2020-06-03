@@ -63,6 +63,11 @@ const customDialogs = [
     component: () => import('@/views/ConfigurationSystem/IntraoperativeRegisterSignDisplaySetting')
   },
   {
+    path: '/template-designer',
+    name: 'TemplateDesigner',
+    component: () => import('@/views/TemplateDesigner/index')
+  },
+  {
     path: '/event',
     name: 'Event',
     component: () => import('@/views/Event/index'),
