@@ -40,7 +40,7 @@ module.exports = () => {
     'signs|10': [
       {
         color: '@color()',
-        name: '@cname()',
+        name: '@cword(2,4)',
         value: '@integer(0,100)'
       }
     ],
@@ -53,6 +53,19 @@ module.exports = () => {
         doctor: '@cname()',
         time: '@date()',
         opeName: '@cword(4,8)'
+      }
+    ],
+    'opeList|20': [
+      {
+        opeRoom: '@integer(1,20)',
+        room: '@opeRoom - @integer(1,3)',
+        patientName: '@cname()',
+        cardNo: '@integer(1000000000,1100000000)',
+        bedNo: '@integer(1000000,1100000)',
+        opeName: '@cword(6,10)',
+        datetime: '@datetime("yyyy-MM-dd HH:mm")',
+        doctor: '@cname()',
+        anaesName: '@cname()'
       }
     ]
   })

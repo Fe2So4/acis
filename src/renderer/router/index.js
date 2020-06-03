@@ -19,6 +19,7 @@ const router = new Router({
       path: '/home',
       name: 'Home',
       redirect: '/home/patientInfo',
+      // redirect: '/login',
       component: () => import('@/views/Home/index'),
       children: [{
         path: 'patientInfo',
@@ -38,6 +39,11 @@ const router = new Router({
     }
   ]
 })
+// 解决重复点击导航路由报错
+const originalPush = Router.prototype.push
+Router.prototype.push = function push (location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 
 router.beforeEach((to, from, next) => {
   if (to.name !== from.name) {

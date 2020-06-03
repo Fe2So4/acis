@@ -77,27 +77,17 @@ export default {
       activesNames: '',
       isCollapse: false,
       showOverflow: false,
-      navList: [
-        {
-          name: '大事件',
-          index: '1',
-          subNav: [
-            { name: '麻药', index: '1-1', route: 'Event' },
-            { name: '用药', index: '1-2', route: 'Event' }
-          ],
-          icon: 'el-icon-star-on'
-        },
-        { name: '系统集成', index: '2', subNav: [], icon: 'el-icon-location' },
-        { name: '患者操作', index: '3', subNav: [], icon: 'el-icon-s-data' },
-        {
-          name: '其他',
-          index: '4',
-          subNav: [
-            { name: '系统配置', index: '4-1', route: 'ConfigurationSystem' },
-            { name: '模板设计器', index: '4-2', route: 'TemplateDesigner' }
-          ],
-          icon: 'el-icon-s-tools'
-        }
+      navList: [{
+        name: '大事件',
+        index: '1',
+        subNav: [{ name: '麻药', index: '1-1', route: 'Event' },
+          { name: '用药', index: '1-2', route: 'Event' }],
+        icon: 'el-icon-star-on'
+      },
+      { name: '系统集成', index: '2', subNav: [], icon: 'el-icon-location' },
+      { name: '患者操作', index: '3', subNav: [], icon: 'el-icon-s-data' },
+      { name: '常用功能', index: '4', subNav: [{ name: '血流动力', index: '4-1', route: 'Hemodynamics' }, { name: '模板管理', index: '4-2', route: 'TemplateManagement' }], icon: 'el-icon-monitor' },
+      { name: '其他', index: '5', subNav: [{ name: '系统配置', index: '5-1', route: 'ConfigurationSystem' }, { name: '模板设计器', index: '5-2', route: 'TemplateDesigner' }], icon: 'el-icon-s-tools' }
       ],
       overviewList: []
     }

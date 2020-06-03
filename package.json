@@ -9,7 +9,7 @@
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
-    "dev": "concurrently \"node ./mock/server.js\" \"node .electron-vue/dev-runner.js\"",
+    "dev": "concurrently \"nodemon ./mock/server.js\" \"node .electron-vue/dev-runner.js\"",
     "lint": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter src",
     "lint:fix": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter --fix src",
     "pack": "npm run pack:main && npm run pack:renderer",
@@ -19,7 +19,7 @@
     "mock": "node ./mock/server.js"
   },
   "build": {
-    "productName": "aims",
+    "productName": "acis",
     "appId": "com.example.yourapp",
     "directories": {
       "output": "build"

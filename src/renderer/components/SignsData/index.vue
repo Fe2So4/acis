@@ -54,11 +54,13 @@ export default {
         ul {
             background:#000;
             height: calc(100% - 26px);
+            padding-top: 10px;
             li{
                 p{
                     font-size: 16px;
                     font-weight: 600;
                     margin:0;
+                    line-height: 26px;
                     padding:0 10px;
                     &:first-child{
                         text-align: left;

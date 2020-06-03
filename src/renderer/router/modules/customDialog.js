@@ -77,6 +77,39 @@ const customDialogs = [
         name: 'Anesthetic'
       }
     ]
+  },
+  {
+    path: '/hemodynamics',
+    name: 'Hemodynamics',
+    component: () => import('@/views/Hemodynamics/index')
+  },
+  {
+    path: '/template-management',
+    name: 'TemplateManagement',
+    redirect: '/template-management/document-template',
+    component: () => import('@/views/TemplateManagement/index'),
+    children: [
+      {
+        path: 'blood-template',
+        name: 'BloodTemplate',
+        component: () => import('@/views/TemplateManagement/BloodTemplate/index')
+      },
+      {
+        path: 'event-template',
+        name: 'EventTemplate',
+        component: () => import('@/views/TemplateManagement/EventTemplate/index')
+      },
+      {
+        path: 'document-template',
+        name: 'DocumentTemplate',
+        component: () => import('@/views/TemplateManagement/DocumentTemplate/index')
+      },
+      {
+        path: 'clear-template',
+        name: 'ClearTemplate',
+        component: () => import('@/views/TemplateManagement/OperationClearTemplate/index')
+      }
+    ]
   }
 ]
 export default customDialogs
