@@ -1,30 +1,35 @@
 <template>
-  <div
-    class="designerContent"
-    @drop="onDrop"
-    @dragover="onDragOver"
-    ref="designerContent"
-  >
-    <canvas
-      class="canvas"
-      @click="onClickCanvas"
-    />
-    <widget-movable
-      v-for="(item,index) of widgetList"
-      :key="index"
-      :prop-id="item.id"
-      :actual="item.actual"
-      :visual="item.visual"
-      :active-id="activeId"
-      @widget-resize="onWidgetResize"
-      @widget-active="onWidgetActive"
-      @widget-move="onWidgetMove"
-      @widget-drag-start="onWidgetDragStart"
-      @widget-drag-end="onWidgetDragEnd"
+  <div class="designerContent">
+    <div
+      class="content"
+      :style="style"
+      @drop="onDrop"
+      @dragover="onDragOver"
+      ref="designerContent"
+      @dblclick="onDblckick"
     >
-      <component :is="item.name" />
-    </widget-movable>
+      <canvas
+        class="canvas"
+        @click="onClickCanvas"
+      />
+      <widget-movable
+        v-for="(item,index) of widgetList"
+        :key="index"
+        :prop-id="item.id"
+        :actual="item.actual"
+        :visual="item.visual"
+        :active-id="activeId"
+        @widget-resize="onWidgetResize"
+        @widget-active="onWidgetActive"
+        @widget-move="onWidgetMove"
+        @widget-drag-start="onWidgetDragStart"
+        @widget-drag-end="onWidgetDragEnd"
+        @widget-delete="onWidgetDelete"
+      >
+        <component :is="item.name" />
+      </widget-movable>
     <!-- <pre>{{ widgetList }}</pre> -->
+    </div>
   </div>
 </template>
 <script>
@@ -32,6 +37,7 @@ import WidgetMovable from './WidgetMovable'
 import WidgetInput from './WidgetInput'
 import WidgetText from './WidgetText'
 import WidgetLine from './WidgetLine'
+import WidgetPanel from './WidgetPanel'
 import WidgetPhysicalSign from './WidgetPhysicalSign'
 import { v4 as uuidv4 } from 'uuid'
 import { createNamespacedHelpers } from 'vuex'
@@ -46,9 +52,12 @@ export default {
     WidgetInput,
     WidgetText,
     WidgetLine,
-    WidgetPhysicalSign
+    WidgetPanel,
+WidgetPhysicalSign
   },
   data () {
+    const circleWidth = 8
+    const circleOffset = -(circleWidth / 2 + 1) + 'px'
     return {
       widgetMap: new Map(),
       widgetList: [],
@@ -73,13 +82,94 @@ export default {
           positionX: '',
           positionY: ''
         }
-      }
+      },
+      activeContent: false,
+      circles: [
+        {
+          style: {
+            left: circleOffset,
+            top: circleOffset,
+            cursor: 'nw-resize'
+          }
+        },
+        {
+          style: {
+            left: 'calc(50% - ' + circleWidth / 2 + 'px)',
+            top: circleOffset,
+            cursor: 'n-resize'
+          }
+        },
+        {
+          style: {
+            right: circleOffset,
+            top: circleOffset,
+            cursor: 'ne-resize'
+          }
+        },
+        {
+          style: {
+            left: circleOffset,
+            top: 'calc(50% - ' + circleWidth / 2 + 'px)',
+            cursor: 'w-resize'
+          }
+        },
+        {
+          style: {
+            right: circleOffset,
+            top: 'calc(50% - ' + circleWidth / 2 + 'px)',
+            cursor: 'e-resize'
+          }
+        },
+        {
+          style: {
+            left: circleOffset,
+            bottom: circleOffset,
+            cursor: 'sw-resize'
+          }
+        },
+        {
+          style: {
+            left: 'calc(50% - ' + circleWidth / 2 + 'px)',
+            bottom: circleOffset,
+            cursor: 's-resize'
+          }
+        },
+        {
+          style: {
+            right: circleOffset,
+            bottom: circleOffset,
+            cursor: 'se-resize'
+          }
+        }
+      ]
     }
   },
   computed: {
     ...mapState({
-      // activeWidget: state => state.activeWidget
-    })
+      activeWidget: state => state.activeWidget,
+      width: state => state.width,
+      height: state => state.height
+    }),
+    style () {
+      return {
+        // left: this.actual.positionX + 'px',
+        // top: this.actual.positionY + 'px',
+        width: this.width + 'px',
+        height: this.height + 'px'
+        // borderColor: this.active ? 'rebeccapurple' : 'transparent'
+      }
+    }
+  },
+  watch: {
+    activeWidget: {
+      handler (newVal, old) {
+        // console.log(newVal.id)
+        const val = newVal
+        // console.log(this.widgetMap.get(newVal.id))
+        this.widgetMap.set(val.id, val)
+        this.setWidgetList()
+      }
+    }
   },
   created () {
     var data = Mock.mock({
@@ -121,10 +211,20 @@ export default {
   },
   methods: {
     ...mapActions([
-      'setActiveWidget'
+      'setActiveWidget',
+      'setWidthHeight'
     ]),
+    onDblckick () {
+      this.activeContent = true
+    },
     setWidgetList () {
       this.widgetList = [...this.widgetMap.values()]
+    },
+    onWidgetDelete (e) {
+      // console.log(e)
+      this.widgetMap.delete(e)
+      this.setWidgetList()
+      // console.log(this.widgetMap, this.widgetMap._c)
     },
     onDragOver (e) {
       e.preventDefault()
@@ -452,6 +552,7 @@ export default {
     },
     onWidgetActive (e) {
       this.activeId = e
+      // console.log(e, 'dblclick', this.widgetMap.get(e))
       this.setActiveWidget(this.widgetMap.get(e))
     },
     onWidgetMove (e) {
@@ -680,16 +781,31 @@ export default {
 </script>
 <style lang="scss" scoped>
 .designerContent {
-  height: 800px;
+  height: 100%;
   flex: 1 1 600px;
   background: cornsilk;
-  position: relative;
-  overflow: hidden;
+  // position: relative;
+  overflow: auto;
 
   .canvas {
     position: absolute;
     width: 100%;
     height: 100%;
+  }
+  .content{
+    position: relative;
+    // width: 600px;
+    // height:800px;
+    border:1px dashed red;
+    margin:0 auto;
+    .circle {
+      width: 8px;
+      height: 8px;
+      // border: 1px solid rebeccapurple;
+      background: rebeccapurple;
+      position: absolute;
+      border-radius: 2px;
+  }
   }
 }
 </style>

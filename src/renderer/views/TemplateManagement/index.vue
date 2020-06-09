@@ -1,5 +1,5 @@
 <template>
-  <div class="blood-template">
+  <div class="template">
     <div class="top">
       <el-menu
         :default-active="$route.path"
@@ -24,7 +24,7 @@
 </template>
 <script>
 export default {
-  name: 'BloodTemplate',
+  name: 'Template',
   data () {
     return {
       activeIndex: '/template-management/document-template',
@@ -61,5 +61,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
+  .template{
+    height: 100%;
+    .content{
+      height:calc(100% - 62px)
+    }
+  }
 </style>

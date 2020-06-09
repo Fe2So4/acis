@@ -34,9 +34,16 @@ export default {
           name: 'widget-checkbox'
         },
         {
+          label: '面板',
+          name: 'widget-panel'
+        },
+        {
+          label: '标签',
+          name: 'widget-label'
+        },
+        {
           label: '体征曲线',
-          name: 'widget-physical-sign'
-        }
+          name: 'widget-physical-sign'}
       ]
     }
   }
@@ -45,7 +52,7 @@ export default {
 <style lang="scss" scoped>
 .widgetList {
   // flex: 0 1 200px;
-  height: 800px;
+  height: 100%;
   background: blanchedalmond;
   padding: 10px;
 }

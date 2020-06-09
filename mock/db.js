@@ -35,7 +35,6 @@ module.exports = () => {
         headPortrait: '@image("100x100",@color,,,@cword)'
       }
     ],
-
     // aics相关模拟接口
     'signs|10': [
       {
