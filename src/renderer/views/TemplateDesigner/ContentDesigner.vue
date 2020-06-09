@@ -53,7 +53,7 @@ export default {
     WidgetText,
     WidgetLine,
     WidgetPanel,
-WidgetPhysicalSign
+    WidgetPhysicalSign
   },
   data () {
     const circleWidth = 8
@@ -163,11 +163,11 @@ WidgetPhysicalSign
   watch: {
     activeWidget: {
       handler (newVal, old) {
-        // console.log(newVal.id)
-        const val = newVal
-        // console.log(this.widgetMap.get(newVal.id))
-        this.widgetMap.set(val.id, val)
-        this.setWidgetList()
+        console.log(newVal)
+        // const val = newVal
+        // // console.log(this.widgetMap.get(newVal.id))
+        // this.widgetMap.set(val.id, val)
+        // this.setWidgetList()
       }
     }
   },

@@ -43,7 +43,8 @@ export default {
         },
         {
           label: '体征曲线',
-          name: 'widget-physical-sign'}
+          name: 'widget-physical-sign'
+        }
       ]
     }
   }
