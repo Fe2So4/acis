@@ -32,6 +32,7 @@ import WidgetMovable from './WidgetMovable'
 import WidgetInput from './WidgetInput'
 import WidgetText from './WidgetText'
 import WidgetLine from './WidgetLine'
+import WidgetPhysicalSign from './WidgetPhysicalSign'
 import { v4 as uuidv4 } from 'uuid'
 import { createNamespacedHelpers } from 'vuex'
 const Mock = require('mockjs')
@@ -44,7 +45,8 @@ export default {
     WidgetMovable,
     WidgetInput,
     WidgetText,
-    WidgetLine
+    WidgetLine,
+    WidgetPhysicalSign
   },
   data () {
     return {
@@ -82,15 +84,15 @@ export default {
   created () {
     var data = Mock.mock({
     // 属性 list 的值是一个数组，其中含有 1 到 10 个元素
-      'list|10-20': [{
+      'list|100': [{
         // 属性 id 是一个自增数，起始值为 1，每次增 1
         id: function () {
           return uuidv4()
         },
         name: 'widget-input',
         'width|10-200': 10,
-        'height|10-30': 10,
-        'positionX|0-200': 0,
+        'height|30-50': 10,
+        'positionX|0-400': 0,
         'positionY|0-400': 0
       }]
     })

@@ -32,6 +32,10 @@ export default {
         {
           label: '复选框',
           name: 'widget-checkbox'
+        },
+        {
+          label: '体征曲线',
+          name: 'widget-physical-sign'
         }
       ]
     }
