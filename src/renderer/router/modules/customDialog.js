@@ -84,6 +84,11 @@ const customDialogs = [
     component: () => import('@/views/Hemodynamics/index')
   },
   {
+    path: '/operation-overview',
+    name: 'OperationOverview',
+    component: () => import('@/views/OperationOverview/index')
+  },
+  {
     path: '/template-management',
     name: 'TemplateManagement',
     redirect: '/template-management/document-template',

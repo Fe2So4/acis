@@ -20,7 +20,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    config.headers['Authorization'] = getUserToken() || ''
+    config.headers.Authorization = getUserToken() || ''
     return config
   },
   error => {

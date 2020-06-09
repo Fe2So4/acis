@@ -95,7 +95,7 @@ const createNewWindow = (locationName, title) => {
     newWindow.webContents.send('route', locationName)
   })
 
-  ipcMain.on('show-window', (e) => {
+  ipcMain.once('show-window', (e) => {
     newWindow.setTitle(title)
     newWindow.show()
   })

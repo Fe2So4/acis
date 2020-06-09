@@ -32,6 +32,14 @@ export default {
         {
           label: '复选框',
           name: 'widget-checkbox'
+        },
+        {
+          label: '面板',
+          name: 'widget-panel'
+        },
+        {
+          label: '标签',
+          name: 'widget-label'
         }
       ]
     }
@@ -41,7 +49,7 @@ export default {
 <style lang="scss" scoped>
 .widgetList {
   // flex: 0 1 200px;
-  height: 800px;
+  height: 100%;
   background: blanchedalmond;
   padding: 10px;
 }

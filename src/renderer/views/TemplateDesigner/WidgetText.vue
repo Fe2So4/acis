@@ -20,6 +20,7 @@ export default {
     height: 100%;
     line-height: 26px;
     background: transparent;
+    margin:unset;
   }
 }
 </style>

@@ -16,7 +16,7 @@
           :collapse="isCollapse"
           class="el-menu-vertical-demo"
           active-text-color="#409EFF"
-          :default-openeds="['1','2','3','4']"
+          :default-openeds="['1','2','3','4','5']"
           @open="handleOpen"
           @close="handleClose"
         >
@@ -85,9 +85,21 @@ export default {
         icon: 'el-icon-star-on'
       },
       { name: '系统集成', index: '2', subNav: [], icon: 'el-icon-location' },
-      { name: '患者操作', index: '3', subNav: [], icon: 'el-icon-s-data' },
-      { name: '常用功能', index: '4', subNav: [{ name: '血流动力', index: '4-1', route: 'Hemodynamics' }, { name: '模板管理', index: '4-2', route: 'TemplateManagement' }], icon: 'el-icon-monitor' },
-      { name: '其他', index: '5', subNav: [{ name: '系统配置', index: '5-1', route: 'ConfigurationSystem' }, { name: '模板设计器', index: '5-2', route: 'TemplateDesigner' }], icon: 'el-icon-s-tools' }
+      { name: '患者操作', index: '3', subNav: [{ name: '手术概览', index: '3-1', route: 'OperationOverview' }], icon: 'el-icon-s-data' },
+      {
+        name: '常用功能',
+        index: '4',
+        subNav: [{ name: '血流动力', index: '4-1', route: 'Hemodynamics' }, { name: '模板管理', index: '4-2', route: 'TemplateManagement' }
+        ],
+        icon: 'el-icon-monitor'
+      },
+      {
+        name: '其他',
+        index: '5',
+        subNav: [{ name: '系统配置', index: '5-1', route: 'ConfigurationSystem' },
+          { name: '模板设计器', index: '5-2', route: 'TemplateDesigner' }],
+        icon: 'el-icon-s-tools'
+      }
       ],
       overviewList: []
     }

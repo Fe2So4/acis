@@ -9,6 +9,7 @@
     @dragover="onDragOver"
     @drop="onDrop"
     @dblclick="onDblckick"
+    @keyup.delete="onDelete"
   >
     <div
       class="circle"
@@ -181,7 +182,7 @@ export default {
       }
       const dX = e.pageX - this.drag.start.pageX
       const dY = e.pageY - this.drag.start.pageY
-
+      console.log(dX, dY)
       // 重置起始位置
       const { pageX, pageY } = e
       this.drag.start.pageX = pageX
@@ -207,6 +208,7 @@ export default {
     },
     onDrop (e) {
       e.preventDefault()
+      this.$emit('widget-active', this.propId)
     },
     onDragStartResize (e) {
       const { pageX, pageY } = e
@@ -336,6 +338,12 @@ export default {
     },
     onDblckick () {
       this.$emit('widget-active', this.propId)
+    },
+    onDelete () {
+      // console.log('delete')
+      if (this.active) {
+        this.$emit('widget-delete', this.propId)
+      }
     }
   },
   mounted () {}
