@@ -65,7 +65,7 @@ const customDialogs = [
   {
     path: '/template-designer',
     name: 'TemplateDesigner',
-    component: () => import('@/views/TemplateDesigner/index')
+    component: () => import('@/views/Designer/index')
   },
   {
     path: '/event',
