@@ -56,6 +56,10 @@ export default {
         {
           label: '输液输血',
           name: 'widget-in-out'
+        },
+        {
+          label: '多选框组',
+          name: 'widget-checkbox-group'
         }
       ]
     }

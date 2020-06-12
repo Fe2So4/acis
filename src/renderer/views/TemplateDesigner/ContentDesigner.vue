@@ -43,6 +43,7 @@ import WidgetPhysicalSign from './WidgetPhysicalSign'
 import WidgetAnaesDrug from './WidgetAnaesDrug'
 import WidgetTextArea from './WidgetTextArea'
 import WidgetInOut from './WidgetInOut'
+import WidgetCheckboxGroup from './WidgetCheckboxGroup'
 import { v4 as uuidv4 } from 'uuid'
 import { createNamespacedHelpers } from 'vuex'
 const Mock = require('mockjs')
@@ -60,7 +61,8 @@ export default {
     WidgetPhysicalSign,
     WidgetAnaesDrug,
     WidgetTextArea,
-    WidgetInOut
+    WidgetInOut,
+    WidgetCheckboxGroup
   },
   data () {
     const circleWidth = 8
