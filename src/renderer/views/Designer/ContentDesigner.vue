@@ -28,6 +28,8 @@
 </template>
 <script>
 import { createNamespacedHelpers } from 'vuex'
+
+import getConfigurationItems from './WidgetConfigurationItems.js'
 // import { v4 as uuidv4 } from 'uuid'
 // import Mock from 'mockjs'
 import WidgetMovable from './WidgetMovable'
@@ -136,7 +138,8 @@ export default {
             positionX,
             positionY,
             width,
-            height
+            height,
+            ...getConfigurationItems(name)
           })
           break
         }
