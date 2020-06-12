@@ -2,6 +2,7 @@
   <div
     class="widgetMovable"
     :style="style"
+    tabindex="0"
     draggable="true"
     @dragstart="onDragStart"
     @drag="onDrag"
@@ -182,7 +183,7 @@ export default {
       }
       const dX = e.pageX - this.drag.start.pageX
       const dY = e.pageY - this.drag.start.pageY
-      console.log(dX, dY)
+      console.log(e.pageX, e.pageY, dX, dY)
       // 重置起始位置
       const { pageX, pageY } = e
       this.drag.start.pageX = pageX
@@ -340,7 +341,7 @@ export default {
       this.$emit('widget-active', this.propId)
     },
     onDelete () {
-      // console.log('delete')
+      console.log('delete')
       if (this.active) {
         this.$emit('widget-delete', this.propId)
       }

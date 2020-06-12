@@ -1,7 +1,7 @@
 const state = () => ({
   activeWidget: null,
-  height: 800,
-  width: 600,
+  height: 1399,
+  width: 904,
   direction: '1'
 })
 

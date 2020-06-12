@@ -1,7 +1,7 @@
 <template>
   <div
-    ref="physicalSign"
-    class="physicalSign"
+    ref="anaesDrug"
+    class="anaesDrug"
   />
 </template>
 
@@ -19,22 +19,17 @@ export default {
       leftPartWidthRate: 0.18,
       rightPartWidthRate: 0.1,
       leftTitle: {
-        text: '左标题',
-        width: 50,
+        text: '麻醉用药',
+        width: 40,
         lineHeight: 30
       },
       timeTitle: {
         text: '时间',
-        height: 30,
+        height: 30, // 是否显示顶部时间条，将高度置为0即可
         lineHeight: 30
       },
-      eventTitle: {
-        text: '事件标题',
-        height: 40,
-        lineHeight: 40
-      },
       totalTitle: {
-        text: '图例'
+        text: '总量'
       },
       yAxis: {
         list: [
@@ -80,7 +75,9 @@ export default {
         endTime: '2018-02-01 12:00',
         timeInterval: 15 * 60 * 1000,
         lineInterval: 3
-      }
+      },
+      drugNumber: 10,
+      drugList: [{ name: '利多卡因', code: '1' }, { name: '安眠药', code: '2' }, { name: '降压药', code: '3' }] // 药品列表
     }
   },
   created () {
@@ -91,11 +88,11 @@ export default {
     this.createGroups()
     this.setLayout()
     this.setContent()
-    addListener(this.$refs.physicalSign, debounce(this.domResizeListener, 20))
+    addListener(this.$refs.anaesDrug, debounce(this.domResizeListener, 20))
   },
   beforeDestroy () {
     this.layer = null
-    removeListener(this.$refs.physicalSign, this.domResizeListener)
+    removeListener(this.$refs.anaesDrug, this.domResizeListener)
   },
   methods: {
     domResizeListener () {
@@ -105,12 +102,11 @@ export default {
     },
     renderScene () {
       this.scene = new Scene({
-        container: this.$refs.physicalSign,
+        container: this.$refs.anaesDrug,
         width: this.$refs.width,
         height: this.$refs.height,
         mode: 'static'
       })
-
       this.layer = this.scene.layer()
     },
     createGroups () {
@@ -136,13 +132,10 @@ export default {
       const timeTitle = new Group({
         className: 'timeTitle content'
       })
-      const yAxis = new Group({
-        className: 'yAxis content'
+      const drugList = new Group({
+        className: 'drugList content'
       })
-      const eventTitle = new Group({
-        className: 'eventTitle content'
-      })
-      leftMain.append(timeTitle, yAxis, eventTitle)
+      leftMain.append(timeTitle, drugList)
 
       const xAxis = new Group({
         className: 'xAxis content'
@@ -150,10 +143,10 @@ export default {
       const grid = new Group({
         className: 'grid content'
       })
-      const eventTag = new Group({
-        className: 'eventTag content'
-      })
-      middlePart.append(xAxis, grid, eventTag)
+      // const eventTag = new Group({
+      //   className: 'eventTag content'
+      // })
+      middlePart.append(xAxis, grid)
 
       const totalTitle = new Group({
         className: 'totalTitle content'
@@ -179,7 +172,8 @@ export default {
       // leftPart/leftTitle
       const leftTitle = leftPart.getElementsByClassName('leftTitle')[0]
       leftTitle.attr({
-        size: [this.leftTitle.width || 0, leftPart.attr('height')]
+        size: [this.leftTitle.width || 0, leftPart.attr('height')],
+        padding: [0, 10, 0, 10]
       })
       const leftTitleBorderRightLine = new Polyline({
         pos: [leftTitle.attr('width') - 0.5, 0],
@@ -201,55 +195,34 @@ export default {
       const timeTitle = leftMain.getElementsByClassName('timeTitle')[0]
       timeTitle.attr({
         size: [leftMain.attr('width'), this.timeTitle.height]
+        // bgcolor: 'green'
       })
-      const timeTitleBorderRightLine = new Polyline({
-        pos: [timeTitle.attr('width') - 0.5, 0],
-        points: [0, timeTitle.attr('height') - 1, 0, timeTitle.attr('height')],
+      // const timeTitleBorderRightLine = new Polyline({
+      //   // pos: [timeTitle.attr('width') - 0.5, 0],
+      //   points: [timeTitle.attr('width') - 0.5, 0, timeTitle.attr('width') - 0.5, timeTitle.attr('height') - 0.5],
+      //   strokeColor: 'black',
+      //   lineWidth: 1
+      // })
+      const timeTitleBorderBottomLine = new Polyline({
+        pos: [0, 0],
+        points: [0, timeTitle.attr('height') - 0.5, timeTitle.attr('width') - 0.5, timeTitle.attr('height') - 0.5],
         strokeColor: 'black',
         lineWidth: 1
       })
-      timeTitle.append(timeTitleBorderRightLine)
+      timeTitle.append(timeTitleBorderBottomLine)
 
-      // leftPart/leftMain/yAxis
-      const yAxis = leftMain.getElementsByClassName('yAxis')[0]
-      yAxis.attr({
-        size: [
-          leftMain.attr('width'),
-          leftMain.attr('height') -
-            this.timeTitle.height -
-            this.eventTitle.height
-        ],
-        pos: [0, this.timeTitle.height]
+      // leftPart/leftMain/drugList
+      const drugList = leftMain.getElementsByClassName('drugList')[0]
+      drugList.attr({
+        size: [leftMain.attr('width'), leftMain.attr('height') - timeTitle.attr('height')],
+        pos: [0, timeTitle.attr('height')]
       })
-      const yAxisBorderRightLine = new Polyline({
-        pos: [yAxis.attr('width') - 0.5, 0],
-        points: [0, 0, 0, yAxis.attr('height')],
+      const drugListBorderRightLine = new Polyline({
+        points: [drugList.attr('width') - 0.5, 0, drugList.attr('width') - 0.5, drugList.attr('height') - 0.5],
         strokeColor: 'black',
         lineWidth: 1
       })
-      const yAxisBorderBottomLine = new Polyline({
-        pos: [0, yAxis.attr('height') - 0.5],
-        points: [0, 0, yAxis.attr('width'), 0],
-        strokeColor: 'black',
-        lineWidth: 1
-      })
-      yAxis.append(yAxisBorderRightLine, yAxisBorderBottomLine)
-
-      // leftPart/leftMain/eventTitle
-      const eventTitle = leftMain.getElementsByClassName('eventTitle')[0]
-      eventTitle.attr({
-        size: [leftMain.attr('width'), this.eventTitle.height],
-        pos: [0, leftMain.attr('height') - this.eventTitle.height]
-      })
-      const eventTitleBorderRightLine = new Polyline({
-        pos: [eventTitle.attr('width') - 0.5, 0],
-        points: [0, 0, 0, eventTitle.attr('height')],
-        strokeColor: 'black',
-        lineWidth: 1
-      })
-      eventTitle.append(eventTitleBorderRightLine)
-
-      // middlePart
+      drugList.append(drugListBorderRightLine)
       const middlePart = this.layer.getElementsByClassName('middlePart')[0]
       middlePart.attr({
         size: [
@@ -286,8 +259,7 @@ export default {
         size: [
           middlePart.attr('width'),
           middlePart.attr('height') -
-            this.timeTitle.height -
-            this.eventTitle.height
+            this.timeTitle.height
         ],
         pos: [0, xAxis.attr('height')]
       })
@@ -297,26 +269,13 @@ export default {
         strokeColor: 'black',
         lineWidth: 1
       })
-      const gridBorderBottomLine = new Polyline({
-        pos: [0, grid.attr('height') - 0.5],
-        points: [0, 0, grid.attr('width'), 0],
-        strokeColor: 'black',
-        lineWidth: 1
-      })
-      grid.append(gridBorderRightLine, gridBorderBottomLine)
-      // middlePart/eventTag
-      const eventTag = middlePart.getElementsByClassName('eventTag')[0]
-      eventTag.attr({
-        size: [middlePart.attr('width'), this.eventTitle.height],
-        pos: [0, middlePart.attr('height') - this.eventTitle.height]
-      })
-      const eventTagBorderRightLine = new Polyline({
-        pos: [eventTag.attr('width') - 0.5, 0],
-        points: [0, 0, 0, eventTag.attr('height')],
-        strokeColor: 'black',
-        lineWidth: 1
-      })
-      eventTag.append(eventTagBorderRightLine)
+      // const gridBorderBottomLine = new Polyline({
+      //   pos: [0, grid.attr('height') - 0.5],
+      //   points: [0, 0, grid.attr('width'), 0],
+      //   strokeColor: 'black',
+      //   lineWidth: 1
+      // })
+      grid.append(gridBorderRightLine)
 
       // rightPart
       const rightPart = this.layer.getElementsByClassName('rightPart')[0]
@@ -354,23 +313,70 @@ export default {
     setContent () {
       this.setLeftTitle()
       this.setTimeTitle()
-      this.setYAxis()
-      this.setEventTitle()
+      this.setDrugContent()
       this.setXAxis()
       this.setGrid()
       this.setTotalTitle()
+    },
+    setDrugContent () {
+      const leftPart = this.layer.getElementsByClassName('leftPart')[0]
+      const drugList = leftPart.getElementsByClassName('drugList')[0]
+      const width = Math.round(drugList.attr('width'))
+      const lineHeight = Math.round(drugList.attr('height')) / this.drugNumber
+      for (let i = 0; i < this.drugNumber - 1; i++) {
+        const line = new Polyline({
+          pos: [0, Math.round(lineHeight * (i + 1)) - 0.5],
+          points: [0, 0, width, 0],
+          strokeColor: 'black',
+          lineWidth: 1
+        })
+        drugList.append(line)
+      }
+      for (let i = 0; i < this.drugNumber; i++) {
+        if (this.drugList[i]) {
+          const text = new Label(this.drugList[i].name)
+          text.attr({
+            pos: [0, lineHeight * i],
+            anchor: [0, 0],
+            fontSize: 12,
+            fontFamily: '宋体',
+            textAlign: 'center',
+            fillColor: 'blue',
+            width: width,
+            height: lineHeight,
+            lineHeight: lineHeight
+          })
+          drugList.append(text)
+        }
+      }
     },
     setLeftTitle () {
       const leftTitle = this.layer.getElementsByClassName('leftTitle')[0]
       const width = leftTitle.attr('width')
       const height = leftTitle.attr('height')
       const textArr = this.leftTitle.text.split('')
+      // const textArr = this.leftTitle.text
       const lineHeight = this.leftTitle.lineHeight
       const titleTextGroup = new Group()
       titleTextGroup.attr({
-        size: [width - 1, textArr.length * lineHeight],
-        pos: [width / 2, height / 2],
+        size: [40 - 1, textArr.length * lineHeight],
+        pos: [40 / 2, height / 2],
         anchor: [0.5, 0.5]
+      })
+      textArr.forEach((item, i, arr) => {
+        const title = new Label(item)
+        title.attr({
+          pos: [0, lineHeight * i - (lineHeight * arr.length) / 2],
+          anchor: [0.5, 0],
+          fontSize: 12,
+          fontFamily: '宋体',
+          textAlign: 'center',
+          fillColor: 'black',
+          width: width,
+          height: lineHeight,
+          lineHeight: lineHeight
+        })
+        titleTextGroup.append(title)
       })
       textArr.forEach((item, i, arr) => {
         const title = new Label(item)
@@ -402,51 +408,6 @@ export default {
         lineHeight: this.timeTitle.lineHeight
       })
       timeTitle.append(text)
-    },
-    setYAxis () {
-      const yAxis = this.layer.getElementsByClassName('yAxis')[0]
-      const width = Math.round(yAxis.attr('width') / this.yAxis.list.length)
-      this.yAxis.list.forEach(item => {
-        const { index, values } = item
-        const textGroup = new Group()
-        textGroup.attr({
-          width: width,
-          height: yAxis.attr('height'),
-          anchor: [0, 1],
-          pos: [width * index, yAxis.attr('height')]
-        })
-        yAxis.append(textGroup)
-        const arrange = values[values.length - 1].value - values[0].value
-        const scale = yAxis.attr('height') / arrange
-        values.forEach((t, i) => {
-          const label = new Label(t.label.toString())
-          label.attr({
-            fontSize: 12,
-            fontFamily: '宋体',
-            textAlign: 'right',
-            fillColor: 'black',
-            width: width,
-            padding: [0, 5, 0, 0],
-            anchor: [1, 0.5],
-            pos: [width, -(t.value - values[0].value) * scale]
-          })
-          textGroup.append(label)
-        })
-      })
-    },
-    setEventTitle () {
-      const eventTitle = this.layer.getElementsByClassName('eventTitle')[0]
-      const text = new Label(this.eventTitle.text)
-      text.attr({
-        fontSize: 12,
-        fontFamily: '宋体',
-        textAlign: 'center',
-        fillColor: 'black',
-        width: Math.round(eventTitle.attr('width')),
-        height: this.eventTitle.height,
-        lineHeight: this.eventTitle.lineHeight
-      })
-      eventTitle.append(text)
     },
     setTotalTitle () {
       const totalTitle = this.layer.getElementsByClassName('totalTitle')[0]
@@ -528,12 +489,13 @@ export default {
           grid.append(line)
         }
       })
-      const yAxislistMax =
-        this.yAxis.list.reduce((max, item) => {
-          return Math.max(max, item.values.length)
-        }, 0) - 1
-      const yScale = height / yAxislistMax
-      for (let index = 0; index < yAxislistMax; index++) {
+      // const yAxislistMax =
+      // this.yAxis.list.reduce((max, item) => {
+      //   return Math.max(max, item.values.length)
+      // }, 0) - 1
+      // const yScale = height / yAxislistMax
+      const yScale = height / this.drugNumber
+      for (let index = 0; index < this.drugNumber; index++) {
         if (index) {
           const mainLine = new Polyline({
             pos: [0, Math.round(index * yScale) - 0.5],
@@ -543,33 +505,33 @@ export default {
           })
           grid.append(mainLine)
         }
-        for (let i = 1; i < this.yAxis.lineInterval; i++) {
-          const line = new Polyline({
-            pos: [
-              0,
-              Math.round(
-                index * yScale + i * (yScale / this.yAxis.lineInterval)
-              ) - 0.5
-            ],
-            points: [0, 0, width, 0],
-            strokeColor: 'gray',
-            lineWidth: 1,
-            lineDash: [1, 2, 3]
-          })
-          grid.append(line)
-        }
+        // for (let i = 1; i < this.yAxis.lineInterval; i++) {
+        //   const line = new Polyline({
+        //     pos: [
+        //       0,
+        //       Math.round(
+        //         index * yScale + i * (yScale / this.yAxis.lineInterval)
+        //       ) - 0.5
+        //     ],
+        //     points: [0, 0, width, 0],
+        //     strokeColor: 'gray',
+        //     lineWidth: 1,
+        //     lineDash: [1, 2, 3]
+        //   })
+        //   grid.append(line)
+        // }
       }
     }
   }
 }
 </script>
 <style lang='scss' scoped>
-.physicalSign {
+.anaesDrug {
   height: 100%;
   width: 100%;
   border: 1px solid black;
   box-sizing: border-box;
   margin: 0 auto;
-  background: #fff;
+  background:#fff;
 }
 </style>

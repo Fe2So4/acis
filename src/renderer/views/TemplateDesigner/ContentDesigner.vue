@@ -28,6 +28,7 @@
       >
         <component :is="item.name" />
       </widget-movable>
+      <!-- <widget-in-out /> -->
     <!-- <pre>{{ widgetList }}</pre> -->
     </div>
   </div>
@@ -39,6 +40,9 @@ import WidgetText from './WidgetText'
 import WidgetLine from './WidgetLine'
 import WidgetPanel from './WidgetPanel'
 import WidgetPhysicalSign from './WidgetPhysicalSign'
+import WidgetAnaesDrug from './WidgetAnaesDrug'
+import WidgetTextArea from './WidgetTextArea'
+import WidgetInOut from './WidgetInOut'
 import { v4 as uuidv4 } from 'uuid'
 import { createNamespacedHelpers } from 'vuex'
 const Mock = require('mockjs')
@@ -53,7 +57,10 @@ export default {
     WidgetText,
     WidgetLine,
     WidgetPanel,
-    WidgetPhysicalSign
+    WidgetPhysicalSign,
+    WidgetAnaesDrug,
+    WidgetTextArea,
+    WidgetInOut
   },
   data () {
     const circleWidth = 8
@@ -174,7 +181,7 @@ export default {
   created () {
     var data = Mock.mock({
     // 属性 list 的值是一个数组，其中含有 1 到 10 个元素
-      'list|100': [{
+      'list|20': [{
         // 属性 id 是一个自增数，起始值为 1，每次增 1
         id: function () {
           return uuidv4()
@@ -221,7 +228,7 @@ export default {
       this.widgetList = [...this.widgetMap.values()]
     },
     onWidgetDelete (e) {
-      // console.log(e)
+      console.log(e)
       this.widgetMap.delete(e)
       this.setWidgetList()
       // console.log(this.widgetMap, this.widgetMap._c)
@@ -783,7 +790,7 @@ export default {
 .designerContent {
   height: 100%;
   flex: 1 1 600px;
-  background: cornsilk;
+  background: #fff;
   // position: relative;
   overflow: auto;
 

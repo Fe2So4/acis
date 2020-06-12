@@ -44,6 +44,18 @@ export default {
         {
           label: '体征曲线',
           name: 'widget-physical-sign'
+        },
+        {
+          label: '麻醉用药',
+          name: 'widget-anaes-drug'
+        },
+        {
+          label: '多行文本',
+          name: 'widget-text-area'
+        },
+        {
+          label: '输液输血',
+          name: 'widget-in-out'
         }
       ]
     }
@@ -54,7 +66,7 @@ export default {
 .widgetList {
   // flex: 0 1 200px;
   height: 100%;
-  background: blanchedalmond;
+  background: palevioletred;
   padding: 10px;
 }
 </style>

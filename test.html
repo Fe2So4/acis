@@ -7,6 +7,7 @@
     <title>表单数据采集</title>
     <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js">
     </script>
+    <script src="https://unpkg.com/spritejs@3/dist/spritejs.js"></script>
     <style>
         .resize {
             height: 400px;
@@ -157,8 +158,8 @@
         <div class="circle" style="cursor: sw-resize;"></div>
         <div class="circle" style="cursor: w-resize;"></div> -->
     <!-- </div> -->
-    <div class="resize" draggable="true" ondragstart="onDragStart(event)" ondrag="onDrag(event)" ondrop="onDrop(event)"
-        ondragover="onDragOver(event)" ondragend="onDragEnd(event)">
+    <!-- <div class="resize" draggable="true" ondragstart="onDragStart(event)" ondrag="onDrag" ondragend="onDragEnd"
+        ondragover="onDragOver(event)">
         <div class="circle" style="cursor: nw-resize;"></div>
         <div class="circle" style="cursor: n-resize;"></div>
         <div class="circle" style="cursor: ne-resize;"></div>
@@ -167,9 +168,16 @@
         <div class="circle" style="cursor: s-resize;"></div>
         <div class="circle" style="cursor: sw-resize;"></div>
         <div class="circle" style="cursor: w-resize;"></div>
+    </div> -->
+    <div class="container" style="position: relative;height: 800px;">
     </div>
 </body>
 <script>
+    const { Scene, Sprite } = spritejs;
+    // console.log(Scene, Sprite)
+    const container = document.querySelector('.container');
+    const scene = new Scene({ container, width: 3080, height: 800, mode: 'stickyTop' });
+    const layer = scene.layer();
     // $(document).ready(function () {
     //     // 初始化一个对象 该对象的属性要和form 对应的值对应 （其实这里应该是ajax请求返回的对象）
     //     var obj = new Object();
@@ -216,35 +224,35 @@
     //     }
     // })
 
-    function drop(event) {
-        event.preventDefault();
-        console.log('drop')
-        console.log(event.dataTransfer)
-        // console.log(event.dataTransfer.getData('Text'), 'drop')
-        var data = event.dataTransfer.getData('Text')
-        event.target.appendChild(document.getElementById(data));
-    }
-    function allowDrop(event) {
-        event.preventDefault();
-        console.log('dragover')
-    }
-    function enterDrag(event) {
-        console.log('enterDrag')
-    }
-    function leaveDrag(event) {
-        console.log('leave')
-    }
+    // function drop(event) {
+    //     event.preventDefault();
+    //     console.log('drop')
+    //     console.log(event.dataTransfer)
+    //     // console.log(event.dataTransfer.getData('Text'), 'drop')
+    //     var data = event.dataTransfer.getData('Text')
+    //     event.target.appendChild(document.getElementById(data));
+    // }
+    // function allowDrop(event) {
+    //     event.preventDefault();
+    //     console.log('dragover')
+    // }
+    // function enterDrag(event) {
+    //     console.log('enterDrag')
+    // }
+    // function leaveDrag(event) {
+    //     console.log('leave')
+    // }
 
-    function dragStart(event) {
-        console.log(event.target.id)
-        event.dataTransfer.setData("Text", event.target.id);
-        // document.getElementById("demo").innerHTML = "开始拖动 p 元素";
-    }
-    var disX = 0;
-    var disY = 0;
-    var disW = 0;
-    var disH = 0;
-    var oPanel = document.querySelector('.resize')
+    // function dragStart(event) {
+    //     console.log(event.target.id)
+    //     event.dataTransfer.setData("Text", event.target.id);
+    //     // document.getElementById("demo").innerHTML = "开始拖动 p 元素";
+    // }
+    // var disX = 0;
+    // var disY = 0;
+    // var disW = 0;
+    // var disH = 0;
+    // var oPanel = document.querySelector('.resize')
     // $('.resize').mousedown(function (event) {
     //     var e = event || window.event;
     //     console.log(event)
@@ -267,47 +275,46 @@
     //         document.onmouseup = null;
     //     }
     // })
-    var pageX = 0;
-    var pageY = 0;
-    var pX = 0;
-    var pY = 0;
-    var dX = 0;
-    var dY = 0;
-    function onDragStart(event) {
-        console.log(event)
-        pageX = event.offsetX
-        pageY = event.offsetY
-        pX = oPanel.offsetLeft
-        pY = oPanel.offsetTop
-        // 定义拖动效果
-        event.dataTransfer.dropEffect = 'move'
-        // console.log(pageX, pageY, 'x,y')
-        // console.log(oPanel.offsetLeft, oPanel.offsetTop, 'left,top')
-    }
-    function onDrag(event) {
-        console.log(event.pageX)
-        console.log(event.pageY)
-        dX = event.pageX - pageX
-        dY = event.pageY - pageY
-        // console.log(dX, dY, 'dX,dy')
-        // pageX = event.pageX
-        // pageY = event.pageY
-        oPanel.style.left = dX + 'px'
-        oPanel.style.top = dY + 'px'
-    }
+    // var pageX = 0;
+    // var pageY = 0;
+    // var pX = 0;
+    // var pY = 0;
+    // var dX = 0;
+    // var dY = 0;
+    // function onDragStart(event) {
+    //     console.log(event)
+    //     pageX = event.offsetX
+    //     pageY = event.offsetY
+    //     // 定义拖动效果
+    //     event.dataTransfer.dropEffect = 'move'
+    // }
+    // function onDrag(e) {
+    //     var e = e || window.event;
+    //     console.log('drag')
+    //     // console.log(event.pageY)
+    //     dX = e.pageX - pageX
+    //     dY = e.pageY - pageY
+    //     oPanel.style.left = dX + 'px'
+    //     oPanel.style.top = dY + 'px'
+    // }
 
-    function onDrop(e) {
-        e.preventDefault();
-    }
-    function onDragOver(event) {
-        // console.log(event.pageX, event.pageY, 'xy')
-        event.dataTransfer.dropEffect = 'none'
-    }
-    function onDragEnd(event) {
-        oPanel.style.left = dX + 'px'
-        oPanel.style.top = dY + 'px'
+    // function onDrop(e) {
+    //     // e.preventDefault();
+    // }
+    // function onDragOver(event) {
+    //     // console.log(event.pageX, event.pageY, 'xy')
+    //     event.dataTransfer.dropEffect = 'none'
+    // }
+    // function onDragEnd(e) {
+    //     // debugger
+    //     console.log(e);
+    //     console.log('dragend');
+
+        // e.preventDefault()
+        // oPanel.style.left = dX + 'px'
+        // oPanel.style.top = dY + 'px'
         // console.log(event)
-    }
+    // }
 </script>
 
 </html>
