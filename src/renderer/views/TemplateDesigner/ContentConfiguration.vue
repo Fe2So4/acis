@@ -85,7 +85,7 @@
         </el-form>
       </el-collapse-item>
       <el-collapse-item
-        title="事件"
+        title="自定义"
         name="2"
       />
       <el-collapse-item
@@ -123,10 +123,6 @@
           </el-form-item>
         </el-form>
       </el-collapse-item>
-      <el-collapse-item
-        title="行为"
-        name="4"
-      />
     </el-collapse>
     <code>{{ activeWidget }}</code>
   </div>
@@ -148,10 +144,14 @@ export default {
       activeNames: ['1', '2', '3', '4'],
       sheetName: '',
       fieldName: '',
-      direction: '1'
+      direction: '1',
+      configurationList: null
     }
   },
   computed: {
+    num () {
+      return 9
+    },
     ...mapState({
       activeWidget: state => state.activeWidget,
       width: state => state.width,
@@ -160,21 +160,8 @@ export default {
     })
   },
   watch: {
-    width: {
-      handler (newVal, old) {
-        this.form.width = newVal
-      },
-      immediate: true
-    },
-    height: {
-      handler (newVal, old) {
-        this.form.height = newVal
-      },
-      immediate: true
-    },
     activeWidget: {
       handler (newVal, old) {
-        console.log(newVal.actual)
         this.form.width = newVal.actual.width
         this.form.height = newVal.actual.height
         this.form.top = newVal.actual.positionY
@@ -206,5 +193,9 @@ export default {
   background: blanchedalmond;
   padding: 20px;
   overflow: auto;
+}
+.contentConfiguration /deep/ .el-collapse-item__header{
+  height: 30px;
+  background:#f8f9fa;
 }
 </style>

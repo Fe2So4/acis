@@ -28,7 +28,6 @@
       >
         <component :is="item.name" />
       </widget-movable>
-      <!-- <widget-in-out /> -->
     <!-- <pre>{{ widgetList }}</pre> -->
     </div>
   </div>
@@ -172,7 +171,7 @@ export default {
   watch: {
     activeWidget: {
       handler (newVal, old) {
-        console.log(newVal)
+        // console.log(newVal)
         // const val = newVal
         // // console.log(this.widgetMap.get(newVal.id))
         // this.widgetMap.set(val.id, val)
@@ -196,7 +195,7 @@ export default {
       }]
     })
     // 输出结果
-    console.log(data.list.length)
+    // console.log(data.list.length)
     data.list.forEach(item => {
       const { id, name, width, height, positionX, positionY } = item
       this.widgetMap.set(id, {
@@ -230,7 +229,7 @@ export default {
       this.widgetList = [...this.widgetMap.values()]
     },
     onWidgetDelete (e) {
-      console.log(e)
+      // console.log(e)
       this.widgetMap.delete(e)
       this.setWidgetList()
       // console.log(this.widgetMap, this.widgetMap._c)

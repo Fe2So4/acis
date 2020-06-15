@@ -362,6 +362,7 @@ export default {
     background: rebeccapurple;
     position: absolute;
     border-radius: 2px;
+    z-index:2
   }
 }
 </style>
