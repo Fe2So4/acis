@@ -41,14 +41,6 @@ export default {
       required: true
     }
   },
-  watch: {
-    widget: {
-      handler: function () {
-        this.setVisual()
-      },
-      deep: true
-    }
-  },
   data () {
     const circleWidth = 8
     const circleOffset = -(circleWidth / 2 - 1) + 'px'
@@ -141,7 +133,6 @@ export default {
     ...mapState(['activeWidgetId'])
   },
   created () {
-    this.setVisual()
   },
   mounted () {
     this.$parent.$refs.designerContent.addEventListener('keyup', this.onKeyupDelete)
@@ -154,6 +145,9 @@ export default {
       const { width, height, positionX, positionY, id } = this.widget
       this.visual = { width, height, positionX, positionY, id }
     },
+    removeVisual () {
+      this.visual = null
+    },
     onDragStart (e) {
       // 记录起始位置
       const { pageX, pageY } = e
@@ -163,9 +157,6 @@ export default {
       e.dataTransfer.setData(
         'text/plain',
         JSON.stringify({
-          id: this.propId,
-          offsetX: e.offsetX,
-          offsetY: e.offsetY,
           type: 'move'
         })
       )
@@ -190,11 +181,11 @@ export default {
 
       // 通知父组件，删除当前控件的参考线
       this.$emit('widget-drag-start', this.widget.id)
+
+      // 设置visual
+      this.setVisual()
     },
     onDrag (e) {
-      // if (e.layerX < 0 || e.layerY < 0) {
-      //   return
-      // }
       // 处理最后一次会变成0
       if (e.pageX === 0 && e.pageY === 0) {
         return
@@ -223,8 +214,7 @@ export default {
       e.dataTransfer.dropEffect = 'none'
     },
     onDragEnd (e) {
-      // 更新visual
-      this.setVisual()
+      this.removeVisual()
     },
     onDrop (e) {
       e.preventDefault()
@@ -237,7 +227,6 @@ export default {
       e.dataTransfer.setData(
         'text/plain',
         JSON.stringify({
-          id: this.propId,
           type: 'resize'
         })
       )
@@ -260,6 +249,7 @@ export default {
       e.dataTransfer.setDragImage(canvas, 25, 25)
 
       this.$emit('widget-drag-start', this.widget.id)
+      this.setVisual()
     },
     onDragResize (e) {
       // 处理最后一次会变成0
@@ -318,8 +308,7 @@ export default {
       })
     },
     onDragEndResize (e) {
-      // 更新visual
-      this.setVisual()
+      this.removeVisual()
     },
     onDblckick () {
       this.$emit('widget-active', this.widget.id)

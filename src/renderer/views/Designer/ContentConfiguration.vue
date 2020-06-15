@@ -6,48 +6,43 @@
       label-width="80px"
       size="small"
     >
-      <!-- <el-form-item label="宽">
-        <el-input-number v-model="form.width" :min="0" controls-position="right"></el-input-number>
-      </el-form-item>
-      <el-form-item label="高">
-        <el-input-number v-model="form.height" type="number" :min="0" controls-position="right"></el-input-number>
-      </el-form-item>
-      <el-form-item label="X轴坐标">
-        <el-input-number v-model="form.left" type="number" :min="0" controls-position="right"></el-input-number>
-      </el-form-item>
-      <el-form-item label="Y轴坐标">
-        <el-input-number v-model="form.top" type="number" :min="0" controls-position="right"></el-input-number>
-      </el-form-item>
-      <el-form-item label="边框" prop="border">
-        <el-checkbox-group v-model="form.border">
-          <el-checkbox label="上" name="border"></el-checkbox>
-          <el-checkbox label="下" name="border"></el-checkbox>
-          <el-checkbox label="左" name="border"></el-checkbox>
-          <el-checkbox label="右" name="border"></el-checkbox>
-        </el-checkbox-group>
-      </el-form-item> -->
-      <el-form-item
-        v-for="(property,key) of properties"
-        :key="key"
-        :label="key"
+      <div
+        v-for="(group, groupName) of configurationGroups"
+        :key="groupName"
       >
-        <el-input-number
-          v-model="properties[key]"
-          :min="0"
-          controls-position="right"
+        <h1 v-show="Object.keys(group).length">
+          {{ groupName }}
+        </h1>
+        <component
+          v-for="(property,key) of group"
+          :key="key"
+          :is="configurationComponent(key)"
+          :value="properties[key]"
           @change="onChange"
         />
-      </el-form-item>
-      <!-- <component v-for="(property,key) of properties" :key="key" :is="'config-' + property" v-model="properties[key]"></component> -->
+      </div>
     </el-form>
-    <code>{{ activeWidget }}</code>
+    <code>{{ configurationGroups }}</code>
   </div>
 </template>
 <script>
+import ConfigurationWidth from './ConfigurationWidth'
+import ConfigurationHeight from './ConfigurationHeight'
+import ConfigurationPositionX from './ConfigurationPositionX'
+import ConfigurationPositionY from './ConfigurationPositionY'
+import { configurationMap } from './WidgetConfigurationItems'
 import { createNamespacedHelpers } from 'vuex'
-const { mapActions, mapGetters, mapState } = createNamespacedHelpers('Designer')
+const { mapActions, mapGetters, mapState } = createNamespacedHelpers(
+  'Designer'
+)
 export default {
   name: 'ContentConfiguration',
+  components: {
+    ConfigurationWidth,
+    ConfigurationHeight,
+    ConfigurationPositionX,
+    ConfigurationPositionY
+  },
   watch: {
     activeWidget: {
       handler: function (val, oldVal) {
@@ -66,20 +61,42 @@ export default {
     return {
       properties: null,
       id: null,
-      name: null
+      name: null,
+      configurationItemNames: []
     }
   },
   computed: {
     ...mapGetters(['activeWidget']),
-    ...mapState(['activeWidgetId'])
+    ...mapState(['activeWidgetId']),
+    configurationGroups () {
+      const groups = {
+        layout: {},
+        position: {},
+        custom: {}
+      }
+
+      // eslint-disable-next-line no-unused-vars
+      for (const key in this.properties) {
+        if (Object.keys(configurationMap).includes(key)) {
+          groups[configurationMap[key].parent][key] = this.properties[key]
+        } else {
+          groups.custom[key] = this.properties[key]
+        }
+      }
+
+      return groups
+    }
   },
   methods: {
     ...mapActions(['setWidgetMap']),
-    onChange (currentValue, oldValue) {
+    onChange (properties) {
       this.setWidgetMap({
         id: this.id,
-        ...this.properties
+        ...properties
       })
+    },
+    configurationComponent (name) {
+      return 'Configuration' + name.slice(0, 1).toUpperCase() + name.slice(1)
     }
   }
 }
