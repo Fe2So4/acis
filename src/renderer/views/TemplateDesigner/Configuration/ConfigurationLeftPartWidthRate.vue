@@ -1,9 +1,12 @@
 <template>
   <div>
-    <el-form-item label="位置X">
+    <el-form-item label="左侧宽">
       <el-input-number
         :value="value"
         :min="0"
+        :max="1"
+        :precision="2"
+        :step="0.02"
         controls-position="right"
         @change="onChange"
       />
@@ -13,7 +16,7 @@
 
 <script>
 export default {
-  name: 'ConfigurationWidth',
+  name: 'ConfigurationLeftPartWidthRate',
   model: {
     prop: 'value',
     event: 'change'
@@ -27,7 +30,7 @@ export default {
   methods: {
     onChange (currentValue, oldValue) {
       this.$emit('change', {
-        positionX: currentValue
+        leftPartWidthRate: currentValue
       })
     }
   }

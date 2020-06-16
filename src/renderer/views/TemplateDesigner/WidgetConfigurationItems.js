@@ -73,6 +73,31 @@ export default function getConfigurationItems (widgetName) {
         singleSelect: '1',
         collections: [{ label: '项目1', value: '1' }, { label: '项目2', value: '2' }]
       }
+    case 'widget-anaes-drug':
+      return {
+        leftPartWidthRate: 0.18,
+        rightPartWidthRate: 0.1,
+        leftTitle: {
+          text: '麻醉用药',
+          width: 40,
+          lineHeight: 30
+        },
+        timeTitle: {
+          text: '时间',
+          height: 30,
+          lineHeight: 30
+        },
+        totalTitle: {
+          text: '总量'
+        },
+        xAxis: {
+          startTime: '2018-02-01 08:00',
+          endTime: '2018-02-01 12:00',
+          timeInterval: 15 * 60 * 1000,
+          lineInterval: 3
+        },
+        drugNumber: 10
+      }
     default:
       return {}
   }
