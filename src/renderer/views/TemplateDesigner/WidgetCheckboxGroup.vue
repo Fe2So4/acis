@@ -18,7 +18,7 @@
 export default {
   data () {
     return {
-      options: [{ label: '正常一百世界经济', value: '1' }, { label: '松动', value: '2' }, { label: '假牙', value: '3' }, { label: '缺牙', value: '4' }],
+      options: [{ label: '正常', value: '1' }, { label: '松动', value: '2' }, { label: '假牙', value: '3' }, { label: '缺牙', value: '4' }],
       checkedOptions: [],
       singleSelect: true
     }

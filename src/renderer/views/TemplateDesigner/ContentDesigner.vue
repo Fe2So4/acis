@@ -2,7 +2,6 @@
   <div class="designerContent">
     <div
       class="content"
-      :style="style"
       @drop="onDrop"
       @dragover="onDragOver"
       ref="designerContent"
@@ -15,10 +14,7 @@
       <widget-movable
         v-for="(item,index) of widgetList"
         :key="index"
-        :prop-id="item.id"
-        :actual="item.actual"
-        :visual="item.visual"
-        :active-id="activeId"
+        :widget="item"
         @widget-resize="onWidgetResize"
         @widget-active="onWidgetActive"
         @widget-move="onWidgetMove"
@@ -43,9 +39,10 @@ import WidgetAnaesDrug from './WidgetAnaesDrug'
 import WidgetTextArea from './WidgetTextArea'
 import WidgetInOut from './WidgetInOut'
 import WidgetCheckboxGroup from './WidgetCheckboxGroup'
-import { v4 as uuidv4 } from 'uuid'
+// import { v4 as uuidv4 } from 'uuid'
 import { createNamespacedHelpers } from 'vuex'
-const Mock = require('mockjs')
+import getConfigurationItems from './WidgetConfigurationItems.js'
+// const Mock = require('mockjs')
 // const Random = Mock.Random
 const { mapState, mapActions } = createNamespacedHelpers('PageTemplateDesigner')
 // import * as _ from 'lodash'
@@ -64,12 +61,7 @@ export default {
     WidgetCheckboxGroup
   },
   data () {
-    const circleWidth = 8
-    const circleOffset = -(circleWidth / 2 + 1) + 'px'
     return {
-      widgetMap: new Map(),
-      widgetList: [],
-      activeId: '',
       referenceLine: {
         x: [],
         y: []
@@ -78,161 +70,34 @@ export default {
       widget: {
         id: '',
         name: '',
-        actual: {
-          width: '',
-          height: '',
-          positionX: '',
-          positionY: ''
-        },
-        visual: {
-          width: '',
-          height: '',
-          positionX: '',
-          positionY: ''
-        }
+        width: '',
+        height: '',
+        positionX: '',
+        positionY: ''
       },
-      activeContent: false,
-      circles: [
-        {
-          style: {
-            left: circleOffset,
-            top: circleOffset,
-            cursor: 'nw-resize'
-          }
-        },
-        {
-          style: {
-            left: 'calc(50% - ' + circleWidth / 2 + 'px)',
-            top: circleOffset,
-            cursor: 'n-resize'
-          }
-        },
-        {
-          style: {
-            right: circleOffset,
-            top: circleOffset,
-            cursor: 'ne-resize'
-          }
-        },
-        {
-          style: {
-            left: circleOffset,
-            top: 'calc(50% - ' + circleWidth / 2 + 'px)',
-            cursor: 'w-resize'
-          }
-        },
-        {
-          style: {
-            right: circleOffset,
-            top: 'calc(50% - ' + circleWidth / 2 + 'px)',
-            cursor: 'e-resize'
-          }
-        },
-        {
-          style: {
-            left: circleOffset,
-            bottom: circleOffset,
-            cursor: 'sw-resize'
-          }
-        },
-        {
-          style: {
-            left: 'calc(50% - ' + circleWidth / 2 + 'px)',
-            bottom: circleOffset,
-            cursor: 's-resize'
-          }
-        },
-        {
-          style: {
-            right: circleOffset,
-            bottom: circleOffset,
-            cursor: 'se-resize'
-          }
-        }
-      ]
+      activeContent: false
     }
   },
   computed: {
     ...mapState({
-      activeWidget: state => state.activeWidget,
-      width: state => state.width,
-      height: state => state.height
-    }),
-    style () {
-      return {
-        // left: this.actual.positionX + 'px',
-        // top: this.actual.positionY + 'px',
-        width: this.width + 'px',
-        height: this.height + 'px'
-        // borderColor: this.active ? 'rebeccapurple' : 'transparent'
-      }
-    }
+      widgetMap: state => state.widgetMap,
+      widgetList: state => state.widgetList,
+      activeWidgetId: state => state.activeWidgetId
+    })
   },
   watch: {
-    activeWidget: {
-      handler (newVal, old) {
-        // console.log(newVal)
-        // const val = newVal
-        // // console.log(this.widgetMap.get(newVal.id))
-        // this.widgetMap.set(val.id, val)
-        // this.setWidgetList()
-      }
-    }
+
   },
   created () {
-    var data = Mock.mock({
-    // 属性 list 的值是一个数组，其中含有 1 到 10 个元素
-      'list|20': [{
-        // 属性 id 是一个自增数，起始值为 1，每次增 1
-        id: function () {
-          return uuidv4()
-        },
-        name: 'widget-input',
-        'width|10-200': 10,
-        'height|30-50': 10,
-        'positionX|0-400': 0,
-        'positionY|0-400': 0
-      }]
-    })
-    // 输出结果
-    // console.log(data.list.length)
-    data.list.forEach(item => {
-      const { id, name, width, height, positionX, positionY } = item
-      this.widgetMap.set(id, {
-        id,
-        name,
-        visual: {
-          width,
-          height,
-          positionX,
-          positionY
-        },
-        actual: {
-          width,
-          height,
-          positionX,
-          positionY
-        }
-      })
-      this.setWidgetList()
-    })
+
   },
   methods: {
-    ...mapActions([
-      'setActiveWidget',
-      'setWidthHeight'
-    ]),
+    ...mapActions(['setWidgetMap', 'deleteWidget', 'setActiveWidget']),
     onDblckick () {
       this.activeContent = true
     },
-    setWidgetList () {
-      this.widgetList = [...this.widgetMap.values()]
-    },
-    onWidgetDelete (e) {
-      // console.log(e)
-      this.widgetMap.delete(e)
-      this.setWidgetList()
-      // console.log(this.widgetMap, this.widgetMap._c)
+    onWidgetDelete () {
+      this.deleteWidget(this.activeWidgetId)
     },
     onDragOver (e) {
       e.preventDefault()
@@ -266,68 +131,42 @@ export default {
             height
           })
 
-          this.setWidgetMap(id, {
+          this.setWidgetMap({
             id,
             name,
-            actual: {
-              positionX,
-              positionY,
-              width,
-              height
-            },
-            visual: {
-              positionX,
-              positionY,
-              width,
-              height
-            }
+            positionX,
+            positionY,
+            width,
+            height,
+            ...getConfigurationItems(name)
           })
           break
         }
         default:
       }
     },
-    setWidgetMap (id, data) {
-      const originalData = this.widgetMap.get(id)
-      if (!originalData) {
-        this.widgetMap.set(id, data)
-      } else {
-        if (data.visual) {
-          originalData.visual = Object.assign({}, originalData.visual, data.visual)
-        }
-        if (data.actual) {
-          originalData.actual = Object.assign({}, originalData.actual, data.actual)
-        }
-      }
-      this.setWidgetList()
-    },
-    onWidgetResize (e) {
-      if (e.data.positionX < 0 || e.data.positionY < 0) {
+    onWidgetResize (payload) {
+      // 获取边界线
+      const { cursor, widget: visual } = payload
+      const { width, height, positionX, positionY, id } = visual
+      const actual = { width, height, positionX, positionY, id }
+
+      if (positionX < 0 || positionY < 0) {
         return
       }
       if (
-        e.data.positionX + e.data.width >
+        positionX + width >
           this.$refs.designerContent.clientWidth ||
-        e.data.positionY + e.data.height >
+        positionY + height >
           this.$refs.designerContent.clientHeight
       ) {
         return
       }
-      if (e.data.width <= 0 || e.data.height <= 0) {
+      if (width <= 0 || height <= 0) {
         return
       }
 
-      // 更新visual
-      this.setWidgetMap(e.id, {
-        visual: e.data
-      })
-
-      // 获取边界线
-      const visual = this.widgetMap.get(e.id).visual
-
-      const actual = Object.assign({}, visual)
-
-      switch (e.cursor) {
+      switch (cursor) {
         case 'nw-resize': {
           const selfLines = {
             x: [
@@ -554,77 +393,57 @@ export default {
       }
 
       // 更新actual
-      this.setWidgetMap(e.id, {
-        actual
-      })
+      this.setWidgetMap(actual)
     },
     onWidgetActive (e) {
-      this.activeId = e
-      // console.log(e, 'dblclick', this.widgetMap.get(e))
-      this.setActiveWidget(this.widgetMap.get(e))
+      this.setActiveWidget(e)
     },
-    onWidgetMove (e) {
-      // 边界修正
-      const { positionX, positionY } = this.correctPositon({
-        positionX: e.data.positionX,
-        positionY: e.data.positionY,
-        width: this.widgetMap.get(e.id).actual.width,
-        height: this.widgetMap.get(e.id).actual.height
-      })
-
-      e.data.positionX = positionX
-      e.data.positionY = positionY
-
-      // 更新visual
-      this.setWidgetMap(e.id, {
-        visual: e.data
-      })
-
+    onWidgetMove (visualWidget) {
       // 获取边界线
-      const visual = this.widgetMap.get(e.id).visual
+      const { width, height, positionX, positionY, id } = visualWidget
       const selfLines = {
         x: [
           {
             name: 'lineLeftX',
-            value: visual.positionX
+            value: positionX
           },
           {
             name: 'lineRightX',
-            value: visual.positionX + visual.width
+            value: positionX + width
           },
           {
             name: 'lineCenterX',
-            value: visual.positionX + visual.width / 2
+            value: positionX + width / 2
           }
         ],
         y: [
           {
             name: 'lineTopY',
-            value: visual.positionY
+            value: positionY
           },
           {
             name: 'lineBottomY',
-            value: visual.positionY + visual.height
+            value: positionY + height
           },
           {
             name: 'lineCenterY',
-            value: visual.positionY + visual.height / 2
+            value: positionY + height / 2
           }
         ]
       }
       const { closestX, closestY } = this.getClosestLine(selfLines)
-      const actual = Object.assign({}, visual)
 
+      const actual = { width, height, positionX, positionY, id }
       if (closestX.closestLine && closestX.closestLine.abs < this.adsorptionDistance) {
         switch (closestX.name) {
           case 'lineLeftX':
             actual.positionX = closestX.closestLine.value
             break
           case 'lineRightX':
-            actual.positionX = closestX.closestLine.value - visual.width
+            actual.positionX = closestX.closestLine.value - width
             break
           case 'lineCenterX':
-            actual.positionX = closestX.closestLine.value - visual.width / 2
+            actual.positionX = closestX.closestLine.value - width / 2
             break
         }
       }
@@ -634,28 +453,28 @@ export default {
             actual.positionY = closestY.closestLine.value
             break
           case 'lineBottomY':
-            actual.positionY = closestY.closestLine.value - visual.height
+            actual.positionY = closestY.closestLine.value - height
             break
           case 'lineCenterY':
-            actual.positionY = closestY.closestLine.value - visual.height / 2
+            actual.positionY = closestY.closestLine.value - height / 2
             break
         }
       }
 
       // 更新actual
-      this.setWidgetMap(e.id, {
+      this.setWidgetMap(
         actual
-      })
+      )
     },
-    onWidgetDragStart (e) {
-      this.setReferenceLine(e.id)
+    onWidgetDragStart (id) {
+      this.setReferenceLine(id)
     },
     onWidgetDragEnd (e) {
       // 更新visual
-      this.widgetMap.get(e.id).visual = Object.assign({}, this.widgetMap.get(e.id).actual)
+      // this.widgetMap.get(e.id).visual = Object.assign({}, this.widgetMap.get(e.id).actual)
     },
     onClickCanvas () {
-      this.activeId = ''
+      this.setActiveWidget(null)
     },
     setReferenceLine (id) {
       this.referenceLine.x = [...this.widgetMap.values()]
@@ -663,9 +482,9 @@ export default {
         .reduce(
           (arr, item) =>
             arr.concat([
-              item.actual.positionX,
-              item.actual.positionX + item.actual.width,
-              item.actual.positionX + item.actual.width / 2
+              item.positionX,
+              item.positionX + item.width,
+              item.positionX + item.width / 2
             ]),
           []
         )
@@ -682,9 +501,9 @@ export default {
         .reduce(
           (arr, item) =>
             arr.concat([
-              item.actual.positionY,
-              item.actual.positionY + item.actual.height,
-              item.actual.positionY + item.actual.height / 2
+              item.positionY,
+              item.positionY + item.height,
+              item.positionY + item.height / 2
             ]),
           []
         )
@@ -802,8 +621,8 @@ export default {
   }
   .content{
     position: relative;
-    // width: 600px;
-    // height:800px;
+    width: 904px;
+    height:1366px;
     border:1px dashed red;
     margin:0 auto;
     .circle {

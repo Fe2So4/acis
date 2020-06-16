@@ -100,7 +100,7 @@ export default {
     }
   }
 }
-</script>W
+</script>
 <style lang="scss" scoped>
 .contentConfiguration {
   height: 800px;

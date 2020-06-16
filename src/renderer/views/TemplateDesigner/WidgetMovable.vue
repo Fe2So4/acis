@@ -13,6 +13,10 @@
     @keyup.delete="onDelete"
   >
     <div
+      v-show="active"
+      class="mask"
+    />
+    <div
       class="circle"
       v-for="(circle, index) of circles"
       :key="index"
@@ -27,24 +31,16 @@
   </div>
 </template>
 <script>
+import { createNamespacedHelpers } from 'vuex'
+const { mapState } = createNamespacedHelpers(
+  'PageTemplateDesigner'
+)
 export default {
   name: 'WidgetMovable',
   props: {
-    actual: {
+    widget: {
       type: Object,
       required: true
-    },
-    visual: {
-      type: Object,
-      required: true
-    },
-    propId: {
-      type: String,
-      required: true
-    },
-    activeId: {
-      required: true,
-      type: String
     }
   },
   data () {
@@ -120,24 +116,33 @@ export default {
           pageX: '',
           pageY: ''
         }
-      }
+      },
+      visual: null
     }
   },
   computed: {
     style () {
       return {
-        left: this.actual.positionX + 'px',
-        top: this.actual.positionY + 'px',
-        width: this.actual.width + 'px',
-        height: this.actual.height + 'px',
-        borderColor: this.active ? 'rebeccapurple' : 'transparent'
+        left: this.widget.positionX + 'px',
+        top: this.widget.positionY + 'px',
+        width: this.widget.width + 'px',
+        height: this.widget.height + 'px'
+        // borderColor: this.active ? 'rebeccapurple' : 'transparent'
       }
     },
     active () {
-      return this.propId === this.activeId
-    }
+      return this.widget.id === this.activeWidgetId
+    },
+    ...mapState(['activeWidgetId'])
   },
   methods: {
+    setVisual () {
+      const { width, height, positionX, positionY, id } = this.widget
+      this.visual = { width, height, positionX, positionY, id }
+    },
+    removeVisual () {
+      this.visual = null
+    },
     onDragStart (e) {
       // 记录起始位置
       const { pageX, pageY } = e
@@ -147,9 +152,6 @@ export default {
       e.dataTransfer.setData(
         'text/plain',
         JSON.stringify({
-          id: this.propId,
-          offsetX: e.offsetX,
-          offsetY: e.offsetY,
           type: 'move'
         })
       )
@@ -173,43 +175,51 @@ export default {
       e.dataTransfer.setDragImage(canvas, 25, 25)
 
       // 通知父组件，删除当前控件的参考线
-      this.$emit('widget-drag-start', {
-        id: this.propId
-      })
+      this.$emit('widget-drag-start', this.widget.id)
+
+      this.setVisual()
     },
     onDrag (e) {
       if (e.layerX < 0 || e.layerY < 0) {
         return
       }
+      if (e.pageX === 0 && e.pageY === 0) {
+        return
+      }
       const dX = e.pageX - this.drag.start.pageX
       const dY = e.pageY - this.drag.start.pageY
       console.log(e.pageX, e.pageY, dX, dY)
-      // 重置起始位置
+
+      // 更新visual
+      this.visual.positionX += dX
+      this.visual.positionY += dY
+
+      // 重置起始位置 //将起始位置更新到最新的位置
       const { pageX, pageY } = e
       this.drag.start.pageX = pageX
       this.drag.start.pageY = pageY
 
-      this.$emit('widget-move', {
-        event: e,
-        id: this.propId,
-        data: {
-          positionX: this.visual.positionX + dX,
-          positionY: this.visual.positionY + dY
-        }
-      })
+      // 边界修正
+      const { positionX, positionY } = this.correctPositon(this.visual)
+      this.visual.positionX = positionX
+      this.visual.positionY = positionY
+
+      // 通知父组件
+      this.$emit('widget-move', this.visual)
     },
     onDragOver (e) {
       e.dataTransfer.dropEffect = 'none'
     },
     onDragEnd (e) {
+      this.removeVisual()
       // 通知父组件，更新visual
-      this.$emit('widget-drag-end', {
-        id: this.propId
-      })
+      // this.$emit('widget-drag-end', {
+      //   id: this.propId
+      // })
     },
     onDrop (e) {
       e.preventDefault()
-      this.$emit('widget-active', this.propId)
+      // this.$emit('widget-active', this.propId)
     },
     onDragStartResize (e) {
       const { pageX, pageY } = e
@@ -243,7 +253,8 @@ export default {
       ctx.stroke()
       e.dataTransfer.setDragImage(canvas, 25, 25)
 
-      this.$emit('widget-drag-start', { id: this.propId })
+      this.$emit('widget-drag-start', this.widget.id)
+      this.setVisual()
     },
     onDragResize (e) {
       const dX = e.pageX - this.resize.start.pageX
@@ -254,96 +265,78 @@ export default {
       this.resize.start.pageX = pageX
       this.resize.start.pageY = pageY
 
-      let data
       switch (e.target.style.cursor) {
         case 'nw-resize':
-          data = {
-            positionX: this.visual.positionX + dX,
-            positionY: this.visual.positionY + dY,
-            width: this.visual.width - dX,
-            height: this.visual.height - dY
-          }
+          this.visual.positionX += dX
+          this.visual.positionY += dY
+          this.visual.width -= dX
+          this.visual.height -= dY
           break
         case 'n-resize':
-          data = {
-            positionX: this.visual.positionX,
-            positionY: this.visual.positionY + dY,
-            width: this.visual.width,
-            height: this.visual.height - dY
-          }
+          this.visual.positionY += dY
+          this.visual.height -= dY
           break
         case 'ne-resize':
-          data = {
-            positionX: this.visual.positionX,
-            positionY: this.visual.positionY + dY,
-            width: this.visual.width + dX,
-            height: this.visual.height - dY
-          }
+          this.visual.positionY += dY
+          this.visual.width += dX
+          this.visual.height -= dY
           break
         case 'w-resize':
-          data = {
-            positionX: this.visual.positionX + dX,
-            positionY: this.visual.positionY,
-            width: this.visual.width - dX,
-            height: this.visual.height
-          }
+          this.visual.positionX += dX
+          this.visual.width -= dX
           break
         case 'e-resize':
-          data = {
-            positionX: this.visual.positionX,
-            positionY: this.visual.positionY,
-            width: this.visual.width + dX,
-            height: this.visual.height
-          }
+          this.visual.width += dX
           break
         case 'sw-resize':
-          data = {
-            positionX: this.visual.positionX + dX,
-            positionY: this.visual.positionY,
-            width: this.visual.width - dX,
-            height: this.visual.height + dY
-          }
+          this.visual.positionX += dX
+          this.visual.width -= dX
+          this.visual.height += dY
           break
         case 's-resize':
-          data = {
-            positionX: this.visual.positionX,
-            positionY: this.visual.positionY,
-            width: this.visual.width,
-            height: this.visual.height + dY
-          }
+          this.visual.height += dY
           break
         case 'se-resize':
-          data = {
-            positionX: this.visual.positionX,
-            positionY: this.visual.positionY,
-            width: this.visual.width + dX,
-            height: this.visual.height + dY
-          }
+          this.visual.width += dX
+          this.visual.height += dY
           break
         default:
           return
       }
-      if (data) {
-        this.$emit('widget-resize', {
-          id: this.propId,
-          data: data,
-          cursor: e.target.style.cursor
-        })
-      }
-    },
-    onDragEndResize (e) {
-      // 通知父组件，更新visual
-      this.$emit('widget-drag-end', {
-        id: this.propId
+
+      this.$emit('widget-resize', {
+        widget: this.visual,
+        cursor: e.target.style.cursor
       })
     },
+    onDragEndResize (e) {
+      this.removeVisual()
+    },
     onDblckick () {
-      this.$emit('widget-active', this.propId)
+      this.$emit('widget-active', this.widget.id)
     },
     onDelete () {
       console.log('delete')
       if (this.active) {
-        this.$emit('widget-delete', this.propId)
+        this.$emit('widget-delete')
+        // this.$emit('widget-delete', this.propId)
+      }
+    },
+    // 边界修正
+    correctPositon ({ positionX, positionY, width, height }) {
+      positionX = positionX < 0 ? 0 : positionX
+      positionY = positionY < 0 ? 0 : positionY
+      positionX =
+        positionX + width > this.$parent.$refs.designerContent.clientWidth
+          ? this.$parent.$refs.designerContent.clientWidth - width
+          : positionX
+      positionY =
+        positionY + height > this.$parent.$refs.designerContent.clientHeight
+          ? this.$parent.$refs.designerContent.clientHeight - height
+          : positionY
+      return {
+        positionX,
+        positionY
       }
     }
   },
@@ -355,6 +348,13 @@ export default {
   position: absolute;
   background: transparent;
   border: 2px solid rebeccapurple;
+  .mask {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border: 2px solid rebeccapurple;
+    z-index: 1;
+  }
   .circle {
     width: 8px;
     height: 8px;

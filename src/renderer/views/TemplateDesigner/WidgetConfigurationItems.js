@@ -68,6 +68,11 @@ export default function getConfigurationItems (widgetName) {
           lineInterval: 3
         }
       }
+    case 'widget-checkbox-group':
+      return {
+        singleSelect: '1',
+        collections: []
+      }
     default:
       return {}
   }

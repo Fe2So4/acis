@@ -1,188 +1,125 @@
 <template>
   <div class="contentConfiguration">
     <el-collapse v-model="activeNames">
-      <el-collapse-item
-        title="布局"
-        name="1"
+      <div
+        v-for="(group, groupName) of configurationGroups"
+        :key="groupName"
       >
-        <el-form
-          ref="form"
-          :model="form"
-          label-width="80px"
-          size="mini"
+        <el-collapse-item
+          :title="convertChinese(groupName)"
+          :name="groupName"
+          v-show="Object.keys(group).length"
         >
-          <el-form-item label="宽">
-            <el-input-number
-              v-model="form.width"
-              :min="0"
-              controls-position="right"
-              @change="handleChange"
-            />
-          </el-form-item>
-          <el-form-item label="高">
-            <el-input-number
-              v-model="form.height"
-              type="number"
-              :min="0"
-              @change="handleChange"
-              controls-position="right"
-            />
-          </el-form-item>
-          <el-form-item label="X轴坐标">
-            <el-input-number
-              v-model="form.left"
-              type="number"
-              :min="0"
-              controls-position="right"
-            />
-          </el-form-item>
-          <el-form-item label="Y轴坐标">
-            <el-input-number
-              v-model="form.top"
-              type="number"
-              :min="0"
-              controls-position="right"
-            />
-          </el-form-item>
-          <el-form-item
-            label="边框"
-            prop="border"
+          <el-form
+            ref="form"
+            :model="properties"
+            label-width="80px"
+            size="small"
           >
-            <el-checkbox-group v-model="form.border">
-              <el-checkbox
-                label="上"
-                name="border"
-              />
-              <el-checkbox
-                label="下"
-                name="border"
-              />
-              <el-checkbox
-                label="左"
-                name="border"
-              />
-              <el-checkbox
-                label="右"
-                name="border"
-              />
-            </el-checkbox-group>
-          </el-form-item>
-          <el-form-item label="方向">
-            <el-select
-              v-model="direction"
-              @change="handleChangeDirection"
-            >
-              <el-option
-                value="1"
-                label="横向"
-              />
-              <el-option
-                value="2"
-                label="纵向"
-              />
-            </el-select>
-          </el-form-item>
-        </el-form>
-      </el-collapse-item>
-      <el-collapse-item
-        title="自定义"
-        name="2"
-      />
-      <el-collapse-item
-        title="数据"
-        name="3"
-      >
-        <el-form
-          ref="form"
-          label-width="80px"
-          size="mini"
-        >
-          <el-form-item label="表名">
-            <el-select v-model="sheetName">
-              <el-option
-                value="user"
-                label="用户表"
-              />
-              <el-option
-                value="student"
-                label="学生表"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="字段名">
-            <el-select v-model="fieldName">
-              <el-option
-                value="id"
-                label="编号"
-              />
-              <el-option
-                value="name"
-                label="姓名"
-              />
-            </el-select>
-          </el-form-item>
-        </el-form>
-      </el-collapse-item>
+            <component
+              v-for="(property,key) of group"
+              :key="key"
+              :is="configurationComponent(key)"
+              :value="properties[key]"
+              @change="onChange"
+            />
+          </el-form>
+        </el-collapse-item>
+      </div>
     </el-collapse>
-    <code>{{ activeWidget }}</code>
   </div>
 </template>
 <script>
+import { pages } from './getAllConfigurationPage'
+import { configurationMap } from './WidgetConfigurationItems'
 import { createNamespacedHelpers } from 'vuex'
-const { mapState, mapActions } = createNamespacedHelpers('PageTemplateDesigner')
+const { mapActions, mapGetters, mapState } = createNamespacedHelpers(
+  'PageTemplateDesigner'
+)
 export default {
   name: 'WidgetConfiguration',
   data () {
     return {
-      form: {
-        width: 0,
-        height: 0,
-        left: 0,
-        top: 0,
-        border: []
-      },
-      activeNames: ['1', '2', '3', '4'],
-      sheetName: '',
-      fieldName: '',
-      direction: '1',
-      configurationList: null
+      properties: null,
+      id: null,
+      name: null,
+      configurationItemNames: [],
+      activeNames: ['layout', 'position', 'custom']
     }
   },
-  computed: {
-    num () {
-      return 9
-    },
-    ...mapState({
-      activeWidget: state => state.activeWidget,
-      width: state => state.width,
-      height: state => state.height
-      // direction: state => state.direction
-    })
+  components: {
+    ...pages
   },
   watch: {
     activeWidget: {
-      handler (newVal, old) {
-        this.form.width = newVal.actual.width
-        this.form.height = newVal.actual.height
-        this.form.top = newVal.actual.positionY
-        this.form.left = newVal.actual.positionX
+      handler: function (val, oldVal) {
+        if (val) {
+          const { id, name, ...properties } = val
+          this.id = id
+          this.properties = properties
+        } else {
+          this.properties = null
+        }
       },
       deep: true
     }
   },
-  methods: {
-    ...mapActions(['setActiveWidget', 'setWidthHeight', 'setDirection']),
-    onClick () {
+  computed: {
+    ...mapGetters(['activeWidget']),
+    ...mapState(['activeWidgetId']),
+    configurationGroups () {
+      const groups = {
+        layout: {},
+        position: {},
+        custom: {}
+      }
 
+      // eslint-disable-next-line no-unused-vars
+      for (const key in this.properties) {
+        if (Object.keys(configurationMap).includes(key)) {
+          groups[configurationMap[key].parent][key] = this.properties[key]
+        } else {
+          groups.custom[key] = this.properties[key]
+        }
+      }
+
+      return groups
     },
-    handleChange () {
-      const obj = {}
-      obj.actual = { height: this.form.height, positionX: this.form.left, positionY: this.form.top, width: this.form.width }
-      this.setActiveWidget(obj)
-    },
-    handleChangeDirection (val) {
-      this.setDirection(val)
+    convertChinese (item) {
+      return function (item) {
+        let name = ''
+        switch (item) {
+          case 'layout':
+            name = '布局'
+            break
+          case 'position':
+            name = '位置'
+            break
+          case 'custom':
+            name = '自定义'
+        }
+        return name
+      }
     }
+  },
+  methods: {
+    ...mapActions(['setWidgetMap']),
+
+    onChange (properties) {
+      this.setWidgetMap({
+        id: this.id,
+        ...properties
+      })
+    },
+    configurationComponent (name) {
+      return 'Configuration' + name.slice(0, 1).toUpperCase() + name.slice(1)
+    }
+  },
+  beforeCreate () {
+
+  },
+  created () {
+    console.log(pages, 'create')
   }
 }
 </script>
