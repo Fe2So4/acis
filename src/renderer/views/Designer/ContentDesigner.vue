@@ -20,7 +20,10 @@
         @widget-move="onWidgetMove"
         @widget-drag-start="onWidgetDragStart"
       >
-        <component :is="item.name" />
+        <component
+          :is="item.name"
+          :configuration="item"
+        />
       </widget-movable>
       <pre>{{ widgetList }}</pre>
     </div>

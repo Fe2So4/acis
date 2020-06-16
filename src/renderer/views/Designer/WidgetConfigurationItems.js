@@ -62,9 +62,9 @@ export default function getConfigurationItems (widgetName) {
           lineInterval: 2
         },
         xAxis: {
-          startTime: '2018-02-01 08:00',
-          endTime: '2018-02-01 12:00',
-          timeInterval: 15 * 60 * 1000,
+          startTime: '2018-01-01 08:00',
+          endTime: '2018-01-01 12:00',
+          timeInterval: 15,
           lineInterval: 3
         }
       }
@@ -79,15 +79,14 @@ const configurationItems = {
 }
 
 const configurationMap = {}
-// eslint-disable-next-line no-unused-vars
-for (const parent in configurationItems) {
+let parent
+for (parent in configurationItems) {
   configurationItems[parent].forEach(item => {
     configurationMap[item] = {
       parent
     }
   })
 }
-console.log(configurationMap)
 
 export {
   configurationMap

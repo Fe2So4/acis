@@ -3,8 +3,8 @@
     <el-form
       ref="form"
       :model="properties"
-      label-width="80px"
-      size="small"
+      label-width="100px"
+      size="mini"
     >
       <div
         v-for="(group, groupName) of configurationGroups"
@@ -17,7 +17,7 @@
           v-for="(property,key) of group"
           :key="key"
           :is="configurationComponent(key)"
-          :value="properties[key]"
+          :value="group[key]"
           @change="onChange"
         />
       </div>
@@ -30,6 +30,14 @@ import ConfigurationWidth from './ConfigurationWidth'
 import ConfigurationHeight from './ConfigurationHeight'
 import ConfigurationPositionX from './ConfigurationPositionX'
 import ConfigurationPositionY from './ConfigurationPositionY'
+import ConfigurationLeftPartWidthRate from './ConfigurationLeftPartWidthRate'
+import ConfigurationRightPartWidthRate from './ConfigurationRightPartWidthRate'
+import ConfigurationLeftTitle from './ConfigurationLeftTitle'
+import ConfigurationTimeTitle from './ConfigurationTimeTitle'
+import ConfigurationEventTitle from './ConfigurationEventTitle'
+import ConfigurationTotalTitle from './ConfigurationTotalTitle'
+import ConfigurationYAxis from './ConfigurationYAxis'
+import ConfigurationXAxis from './ConfigurationXAxis'
 import { configurationMap } from './WidgetConfigurationItems'
 import { createNamespacedHelpers } from 'vuex'
 const { mapActions, mapGetters, mapState } = createNamespacedHelpers(
@@ -41,7 +49,15 @@ export default {
     ConfigurationWidth,
     ConfigurationHeight,
     ConfigurationPositionX,
-    ConfigurationPositionY
+    ConfigurationPositionY,
+    ConfigurationLeftPartWidthRate,
+    ConfigurationRightPartWidthRate,
+    ConfigurationLeftTitle,
+    ConfigurationTimeTitle,
+    ConfigurationEventTitle,
+    ConfigurationTotalTitle,
+    ConfigurationYAxis,
+    ConfigurationXAxis
   },
   watch: {
     activeWidget: {
@@ -65,6 +81,7 @@ export default {
       configurationItemNames: []
     }
   },
+  created () {},
   computed: {
     ...mapGetters(['activeWidget']),
     ...mapState(['activeWidgetId']),
@@ -75,12 +92,14 @@ export default {
         custom: {}
       }
 
-      // eslint-disable-next-line no-unused-vars
-      for (const key in this.properties) {
-        if (Object.keys(configurationMap).includes(key)) {
-          groups[configurationMap[key].parent][key] = this.properties[key]
-        } else {
-          groups.custom[key] = this.properties[key]
+      let key
+      for (key in this.properties) {
+        if (Object.prototype.hasOwnProperty.call(this.properties, key)) {
+          if (Object.keys(configurationMap).includes(key)) {
+            groups[configurationMap[key].parent][key] = this.properties[key]
+          } else {
+            groups.custom[key] = this.properties[key]
+          }
         }
       }
 
@@ -104,8 +123,9 @@ export default {
 <style lang="scss" scoped>
 .contentConfiguration {
   height: 800px;
-  flex: 0 1 250px;
+  flex: 0 1 270px;
   background: blanchedalmond;
   padding: 20px;
+  overflow-y: auto;
 }
 </style>
