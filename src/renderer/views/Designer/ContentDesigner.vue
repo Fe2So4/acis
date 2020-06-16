@@ -107,14 +107,11 @@ export default {
       e.dataTransfer.dropEffect = 'move'
     },
     onDrop (e) {
-      const { offsetX, offsetY, id, name, width, height, type } = JSON.parse(
-        e.dataTransfer.getData('text/plain')
-      )
-      switch (type) {
-        case 'resize':
-        case 'move':
-          return
-        case 'copy': {
+      try {
+        const { offsetX, offsetY, id, name, width, height, type } = JSON.parse(
+          e.dataTransfer.getData('text/plain')
+        )
+        if (type === 'copy') {
           let left = e.offsetX
           let top = e.offsetY
 
@@ -144,10 +141,8 @@ export default {
             height,
             ...getConfigurationItems(name)
           })
-          break
         }
-        default:
-      }
+      } catch (e) {}
     },
     onWidgetDragStart (id) {
       this.setReferenceLine(id)

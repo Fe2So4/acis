@@ -11,8 +11,8 @@
     @dblclick="onDblckick"
   >
     <div
-      v-show="active"
       class="mask"
+      :style="{'borderColor': active ? 'rebeccapurple' : 'transparent'}"
     />
     <div
       class="circle"
@@ -30,9 +30,7 @@
 </template>
 <script>
 import { createNamespacedHelpers } from 'vuex'
-const { mapState } = createNamespacedHelpers(
-  'Designer'
-)
+const { mapState } = createNamespacedHelpers('Designer')
 export default {
   name: 'WidgetMovable',
   props: {
@@ -132,13 +130,12 @@ export default {
     },
     ...mapState(['activeWidgetId'])
   },
-  created () {
-  },
+  created () {},
   mounted () {
-    this.$parent.$refs.designerContent.addEventListener('keyup', this.onKeyupDelete)
+    document.addEventListener('keyup', this.onKeyupDelete)
   },
   beforeDestroy () {
-    this.$parent.$refs.designerContent.removeEventListener('keyup', this.onKeyupDelete)
+    document.removeEventListener('keyup', this.onKeyupDelete)
   },
   methods: {
     setVisual () {
@@ -153,13 +150,7 @@ export default {
       const { pageX, pageY } = e
       this.drag.start.pageX = pageX
       this.drag.start.pageY = pageY
-      // 设置拖动数据类型
-      e.dataTransfer.setData(
-        'text/plain',
-        JSON.stringify({
-          type: 'move'
-        })
-      )
+
       // 定义拖动效果
       e.dataTransfer.dropEffect = 'move'
 
@@ -223,13 +214,6 @@ export default {
       const { pageX, pageY } = e
       this.resize.start.pageX = pageX
       this.resize.start.pageY = pageY
-
-      e.dataTransfer.setData(
-        'text/plain',
-        JSON.stringify({
-          type: 'resize'
-        })
-      )
 
       // 定义拖动效果
       e.dataTransfer.dropEffect = 'move'
@@ -314,8 +298,10 @@ export default {
       this.$emit('widget-active', this.widget.id)
     },
     onKeyupDelete (e) {
-      if (['Delete', 'Backspace'].includes(e.code)) {
-        this.$emit('widget-delete', this.widget.id)
+      if (e.target === document.body) {
+        if (['Delete', 'Backspace'].includes(e.code)) {
+          this.$emit('widget-delete', this.widget.id)
+        }
       }
     },
     // 边界修正
@@ -346,7 +332,7 @@ export default {
     width: 100%;
     height: 100%;
     position: absolute;
-    border: 2px solid rebeccapurple;
+    border: 2px solid transparent;
     z-index: 1;
   }
   .circle {
