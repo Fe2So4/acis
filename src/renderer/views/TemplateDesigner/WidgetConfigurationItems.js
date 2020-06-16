@@ -71,7 +71,7 @@ export default function getConfigurationItems (widgetName) {
     case 'widget-checkbox-group':
       return {
         singleSelect: '1',
-        collections: []
+        collections: [{ label: '项目1', value: '1' }, { label: '项目2', value: '2' }]
       }
     default:
       return {}

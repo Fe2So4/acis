@@ -27,6 +27,16 @@
         </el-collapse-item>
       </div>
     </el-collapse>
+    <!-- <el-form
+      ref="form"
+      label-width="80px"
+      size="small"
+    >
+      <configuration-collections
+        :value="data"
+        @change="onChange"
+      />
+    </el-form> -->
   </div>
 </template>
 <script>
@@ -40,6 +50,7 @@ export default {
   name: 'WidgetConfiguration',
   data () {
     return {
+      data: [],
       properties: null,
       id: null,
       name: null,

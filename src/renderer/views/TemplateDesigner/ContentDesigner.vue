@@ -22,7 +22,10 @@
         @widget-drag-end="onWidgetDragEnd"
         @widget-delete="onWidgetDelete"
       >
-        <component :is="item.name" />
+        <component
+          :is="item.name"
+          :configuration="item"
+        />
       </widget-movable>
     <!-- <pre>{{ widgetList }}</pre> -->
     </div>

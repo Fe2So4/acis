@@ -4,7 +4,7 @@
       v-model="checkedOptions"
     >
       <el-checkbox
-        v-for="option in options"
+        v-for="option in configuration.collections"
         :label="option.label"
         :key="option.value"
         @change="handleChange"
@@ -18,14 +18,23 @@
 export default {
   data () {
     return {
-      options: [{ label: '正常', value: '1' }, { label: '松动', value: '2' }, { label: '假牙', value: '3' }, { label: '缺牙', value: '4' }],
-      checkedOptions: [],
-      singleSelect: true
+      // options: [{ label: '正常', value: '1' }, { label: '松动', value: '2' }, { label: '假牙', value: '3' }, { label: '缺牙', value: '4' }],
+      checkedOptions: []
+      // singleSelect: true
+    }
+  },
+  props: {
+    configuration: {
+      type: Object,
+      default: () => ({
+        collections: [{ label: '项目1', value: '1' }, { label: '项目2', value: '2' }],
+        singleSelect: '1'
+      })
     }
   },
   methods: {
     handleChange (arr) {
-      if (this.singleSelect) {
+      if (this.configuration.singleSelect === '1') {
         this.checkedOptions.length > 1 && this.checkedOptions.shift()
       }
     }
