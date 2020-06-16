@@ -1,7 +1,12 @@
 <template>
   <div>
     <el-form-item label="位置Y">
-      <el-input-number :value="value" :min="0" controls-position="right" @change="onChange"></el-input-number>
+      <el-input-number
+        :value="value"
+        :min="0"
+        controls-position="right"
+        @change="onChange"
+      />
     </el-form-item>
   </div>
 </template>
