@@ -22,7 +22,7 @@
         />
       </div>
     </el-form>
-    <code>{{ configurationGroups }}</code>
+    <!-- <code>{{ configurationGroups }}</code> -->
   </div>
 </template>
 <script>
@@ -30,6 +30,10 @@ import ConfigurationWidth from './ConfigurationWidth'
 import ConfigurationHeight from './ConfigurationHeight'
 import ConfigurationPositionX from './ConfigurationPositionX'
 import ConfigurationPositionY from './ConfigurationPositionY'
+import ConfigurationFont from './ConfigurationFont'
+import ConfigurationBorder from './ConfigurationBorder'
+import ConfigurationPlaceholder from './ConfigurationPlaceholder'
+import ConfigurationText from './ConfigurationText'
 import ConfigurationLeftPartWidthRate from './ConfigurationLeftPartWidthRate'
 import ConfigurationRightPartWidthRate from './ConfigurationRightPartWidthRate'
 import ConfigurationLeftTitle from './ConfigurationLeftTitle'
@@ -50,6 +54,10 @@ export default {
     ConfigurationHeight,
     ConfigurationPositionX,
     ConfigurationPositionY,
+    ConfigurationFont,
+    ConfigurationBorder,
+    ConfigurationPlaceholder,
+    ConfigurationText,
     ConfigurationLeftPartWidthRate,
     ConfigurationRightPartWidthRate,
     ConfigurationLeftTitle,
@@ -91,15 +99,12 @@ export default {
         position: {},
         custom: {}
       }
-
       let key
       for (key in this.properties) {
-        if (Object.prototype.hasOwnProperty.call(this.properties, key)) {
-          if (Object.keys(configurationMap).includes(key)) {
-            groups[configurationMap[key].parent][key] = this.properties[key]
-          } else {
-            groups.custom[key] = this.properties[key]
-          }
+        if (Object.keys(configurationMap).includes(key)) {
+          groups[configurationMap[key].parent][key] = this.properties[key]
+        } else {
+          groups.custom[key] = this.properties[key]
         }
       }
 
@@ -119,10 +124,10 @@ export default {
     }
   }
 }
-</script>
+</script>W
 <style lang="scss" scoped>
 .contentConfiguration {
-  height: 800px;
+  height: 100%;
   flex: 0 1 270px;
   background: blanchedalmond;
   padding: 20px;

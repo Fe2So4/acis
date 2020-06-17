@@ -10,7 +10,7 @@
         :visible.sync="visible"
       >
         <el-tree
-          :data="data"
+          :data="treeData"
           node-key="id"
           default-expand-all
           :expand-on-click-node="false"
@@ -74,7 +74,7 @@ export default {
   data () {
     return {
       visible: false,
-      data: [
+      treeData: [
         {
           id: 1,
           label: '一级 1',

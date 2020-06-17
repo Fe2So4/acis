@@ -5,11 +5,12 @@
       @drop="onDrop"
       @dragover="onDragOver"
       ref="designerContent"
+      @click.self="() => setActiveWidget(null)"
     >
-      <canvas
+      <!-- <canvas
         class="canvas"
         @click="onClickCanvas"
-      />
+      /> -->
       <widget-movable
         v-for="(item,index) of widgetList"
         :key="index"
@@ -25,7 +26,7 @@
           :configuration="item"
         />
       </widget-movable>
-      <pre>{{ widgetList }}</pre>
+      <!-- <pre>{{ widgetList }}</pre> -->
     </div>
   </div>
 </template>
@@ -37,6 +38,7 @@ import getConfigurationItems from './WidgetConfigurationItems.js'
 // import Mock from 'mockjs'
 import WidgetMovable from './WidgetMovable'
 import WidgetInput from './WidgetInput'
+import WidgetTextarea from './WidgetTextarea'
 import WidgetText from './WidgetText'
 import WidgetLine from './WidgetLine'
 import WidgetPhysicalSign from './WidgetPhysicalSign'
@@ -50,6 +52,7 @@ export default {
   components: {
     WidgetMovable,
     WidgetInput,
+    WidgetTextarea,
     WidgetText,
     WidgetLine,
     WidgetPhysicalSign
@@ -663,13 +666,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 .designer {
-  // height: 400px;
+  height: 100%;
   flex: 1 1 600px;
   background: cornsilk;
+  overflow: auto;
 }
 .designerContent {
-  width: 600px;
-  height: 400px;
+  width: 210mm;
+  height: 297mm;
   background: white;
   margin: 0 auto;
   border: 1px dashed palevioletred;

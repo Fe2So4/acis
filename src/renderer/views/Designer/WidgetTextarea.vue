@@ -1,14 +1,17 @@
 <template>
   <div
-    class="widgetText"
-    :style="widgetStyle"
+    class="widgetTextArea"
   >
-    {{ configuration.text }}
+    <textarea
+      class="textarea"
+      :style="widgetStyle"
+      :placeholder="configuration.placeholder"
+    />
   </div>
 </template>
 <script>
 export default {
-  name: 'WidgetText',
+  name: 'WidgetTextArea',
   props: {
     configuration: {
       type: Object,
@@ -52,10 +55,15 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.widgetText {
+.widgetTextArea {
   width: 100%;
   height: 100%;
-  word-break: break-all;
-  overflow: hidden;
+  .textarea {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    outline: none;
+    border: none;
+  }
 }
 </style>

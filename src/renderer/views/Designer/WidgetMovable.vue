@@ -30,7 +30,9 @@
 </template>
 <script>
 import { createNamespacedHelpers } from 'vuex'
-const { mapState } = createNamespacedHelpers('Designer')
+const { mapState } = createNamespacedHelpers(
+  'Designer'
+)
 export default {
   name: 'WidgetMovable',
   props: {
@@ -130,12 +132,13 @@ export default {
     },
     ...mapState(['activeWidgetId'])
   },
-  created () {},
+  created () {
+  },
   mounted () {
-    document.addEventListener('keyup', this.onKeyupDelete)
+    document.addEventListener('keyup', this.onDocumentKeyup)
   },
   beforeDestroy () {
-    document.removeEventListener('keyup', this.onKeyupDelete)
+    document.removeEventListener('keyup', this.onDocumentKeyup)
   },
   methods: {
     setVisual () {
@@ -161,13 +164,13 @@ export default {
       )
       canvas.width = canvas.height = 50
 
-      var ctx = canvas.getContext('2d')
-      ctx.lineWidth = 4
-      ctx.moveTo(0, 0)
-      ctx.lineTo(50, 50)
-      ctx.moveTo(0, 50)
-      ctx.lineTo(50, 0)
-      ctx.stroke()
+      // var ctx = canvas.getContext('2d')
+      // ctx.lineWidth = 4
+      // ctx.moveTo(0, 0)
+      // ctx.lineTo(50, 50)
+      // ctx.moveTo(0, 50)
+      // ctx.lineTo(50, 0)
+      // ctx.stroke()
       e.dataTransfer.setDragImage(canvas, 25, 25)
 
       // 通知父组件，删除当前控件的参考线
@@ -214,7 +217,6 @@ export default {
       const { pageX, pageY } = e
       this.resize.start.pageX = pageX
       this.resize.start.pageY = pageY
-
       // 定义拖动效果
       e.dataTransfer.dropEffect = 'move'
       // 定义跟随图片
@@ -223,13 +225,13 @@ export default {
         'canvas'
       )
       canvas.width = canvas.height = 50
-      var ctx = canvas.getContext('2d')
-      ctx.lineWidth = 4
-      ctx.moveTo(0, 0)
-      ctx.lineTo(50, 50)
-      ctx.moveTo(0, 50)
-      ctx.lineTo(50, 0)
-      ctx.stroke()
+      // var ctx = canvas.getContext('2d')
+      // ctx.lineWidth = 4
+      // ctx.moveTo(0, 0)
+      // ctx.lineTo(50, 50)
+      // ctx.moveTo(0, 50)
+      // ctx.lineTo(50, 0)
+      // ctx.stroke()
       e.dataTransfer.setDragImage(canvas, 25, 25)
 
       this.$emit('widget-drag-start', this.widget.id)
@@ -297,7 +299,7 @@ export default {
     onDblckick () {
       this.$emit('widget-active', this.widget.id)
     },
-    onKeyupDelete (e) {
+    onDocumentKeyup (e) {
       if (e.target === document.body) {
         if (['Delete', 'Backspace'].includes(e.code)) {
           this.$emit('widget-delete', this.widget.id)

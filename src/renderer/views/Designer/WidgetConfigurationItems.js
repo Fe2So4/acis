@@ -68,6 +68,37 @@ export default function getConfigurationItems (widgetName) {
           lineInterval: 3
         }
       }
+    case 'widget-input':
+    case 'widget-textarea':
+      return {
+        font: {
+          size: 9,
+          weight: 'normal',
+          lineHeight: 30,
+          textAlign: 'left'
+        },
+        border: {
+          position: ['top', 'right', 'bottom', 'left'],
+          color: '#000000',
+          width: 1
+        },
+        placeholder: '占位内容'
+      }
+    case 'widget-text':
+      return {
+        font: {
+          size: 9,
+          weight: 'normal',
+          lineHeight: 30,
+          textAlign: 'left'
+        },
+        border: {
+          position: ['top', 'right', 'bottom', 'left'],
+          color: '#000000',
+          width: 1
+        },
+        text: '文本内容'
+      }
     default:
       return {}
   }
