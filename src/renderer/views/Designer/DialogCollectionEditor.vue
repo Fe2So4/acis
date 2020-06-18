@@ -4,47 +4,26 @@
     :title="configuration.title"
     :visible.sync="configuration.visible"
     :append-to-body="appendToBody"
+    v-dialogDrag
   >
     <div class="content">
       <div>
-        <el-button
-          @click="add"
-          size="mini"
-        >
-          新增
-        </el-button>
-        <el-button
-          @click="remove"
-          size="mini"
-        >
-          删除
-        </el-button>
+        <el-button @click="add" size="mini">新增</el-button>
+        <el-button @click="remove" size="mini">删除</el-button>
         <el-table
           :data="list"
           style="width: 100%"
           highlight-current-row
           @current-change="onCurrentChange"
         >
-          <el-table-column
-            prop="label"
-            label="集合"
-          />
+          <el-table-column prop="label" label="集合" />
         </el-table>
       </div>
       <div>
-        <el-form
-          label-width="80px"
-          size="mini"
-        >
-          <el-form-item
-            v-for="(rowValue, rowKey) in currentRow"
-            :key="rowKey"
-            :label="rowKey"
-          >
+        <el-form label-width="80px" size="mini">
+          <el-form-item v-for="(rowValue, rowKey) in currentRow" :key="rowKey" :label="rowKey">
             <span v-if="isArray(rowValue)">
-              <el-button @click="onClickConfiguration(configField(rowKey).config)">
-                配置
-              </el-button>
+              <el-button @click="onClickConfiguration(configField(rowKey).config)">配置</el-button>
               <DialogCollectionEditorContent
                 v-if="configField(rowKey).config.visible"
                 :configuration="configField(rowKey).config"
@@ -62,24 +41,19 @@
         </el-form>
       </div>
     </div>
-    <span
-      slot="footer"
-    >
+    <span slot="footer">
       <el-button @click="configuration.visible = false">取 消</el-button>
-      <el-button
-        type="primary"
-        @click="onClickConfirm"
-      >确 定</el-button>
+      <el-button type="primary" @click="onClickConfirm">确 定</el-button>
     </span>
   </el-dialog>
 </template>
 
 <script>
-import isArray from 'lodash/isArray'
-import isNumber from 'lodash/isNumber'
-import DialogCollectionEditorContent from './DialogCollectionEditorContent'
+import isArray from "lodash/isArray";
+import isNumber from "lodash/isNumber";
+import DialogCollectionEditorContent from "./DialogCollectionEditorContent";
 export default {
-  name: 'DialogCollectionEditor',
+  name: "DialogCollectionEditor",
   components: {
     DialogCollectionEditorContent
   },
@@ -90,75 +64,76 @@ export default {
     },
     value: {
       type: Array,
-      default () {
-        return []
+      default() {
+        return [];
       }
     }
   },
-  data () {
+  data() {
     return {
       list: [],
       currentRow: null
-    }
+    };
   },
   computed: {
-    appendToBody () {
-      return this.$attrs['append-to-body']
+    appendToBody() {
+      return this.$attrs["append-to-body"];
     },
-    configField () {
-      return (name) => {
-        const field = this.configuration.field.filter(item => item.name === name)
+    configField() {
+      return name => {
+        const field = this.configuration.field.filter(
+          item => item.name === name
+        );
         if (field.length) {
-          return field[0]
+          return field[0];
         }
-        return {}
-      }
+        return {};
+      };
     }
   },
-  created () {
-    this.isArray = isArray
-    this.list = JSON.parse(JSON.stringify(this.value))
+  created() {
+    this.isArray = isArray;
+    this.list = JSON.parse(JSON.stringify(this.value));
   },
   methods: {
-    add () {
+    add() {
       const item = this.configuration.field.reduce((obj, field) => {
-        obj[field.name] = field.default
-        return obj
-      }, {})
-      this.list.push(item)
+        obj[field.name] = field.default;
+        return obj;
+      }, {});
+      this.list.push(item);
     },
-    remove () {
-      let currentIndex
+    remove() {
+      let currentIndex;
       this.list.forEach((item, index) => {
         if (item === this.currentRow) {
-          currentIndex = index
+          currentIndex = index;
         }
-      })
+      });
       if (isNumber(currentIndex)) {
-        this.list.splice(currentIndex, 1)
+        this.list.splice(currentIndex, 1);
       }
     },
-    onCurrentChange (currentRow, oldCurrentRow) {
-      this.currentRow = currentRow
+    onCurrentChange(currentRow, oldCurrentRow) {
+      this.currentRow = currentRow;
     },
-    onClickConfiguration (config) {
-      config.visible = true
+    onClickConfiguration(config) {
+      config.visible = true;
     },
-    onClickConfirm () {
-      this.$emit('change', this.list)
-      this.configuration.visible = false
+    onClickConfirm() {
+      this.$emit("change", this.list);
+      this.configuration.visible = false;
     },
-    onChangeValue (e, fieldName) {
-      this.currentRow[fieldName] = e
+    onChangeValue(e, fieldName) {
+      this.currentRow[fieldName] = e;
     }
   }
-}
-
+};
 </script>
 <style lang='scss' scoped>
 .content {
   display: flex;
-  &>div {
+  & > div {
     width: 50%;
     margin: 10px;
     // border: 1px solid #666;
