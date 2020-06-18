@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import '@/mock/dataSource'
 export default {
   name: 'Aims',
   mounted () {

@@ -34,6 +34,7 @@ import ConfigurationFont from './ConfigurationFont'
 import ConfigurationBorder from './ConfigurationBorder'
 import ConfigurationPlaceholder from './ConfigurationPlaceholder'
 import ConfigurationText from './ConfigurationText'
+import ConfigurationDirection from './ConfigurationDirection'
 import ConfigurationLeftPartWidthRate from './ConfigurationLeftPartWidthRate'
 import ConfigurationRightPartWidthRate from './ConfigurationRightPartWidthRate'
 import ConfigurationLeftTitle from './ConfigurationLeftTitle'
@@ -42,6 +43,8 @@ import ConfigurationEventTitle from './ConfigurationEventTitle'
 import ConfigurationTotalTitle from './ConfigurationTotalTitle'
 import ConfigurationYAxis from './ConfigurationYAxis'
 import ConfigurationXAxis from './ConfigurationXAxis'
+import ConfigurationDataSource from './ConfigurationDataSource'
+import ConfigurationDictionarySource from './ConfigurationDictionarySource'
 import { configurationMap } from './WidgetConfigurationItems'
 import { createNamespacedHelpers } from 'vuex'
 const { mapActions, mapGetters, mapState } = createNamespacedHelpers(
@@ -58,6 +61,7 @@ export default {
     ConfigurationBorder,
     ConfigurationPlaceholder,
     ConfigurationText,
+    ConfigurationDirection,
     ConfigurationLeftPartWidthRate,
     ConfigurationRightPartWidthRate,
     ConfigurationLeftTitle,
@@ -65,7 +69,9 @@ export default {
     ConfigurationEventTitle,
     ConfigurationTotalTitle,
     ConfigurationYAxis,
-    ConfigurationXAxis
+    ConfigurationXAxis,
+    ConfigurationDataSource,
+    ConfigurationDictionarySource
   },
   watch: {
     activeWidget: {
@@ -97,7 +103,8 @@ export default {
       const groups = {
         layout: {},
         position: {},
-        custom: {}
+        custom: {},
+        data: {}
       }
       let key
       for (key in this.properties) {
@@ -124,7 +131,7 @@ export default {
     }
   }
 }
-</script>W
+</script>
 <style lang="scss" scoped>
 .contentConfiguration {
   height: 100%;

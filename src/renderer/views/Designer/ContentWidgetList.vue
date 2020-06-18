@@ -5,6 +5,13 @@
       :key="widget.name"
       :widget="widget"
     />
+    <el-button
+      @click="saveWidget"
+      type="primary"
+      size="mini"
+    >
+      保存
+    </el-button>
   </div>
 </template>
 <script>
@@ -37,10 +44,10 @@ export default {
           label: '线',
           name: 'widget-line'
         },
-        // {
-        //   label: '复选框',
-        //   name: 'widget-checkbox'
-        // },
+        {
+          label: '下拉选择',
+          name: 'widget-select'
+        },
         {
           label: '体征曲线',
           name: 'widget-physical-sign'
@@ -50,10 +57,13 @@ export default {
   },
   computed: {
     ...mapState({
-      // widgetList: state => state.widgetList
+      widgetList: state => state.widgetList
     })
   },
   methods: {
+    saveWidget () {
+      console.log(JSON.stringify(this.widgetList))
+    }
   }
 }
 </script>
