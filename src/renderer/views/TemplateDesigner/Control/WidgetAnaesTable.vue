@@ -16,69 +16,70 @@ export default {
     return {
       layer: null,
       layout: {},
-      drugList: [{ name: '利多卡因', code: '1' }, { name: '安眠药', code: '2' }, { name: '降压药', code: '3' }], // 药品列表
-      leftTitle: {
-        text: '监测',
-        width: 40,
-        lineHeight: 30
-      },
-      // 行标题宽度
-      rowTitle: {
-        width: 128
-      },
-      rowList: [
-        { text: '心电图', colNum: 2 },
-        { text: '氧饱和度', colNum: 1 },
-        { text: '潮气量', colNum: 2 },
-        { text: 'f', colNum: 1 },
-        { text: 'PEAK', colNum: 2 },
-        { text: 'PEEP', colNum: 2 },
-        { text: '中心静脉压', colNum: 2 },
-        { text: '尿量', colNum: 1 },
-        { text: '累计失血量', colNum: 2 }
-      ],
-      column: {
-        num: 8
-      }
+      drugList: [{ name: '利多卡因', code: '1' }, { name: '安眠药', code: '2' }, { name: '降压药', code: '3' }] // 药品列表
+      // leftTitle: {
+      //   text: '监测',
+      //   width: 40,
+      //   lineHeight: 30
+      // },
+      // // 行标题宽度
+      // rowTitle: {
+      //   width: 128
+      // },
+      // rowList: [
+      //   { text: '心电图', colNum: 2 },
+      //   { text: '氧饱和度', colNum: 1 },
+      //   { text: '潮气量', colNum: 2 },
+      //   { text: 'f', colNum: 1 },
+      //   { text: 'PEAK', colNum: 2 },
+      //   { text: 'PEEP', colNum: 2 },
+      //   { text: '中心静脉压', colNum: 2 },
+      //   { text: '尿量', colNum: 1 },
+      //   { text: '累计失血量', colNum: 2 }
+      // ],
+      // column: {
+      //   num: 8
+      // }
     }
   },
   props: {
-    // configuration: {
-    //   type: Object,
-    //   default: () => (
-    //     {
-    //       leftPartWidthRate: 0.18,
-    //       rightPartWidthRate: 0.1,
-    //       leftTitle: {
-    //         text: '麻醉用药',
-    //         width: 40,
-    //         lineHeight: 30
-    //       },
-    //       timeTitle: {
-    //         text: '时间',
-    //         height: 30, // 是否显示顶部时间条，将高度置为0即可
-    //         lineHeight: 30
-    //       },
-    //       totalTitle: {
-    //         text: '总量'
-    //       },
-    //       xAxis: {
-    //         startTime: '2018-02-01 08:00',
-    //         endTime: '2018-02-01 12:00',
-    //         timeInterval: 15 * 60 * 1000,
-    //         lineInterval: 3
-    //       },
-    //       drugNumber: 10
-    //     })
-    // }
+    configuration: {
+      type: Object,
+      default: () => (
+        {
+          leftTitle: {
+            text: '监测',
+            width: 40,
+            lineHeight: 30
+          },
+          // 行标题宽度
+          rowTitle: {
+            width: 128
+          },
+          rowList: [
+            { text: '心电图', colNum: 2 },
+            { text: '氧饱和度', colNum: 1 },
+            { text: '潮气量', colNum: 2 },
+            { text: 'f', colNum: 1 },
+            { text: 'PEAK', colNum: 2 },
+            { text: 'PEEP', colNum: 2 },
+            { text: '中心静脉压', colNum: 2 },
+            { text: '尿量', colNum: 1 },
+            { text: '累计失血量', colNum: 2 }
+          ],
+          column: {
+            num: 8
+          }
+        })
+    }
   },
   watch: {
-    // configuration: {
-    //   deep: true,
-    //   handler: function (val) {
-    //     this.resize()
-    //   }
-    // }
+    configuration: {
+      deep: true,
+      handler: function (val) {
+        this.resize()
+      }
+    }
   },
   created () {
     this.resize = debounce(this.domResizeListener, 20)
@@ -91,7 +92,7 @@ export default {
     addListener(this.$refs.anaesTable, this.resize)
   },
   beforeDestroy () {
-    this.layer = null
+    this.scene = null
     removeListener(this.$refs.anaesTable, this.resize)
   },
   methods: {
@@ -111,13 +112,13 @@ export default {
     },
     createGroups () {
       const leftPart = new Group({
-        className: 'leftPart'
+        className: 'leftPart content'
       })
       const middlePart = new Group({
-        className: 'middlePart'
+        className: 'middlePart content'
       })
       const rightPart = new Group({
-        className: 'rightPart'
+        className: 'rightPart content'
       })
       this.layer.append(leftPart, middlePart, rightPart)
     },
@@ -130,7 +131,7 @@ export default {
       const leftPart = this.layer.getElementsByClassName('leftPart')[0]
       leftPart.attr({
         size: [
-          this.leftTitle.width,
+          this.configuration.leftTitle.width,
           this.layer.height
         ]
       })
@@ -145,10 +146,10 @@ export default {
       const middlePart = this.layer.getElementsByClassName('middlePart')[0]
       middlePart.attr({
         size: [
-          this.rowTitle.width,
+          this.configuration.rowTitle.width,
           this.layer.height
         ],
-        pos: [this.leftTitle.width, 0]
+        pos: [this.configuration.leftTitle.width, 0]
       })
       const middlePartRightLine = new Polyline({
         pos: [middlePart.attr('width') - 0.5, 0],
@@ -176,8 +177,8 @@ export default {
       const leftPart = this.layer.getElementsByClassName('leftPart')[0]
       const width = leftPart.attr('width')
       const height = leftPart.attr('height')
-      const textArr = this.leftTitle.text.split('')
-      const lineHeight = this.leftTitle.lineHeight
+      const textArr = this.configuration.leftTitle.text.split('')
+      const lineHeight = this.configuration.leftTitle.lineHeight
       const titleTextGroup = new Group()
       titleTextGroup.attr({
         size: [40 - 1, textArr.length * lineHeight],
@@ -218,8 +219,8 @@ export default {
     },
     setRowTitle () {
       const middlePart = this.layer.getElementsByClassName('middlePart')[0]
-      const lineHeight = Math.round(middlePart.attr('height') / this.rowList.length)
-      for (let i = 0; i < this.rowList.length - 1; i++) {
+      const lineHeight = Math.round(middlePart.attr('height') / this.configuration.rowList.length)
+      for (let i = 0; i < this.configuration.rowList.length - 1; i++) {
         const line = new Polyline({
           pos: [0, lineHeight * (1 + i) - 0.5],
           points: [0, 0, middlePart.attr('width'), 0],
@@ -228,8 +229,8 @@ export default {
         })
         middlePart.append(line)
       }
-      for (let i = 0; i < this.rowList.length; i++) {
-        const label = new Label(this.rowList[i])
+      for (let i = 0; i < this.configuration.rowList.length; i++) {
+        const label = new Label(this.configuration.rowList[i])
         label.attr({
           pos: [0, lineHeight * i + lineHeight / 2],
           anchor: [0, 0.5],
@@ -246,8 +247,8 @@ export default {
     },
     setRightPartRow () {
       const rightPart = this.layer.getElementsByClassName('rightPart')[0]
-      const lineHeight = Math.round(rightPart.attr('height') / this.rowList.length)
-      for (let i = 0; i < this.rowList.length - 1; i++) {
+      const lineHeight = Math.round(rightPart.attr('height') / this.configuration.rowList.length)
+      for (let i = 0; i < this.configuration.rowList.length - 1; i++) {
         const line = new Polyline({
           pos: [0, lineHeight * (1 + i) - 0.5],
           points: [0, 0, rightPart.attr('width'), 0],
@@ -259,19 +260,19 @@ export default {
     },
     setRightPartCol () {
       const rightPart = this.layer.getElementsByClassName('rightPart')[0]
-      const lineHeight = Math.round(rightPart.attr('height') / this.rowList.length)
-      for (let i = 0; i < this.rowList.length; i++) {
-        const colInterval = Math.round(rightPart.attr('width') / this.column.num)
+      const lineHeight = Math.round(rightPart.attr('height') / this.configuration.rowList.length)
+      for (let i = 0; i < this.configuration.rowList.length; i++) {
+        const colInterval = Math.round(rightPart.attr('width') / this.configuration.column.num)
         // const colInterval = Math.round(rightPart.attr('width') / this.column.num) * this.rowList[i].colNum
-        for (let j = 0; j < this.column.num - 1; j++) {
+        for (let j = 0; j < this.configuration.column.num - 1; j++) {
           const line = new Polyline({
             pos: [colInterval * (1 + j) - 0.5, lineHeight * i],
             points: [0, 0, 0, lineHeight],
             strokeColor: 'black',
             lineWidth: 1
           })
-          if (j % this.rowList[i].colNum === 0 && this.rowList[i].colNum !== 1) {
-            console.log(j, this.rowList[i].colNum)
+          if (j % this.configuration.rowList[i].colNum === 0 && this.configuration.rowList[i].colNum !== 1) {
+            console.log(j, this.configuration.rowList[i].colNum)
             continue
           }
           rightPart.append(line)

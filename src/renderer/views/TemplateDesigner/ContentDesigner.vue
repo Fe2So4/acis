@@ -16,7 +16,7 @@
         class="canvas"
         @click="onClickCanvas"
       />
-      <widget-movable
+      <!-- <widget-movable
         v-for="(item,index) of widgetList"
         :key="index"
         :widget="item"
@@ -31,7 +31,8 @@
           :is="item.name"
           :configuration="item"
         />
-      </widget-movable>
+      </widget-movable> -->
+      <widget-image />
       <!-- <widget-anaes-table /> -->
     <!-- <pre>{{ widgetList }}</pre> -->
     </div>
@@ -39,7 +40,7 @@
 </template>
 <script>
 import { controls } from './getAllConfigurationPage'
-import WidgetMovable from './WidgetMovable'
+// import WidgetMovable from './WidgetMovable'
 // import { v4 as uuidv4 } from 'uuid'
 import { createNamespacedHelpers } from 'vuex'
 import getConfigurationItems from './WidgetConfigurationItems.js'
@@ -50,7 +51,7 @@ const { mapState, mapActions } = createNamespacedHelpers('PageTemplateDesigner')
 export default {
   name: 'ContentDesigner',
   components: {
-    WidgetMovable,
+    // WidgetMovable,
     ...controls
   },
   data () {
