@@ -15,87 +15,17 @@ export default {
   props: {
     configuration: {
       type: Object,
-      default: () => (
-        {
-          leftPartWidthRate: 0.18,
-          rightPartWidthRate: 0.1,
-          leftTitle: {
-            text: '左标题',
-            width: 50,
-            lineHeight: 30
-          },
-          timeTitle: {
-            text: '时间',
-            height: 30,
-            lineHeight: 30
-          },
-          eventTitle: {
-            text: '事件标题',
-            height: 40,
-            lineHeight: 40
-          },
-          totalTitle: {
-            text: '图例'
-          },
-          yAxis: {
-            list: [
-              {
-                index: 0,
-                values: [
-                  {
-                    value: 0,
-                    label: '℃'
-                  },
-                  {
-                    value: 10,
-                    label: 10
-                  },
-                  {
-                    value: 20,
-                    label: '到顶啦'
-                  }
-                ]
-              },
-              {
-                index: 1,
-                values: [
-                  {
-                    value: 30,
-                    label: '30'
-                  },
-                  {
-                    value: 40,
-                    label: 40
-                  },
-                  {
-                    value: 50,
-                    label: '顶部'
-                  }
-                ]
-              }
-            ],
-            lineInterval: 2
-          },
-          xAxis: {
-            startTime: '2018-01-01 08:00',
-            endTime: '2018-01-01 12:00',
-            timeInterval: 15,
-            lineInterval: 3
-          }
-        }
-      )
+      required: true
     }
   },
   data () {
     return {
       layer: null,
       layout: {}
-      // xAxisList: []
     }
   },
   watch: {
     configuration: {
-      // immediate: true,
       deep: true,
       handler: function (val) {
         this.resize()
@@ -113,7 +43,7 @@ export default {
     addListener(this.$refs.physicalSign, this.resize)
   },
   beforeDestroy () {
-    this.layer = null
+    this.scene = null
     removeListener(this.$refs.physicalSign, this.resize)
   },
   methods: {
