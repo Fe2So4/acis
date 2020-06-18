@@ -128,6 +128,32 @@ export default function getConfigurationItems (widgetName) {
         },
         outPut: { text: '用量', num: 0 }
       }
+    case 'widget-anaes-table':
+      return {
+        leftTitle: {
+          text: '监测',
+          width: 40,
+          lineHeight: 30
+        },
+        // 行标题宽度
+        rowTitle: {
+          width: 128
+        },
+        rowList: [
+          { text: '心电图', colNum: 2 },
+          { text: '氧饱和度', colNum: 1 },
+          { text: '潮气量', colNum: 2 },
+          { text: 'f', colNum: 1 },
+          { text: 'PEAK', colNum: 2 },
+          { text: 'PEEP', colNum: 2 },
+          { text: '中心静脉压', colNum: 2 },
+          { text: '尿量', colNum: 1 },
+          { text: '累计失血量', colNum: 2 }
+        ],
+        column: {
+          num: 8
+        }
+      }
     default:
       return {}
   }
