@@ -101,10 +101,8 @@ export default {
     onDblckick () {
       this.activeContent = true
       this.setDesignerActive(true)
-      console.log('son')
     },
     handleClearDesignerActive () {
-      console.log('father')
       this.setDesignerActive(false)
     },
     onWidgetDelete () {
