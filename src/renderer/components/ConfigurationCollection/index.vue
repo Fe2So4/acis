@@ -15,7 +15,7 @@
               @click="handleChange(item,index)"
             >
               <span>{{ index }}</span>
-              <span :class="{'active':activeIndex === index}">{{ item.label }}</span>
+              <span :class="{'active':activeIndex === index}">{{ itemName(item) }}</span>
             </li>
           </ul>
           <div class="option">
@@ -101,6 +101,13 @@ export default {
     },
     detailData: {
       type: Object
+    }
+  },
+  computed: {
+    itemName (param) {
+      return function (param) {
+        return param[this.textList[0]]
+      }
     }
   },
   methods: {

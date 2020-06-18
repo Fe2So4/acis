@@ -1,11 +1,16 @@
 <template>
-  <div class="designerContent">
+  <div
+    class="designerContent"
+    @click="handleClearDesignerActive"
+  >
     <div
       class="content"
       @drop="onDrop"
+      :style="style"
       @dragover="onDragOver"
       ref="designerContent"
-      @dblclick="onDblckick"
+      @click.stop="() => {}"
+      @dblclick.stop="onDblckick"
     >
       <canvas
         class="canvas"
@@ -27,21 +32,14 @@
           :configuration="item"
         />
       </widget-movable>
+      <!-- <widget-anaes-table /> -->
     <!-- <pre>{{ widgetList }}</pre> -->
     </div>
   </div>
 </template>
 <script>
+import { controls } from './getAllConfigurationPage'
 import WidgetMovable from './WidgetMovable'
-import WidgetInput from './WidgetInput'
-import WidgetText from './WidgetText'
-import WidgetLine from './WidgetLine'
-import WidgetPanel from './WidgetPanel'
-import WidgetPhysicalSign from './WidgetPhysicalSign'
-import WidgetAnaesDrug from './WidgetAnaesDrug'
-import WidgetTextArea from './WidgetTextArea'
-import WidgetInOut from './WidgetInOut'
-import WidgetCheckboxGroup from './WidgetCheckboxGroup'
 // import { v4 as uuidv4 } from 'uuid'
 import { createNamespacedHelpers } from 'vuex'
 import getConfigurationItems from './WidgetConfigurationItems.js'
@@ -53,15 +51,7 @@ export default {
   name: 'ContentDesigner',
   components: {
     WidgetMovable,
-    WidgetInput,
-    WidgetText,
-    WidgetLine,
-    WidgetPanel,
-    WidgetPhysicalSign,
-    WidgetAnaesDrug,
-    WidgetTextArea,
-    WidgetInOut,
-    WidgetCheckboxGroup
+    ...controls
   },
   data () {
     return {
@@ -85,8 +75,19 @@ export default {
     ...mapState({
       widgetMap: state => state.widgetMap,
       widgetList: state => state.widgetList,
-      activeWidgetId: state => state.activeWidgetId
-    })
+      activeWidgetId: state => state.activeWidgetId,
+      width: state => state.designerWidth,
+      height: state => state.designerHeight
+    }),
+    style () {
+      return {
+        // left: this.widget.positionX + 'px',
+        // top: this.widget.positionY + 'px',
+        width: this.width + 'px',
+        height: this.height + 'px'
+        // borderColor: this.active ? 'rebeccapurple' : 'transparent'
+      }
+    }
   },
   watch: {
 
@@ -95,9 +96,15 @@ export default {
 
   },
   methods: {
-    ...mapActions(['setWidgetMap', 'deleteWidget', 'setActiveWidget']),
+    ...mapActions(['setWidgetMap', 'deleteWidget', 'setActiveWidget', 'setDesignerActive']),
     onDblckick () {
       this.activeContent = true
+      this.setDesignerActive(true)
+      console.log('son')
+    },
+    handleClearDesignerActive () {
+      console.log('father')
+      this.setDesignerActive(false)
     },
     onWidgetDelete () {
       this.deleteWidget(this.activeWidgetId)
@@ -626,7 +633,7 @@ export default {
     position: relative;
     width: 904px;
     height:1366px;
-    border:1px dashed red;
+    border:1px dashed black;
     margin:0 auto;
     .circle {
       width: 8px;

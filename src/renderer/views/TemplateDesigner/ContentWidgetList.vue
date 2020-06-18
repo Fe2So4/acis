@@ -38,10 +38,6 @@ export default {
           name: 'widget-panel'
         },
         {
-          label: '标签',
-          name: 'widget-label'
-        },
-        {
           label: '体征曲线',
           name: 'widget-physical-sign'
         },
@@ -60,6 +56,10 @@ export default {
         {
           label: '多选框组',
           name: 'widget-checkbox-group'
+        },
+        {
+          label: '监测表格',
+          name: 'widget-anaes-table'
         }
       ]
     }

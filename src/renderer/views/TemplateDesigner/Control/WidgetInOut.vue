@@ -1,7 +1,7 @@
 <template>
   <div
-    ref="anaesDrug"
-    class="anaesDrug"
+    ref="inOut"
+    class="inOut"
   />
 </template>
 
@@ -16,83 +16,59 @@ export default {
     return {
       layer: null,
       layout: {},
-      leftPartWidthRate: 0.18,
-      rightPartWidthRate: 0.1,
-      leftTitle: {
-        text: '麻醉用药',
-        width: 40,
-        lineHeight: 30
-      },
-      timeTitle: {
-        text: '时间',
-        height: 30, // 是否显示顶部时间条，将高度置为0即可
-        lineHeight: 30
-      },
-      totalTitle: {
-        text: '总量'
-      },
-      yAxis: {
-        list: [
-          {
-            index: 0,
-            values: [
-              {
-                value: 0,
-                label: '℃'
-              },
-              {
-                value: 10,
-                label: 10
-              },
-              {
-                value: 20,
-                label: '到顶啦'
-              }
-            ]
+      drugList: [] // 药品列表
+    }
+  },
+  props: {
+    configuration: {
+      type: Object,
+      default: () => {
+        return {
+          leftPartWidthRate: 0.18,
+          rightPartWidthRate: 0.1,
+          leftTitle: {
+            text: '输液输血',
+            width: 40,
+            lineHeight: 30
           },
-          {
-            index: 1,
-            values: [
-              {
-                value: 30,
-                label: '30'
-              },
-              {
-                value: 40,
-                label: 40
-              },
-              {
-                value: 50,
-                label: '顶部'
-              }
-            ]
-          }
-        ],
-        lineInterval: 2
-      },
-      xAxis: {
-        startTime: '2018-02-01 08:00',
-        endTime: '2018-02-01 12:00',
-        timeInterval: 15 * 60 * 1000,
-        lineInterval: 3
-      },
-      drugNumber: 10,
-      drugList: [{ name: '利多卡因', code: '1' }, { name: '安眠药', code: '2' }, { name: '降压药', code: '3' }] // 药品列表
+          timeTitle: {
+            text: '时间',
+            height: 0, // 是否显示顶部时间条，将高度置为0即可
+            lineHeight: 30
+          },
+          totalTitle: {
+            text: '总量'
+          },
+          xAxis: {
+            startTime: '2018-02-01 08:00',
+            endTime: '2018-02-01 12:00',
+            timeInterval: 15 * 60 * 1000,
+            lineInterval: 3
+          },
+          drugNumber: 10,
+          drugList: [], // 药品列表
+          infusion: { text: '输液', num: 3 },
+          bloodTransfusion: {
+            text: '输血', num: 2
+          },
+          outPut: { text: '用量', num: 0 }
+        }
+      }
     }
   },
   created () {
-    this.setXAxisList()
+    this.resize = debounce(this.domResizeListener, 20)
   },
   mounted () {
     this.renderScene()
     this.createGroups()
     this.setLayout()
     this.setContent()
-    addListener(this.$refs.anaesDrug, debounce(this.domResizeListener, 20))
+    addListener(this.$refs.inOut, this.resize)
   },
   beforeDestroy () {
     this.layer = null
-    removeListener(this.$refs.anaesDrug, this.domResizeListener)
+    removeListener(this.$refs.inOut, this.resize)
   },
   methods: {
     domResizeListener () {
@@ -102,7 +78,7 @@ export default {
     },
     renderScene () {
       this.scene = new Scene({
-        container: this.$refs.anaesDrug,
+        container: this.$refs.inOut,
         width: this.$refs.width,
         height: this.$refs.height,
         mode: 'static'
@@ -143,9 +119,7 @@ export default {
       const grid = new Group({
         className: 'grid content'
       })
-      // const eventTag = new Group({
-      //   className: 'eventTag content'
-      // })
+
       middlePart.append(xAxis, grid)
 
       const totalTitle = new Group({
@@ -165,15 +139,15 @@ export default {
       const leftPart = this.layer.getElementsByClassName('leftPart')[0]
       leftPart.attr({
         size: [
-          Math.round(this.layer.width * this.leftPartWidthRate),
+          Math.round(this.layer.width * this.configuration.leftPartWidthRate),
           this.layer.height
         ]
       })
       // leftPart/leftTitle
       const leftTitle = leftPart.getElementsByClassName('leftTitle')[0]
       leftTitle.attr({
-        size: [this.leftTitle.width || 0, leftPart.attr('height')],
-        padding: [0, 10, 0, 10]
+        size: [this.configuration.leftTitle.width || 0, leftPart.attr('height')]
+        // padding: [0, 10, 0, 10]
       })
       const leftTitleBorderRightLine = new Polyline({
         pos: [leftTitle.attr('width') - 0.5, 0],
@@ -194,7 +168,7 @@ export default {
       // leftPart/leftMain/timeTitle
       const timeTitle = leftMain.getElementsByClassName('timeTitle')[0]
       timeTitle.attr({
-        size: [leftMain.attr('width'), this.timeTitle.height]
+        size: [leftMain.attr('width'), this.configuration.timeTitle.height]
         // bgcolor: 'green'
       })
       // const timeTitleBorderRightLine = new Polyline({
@@ -217,18 +191,129 @@ export default {
         size: [leftMain.attr('width'), leftMain.attr('height') - timeTitle.attr('height')],
         pos: [0, timeTitle.attr('height')]
       })
+      const drugListBorderLeftLine = new Polyline({
+        pos: [29.5, 0],
+        points: [0, 0, 0, drugList.attr('height')],
+        strokeColor: 'black',
+        lineWidth: 1
+      })
       const drugListBorderRightLine = new Polyline({
         points: [drugList.attr('width') - 0.5, 0, drugList.attr('width') - 0.5, drugList.attr('height') - 0.5],
         strokeColor: 'black',
         lineWidth: 1
       })
-      drugList.append(drugListBorderRightLine)
+      // const infusion = drugList.getElementsByClassName('infusion')[0]
+      // const bloodTransfusion = drugList.getElementsByClassName('bloodTransfusion')[0]
+      // const outPut = drugList.getElementsByClassName('outPut')[0]
+      const infusion = new Group({ className: 'infusion content' })
+      const bloodTransfusion = new Group({ className: 'bloodTransfusion content' })
+      const outPut = new Group({ className: 'outPut content' })
+      drugList.append(infusion, bloodTransfusion, outPut)
+      console.log(infusion, bloodTransfusion, outPut)
+      const step = Math.round(drugList.attr('height') / (this.configuration.infusion.num + this.configuration.bloodTransfusion.num + this.configuration.outPut.num))
+      infusion.attr({
+        size: [leftMain.attr('width'), step * this.configuration.infusion.num]
+        // bgcolor: 'red'
+      })
+      const text1 = new Label(this.configuration.infusion.text)
+      text1.attr({
+        pos: [0, step * this.configuration.infusion.num / 2],
+        anchor: [0, 0.5],
+        fontSize: 12,
+        fontFamily: '宋体',
+        textAlign: 'center',
+        fillColor: 'black',
+        width: 30,
+        height: infusion.attr('height'),
+        lineHeight: infusion.attr('height')
+      })
+      for (let i = 0; i < this.configuration.infusion.num; i++) {
+        const infusionLine = new Polyline({
+          pos: [30, i * step - 0.5],
+          points: [0, 0, leftMain.attr('width') - 30, 0],
+          strokeColor: 'black',
+          lineWidth: 1
+        })
+        infusion.append(infusionLine)
+      }
+      infusion.append(text1)
+      bloodTransfusion.attr({
+        size: [leftMain.attr('width'), step * this.configuration.bloodTransfusion.num],
+        // bgcolor: 'green',
+        pos: [0, step * this.configuration.infusion.num]
+      })
+      const text2 = new Label(this.configuration.bloodTransfusion.text)
+      text2.attr({
+        pos: [0, step * this.configuration.bloodTransfusion.num / 2],
+        anchor: [0, 0.5],
+        fontSize: 12,
+        fontFamily: '宋体',
+        textAlign: 'center',
+        fillColor: 'black',
+        width: 30,
+        height: bloodTransfusion.attr('height'),
+        lineHeight: bloodTransfusion.attr('height')
+      })
+      bloodTransfusion.append(text2)
+      const bloodTransfusionTopLine = new Polyline({
+        pos: [0, -0.5],
+        points: [0, 0, drugList.attr('width'), 0],
+        strokeColor: 'black',
+        lineWidth: 1
+      })
+      for (let i = 1; i < this.configuration.bloodTransfusion.num; i++) {
+        const centerLine = new Polyline({
+          pos: [30, i * step - 0.5],
+          points: [0, 0, leftMain.attr('width') - 30, 0],
+          strokeColor: 'black',
+          lineWidth: 1
+        })
+        bloodTransfusion.append(centerLine)
+      }
+      bloodTransfusion.append(bloodTransfusionTopLine)
+      outPut.attr({
+        size: [leftMain.attr('width'), step * this.configuration.outPut.num],
+        pos: [0, (this.configuration.bloodTransfusion.num + this.configuration.infusion.num) * step]
+      })
+      for (let i = 1; i < this.configuration.bloodTransfusion.num; i++) {
+        const outPutLine = new Polyline({
+          pos: [30, i * step - 0.5],
+          points: [0, 0, leftMain.attr('width') - 30, 0],
+          strokeColor: 'black',
+          lineWidth: 1
+        })
+        outPut.append(outPutLine)
+      }
+      const text3 = new Label(this.configuration.outPut.text)
+      text3.attr({
+        pos: [0, step * this.configuration.outPut.num / 2],
+        anchor: [0, 0.5],
+        fontSize: 12,
+        fontFamily: '宋体',
+        textAlign: 'center',
+        fillColor: 'black',
+        width: 30,
+        height: outPut.attr('height'),
+        lineHeight: outPut.attr('height')
+      })
+      const outPutTopLine = new Polyline({
+        pos: [0, -0.5],
+        points: [0, 0, drugList.attr('width'), 0],
+        strokeColor: 'black',
+        lineWidth: 1
+      })
+      outPut.append(text3)
+      if (this.configuration.outPut.num !== 0) {
+        outPut.append(outPutTopLine)
+      }
+      drugList.append(drugListBorderLeftLine, drugListBorderRightLine)
+
       const middlePart = this.layer.getElementsByClassName('middlePart')[0]
       middlePart.attr({
         size: [
           Math.round(
             this.layer.width *
-              (1 - this.leftPartWidthRate - this.rightPartWidthRate)
+              (1 - this.configuration.leftPartWidthRate - this.configuration.rightPartWidthRate)
           ),
           this.layer.height
         ],
@@ -238,7 +323,7 @@ export default {
       // middlePart/xAxis
       const xAxis = middlePart.getElementsByClassName('xAxis')[0]
       xAxis.attr({
-        size: [middlePart.attr('width'), this.timeTitle.height]
+        size: [middlePart.attr('width'), this.configuration.timeTitle.height]
       })
       const xAxisBorderRightLine = new Polyline({
         pos: [xAxis.attr('width') - 0.5, 0],
@@ -259,7 +344,7 @@ export default {
         size: [
           middlePart.attr('width'),
           middlePart.attr('height') -
-            this.timeTitle.height
+            this.configuration.timeTitle.height
         ],
         pos: [0, xAxis.attr('height')]
       })
@@ -269,7 +354,7 @@ export default {
         strokeColor: 'black',
         lineWidth: 1
       })
-      // const gridBorderBottomLine = new Polyline({
+      //   const gridBorderBottomLine = new Polyline({
       //   pos: [0, grid.attr('height') - 0.5],
       //   points: [0, 0, grid.attr('width'), 0],
       //   strokeColor: 'black',
@@ -281,7 +366,7 @@ export default {
       const rightPart = this.layer.getElementsByClassName('rightPart')[0]
       rightPart.attr({
         size: [
-          Math.round(this.layer.width * this.rightPartWidthRate),
+          Math.round(this.layer.width * this.configuration.rightPartWidthRate),
           this.layer.height
         ],
         pos: [leftPart.attr('width') + middlePart.attr('width'), 0]
@@ -290,7 +375,7 @@ export default {
       // rightPart/totalTitle
       const totalTitle = rightPart.getElementsByClassName('totalTitle')[0]
       totalTitle.attr({
-        size: [rightPart.attr('width'), this.timeTitle.height]
+        size: [rightPart.attr('width'), this.configuration.timeTitle.height]
       })
       const totalTitleBorderBottomLine = new Polyline({
         pos: [0, totalTitle.attr('height') - 0.5],
@@ -305,58 +390,59 @@ export default {
       legend.attr({
         size: [
           rightPart.attr('width'),
-          rightPart.attr('height') - this.timeTitle.height
+          rightPart.attr('height') - this.configuration.timeTitle.height
         ],
-        pos: [0, this.timeTitle.height]
+        pos: [0, this.configuration.timeTitle.height]
       })
     },
     setContent () {
       this.setLeftTitle()
       this.setTimeTitle()
       this.setDrugContent()
+      this.setXAxisList()
       this.setXAxis()
       this.setGrid()
       this.setTotalTitle()
     },
     setDrugContent () {
-      const leftPart = this.layer.getElementsByClassName('leftPart')[0]
-      const drugList = leftPart.getElementsByClassName('drugList')[0]
-      const width = Math.round(drugList.attr('width'))
-      const lineHeight = Math.round(drugList.attr('height')) / this.drugNumber
-      for (let i = 0; i < this.drugNumber - 1; i++) {
-        const line = new Polyline({
-          pos: [0, Math.round(lineHeight * (i + 1)) - 0.5],
-          points: [0, 0, width, 0],
-          strokeColor: 'black',
-          lineWidth: 1
-        })
-        drugList.append(line)
-      }
-      for (let i = 0; i < this.drugNumber; i++) {
-        if (this.drugList[i]) {
-          const text = new Label(this.drugList[i].name)
-          text.attr({
-            pos: [0, lineHeight * i],
-            anchor: [0, 0],
-            fontSize: 12,
-            fontFamily: '宋体',
-            textAlign: 'center',
-            fillColor: 'blue',
-            width: width,
-            height: lineHeight,
-            lineHeight: lineHeight
-          })
-          drugList.append(text)
-        }
-      }
+      // const leftPart = this.layer.getElementsByClassName('leftPart')[0]
+      // const drugList = leftPart.getElementsByClassName('drugList')[0]
+      // const width = Math.round(drugList.attr('width'))
+      // const lineHeight = Math.round(drugList.attr('height')) / this.drugNumber
+      // for (let i = 0; i < this.drugNumber - 1; i++) {
+      //   const line = new Polyline({
+      //     pos: [0, Math.round(lineHeight * (i + 1)) - 0.5],
+      //     points: [0, 0, width, 0],
+      //     strokeColor: 'black',
+      //     lineWidth: 1
+      //   })
+      //   drugList.append(line)
+      // }
+      // for (let i = 0; i < this.drugNumber; i++) {
+      //   if (this.drugList[i]) {
+      //     const text = new Label(this.drugList[i].name)
+      //     text.attr({
+      //       pos: [0, lineHeight * i],
+      //       anchor: [0, 0],
+      //       fontSize: 12,
+      //       fontFamily: '宋体',
+      //       textAlign: 'center',
+      //       fillColor: 'blue',
+      //       width: width,
+      //       height: lineHeight,
+      //       lineHeight: lineHeight
+      //     })
+      //     drugList.append(text)
+      //   }
+      // }
     },
     setLeftTitle () {
       const leftTitle = this.layer.getElementsByClassName('leftTitle')[0]
       const width = leftTitle.attr('width')
       const height = leftTitle.attr('height')
-      const textArr = this.leftTitle.text.split('')
+      const textArr = this.configuration.leftTitle.text.split('')
       // const textArr = this.leftTitle.text
-      const lineHeight = this.leftTitle.lineHeight
+      const lineHeight = this.configuration.leftTitle.lineHeight
       const titleTextGroup = new Group()
       titleTextGroup.attr({
         size: [40 - 1, textArr.length * lineHeight],
@@ -397,50 +483,50 @@ export default {
     },
     setTimeTitle () {
       const timeTitle = this.layer.getElementsByClassName('timeTitle')[0]
-      const text = new Label(this.timeTitle.text)
+      const text = new Label(this.configuration.timeTitle.text)
       text.attr({
         fontSize: 12,
         fontFamily: '宋体',
         textAlign: 'center',
         fillColor: 'black',
         width: Math.round(timeTitle.attr('width')),
-        height: this.timeTitle.height,
-        lineHeight: this.timeTitle.lineHeight
+        height: this.configuration.timeTitle.height,
+        lineHeight: this.configuration.timeTitle.lineHeight
       })
       timeTitle.append(text)
     },
     setTotalTitle () {
       const totalTitle = this.layer.getElementsByClassName('totalTitle')[0]
-      const text = new Label(this.totalTitle.text)
+      const text = new Label(this.configuration.totalTitle.text)
       text.attr({
         fontSize: 12,
         fontFamily: '宋体',
         textAlign: 'center',
         fillColor: 'black',
         width: Math.round(totalTitle.attr('width')),
-        height: this.timeTitle.height,
-        lineHeight: this.timeTitle.lineHeight
+        height: this.configuration.timeTitle.height,
+        lineHeight: this.configuration.timeTitle.lineHeight
       })
       totalTitle.append(text)
     },
     setXAxisList () {
-      const startMoment = +moment(this.xAxis.startTime)
-      const endMoment = +moment(this.xAxis.endTime)
+      const startMoment = +moment(this.configuration.xAxis.startTime)
+      const endMoment = +moment(this.configuration.xAxis.endTime)
       const list = []
       for (let i = startMoment; i < endMoment;) {
         list.push({
           // value: i - startMoment,
           label: moment(i).format('HH:mm')
         })
-        i += this.xAxis.timeInterval
+        i += this.configuration.xAxis.timeInterval
       }
-      this.xAxis.list = list
+      this.configuration.xAxis.list = list
     },
     setXAxis () {
       const xAxis = this.layer.getElementsByClassName('xAxis')[0]
       const width = xAxis.attr('width')
       const height = xAxis.attr('height')
-      const list = this.xAxis.list
+      const list = this.configuration.xAxis.list
       const scale = width / list.length
       list.forEach((item, index, arr) => {
         const label = new Label(item.label.toString())
@@ -461,7 +547,7 @@ export default {
       const grid = this.layer.getElementsByClassName('grid')[0]
       const width = grid.attr('width')
       const height = grid.attr('height')
-      const xAxislist = this.xAxis.list
+      const xAxislist = this.configuration.xAxis.list
       const xScale = width / xAxislist.length
       xAxislist.forEach((item, index, arr) => {
         if (index) {
@@ -473,11 +559,11 @@ export default {
           })
           grid.append(mainLine)
         }
-        for (let i = 1; i < this.xAxis.lineInterval; i++) {
+        for (let i = 1; i < this.configuration.xAxis.lineInterval; i++) {
           const line = new Polyline({
             pos: [
               Math.round(
-                index * xScale + i * (xScale / this.xAxis.lineInterval)
+                index * xScale + i * (xScale / this.configuration.xAxis.lineInterval)
               ) - 0.5,
               0
             ],
@@ -494,8 +580,9 @@ export default {
       //   return Math.max(max, item.values.length)
       // }, 0) - 1
       // const yScale = height / yAxislistMax
-      const yScale = height / this.drugNumber
-      for (let index = 0; index < this.drugNumber; index++) {
+      const lineNumber = this.configuration.infusion.num + this.configuration.bloodTransfusion.num + this.configuration.outPut.num
+      const yScale = Math.round(height / lineNumber)
+      for (let index = 0; index < lineNumber; index++) {
         if (index) {
           const mainLine = new Polyline({
             pos: [0, Math.round(index * yScale) - 0.5],
@@ -526,7 +613,7 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
-.anaesDrug {
+.inOut {
   height: 100%;
   width: 100%;
   border: 1px solid black;

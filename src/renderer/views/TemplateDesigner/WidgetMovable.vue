@@ -9,7 +9,8 @@
     @dragend="onDragEnd"
     @dragover="onDragOver"
     @drop="onDrop"
-    @dblclick="onDblckick"
+    @click.stop="()=>{}"
+    @dblclick.stop="onDblckick"
     @keyup.delete="onDelete"
   >
     <div

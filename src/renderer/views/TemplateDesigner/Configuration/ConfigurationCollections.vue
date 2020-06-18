@@ -43,6 +43,10 @@
 <script>
 import ConfigurationCollection from '@/components/ConfigurationCollection/index'
 export default {
+  model: {
+    prop: 'value',
+    event: 'change'
+  },
   data () {
     return {
       input3: '',
@@ -60,12 +64,18 @@ export default {
       activeIndex2: null
     }
   },
+  props: {
+    value: {
+      type: Array,
+      required: true
+    }
+  },
   watch: {
-    detailData: {
-      handler (newVal) {
-        return newVal
+    value: {
+      handler (newVal, old) {
+        this.basicData = JSON.parse(JSON.stringify(newVal))
       },
-      deep: true
+      immediate: true
     }
   },
   components: {
@@ -97,10 +107,6 @@ export default {
       }
       // const obj = { name: `数据项${length + 1}`, value: `数据项${length + 1}`, collection: [] }
       this.basicData.push(obj)
-      if (!this.activeIndex) {
-        this.detailData = this.basicData[0]
-        this.activeIndex = 0
-      }
     },
     handleDelete (index) {
       this.basicData.splice(index, 1)

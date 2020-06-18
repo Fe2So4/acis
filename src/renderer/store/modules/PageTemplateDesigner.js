@@ -1,12 +1,17 @@
 const state = () => ({
   widgetMap: new Map(), // 控件属性map集
   widgetList: [], // 控件属性列表
-  activeWidgetId: null// 激活项id
+  activeWidgetId: null, // 激活项id
+  designerWidth: 904,
+  designerHeight: 1366,
+  designerActive: false
 })
 
 const getters = {
   // 获取当前激活项属性
-  activeWidget: state => state.widgetMap.get(state.activeWidgetId)
+  activeWidget: state => state.widgetMap.get(state.activeWidgetId),
+  // 获取当前模板激活状态
+  designerActive: state => state.designerActive
 }
 
 const mutations = {
@@ -30,6 +35,18 @@ const mutations = {
   SET_ACTIVE_WIDGET (state, id) {
     // 设置当前激活项
     state.activeWidgetId = id
+  },
+  // 设置模板激活状态
+  SET_DESIGNER_ACTIVE (state, payload) {
+    state.designerActive = payload
+  },
+  // 设置模板宽度
+  SET_DESIGNER_WIDTH (state, payload) {
+    state.designerWidth = payload
+  },
+  // 设置模板高度
+  SET_DESIGNER_HEIGHT (state, payload) {
+    state.designerHeight = payload
   }
 }
 
@@ -44,6 +61,15 @@ const actions = {
   },
   setActiveWidget ({ commit }, widget) {
     commit('SET_ACTIVE_WIDGET', widget)
+  },
+  setDesignerActive ({ commit }, payload) {
+    commit('SET_DESIGNER_ACTIVE', payload)
+  },
+  setDesignerWidth ({ commit }, payload) {
+    commit('SET_DESIGNER_WIDTH', payload)
+  },
+  setDesignerHeight ({ commit }, payload) {
+    commit('SET_DESIGNER_WIDTH', payload)
   }
 }
 

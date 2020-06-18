@@ -98,6 +98,36 @@ export default function getConfigurationItems (widgetName) {
         },
         drugNumber: 10
       }
+    case 'widget-in-out':
+      return {
+        leftPartWidthRate: 0.18,
+        rightPartWidthRate: 0.1,
+        leftTitle: {
+          text: '输液输血',
+          width: 40,
+          lineHeight: 30
+        },
+        timeTitle: {
+          text: '时间',
+          height: 0, // 是否显示顶部时间条，将高度置为0即可
+          lineHeight: 30
+        },
+        totalTitle: {
+          text: '总量'
+        },
+        xAxis: {
+          startTime: '2018-02-01 08:00',
+          endTime: '2018-02-01 12:00',
+          timeInterval: 15 * 60 * 1000,
+          lineInterval: 3
+        },
+        drugNumber: 10,
+        infusion: { text: '输液', num: 3 },
+        bloodTransfusion: {
+          text: '输血', num: 2
+        },
+        outPut: { text: '用量', num: 0 }
+      }
     default:
       return {}
   }

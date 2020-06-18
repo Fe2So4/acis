@@ -1,6 +1,9 @@
 <template>
   <div class="contentConfiguration">
-    <el-collapse v-model="activeNames">
+    <el-collapse
+      v-model="activeNames"
+      v-if="!designerActive"
+    >
       <div
         v-for="(group, groupName) of configurationGroups"
         :key="groupName"
@@ -27,6 +30,38 @@
         </el-collapse-item>
       </div>
     </el-collapse>
+    <el-collapse
+      v-else
+      v-model="activeNames"
+    >
+      <el-collapse-item
+        title="布局"
+        name="layout"
+      >
+        <el-form
+          ref="form"
+          label-width="80px"
+          size="small"
+        >
+          <el-form-item label="宽度">
+            <el-input-number
+              v-model="width"
+              :min="0"
+              controls-position="right"
+              @change="onChangeWidth"
+            />
+          </el-form-item>
+          <el-form-item label="高度">
+            <el-input-number
+              v-model="height"
+              :min="0"
+              controls-position="right"
+              @change="onChangeHeight"
+            />
+          </el-form-item>
+        </el-form>
+      </el-collapse-item>
+    </el-collapse>
     <!-- <el-form
       ref="form"
       label-width="80px"
@@ -51,6 +86,8 @@ export default {
   data () {
     return {
       data: [],
+      width: null,
+      height: null,
       properties: null,
       id: null,
       name: null,
@@ -73,18 +110,29 @@ export default {
         }
       },
       deep: true
+    },
+    designerWidth: {
+      handler (newVal, old) {
+        this.width = newVal
+      },
+      immediate: true
+    },
+    designerHeight: {
+      handler (newVal, old) {
+        this.height = newVal
+      },
+      immediate: true
     }
   },
   computed: {
-    ...mapGetters(['activeWidget']),
-    ...mapState(['activeWidgetId']),
+    ...mapGetters(['activeWidget', 'designerActive']),
+    ...mapState(['activeWidgetId', 'designerWidth', 'designerHeight']),
     configurationGroups () {
       const groups = {
         layout: {},
         position: {},
         custom: {}
       }
-
       // eslint-disable-next-line no-unused-vars
       for (const key in this.properties) {
         if (Object.keys(configurationMap).includes(key)) {
@@ -114,8 +162,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setWidgetMap']),
-
+    ...mapActions(['setWidgetMap', 'setDesignerWidth', 'setDesignerHeight']),
+    onChangeWidth () {
+      this.setDesignerWidth(this.width)
+    },
+    onChangeHeight () {
+      this.setDesignerHeight(this.height)
+    },
     onChange (properties) {
       this.setWidgetMap({
         id: this.id,
