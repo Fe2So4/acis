@@ -4,47 +4,6 @@
       <el-button @click="onClick">
         配置
       </el-button>
-      <el-dialog
-        center
-        title="纵坐标配置"
-        :visible.sync="visible"
-      >
-        <el-tree
-          :data="treeData"
-          node-key="id"
-          default-expand-all
-          :expand-on-click-node="false"
-        >
-          <span
-            class="custom-tree-node"
-            slot-scope="{ node, data }"
-          >
-            <span>{{ node.label }}</span>
-            <span>
-              <el-button
-                type="text"
-                size="mini"
-                @click="() => append(data)"
-              >Append</el-button>
-              <el-button
-                type="text"
-                size="mini"
-                @click="() => remove(node, data)"
-              >Delete</el-button>
-            </span>
-          </span>
-        </el-tree>
-        <span
-          slot="footer"
-          class="dialog-footer"
-        >
-          <el-button @click="visible = false">取 消</el-button>
-          <el-button
-            type="primary"
-            @click="visible = false"
-          >确 定</el-button>
-        </span>
-      </el-dialog>
     </el-form-item>
     <el-form-item label="横线分隔">
       <el-input-number
@@ -54,13 +13,22 @@
         @change="onChangeLineInterval"
       />
     </el-form-item>
+    <dialog-collection-editor
+      v-if="dialogCollectionEditorConfig.visible"
+      :configuration="dialogCollectionEditorConfig"
+      :value="value.list"
+      @change="onChangeList"
+    />
   </div>
 </template>
 
 <script>
-let id = 1000
+import DialogCollectionEditor from './DialogCollectionEditor'
 export default {
   name: 'ConfigurationYAxis',
+  components: {
+    DialogCollectionEditor
+  },
   model: {
     prop: 'value',
     event: 'change'
@@ -73,77 +41,53 @@ export default {
   },
   data () {
     return {
+      dialogCollectionEditorConfig: {}
+    }
+  },
+  created () {
+    this.dialogCollectionEditorConfig = {
       visible: false,
-      treeData: [
+      title: '纵坐标配置',
+      field: [
         {
-          id: 1,
-          label: '一级 1',
-          children: [
-            {
-              id: 4,
-              label: '二级 1-1',
-              children: [
-                {
-                  id: 9,
-                  label: '三级 1-1-1'
-                },
-                {
-                  id: 10,
-                  label: '三级 1-1-2'
-                }
-              ]
-            }
-          ]
+          name: 'label',
+          default: 'Y坐标轴',
+          description: '坐标轴名',
+          config: null
         },
         {
-          id: 2,
-          label: '一级 2',
-          children: [
-            {
-              id: 5,
-              label: '二级 2-1'
-            },
-            {
-              id: 6,
-              label: '二级 2-2'
-            }
-          ]
+          name: 'index',
+          default: 0,
+          description: '坐标轴索引',
+          config: null
         },
         {
-          id: 3,
-          label: '一级 3',
-          children: [
-            {
-              id: 7,
-              label: '二级 3-1'
-            },
-            {
-              id: 8,
-              label: '二级 3-2'
-            }
-          ]
+          name: 'values',
+          default: [],
+          description: '值',
+          config: {
+            visible: false,
+            title: '单个纵坐标配置',
+            field: [
+              {
+                name: 'label',
+                default: '新项目',
+                description: '显示文字',
+                config: null
+              },
+              {
+                name: 'value',
+                default: 0,
+                description: '值',
+                config: null
+              }
+            ]
+          }
         }
       ]
     }
   },
   methods: {
-    onClick () {
-      this.visible = true
-    },
-    append (data) {
-      const newChild = { id: id++, label: 'testtest', children: [] }
-      if (!data.children) {
-        this.$set(data, 'children', [])
-      }
-      data.children.push(newChild)
-    },
-
-    remove (node, data) {
-      const parent = node.parent
-      const children = parent.data.children || parent.data
-      const index = children.findIndex(d => d.id === data.id)
-      children.splice(index, 1)
-    },
     onChangeLineInterval (currentValue, oldValue) {
       const configuration = Object.assign({}, this.value, {
         lineInterval: currentValue
@@ -151,6 +95,17 @@ export default {
       this.$emit('change', {
         yAxis: configuration
       })
+    },
+    onChangeList (currentValue) {
+      const configuration = Object.assign({}, this.value, {
+        list: currentValue
+      })
+      this.$emit('change', {
+        yAxis: configuration
+      })
+    },
+    onClick () {
+      this.dialogCollectionEditorConfig.visible = true
     }
   }
 }

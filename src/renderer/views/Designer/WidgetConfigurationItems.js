@@ -25,6 +25,7 @@ export default function getConfigurationItems (widgetName) {
         yAxis: {
           list: [
             {
+              label: 'Y轴1',
               index: 0,
               values: [
                 {
@@ -42,6 +43,7 @@ export default function getConfigurationItems (widgetName) {
               ]
             },
             {
+              label: 'Y轴2',
               index: 1,
               values: [
                 {
@@ -82,7 +84,34 @@ export default function getConfigurationItems (widgetName) {
           color: '#000000',
           width: 1
         },
-        placeholder: '占位内容'
+        placeholder: '占位内容',
+        dataSource: {
+          tableName: '',
+          className: ''
+        }
+      }
+    case 'widget-select':
+      return {
+        font: {
+          size: 9,
+          weight: 'normal',
+          lineHeight: 30,
+          textAlign: 'left'
+        },
+        border: {
+          position: ['top', 'right', 'bottom', 'left'],
+          color: '#000000',
+          width: 1
+        },
+        placeholder: '占位内容',
+        dataSource: {
+          tableName: '',
+          className: ''
+        },
+        dictionarySource: {
+          dictTableName: '',
+          dictClassName: ''
+        }
       }
     case 'widget-text':
       return {
@@ -99,6 +128,10 @@ export default function getConfigurationItems (widgetName) {
         },
         text: '文本内容'
       }
+    case 'widget-line':
+      return {
+        direction: 'horizontal'
+      }
     default:
       return {}
   }
@@ -106,7 +139,8 @@ export default function getConfigurationItems (widgetName) {
 
 const configurationItems = {
   layout: ['width', 'height'],
-  position: ['positionX', 'positionY']
+  position: ['positionX', 'positionY'],
+  data: ['dataSource', 'dictionarySource']
 }
 
 const configurationMap = {}

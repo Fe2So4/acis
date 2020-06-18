@@ -38,6 +38,7 @@ import getConfigurationItems from './WidgetConfigurationItems.js'
 // import Mock from 'mockjs'
 import WidgetMovable from './WidgetMovable'
 import WidgetInput from './WidgetInput'
+import WidgetSelect from './WidgetSelect'
 import WidgetTextarea from './WidgetTextarea'
 import WidgetText from './WidgetText'
 import WidgetLine from './WidgetLine'
@@ -52,6 +53,7 @@ export default {
   components: {
     WidgetMovable,
     WidgetInput,
+    WidgetSelect,
     WidgetTextarea,
     WidgetText,
     WidgetLine,

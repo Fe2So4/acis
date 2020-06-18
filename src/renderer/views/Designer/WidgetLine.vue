@@ -1,12 +1,61 @@
 <template>
-  <div class="widgetLine">
-    <hr class="line">
+  <div
+    class="widgetLine"
+    :style="widgetStyle"
+  >
+    <div
+      class="line"
+      :style="lineStyle"
+    />
   </div>
 </template>
 <script>
 export default {
-  name: 'WidgetInput',
-  components: {}
+  name: 'WidgetLine',
+  props: {
+    configuration: {
+      type: Object,
+      required: true
+    }
+  },
+  watch: {
+    configuration: {
+      deep: true,
+      handler: function (val) {
+        this.setStyle()
+      }
+    }
+  },
+  data () {
+    return {
+      widgetStyle: {},
+      lineStyle: {}
+    }
+  },
+  created () {
+    this.setStyle()
+  },
+  methods: {
+    setStyle () {
+      if (this.configuration.direction === 'horizontal') {
+        this.widgetStyle = {
+          'flex-direction': 'column'
+        }
+        this.lineStyle = {
+          height: '1px',
+          width: '100%'
+        }
+      } else {
+        this.widgetStyle = {
+          'flex-direction': 'row'
+        }
+        this.lineStyle = {
+          height: '100%',
+          width: '1px'
+        }
+      }
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
