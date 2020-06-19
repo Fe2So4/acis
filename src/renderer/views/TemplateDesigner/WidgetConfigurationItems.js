@@ -79,7 +79,7 @@ export default function getConfigurationItems (widgetName) {
         rightPartWidthRate: 0.1,
         leftTitle: {
           text: '麻醉用药',
-          width: 40,
+          width: 50,
           lineHeight: 30
         },
         timeTitle: {
@@ -153,6 +153,72 @@ export default function getConfigurationItems (widgetName) {
         column: {
           num: 8
         }
+      }
+    case 'widget-image':
+      return {
+        imgUrl: 'http://47.103.105.200/htmlFile/056a0b71-b085-4947-a71f-6df7d0529e50_100000000.jpg'
+      }
+    case 'widget-input':
+    case 'widget-text-area':
+      return {
+        font: {
+          size: 9,
+          weight: 'normal',
+          lineHeight: 30,
+          textAlign: 'left'
+        },
+        border: {
+          position: ['top', 'right', 'bottom', 'left'],
+          color: '#000000',
+          width: 1
+        },
+        placeholder: '占位内容',
+        dataSource: {
+          tableName: '',
+          className: ''
+        }
+      }
+    case 'widget-select':
+      return {
+        font: {
+          size: 9,
+          weight: 'normal',
+          lineHeight: 30,
+          textAlign: 'left'
+        },
+        border: {
+          position: ['top', 'right', 'bottom', 'left'],
+          color: '#000000',
+          width: 1
+        },
+        placeholder: '占位内容',
+        dataSource: {
+          tableName: '',
+          className: ''
+        },
+        dictionarySource: {
+          dictTableName: '',
+          dictClassName: ''
+        }
+      }
+    case 'widget-text':
+      return {
+        font: {
+          size: 9,
+          weight: 'normal',
+          lineHeight: 30,
+          textAlign: 'left'
+        },
+        border: {
+          position: ['top', 'right', 'bottom', 'left'],
+          color: '#000000',
+          width: 1
+        },
+        text: '文本内容'
+      }
+    case 'widget-line':
+      return {
+        direction: 'horizontal'
       }
     default:
       return {}

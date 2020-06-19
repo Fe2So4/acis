@@ -60,6 +60,10 @@ export default {
         {
           label: '监测表格',
           name: 'widget-anaes-table'
+        },
+        {
+          label: '图片',
+          name: 'widget-image'
         }
       ]
     }

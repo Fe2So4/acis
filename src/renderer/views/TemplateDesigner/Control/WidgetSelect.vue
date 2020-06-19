@@ -1,17 +1,18 @@
 <template>
   <div
-    class="widgetTextArea"
+    class="widgetSelect"
   >
-    <textarea
-      class="textarea"
+    <input
+      class="input"
+      type="text"
       :style="widgetStyle"
       :placeholder="configuration.placeholder"
-    />
+    >
   </div>
 </template>
 <script>
 export default {
-  name: 'WidgetTextArea',
+  name: 'WidgetSelect',
   props: {
     configuration: {
       type: Object,
@@ -55,10 +56,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.widgetTextArea {
+.widgetSelect {
   width: 100%;
   height: 100%;
-  .textarea {
+  .input {
     width: 100%;
     height: 100%;
     background: transparent;

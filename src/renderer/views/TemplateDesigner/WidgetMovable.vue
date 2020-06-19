@@ -16,6 +16,7 @@
     <div
       v-show="active"
       class="mask"
+      :style="{'borderColor': active ? 'rebeccapurple' : 'transparent'}"
     />
     <div
       class="circle"
@@ -348,12 +349,12 @@ export default {
 .widgetMovable {
   position: absolute;
   background: transparent;
-  border: 2px solid rebeccapurple;
+  // border: 2px solid rebeccapurple;
   .mask {
     width: 100%;
     height: 100%;
     position: absolute;
-    border: 2px solid rebeccapurple;
+    border: 2px solid transparent;;
     z-index: 1;
   }
   .circle {

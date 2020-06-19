@@ -1,28 +1,59 @@
 <template>
   <div
     class="widgetLine"
-    :class="{'horizontal':direction==='2' ? true:''}"
+    :style="widgetStyle"
   >
-    <hr
+    <div
       class="line"
-      :class="{'vertical':direction==='2' ? true:''}"
-    >
+      :style="lineStyle"
+    />
   </div>
 </template>
 <script>
-import { createNamespacedHelpers } from 'vuex'
-const { mapState } = createNamespacedHelpers('PageTemplateDesigner')
 export default {
-  name: 'WidgetInput',
-  components: {},
-  computed: {
-    ...mapState({
-      direction: state => state.direction
-    })
+  name: 'WidgetLine',
+  props: {
+    configuration: {
+      type: Object,
+      required: true
+    }
   },
   watch: {
-    direction (newVal, old) {
-      return newVal
+    configuration: {
+      deep: true,
+      handler: function (val) {
+        this.setStyle()
+      }
+    }
+  },
+  data () {
+    return {
+      widgetStyle: {},
+      lineStyle: {}
+    }
+  },
+  created () {
+    this.setStyle()
+  },
+  methods: {
+    setStyle () {
+      if (this.configuration.direction === 'horizontal') {
+        this.widgetStyle = {
+          'flex-direction': 'column'
+        }
+        this.lineStyle = {
+          height: '1px',
+          width: '100%'
+        }
+      } else {
+        this.widgetStyle = {
+          'flex-direction': 'row'
+        }
+        this.lineStyle = {
+          height: '100%',
+          width: '1px'
+        }
+      }
     }
   }
 }
@@ -38,15 +69,6 @@ export default {
     width: 100%;
     height: 1px;
     background: black;
-    margin:unset;
-    border: unset;
   }
-  .vertical{
-    width: 1px;
-    height: 100%;
-  }
-}
-.horizontal{
-  flex-direction: row;
 }
 </style>

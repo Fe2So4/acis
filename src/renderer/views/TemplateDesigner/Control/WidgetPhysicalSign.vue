@@ -12,90 +12,39 @@ import debounce from 'lodash/debounce'
 import moment from 'moment'
 const { Scene, Group, Label, Polyline } = spritejs
 export default {
+  props: {
+    configuration: {
+      type: Object,
+      required: true
+    }
+  },
   data () {
     return {
       layer: null,
-      layout: {},
-      leftPartWidthRate: 0.18,
-      rightPartWidthRate: 0.1,
-      leftTitle: {
-        text: '左标题',
-        width: 50,
-        lineHeight: 30
-      },
-      timeTitle: {
-        text: '时间',
-        height: 30,
-        lineHeight: 30
-      },
-      eventTitle: {
-        text: '事件标题',
-        height: 40,
-        lineHeight: 40
-      },
-      totalTitle: {
-        text: '图例'
-      },
-      yAxis: {
-        list: [
-          {
-            index: 0,
-            values: [
-              {
-                value: 0,
-                label: '℃'
-              },
-              {
-                value: 10,
-                label: 10
-              },
-              {
-                value: 20,
-                label: '到顶啦'
-              }
-            ]
-          },
-          {
-            index: 1,
-            values: [
-              {
-                value: 30,
-                label: '30'
-              },
-              {
-                value: 40,
-                label: 40
-              },
-              {
-                value: 50,
-                label: '顶部'
-              }
-            ]
-          }
-        ],
-        lineInterval: 2
-      },
-      xAxis: {
-        startTime: '2018-02-01 08:00',
-        endTime: '2018-02-01 12:00',
-        timeInterval: 15 * 60 * 1000,
-        lineInterval: 3
+      layout: {}
+    }
+  },
+  watch: {
+    configuration: {
+      deep: true,
+      handler: function (val) {
+        this.resize()
       }
     }
   },
   created () {
-    this.setXAxisList()
+    this.resize = debounce(this.domResizeListener, 20)
   },
   mounted () {
     this.renderScene()
     this.createGroups()
     this.setLayout()
     this.setContent()
-    addListener(this.$refs.physicalSign, debounce(this.domResizeListener, 20))
+    addListener(this.$refs.physicalSign, this.resize)
   },
   beforeDestroy () {
-    this.layer = null
-    removeListener(this.$refs.physicalSign, this.domResizeListener)
+    this.scene = null
+    removeListener(this.$refs.physicalSign, this.resize)
   },
   methods: {
     domResizeListener () {
@@ -172,14 +121,14 @@ export default {
       const leftPart = this.layer.getElementsByClassName('leftPart')[0]
       leftPart.attr({
         size: [
-          Math.round(this.layer.width * this.leftPartWidthRate),
+          Math.round(this.layer.width * this.configuration.leftPartWidthRate),
           this.layer.height
         ]
       })
       // leftPart/leftTitle
       const leftTitle = leftPart.getElementsByClassName('leftTitle')[0]
       leftTitle.attr({
-        size: [this.leftTitle.width || 0, leftPart.attr('height')]
+        size: [this.configuration.leftTitle.width || 0, leftPart.attr('height')]
       })
       const leftTitleBorderRightLine = new Polyline({
         pos: [leftTitle.attr('width') - 0.5, 0],
@@ -200,7 +149,7 @@ export default {
       // leftPart/leftMain/timeTitle
       const timeTitle = leftMain.getElementsByClassName('timeTitle')[0]
       timeTitle.attr({
-        size: [leftMain.attr('width'), this.timeTitle.height]
+        size: [leftMain.attr('width'), this.configuration.timeTitle.height]
       })
       const timeTitleBorderRightLine = new Polyline({
         pos: [timeTitle.attr('width') - 0.5, 0],
@@ -216,10 +165,10 @@ export default {
         size: [
           leftMain.attr('width'),
           leftMain.attr('height') -
-            this.timeTitle.height -
-            this.eventTitle.height
+            this.configuration.timeTitle.height -
+            this.configuration.eventTitle.height
         ],
-        pos: [0, this.timeTitle.height]
+        pos: [0, this.configuration.timeTitle.height]
       })
       const yAxisBorderRightLine = new Polyline({
         pos: [yAxis.attr('width') - 0.5, 0],
@@ -238,8 +187,8 @@ export default {
       // leftPart/leftMain/eventTitle
       const eventTitle = leftMain.getElementsByClassName('eventTitle')[0]
       eventTitle.attr({
-        size: [leftMain.attr('width'), this.eventTitle.height],
-        pos: [0, leftMain.attr('height') - this.eventTitle.height]
+        size: [leftMain.attr('width'), this.configuration.eventTitle.height],
+        pos: [0, leftMain.attr('height') - this.configuration.eventTitle.height]
       })
       const eventTitleBorderRightLine = new Polyline({
         pos: [eventTitle.attr('width') - 0.5, 0],
@@ -255,7 +204,9 @@ export default {
         size: [
           Math.round(
             this.layer.width *
-              (1 - this.leftPartWidthRate - this.rightPartWidthRate)
+              (1 -
+                this.configuration.leftPartWidthRate -
+                this.configuration.rightPartWidthRate)
           ),
           this.layer.height
         ],
@@ -265,7 +216,7 @@ export default {
       // middlePart/xAxis
       const xAxis = middlePart.getElementsByClassName('xAxis')[0]
       xAxis.attr({
-        size: [middlePart.attr('width'), this.timeTitle.height]
+        size: [middlePart.attr('width'), this.configuration.timeTitle.height]
       })
       const xAxisBorderRightLine = new Polyline({
         pos: [xAxis.attr('width') - 0.5, 0],
@@ -286,8 +237,8 @@ export default {
         size: [
           middlePart.attr('width'),
           middlePart.attr('height') -
-            this.timeTitle.height -
-            this.eventTitle.height
+            this.configuration.timeTitle.height -
+            this.configuration.eventTitle.height
         ],
         pos: [0, xAxis.attr('height')]
       })
@@ -307,8 +258,11 @@ export default {
       // middlePart/eventTag
       const eventTag = middlePart.getElementsByClassName('eventTag')[0]
       eventTag.attr({
-        size: [middlePart.attr('width'), this.eventTitle.height],
-        pos: [0, middlePart.attr('height') - this.eventTitle.height]
+        size: [middlePart.attr('width'), this.configuration.eventTitle.height],
+        pos: [
+          0,
+          middlePart.attr('height') - this.configuration.eventTitle.height
+        ]
       })
       const eventTagBorderRightLine = new Polyline({
         pos: [eventTag.attr('width') - 0.5, 0],
@@ -322,7 +276,7 @@ export default {
       const rightPart = this.layer.getElementsByClassName('rightPart')[0]
       rightPart.attr({
         size: [
-          Math.round(this.layer.width * this.rightPartWidthRate),
+          Math.round(this.layer.width * this.configuration.rightPartWidthRate),
           this.layer.height
         ],
         pos: [leftPart.attr('width') + middlePart.attr('width'), 0]
@@ -331,7 +285,7 @@ export default {
       // rightPart/totalTitle
       const totalTitle = rightPart.getElementsByClassName('totalTitle')[0]
       totalTitle.attr({
-        size: [rightPart.attr('width'), this.timeTitle.height]
+        size: [rightPart.attr('width'), this.configuration.timeTitle.height]
       })
       const totalTitleBorderBottomLine = new Polyline({
         pos: [0, totalTitle.attr('height') - 0.5],
@@ -346,9 +300,9 @@ export default {
       legend.attr({
         size: [
           rightPart.attr('width'),
-          rightPart.attr('height') - this.timeTitle.height
+          rightPart.attr('height') - this.configuration.timeTitle.height
         ],
-        pos: [0, this.timeTitle.height]
+        pos: [0, this.configuration.timeTitle.height]
       })
     },
     setContent () {
@@ -356,6 +310,7 @@ export default {
       this.setTimeTitle()
       this.setYAxis()
       this.setEventTitle()
+      this.setXAxisList()
       this.setXAxis()
       this.setGrid()
       this.setTotalTitle()
@@ -364,8 +319,8 @@ export default {
       const leftTitle = this.layer.getElementsByClassName('leftTitle')[0]
       const width = leftTitle.attr('width')
       const height = leftTitle.attr('height')
-      const textArr = this.leftTitle.text.split('')
-      const lineHeight = this.leftTitle.lineHeight
+      const textArr = this.configuration.leftTitle.text.split('')
+      const lineHeight = this.configuration.leftTitle.lineHeight
       const titleTextGroup = new Group()
       titleTextGroup.attr({
         size: [width - 1, textArr.length * lineHeight],
@@ -391,22 +346,24 @@ export default {
     },
     setTimeTitle () {
       const timeTitle = this.layer.getElementsByClassName('timeTitle')[0]
-      const text = new Label(this.timeTitle.text)
+      const text = new Label(this.configuration.timeTitle.text)
       text.attr({
         fontSize: 12,
         fontFamily: '宋体',
         textAlign: 'center',
         fillColor: 'black',
         width: Math.round(timeTitle.attr('width')),
-        height: this.timeTitle.height,
-        lineHeight: this.timeTitle.lineHeight
+        height: this.configuration.timeTitle.height,
+        lineHeight: this.configuration.timeTitle.lineHeight
       })
       timeTitle.append(text)
     },
     setYAxis () {
       const yAxis = this.layer.getElementsByClassName('yAxis')[0]
-      const width = Math.round(yAxis.attr('width') / this.yAxis.list.length)
-      this.yAxis.list.forEach(item => {
+      const width = Math.round(
+        yAxis.attr('width') / this.configuration.yAxis.list.length
+      )
+      this.configuration.yAxis.list.forEach(item => {
         const { index, values } = item
         const textGroup = new Group()
         textGroup.attr({
@@ -436,50 +393,50 @@ export default {
     },
     setEventTitle () {
       const eventTitle = this.layer.getElementsByClassName('eventTitle')[0]
-      const text = new Label(this.eventTitle.text)
+      const text = new Label(this.configuration.eventTitle.text)
       text.attr({
         fontSize: 12,
         fontFamily: '宋体',
         textAlign: 'center',
         fillColor: 'black',
         width: Math.round(eventTitle.attr('width')),
-        height: this.eventTitle.height,
-        lineHeight: this.eventTitle.lineHeight
+        height: this.configuration.eventTitle.height,
+        lineHeight: this.configuration.eventTitle.lineHeight
       })
       eventTitle.append(text)
     },
     setTotalTitle () {
       const totalTitle = this.layer.getElementsByClassName('totalTitle')[0]
-      const text = new Label(this.totalTitle.text)
+      const text = new Label(this.configuration.totalTitle.text)
       text.attr({
         fontSize: 12,
         fontFamily: '宋体',
         textAlign: 'center',
         fillColor: 'black',
         width: Math.round(totalTitle.attr('width')),
-        height: this.timeTitle.height,
-        lineHeight: this.timeTitle.lineHeight
+        height: this.configuration.timeTitle.height,
+        lineHeight: this.configuration.timeTitle.lineHeight
       })
       totalTitle.append(text)
     },
     setXAxisList () {
-      const startMoment = +moment(this.xAxis.startTime)
-      const endMoment = +moment(this.xAxis.endTime)
+      const startMoment = +moment(this.configuration.xAxis.startTime)
+      const endMoment = +moment(this.configuration.xAxis.endTime)
       const list = []
       for (let i = startMoment; i < endMoment;) {
         list.push({
           // value: i - startMoment,
           label: moment(i).format('HH:mm')
         })
-        i += this.xAxis.timeInterval
+        i += this.configuration.xAxis.timeInterval * 60 * 1000
       }
-      this.xAxis.list = list
+      this.xAxisList = list
     },
     setXAxis () {
       const xAxis = this.layer.getElementsByClassName('xAxis')[0]
       const width = xAxis.attr('width')
       const height = xAxis.attr('height')
-      const list = this.xAxis.list
+      const list = this.xAxisList
       const scale = width / list.length
       list.forEach((item, index, arr) => {
         const label = new Label(item.label.toString())
@@ -500,7 +457,7 @@ export default {
       const grid = this.layer.getElementsByClassName('grid')[0]
       const width = grid.attr('width')
       const height = grid.attr('height')
-      const xAxislist = this.xAxis.list
+      const xAxislist = this.xAxisList
       const xScale = width / xAxislist.length
       xAxislist.forEach((item, index, arr) => {
         if (index) {
@@ -512,11 +469,12 @@ export default {
           })
           grid.append(mainLine)
         }
-        for (let i = 1; i < this.xAxis.lineInterval; i++) {
+        for (let i = 1; i < this.configuration.xAxis.lineInterval; i++) {
           const line = new Polyline({
             pos: [
               Math.round(
-                index * xScale + i * (xScale / this.xAxis.lineInterval)
+                index * xScale +
+                  i * (xScale / this.configuration.xAxis.lineInterval)
               ) - 0.5,
               0
             ],
@@ -529,7 +487,7 @@ export default {
         }
       })
       const yAxislistMax =
-        this.yAxis.list.reduce((max, item) => {
+        this.configuration.yAxis.list.reduce((max, item) => {
           return Math.max(max, item.values.length)
         }, 0) - 1
       const yScale = height / yAxislistMax
@@ -543,12 +501,13 @@ export default {
           })
           grid.append(mainLine)
         }
-        for (let i = 1; i < this.yAxis.lineInterval; i++) {
+        for (let i = 1; i < this.configuration.yAxis.lineInterval; i++) {
           const line = new Polyline({
             pos: [
               0,
               Math.round(
-                index * yScale + i * (yScale / this.yAxis.lineInterval)
+                index * yScale +
+                  i * (yScale / this.configuration.yAxis.lineInterval)
               ) - 0.5
             ],
             points: [0, 0, width, 0],
@@ -570,6 +529,5 @@ export default {
   border: 1px solid black;
   box-sizing: border-box;
   margin: 0 auto;
-  background: #fff;
 }
 </style>

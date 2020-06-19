@@ -66,6 +66,12 @@ module.exports = () => {
         doctor: '@cname()',
         anaesName: '@cname()'
       }
+    ],
+    'imageList|5': [
+      {
+        label: '@cword(3,6)',
+        value: '@image(\'640x300\',@color)'
+      }
     ]
   })
   return data
