@@ -4,6 +4,7 @@
     :title="configuration.title"
     :visible.sync="configuration.visible"
     :append-to-body="appendToBody"
+    v-dialogDrag
   >
     <div class="content">
       <div>

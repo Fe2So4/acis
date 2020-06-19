@@ -16,7 +16,9 @@
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "postinstall": "npm run lint:fix",
-    "mock": "node ./mock/server.js"
+    "mock": "node ./mock/server.js",
+    "build_schedule": "node .electron-vue/build_schedule.js && electron-builder",
+    "dev_schedule": "node .electron-vue/dev-schedule-runner.js"
   },
   "build": {
     "productName": "acis",

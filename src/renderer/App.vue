@@ -7,7 +7,7 @@
 <script>
 import '@/mock/dataSource'
 export default {
-  name: 'Aims',
+  name: 'Acis',
   mounted () {
     this.$electron.ipcRenderer.on('route', (e, locationName) => {
       if (locationName) {
