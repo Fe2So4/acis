@@ -69,7 +69,7 @@ const actions = {
     commit('SET_DESIGNER_WIDTH', payload)
   },
   setDesignerHeight ({ commit }, payload) {
-    commit('SET_DESIGNER_WIDTH', payload)
+    commit('SET_DESIGNER_Height', payload)
   }
 }
 

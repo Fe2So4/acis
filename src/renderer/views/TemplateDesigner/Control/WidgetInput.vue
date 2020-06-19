@@ -7,6 +7,7 @@
       type="text"
       :style="widgetStyle"
       :placeholder="configuration.placeholder"
+      :readonly="configuration.readonly"
     >
   </div>
 </template>
@@ -17,6 +18,10 @@ export default {
     configuration: {
       type: Object,
       required: true
+    },
+    editMode: {
+      type: Boolean,
+      default: true
     }
   },
   watch: {

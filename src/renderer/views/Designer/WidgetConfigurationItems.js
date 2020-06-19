@@ -21,6 +21,96 @@ export default function getConfigurationItems (widgetName) {
     dictClassName: ''
   }
   switch (widgetName) {
+    case 'widget-checkbox-group':
+      return {
+        singleSelect: '1',
+        collections: [{ label: '项目1', value: '1' }, { label: '项目2', value: '2' }]
+      }
+    case 'widget-anaes-drug':
+      return {
+        leftPartWidthRate: 0.18,
+        rightPartWidthRate: 0.1,
+        leftTitle: {
+          text: '麻醉用药',
+          width: 50,
+          lineHeight: 30
+        },
+        timeTitle: {
+          text: '时间',
+          height: 30,
+          lineHeight: 30
+        },
+        totalTitle: {
+          text: '总量'
+        },
+        xAxis: {
+          startTime: '2018-02-01 08:00',
+          endTime: '2018-02-01 12:00',
+          timeInterval: 15 * 60 * 1000,
+          lineInterval: 3
+        },
+        drugNumber: 10
+      }
+    case 'widget-in-out':
+      return {
+        leftPartWidthRate: 0.18,
+        rightPartWidthRate: 0.1,
+        leftTitle: {
+          text: '输液输血',
+          width: 40,
+          lineHeight: 30
+        },
+        timeTitle: {
+          text: '时间',
+          height: 0, // 是否显示顶部时间条，将高度置为0即可
+          lineHeight: 30
+        },
+        totalTitle: {
+          text: '总量'
+        },
+        xAxis: {
+          startTime: '2018-02-01 08:00',
+          endTime: '2018-02-01 12:00',
+          timeInterval: 15 * 60 * 1000,
+          lineInterval: 3
+        },
+        drugNumber: 10,
+        infusion: { text: '输液', num: 3 },
+        bloodTransfusion: {
+          text: '输血', num: 2
+        },
+        outPut: { text: '用量', num: 0 }
+      }
+    case 'widget-anaes-table':
+      return {
+        leftTitle: {
+          text: '监测',
+          width: 40,
+          lineHeight: 30
+        },
+        // 行标题宽度
+        rowTitle: {
+          width: 128
+        },
+        rowList: [
+          { text: '心电图', colNum: 2 },
+          { text: '氧饱和度', colNum: 1 },
+          { text: '潮气量', colNum: 2 },
+          { text: 'f', colNum: 1 },
+          { text: 'PEAK', colNum: 2 },
+          { text: 'PEEP', colNum: 2 },
+          { text: '中心静脉压', colNum: 2 },
+          { text: '尿量', colNum: 1 },
+          { text: '累计失血量', colNum: 2 }
+        ],
+        anaesColumn: {
+          num: 8
+        }
+      }
+    case 'widget-image':
+      return {
+        imgUrl: 'http://47.103.105.200/htmlFile/056a0b71-b085-4947-a71f-6df7d0529e50_100000000.jpg'
+      }
     case 'widget-physical-sign':
       return {
         border,

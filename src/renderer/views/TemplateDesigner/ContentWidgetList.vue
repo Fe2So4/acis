@@ -47,7 +47,7 @@ export default {
         },
         {
           label: '多行文本',
-          name: 'widget-text-area'
+          name: 'widget-textarea'
         },
         {
           label: '输液输血',

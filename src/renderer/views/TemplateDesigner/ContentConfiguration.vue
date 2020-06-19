@@ -101,6 +101,7 @@ export default {
   watch: {
     activeWidget: {
       handler: function (val, oldVal) {
+        console.log(val)
         if (val) {
           const { id, name, ...properties } = val
           this.id = id
@@ -131,7 +132,8 @@ export default {
       const groups = {
         layout: {},
         position: {},
-        custom: {}
+        custom: {},
+        data: {}
       }
       // eslint-disable-next-line no-unused-vars
       for (const key in this.properties) {

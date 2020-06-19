@@ -37,7 +37,7 @@ export default {
       //   { text: '尿量', colNum: 1 },
       //   { text: '累计失血量', colNum: 2 }
       // ],
-      // column: {
+      // anaesColumn: {
       //   num: 8
       // }
     }
@@ -67,7 +67,7 @@ export default {
             { text: '尿量', colNum: 1 },
             { text: '累计失血量', colNum: 2 }
           ],
-          column: {
+          anaesColumn: {
             num: 8
           }
         })
@@ -262,9 +262,9 @@ export default {
       const rightPart = this.layer.getElementsByClassName('rightPart')[0]
       const lineHeight = Math.round(rightPart.attr('height') / this.configuration.rowList.length)
       for (let i = 0; i < this.configuration.rowList.length; i++) {
-        const colInterval = Math.round(rightPart.attr('width') / this.configuration.column.num)
-        // const colInterval = Math.round(rightPart.attr('width') / this.column.num) * this.rowList[i].colNum
-        for (let j = 0; j < this.configuration.column.num - 1; j++) {
+        const colInterval = Math.round(rightPart.attr('width') / this.configuration.anaesColumn.num)
+        // const colInterval = Math.round(rightPart.attr('width') / this.anaesColumn.num) * this.rowList[i].colNum
+        for (let j = 0; j < this.configuration.anaesColumn.num - 1; j++) {
           const line = new Polyline({
             pos: [colInterval * (1 + j) - 0.5, lineHeight * i],
             points: [0, 0, 0, lineHeight],

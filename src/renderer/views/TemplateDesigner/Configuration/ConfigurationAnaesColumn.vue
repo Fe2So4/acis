@@ -1,8 +1,8 @@
 <template>
   <div>
-    <el-form-item label="列数">
+    <el-form-item label="表格列数">
       <el-input-number
-        :value="value"
+        :value="value.num"
         :min="0"
         controls-position="right"
         @change="onChange"
@@ -13,21 +13,24 @@
 
 <script>
 export default {
-  name: 'ConfigurationColumn',
+  name: 'ConfigurationAnaesColumn',
   model: {
     prop: 'value',
     event: 'change'
   },
   props: {
     value: {
-      type: Number,
+      type: Object,
       required: true
     }
   },
   methods: {
     onChange (currentValue, oldValue) {
+      const configuration = Object.assign({}, this.value, {
+        num: currentValue
+      })
       this.$emit('change', {
-        column: currentValue
+        column: configuration
       })
     }
   }

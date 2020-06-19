@@ -2,19 +2,15 @@
   <div
     class="widgetMovable"
     :style="style"
-    tabindex="0"
     draggable="true"
     @dragstart="onDragStart"
     @drag="onDrag"
     @dragend="onDragEnd"
     @dragover="onDragOver"
     @drop="onDrop"
-    @click.stop="()=>{}"
-    @dblclick.stop="onDblckick"
-    @keyup.delete="onDelete"
+    @dblclick="onDblckick"
   >
     <div
-      v-show="active"
       class="mask"
       :style="{'borderColor': active ? 'rebeccapurple' : 'transparent'}"
     />
@@ -47,7 +43,7 @@ export default {
   },
   data () {
     const circleWidth = 8
-    const circleOffset = -(circleWidth / 2 + 1) + 'px'
+    const circleOffset = -(circleWidth / 2 - 1) + 'px'
     return {
       circles: [
         {
@@ -129,13 +125,20 @@ export default {
         top: this.widget.positionY + 'px',
         width: this.widget.width + 'px',
         height: this.widget.height + 'px'
-        // borderColor: this.active ? 'rebeccapurple' : 'transparent'
       }
     },
     active () {
       return this.widget.id === this.activeWidgetId
     },
     ...mapState(['activeWidgetId'])
+  },
+  created () {
+  },
+  mounted () {
+    document.addEventListener('keyup', this.onDocumentKeyup)
+  },
+  beforeDestroy () {
+    document.removeEventListener('keyup', this.onDocumentKeyup)
   },
   methods: {
     setVisual () {
@@ -150,13 +153,7 @@ export default {
       const { pageX, pageY } = e
       this.drag.start.pageX = pageX
       this.drag.start.pageY = pageY
-      // 设置拖动数据类型
-      e.dataTransfer.setData(
-        'text/plain',
-        JSON.stringify({
-          type: 'move'
-        })
-      )
+
       // 定义拖动效果
       e.dataTransfer.dropEffect = 'move'
 
@@ -167,40 +164,38 @@ export default {
       )
       canvas.width = canvas.height = 50
 
-      var ctx = canvas.getContext('2d')
-      ctx.lineWidth = 4
-      ctx.moveTo(0, 0)
-      ctx.lineTo(50, 50)
-      ctx.moveTo(0, 50)
-      ctx.lineTo(50, 0)
-      ctx.stroke()
+      // var ctx = canvas.getContext('2d')
+      // ctx.lineWidth = 4
+      // ctx.moveTo(0, 0)
+      // ctx.lineTo(50, 50)
+      // ctx.moveTo(0, 50)
+      // ctx.lineTo(50, 0)
+      // ctx.stroke()
       e.dataTransfer.setDragImage(canvas, 25, 25)
 
       // 通知父组件，删除当前控件的参考线
       this.$emit('widget-drag-start', this.widget.id)
 
+      // 设置visual
       this.setVisual()
     },
     onDrag (e) {
-      if (e.layerX < 0 || e.layerY < 0) {
-        return
-      }
+      // 处理最后一次会变成0
       if (e.pageX === 0 && e.pageY === 0) {
         return
       }
+      // 获取位置增量
       const dX = e.pageX - this.drag.start.pageX
       const dY = e.pageY - this.drag.start.pageY
-      console.log(e.pageX, e.pageY, dX, dY)
 
       // 更新visual
       this.visual.positionX += dX
       this.visual.positionY += dY
 
-      // 重置起始位置 //将起始位置更新到最新的位置
+      // 重置起始位置
       const { pageX, pageY } = e
       this.drag.start.pageX = pageX
       this.drag.start.pageY = pageY
-
       // 边界修正
       const { positionX, positionY } = this.correctPositon(this.visual)
       this.visual.positionX = positionX
@@ -214,51 +209,39 @@ export default {
     },
     onDragEnd (e) {
       this.removeVisual()
-      // 通知父组件，更新visual
-      // this.$emit('widget-drag-end', {
-      //   id: this.propId
-      // })
     },
     onDrop (e) {
       e.preventDefault()
-      // this.$emit('widget-active', this.propId)
     },
     onDragStartResize (e) {
       const { pageX, pageY } = e
       this.resize.start.pageX = pageX
       this.resize.start.pageY = pageY
-
-      e.dataTransfer.setData(
-        'text/plain',
-        JSON.stringify({
-          id: this.propId,
-          type: 'resize'
-        })
-      )
-
       // 定义拖动效果
       e.dataTransfer.dropEffect = 'move'
-
       // 定义跟随图片
       const canvas = document.createElementNS(
         'http://www.w3.org/1999/xhtml',
         'canvas'
       )
       canvas.width = canvas.height = 50
-
-      var ctx = canvas.getContext('2d')
-      ctx.lineWidth = 4
-      ctx.moveTo(0, 0)
-      ctx.lineTo(50, 50)
-      ctx.moveTo(0, 50)
-      ctx.lineTo(50, 0)
-      ctx.stroke()
+      // var ctx = canvas.getContext('2d')
+      // ctx.lineWidth = 4
+      // ctx.moveTo(0, 0)
+      // ctx.lineTo(50, 50)
+      // ctx.moveTo(0, 50)
+      // ctx.lineTo(50, 0)
+      // ctx.stroke()
       e.dataTransfer.setDragImage(canvas, 25, 25)
 
       this.$emit('widget-drag-start', this.widget.id)
       this.setVisual()
     },
     onDragResize (e) {
+      // 处理最后一次会变成0
+      if (e.pageX === 0 && e.pageY === 0) {
+        return
+      }
       const dX = e.pageX - this.resize.start.pageX
       const dY = e.pageY - this.resize.start.pageY
 
@@ -266,7 +249,6 @@ export default {
       const { pageX, pageY } = e
       this.resize.start.pageX = pageX
       this.resize.start.pageY = pageY
-
       switch (e.target.style.cursor) {
         case 'nw-resize':
           this.visual.positionX += dX
@@ -317,11 +299,11 @@ export default {
     onDblckick () {
       this.$emit('widget-active', this.widget.id)
     },
-    onDelete () {
-      console.log('delete')
-      if (this.active) {
-        this.$emit('widget-delete')
-        // this.$emit('widget-delete', this.propId)
+    onDocumentKeyup (e) {
+      if (e.target === document.body) {
+        if (['Delete', 'Backspace'].includes(e.code)) {
+          this.$emit('widget-delete', this.widget.id)
+        }
       }
     },
     // 边界修正
@@ -341,30 +323,27 @@ export default {
         positionY
       }
     }
-  },
-  mounted () {}
+  }
 }
 </script>
 <style lang="scss" scoped>
 .widgetMovable {
   position: absolute;
   background: transparent;
-  // border: 2px solid rebeccapurple;
   .mask {
     width: 100%;
     height: 100%;
     position: absolute;
-    border: 2px solid transparent;;
+    border: 2px solid transparent;
     z-index: 1;
   }
   .circle {
     width: 8px;
     height: 8px;
-    // border: 1px solid rebeccapurple;
     background: rebeccapurple;
     position: absolute;
     border-radius: 2px;
-    z-index:2
+    z-index: 1;
   }
 }
 </style>

@@ -1,9 +1,18 @@
 <template>
   <div
-    class="widgetText"
+    class="widgetNews"
     :style="widgetStyle"
   >
-    {{ configuration.text }}
+    <div
+      v-for="(col,index) in (configuration.column-1)"
+      class="col"
+      :style="colStyle"
+      :key="index"
+    />
+    <div
+      class="col"
+      :style="lastColStyle"
+    />
   </div>
 </template>
 <script>
@@ -13,6 +22,10 @@ export default {
     configuration: {
       type: Object,
       required: true
+    },
+    editMode: {
+      type: Boolean,
+      default: true
     }
   },
   watch: {
@@ -21,15 +34,13 @@ export default {
       handler: function (val) {
         this.setStyle()
       }
-    },
-    editMode: {
-      type: Boolean,
-      default: true
     }
   },
   data () {
     return {
-      widgetStyle: {}
+      widgetStyle: {},
+      colStyle: {},
+      lastColStyle: {}
     }
   },
   created () {
@@ -38,7 +49,7 @@ export default {
   methods: {
     setStyle () {
       const { font, border } = this.configuration
-      let styleObj = {
+      let widgetStyle = {
         fontSize: font.size + 'pt',
         fontWeight: font.weight,
         lineHeight: font.lineHeight + 'px',
@@ -49,17 +60,34 @@ export default {
         return obj
       }, {})
 
-      styleObj = { ...styleObj, ...borderObj }
-      this.widgetStyle = styleObj
+      widgetStyle = { ...widgetStyle, ...borderObj }
+      this.widgetStyle = widgetStyle
+
+      const colWidth = (100 / this.configuration.column) + '%'
+      this.colStyle = {
+        width: colWidth,
+        'border-right': border.width + 'px solid' + border.color
+      }
+      this.lastColStyle = {
+        width: colWidth
+      }
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.widgetText {
+.widgetNews {
   width: 100%;
   height: 100%;
-  word-break: break-all;
   overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  .col {
+    border-right: 1px solid black;
+    width: 33%;
+  }
+  .col:last-child {
+    border-right: none;
+  }
 }
 </style>

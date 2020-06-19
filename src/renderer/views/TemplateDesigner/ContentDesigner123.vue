@@ -1,25 +1,26 @@
 <template>
-  <div class="designer">
+  <div
+    class="designerContent"
+    @click="handleClearDesignerActive"
+  >
     <div
-      class="designerContent"
+      class="content"
       @drop="onDrop"
+      :style="style"
       @dragover="onDragOver"
       ref="designerContent"
-      @click.self="() => setActiveWidget(null)"
+      @click.stop="() => {}"
+      @dblclick.stop="onDblckick"
     >
-      <!-- <canvas
-        class="canvas"
-        @click="onClickCanvas"
-      /> -->
       <widget-movable
         v-for="(item,index) of widgetList"
         :key="index"
         :widget="item"
-        @widget-delete="onWidgetDelete"
         @widget-resize="onWidgetResize"
         @widget-active="onWidgetActive"
         @widget-move="onWidgetMove"
         @widget-drag-start="onWidgetDragStart"
+        @widget-delete="onWidgetDelete"
       >
         <component
           :is="item.name"
@@ -27,24 +28,19 @@
           :edit-mode="editMode"
         />
       </widget-movable>
+      <!-- <widget-image /> -->
+      <!-- <widget-anaes-table /> -->
       <!-- <pre>{{ widgetList }}</pre> -->
     </div>
   </div>
 </template>
 <script>
-import { createNamespacedHelpers } from 'vuex'
-
-import getConfigurationItems from './WidgetConfigurationItems.js'
-// import { v4 as uuidv4 } from 'uuid'
-// import Mock from 'mockjs'
-import WidgetMovable from './WidgetMovable'
 import { controls } from './getAllConfigurationPage'
-// import WidgetInput from './WidgetInput'
-// import WidgetTextarea from './WidgetTextarea'
-// import WidgetText from './WidgetText'
-// import WidgetLine from './WidgetLine'
-// import WidgetPhysicalSign from './WidgetPhysicalSign'
-// import WidgetNews from './WidgetNews'
+import WidgetMovable from './WidgetMovable'
+// import { v4 as uuidv4 } from 'uuid'
+import { createNamespacedHelpers } from 'vuex'
+import getConfigurationItems from './WidgetConfigurationItems.js'
+// const Mock = require('mockjs')
 // const Random = Mock.Random
 const { mapState, mapActions } = createNamespacedHelpers(
   'PageTemplateDesigner'
@@ -62,8 +58,8 @@ export default {
         x: [],
         y: []
       },
-      adsorptionDistance: 5,
       editMode: true,
+      adsorptionDistance: 5,
       widget: {
         id: '',
         name: '',
@@ -71,40 +67,47 @@ export default {
         height: '',
         positionX: '',
         positionY: ''
-      }
+      },
+      activeContent: false
     }
   },
   computed: {
     ...mapState({
       widgetMap: state => state.widgetMap,
       widgetList: state => state.widgetList,
-      activeWidgetId: state => state.activeWidgetId
-    })
-    // ...mapGetters(['activeWidgetId'])
+      activeWidgetId: state => state.activeWidgetId,
+      width: state => state.designerWidth,
+      height: state => state.designerHeight
+    }),
+    style () {
+      return {
+        // left: this.widget.positionX + 'px',
+        // top: this.widget.positionY + 'px',
+        width: this.width + 'px',
+        height: this.height + 'px'
+        // borderColor: this.active ? 'rebeccapurple' : 'transparent'
+      }
+    }
   },
-  created () {
-    // var data = Mock.mock({
-    // // 属性 list 的值是一个数组，其中含有 1 到 10 个元素
-    //   'list|100-200': [{
-    //     // 属性 id 是一个自增数，起始值为 1，每次增 1
-    //     id: function () {
-    //       return uuidv4()
-    //     },
-    //     name: 'widget-input',
-    //     'width|10-200': 10,
-    //     'height|10-30': 10,
-    //     'positionX|0-200': 0,
-    //     'positionY|0-400': 0
-    //   }]
-    // })
-    // // 输出结果
-    // console.log(data.list.length)
-    // data.list.forEach(item => {
-    //   this.setWidgetMap(item)
-    // })
-  },
+  watch: {},
+  created () {},
   methods: {
-    ...mapActions(['setWidgetMap', 'deleteWidget', 'setActiveWidget']),
+    ...mapActions([
+      'setWidgetMap',
+      'deleteWidget',
+      'setActiveWidget',
+      'setDesignerActive'
+    ]),
+    onDblckick () {
+      this.activeContent = true
+      this.setDesignerActive(true)
+    },
+    handleClearDesignerActive () {
+      this.setDesignerActive(false)
+    },
+    onWidgetDelete () {
+      this.deleteWidget(this.activeWidgetId)
+    },
     onDragOver (e) {
       e.preventDefault()
       e.dataTransfer.dropEffect = 'move'
@@ -232,10 +235,8 @@ export default {
         return
       }
       if (
-        positionX + width >
-          this.$refs.designerContent.clientWidth ||
-        positionY + height >
-          this.$refs.designerContent.clientHeight
+        positionX + width > this.$refs.designerContent.clientWidth ||
+        positionY + height > this.$refs.designerContent.clientHeight
       ) {
         return
       }
@@ -523,12 +524,12 @@ export default {
     onWidgetActive (e) {
       this.setActiveWidget(e)
     },
-    onWidgetDelete (e) {
-      if (this.activeWidgetId === e) {
-        this.deleteWidget(e)
-        this.setActiveWidget(null)
-      }
-    },
+    // onWidgetDelete (e) {
+    //   if (this.activeWidgetId === e) {
+    //     this.deleteWidget(e)
+    //     this.setActiveWidget(null)
+    //   }
+    // },
     onClickCanvas () {
       this.setActiveWidget(null)
     },
@@ -665,25 +666,19 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.designer {
+.designerContent {
   height: 100%;
   flex: 1 1 600px;
-  background: cornsilk;
+  background: #fff;
+  // position: relative;
   overflow: auto;
-}
-.designerContent {
-  width: 210mm;
-  height: 297mm;
-  background: white;
-  margin: 0 auto;
-  border: 1px dashed palevioletred;
-  position: relative;
-  overflow: hidden;
 
-  .canvas {
-    position: absolute;
-    width: 100%;
-    height: 100%;
+  .content {
+    position: relative;
+    width: 210mm;
+    height: 297mm;
+    border: 1px dashed black;
+    margin: 0 auto;
   }
 }
 </style>
