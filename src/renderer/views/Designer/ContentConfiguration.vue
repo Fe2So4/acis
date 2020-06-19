@@ -33,7 +33,10 @@ import ConfigurationPositionY from './ConfigurationPositionY'
 import ConfigurationFont from './ConfigurationFont'
 import ConfigurationBorder from './ConfigurationBorder'
 import ConfigurationPlaceholder from './ConfigurationPlaceholder'
+import ConfigurationReadonly from './ConfigurationReadonly'
+import ConfigurationMultiSelect from './ConfigurationMultiSelect'
 import ConfigurationText from './ConfigurationText'
+import ConfigurationColumn from './ConfigurationColumn'
 import ConfigurationDirection from './ConfigurationDirection'
 import ConfigurationLeftPartWidthRate from './ConfigurationLeftPartWidthRate'
 import ConfigurationRightPartWidthRate from './ConfigurationRightPartWidthRate'
@@ -60,7 +63,10 @@ export default {
     ConfigurationFont,
     ConfigurationBorder,
     ConfigurationPlaceholder,
+    ConfigurationReadonly,
+    ConfigurationMultiSelect,
     ConfigurationText,
+    ConfigurationColumn,
     ConfigurationDirection,
     ConfigurationLeftPartWidthRate,
     ConfigurationRightPartWidthRate,

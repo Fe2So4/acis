@@ -24,6 +24,7 @@
         <component
           :is="item.name"
           :configuration="item"
+          :edit-mode="editMode"
         />
       </widget-movable>
       <!-- <pre>{{ widgetList }}</pre> -->
@@ -38,11 +39,11 @@ import getConfigurationItems from './WidgetConfigurationItems.js'
 // import Mock from 'mockjs'
 import WidgetMovable from './WidgetMovable'
 import WidgetInput from './WidgetInput'
-import WidgetSelect from './WidgetSelect'
 import WidgetTextarea from './WidgetTextarea'
 import WidgetText from './WidgetText'
 import WidgetLine from './WidgetLine'
 import WidgetPhysicalSign from './WidgetPhysicalSign'
+import WidgetNews from './WidgetNews'
 // const Random = Mock.Random
 const { mapState, mapActions } = createNamespacedHelpers(
   'Designer'
@@ -53,11 +54,11 @@ export default {
   components: {
     WidgetMovable,
     WidgetInput,
-    WidgetSelect,
     WidgetTextarea,
     WidgetText,
     WidgetLine,
-    WidgetPhysicalSign
+    WidgetPhysicalSign,
+    WidgetNews
   },
   data () {
     return {
@@ -66,6 +67,7 @@ export default {
         y: []
       },
       adsorptionDistance: 5,
+      editMode: true,
       widget: {
         id: '',
         name: '',

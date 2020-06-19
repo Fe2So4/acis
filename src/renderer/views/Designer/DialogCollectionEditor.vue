@@ -4,7 +4,6 @@
     :title="configuration.title"
     :visible.sync="configuration.visible"
     :append-to-body="appendToBody"
-    v-dialogDrag
   >
     <div class="content">
       <div>
@@ -34,30 +33,22 @@
       </div>
       <div>
         <el-form
-          label-width="80px"
+          label-width="100px"
           size="mini"
         >
           <el-form-item
             v-for="(rowValue, rowKey) in currentRow"
             :key="rowKey"
-            :label="rowKey"
+            :label="configField(rowKey).description"
           >
             <span v-if="isArray(rowValue)">
-              <el-button @click="onClickConfiguration(configField(rowKey).config)">
-                配置
-              </el-button>
-              <!-- <DialogCollectionEditorContent
-                v-if="configField(rowKey).config.visible"
-                :configuration="configField(rowKey).config"
-                :value="rowValue"
-                @change="onChangeValue($event,rowKey)"
-              /> -->
+              <el-button @click="onClickConfiguration(configField(rowKey).config)">配置</el-button>
               <DialogCollectionEditor
                 v-if="configField(rowKey).config.visible"
                 :configuration="configField(rowKey).config"
                 :value="rowValue"
-                append-to-body
                 @change="onChangeValue($event,rowKey)"
+                append-to-body
               />
             </span>
             <el-input
@@ -71,9 +62,13 @@
       </div>
     </div>
     <span slot="footer">
-      <el-button @click="configuration.visible = false">取 消</el-button>
+      <el-button
+        size="mini"
+        @click="configuration.visible = false"
+      >取 消</el-button>
       <el-button
         type="primary"
+        size="mini"
         @click="onClickConfirm"
       >确 定</el-button>
     </span>
@@ -83,12 +78,8 @@
 <script>
 import isArray from 'lodash/isArray'
 import isNumber from 'lodash/isNumber'
-// import DialogCollectionEditorContent from './DialogCollectionEditorContent'
 export default {
   name: 'DialogCollectionEditor',
-  components: {
-    // DialogCollectionEditorContent
-  },
   props: {
     configuration: {
       type: Object,

@@ -1,7 +1,29 @@
 export default function getConfigurationItems (widgetName) {
+  const border = {
+    position: ['top', 'right', 'bottom', 'left'],
+    color: '#000000',
+    width: 1
+  }
+  const font = {
+    size: 9,
+    weight: 'normal',
+    lineHeight: 30,
+    textAlign: 'left'
+  }
+  // 源数据
+  const dataSource = {
+    tableName: '',
+    className: ''
+  }
+  // 字典
+  const dictionarySource = {
+    dictTableName: '',
+    dictClassName: ''
+  }
   switch (widgetName) {
     case 'widget-physical-sign':
       return {
+        border,
         leftPartWidthRate: 0.18,
         rightPartWidthRate: 0.1,
         leftTitle: {
@@ -41,24 +63,6 @@ export default function getConfigurationItems (widgetName) {
                   label: '到顶啦'
                 }
               ]
-            },
-            {
-              label: 'Y轴2',
-              index: 1,
-              values: [
-                {
-                  value: 30,
-                  label: '30'
-                },
-                {
-                  value: 40,
-                  label: 40
-                },
-                {
-                  value: 50,
-                  label: '顶部'
-                }
-              ]
             }
           ],
           lineInterval: 2
@@ -70,62 +74,33 @@ export default function getConfigurationItems (widgetName) {
           lineInterval: 3
         }
       }
+    case 'widget-news':
+      return {
+        font,
+        border,
+        column: 3
+      }
     case 'widget-input':
+      return {
+        font,
+        border,
+        placeholder: '占位内容',
+        readonly: false,
+        dataSource,
+        multiSelect: false,
+        dictionarySource
+      }
     case 'widget-textarea':
       return {
-        font: {
-          size: 9,
-          weight: 'normal',
-          lineHeight: 30,
-          textAlign: 'left'
-        },
-        border: {
-          position: ['top', 'right', 'bottom', 'left'],
-          color: '#000000',
-          width: 1
-        },
+        font,
+        border,
         placeholder: '占位内容',
-        dataSource: {
-          tableName: '',
-          className: ''
-        }
-      }
-    case 'widget-select':
-      return {
-        font: {
-          size: 9,
-          weight: 'normal',
-          lineHeight: 30,
-          textAlign: 'left'
-        },
-        border: {
-          position: ['top', 'right', 'bottom', 'left'],
-          color: '#000000',
-          width: 1
-        },
-        placeholder: '占位内容',
-        dataSource: {
-          tableName: '',
-          className: ''
-        },
-        dictionarySource: {
-          dictTableName: '',
-          dictClassName: ''
-        }
+        dataSource
       }
     case 'widget-text':
       return {
-        font: {
-          size: 9,
-          weight: 'normal',
-          lineHeight: 30,
-          textAlign: 'left'
-        },
-        border: {
-          position: ['top', 'right', 'bottom', 'left'],
-          color: '#000000',
-          width: 1
-        },
+        font,
+        border,
         text: '文本内容'
       }
     case 'widget-line':
