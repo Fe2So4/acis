@@ -4,6 +4,7 @@
     :title="configuration.title"
     :visible.sync="configuration.visible"
     :append-to-body="appendToBody"
+    v-dialogDrag
   >
     <div class="content">
       <div>
@@ -69,9 +70,7 @@
         </el-form>
       </div>
     </div>
-    <span
-      slot="footer"
-    >
+    <span slot="footer">
       <el-button @click="configuration.visible = false">取 消</el-button>
       <el-button
         type="primary"
@@ -113,8 +112,10 @@ export default {
       return this.$attrs['append-to-body']
     },
     configField () {
-      return (name) => {
-        const field = this.configuration.field.filter(item => item.name === name)
+      return name => {
+        const field = this.configuration.field.filter(
+          item => item.name === name
+        )
         if (field.length) {
           return field[0]
         }
@@ -160,12 +161,11 @@ export default {
     }
   }
 }
-
 </script>
 <style lang='scss' scoped>
 .content {
   display: flex;
-  &>div {
+  & > div {
     width: 50%;
     margin: 10px;
     // border: 1px solid #666;
