@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form-item label="数据库字典表名">
+    <el-form-item label="字典表名">
       <el-select
         :value="value.dictTableName"
         placeholder="请选择"
@@ -19,7 +19,7 @@
         </el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="数据库字典字段名">
+    <el-form-item label="字典字段名">
       <el-select
         :value="value.dictClassName"
         placeholder="请选择"

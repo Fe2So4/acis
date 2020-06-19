@@ -24,6 +24,10 @@ export default {
       handler: function (val) {
         this.setStyle()
       }
+    },
+    editMode: {
+      type: Boolean,
+      default: true
     }
   },
   data () {

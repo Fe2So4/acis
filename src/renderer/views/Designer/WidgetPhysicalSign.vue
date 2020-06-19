@@ -1,7 +1,8 @@
 <template>
   <div
     ref="physicalSign"
-    class="physicalSign"
+    class="widgetPhysicalSign"
+    :style="widgetStyle"
   />
 </template>
 
@@ -16,10 +17,15 @@ export default {
     configuration: {
       type: Object,
       required: true
+    },
+    editMode: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
     return {
+      widgetStyle: {},
       layer: null,
       layout: {}
     }
@@ -28,11 +34,13 @@ export default {
     configuration: {
       deep: true,
       handler: function (val) {
+        this.setStyle()
         this.resize()
       }
     }
   },
   created () {
+    this.setStyle()
     this.resize = debounce(this.domResizeListener, 20)
   },
   mounted () {
@@ -47,6 +55,17 @@ export default {
     removeListener(this.$refs.physicalSign, this.resize)
   },
   methods: {
+    setStyle () {
+      const { border } = this.configuration
+      let styleObj = {}
+      const borderObj = border.position.reduce((obj, item) => {
+        obj['border-' + item] = border.width + 'px solid ' + border.color
+        return obj
+      }, {})
+
+      styleObj = { ...styleObj, ...borderObj }
+      this.widgetStyle = styleObj
+    },
     domResizeListener () {
       this.scene.resize()
       this.setLayout()
@@ -523,11 +542,9 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
-.physicalSign {
+.widgetPhysicalSign {
   height: 100%;
   width: 100%;
-  border: 1px solid black;
   box-sizing: border-box;
-  margin: 0 auto;
 }
 </style>

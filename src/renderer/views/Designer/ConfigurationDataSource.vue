@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form-item label="数据库表名">
+    <el-form-item label="源数据表名">
       <el-select
         :value="value.tableName"
         placeholder="请选择"
@@ -19,7 +19,7 @@
         </el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="数据库字段名">
+    <el-form-item label="源数据字段名">
       <el-select
         :value="value.className"
         placeholder="请选择"

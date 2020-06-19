@@ -45,12 +45,12 @@ export default {
           name: 'widget-line'
         },
         {
-          label: '下拉选择',
-          name: 'widget-select'
-        },
-        {
           label: '体征曲线',
           name: 'widget-physical-sign'
+        },
+        {
+          label: '消息',
+          name: 'widget-news'
         }
       ]
     }
