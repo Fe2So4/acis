@@ -12,6 +12,7 @@ import debounce from 'lodash/debounce'
 import moment from 'moment'
 const { Scene, Group, Label, Polyline } = spritejs
 export default {
+  name: 'WidgetInOut',
   data () {
     return {
       layer: null,

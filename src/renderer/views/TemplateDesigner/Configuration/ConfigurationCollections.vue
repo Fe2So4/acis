@@ -43,6 +43,7 @@
 <script>
 import ConfigurationCollection from '@/components/ConfigurationCollection/index'
 export default {
+  name: 'ConfigurationCollections',
   model: {
     prop: 'value',
     event: 'change'

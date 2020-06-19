@@ -4,6 +4,7 @@
 </template>
 <script>
 export default {
+  name: 'WidgetImage',
   data () {
     return {
     //   imgUrl: 'http://47.103.105.200/htmlFile/056a0b71-b085-4947-a71f-6df7d0529e50_100000000.jpg'

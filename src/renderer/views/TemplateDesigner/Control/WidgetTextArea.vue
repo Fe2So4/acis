@@ -11,7 +11,7 @@
 </template>
 <script>
 export default {
-  name: 'WidgetTextArea',
+  name: 'WidgetTextarea',
   props: {
     configuration: {
       type: Object,

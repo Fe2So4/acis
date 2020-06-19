@@ -18,7 +18,7 @@
 </template>
 <script>
 export default {
-  name: 'ConfigurationSingleSelect',
+  name: 'ConfigurationImgUrl',
   model: {
     prop: 'value',
     event: 'change'

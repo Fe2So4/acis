@@ -29,7 +29,7 @@
 
 <script>
 export default {
-  name: 'ConfigurationEventTitle',
+  name: 'ConfigurationBloodTransfusion',
   model: {
     prop: 'value',
     event: 'change'

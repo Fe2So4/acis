@@ -8,7 +8,7 @@
 <script>
 // import '@/mock/dataSource'
 export default {
-  name: 'schedule',
+  name: 'Schedule',
   mounted () {
     // this.$electron.ipcRenderer.on('route', (e, locationName) => {
     //   if (locationName) {

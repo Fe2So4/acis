@@ -16,6 +16,7 @@
 </template>
 <script>
 export default {
+  name: 'WidgetCheckboxGroup',
   data () {
     return {
       // options: [{ label: '正常', value: '1' }, { label: '松动', value: '2' }, { label: '假牙', value: '3' }, { label: '缺牙', value: '4' }],

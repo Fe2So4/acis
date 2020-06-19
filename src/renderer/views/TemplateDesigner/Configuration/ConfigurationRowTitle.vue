@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'ConfigurationColumn',
+  name: 'ConfigurationRowTitle',
   model: {
     prop: 'value',
     event: 'change'
