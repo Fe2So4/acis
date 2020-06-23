@@ -2,6 +2,7 @@ const Mock = require('mockjs')
 Mock.setup({
   timeout: '200-600'
 })
+// 源数据表名和字段名
 Mock.mock('/api/dataSource', 'get', {
   code: 200,
   success: true,
@@ -871,4 +872,154 @@ Mock.mock('/api/dataSource', 'get', {
     }
   ],
   msg: '操作成功'
+})
+// 获取源数据表中查出的结果
+Mock.mock('/api/getValueData', 'get', {
+  code: 200,
+  success: true,
+  data: [
+    {
+      tableName: 'acis_ope_apply_info',
+      className: 'patient_id',
+      value: '123211'
+    },
+    {
+      tableName: 'acis_ope_apply_info',
+      className: 'visit_id',
+      value: '01101'
+    },
+    {
+      tableName: 'acis_ope_apply_info',
+      className: 'inpatient_ward',
+      value: '二病区'
+    }
+  ]
+})
+// 模板数据
+Mock.mock('/api/getTemplateData', 'get', {
+  code: 200,
+  success: true,
+  data: [
+    {
+      border: {
+        color: '#000000',
+        position: [
+          'top',
+          'right',
+          'bottom',
+          'left'
+        ],
+        width: 1
+      },
+      dataSource: {
+        className: 'inpatient_ward',
+        tableName: 'acis_ope_apply_info'
+      },
+      dictionarySource: {
+        dictClassName: '',
+        dictTableName: ''
+      },
+      font: {
+        lineHeight: 30,
+        size: 9,
+        textAlign: 'left',
+        weight: 'normal'
+      },
+      height: 30,
+      id: '6b650d53-9d55-457f-86f7-329fbf91bc05',
+      multiSelect: false,
+      name: 'widget-input',
+      placeholder: '选择病区',
+      positionX: 53,
+      positionY: 66,
+      readonly: false,
+      width: 100
+    },
+    {
+      border: {
+        color: '#000000',
+        position: [
+          'top',
+          'right',
+          'bottom',
+          'left'
+        ],
+        width: 1
+      },
+      dataSource: {
+        className: 'inpatient_ward',
+        tableName: 'acis_ope_apply_info'
+      },
+      dictionarySource: {
+        dictClassName: 'patient_id',
+        dictTableName: 'acis_ope_apply_info'
+      },
+      font: {
+        lineHeight: 30,
+        size: 9,
+        textAlign: 'left',
+        weight: 'normal'
+      },
+      height: 30,
+      id: '24ec1169-f82f-41b5-b4bb-bec500074982',
+      multiSelect: true,
+      name: 'widget-input',
+      placeholder: '病区多选',
+      positionX: 198,
+      positionY: 59,
+      readonly: false,
+      width: 200
+    },
+    {
+      border: {
+        color: '#000000',
+        position: [
+          'top',
+          'right',
+          'bottom',
+          'left'
+        ],
+        width: 1
+      },
+      dataSource: {
+        className: 'patient_id',
+        tableName: 'acis_ope_apply_info'
+      },
+      dictionarySource: {
+        dictClassName: '',
+        dictTableName: ''
+      },
+      font: {
+        lineHeight: 30,
+        size: 9,
+        textAlign: 'left',
+        weight: 'normal'
+      },
+      height: 30,
+      id: '1257a886-b2fb-497e-b155-879d5544c245',
+      multiSelect: false,
+      name: 'widget-input',
+      placeholder: '患者id',
+      positionX: 340,
+      positionY: 58,
+      readonly: true,
+      width: 100
+    }
+  ]
+})
+// 字典数据
+Mock.mock('/api/getDictionaryData', 'post', {
+  code: 200,
+  success: true,
+  data: [
+    {
+      value: '一病区'
+    },
+    {
+      value: '二病区'
+    },
+    {
+      value: '三病区'
+    }
+  ]
 })

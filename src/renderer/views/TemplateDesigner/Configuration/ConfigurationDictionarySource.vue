@@ -5,6 +5,7 @@
         :value="value.dictTableName"
         placeholder="请选择"
         @change="onChangeTableName"
+        clearable
       >
         <el-option
           v-for="item in tables"
@@ -24,6 +25,7 @@
         :value="value.dictClassName"
         placeholder="请选择"
         @change="onChangeClassName"
+        clearable
       >
         <el-option
           v-for="item in classes"
@@ -43,6 +45,7 @@
 
 <script>
 import request from '@/utils/requestForMock'
+import { dataSource } from '@/api/medicalDocument'
 export default {
   name: 'ConfigurationDictionarySource',
   model: {
@@ -61,14 +64,24 @@ export default {
       classes: []
     }
   },
-  created () {
-    this.getDataSource()
+  async created () {
+    await this.getDataSource()
+    if (this.value.dictTableName) {
+      this.classes = this.tables.filter(
+        item => item.name === this.value.dictTableName
+      )[0].children
+    }
   },
   methods: {
     onChangeTableName (currentValue, oldValue) {
-      this.classes = this.tables.filter(
+      const classes = this.tables.filter(
         item => item.name === currentValue
-      )[0].children
+      )
+      if (classes.length) {
+        this.classes = classes[0].children
+      } else {
+        this.classes = []
+      }
       const configuration = Object.assign({}, this.value, {
         dictTableName: currentValue,
         dictClassName: ''
@@ -86,7 +99,7 @@ export default {
       })
     },
     getDataSource () {
-      request('/api/dataSource')
+      return request(dataSource)
         .then(res => {
           this.tables = res.data.data
         })
