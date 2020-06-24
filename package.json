@@ -64,6 +64,7 @@
     "moment": "^2.26.0",
     "normalize.css": "^8.0.1",
     "resize-detector": "^0.2.2",
+    "socket.io": "^2.3.0",
     "spritejs": "^3.7.19",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",

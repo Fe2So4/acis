@@ -7,8 +7,24 @@ Mock.setup({
 })
 // 源数据表名和字段名
 Mock.mock('/api/dataSource', 'get', sourceData)
+// 模板信息
+Mock.mock('/api/getTemplateInfo', 'post', {
+  code: 200,
+  success: true,
+  data: {
+    templateId: 1,
+    startTime: '2020-06-23 09:00',
+    endTime: '2020-06-23 13:00',
+    pageIndex: 0,
+    pageTotal: 3
+  }
+})
+
+// 模板数据
+Mock.mock('/api/getTemplateData', templateData)
+
 // 获取源数据表中查出的结果
-Mock.mock('/api/getValueData', 'get', {
+Mock.mock('/api/getValueData', {
   code: 200,
   success: true,
   data: [
@@ -29,8 +45,7 @@ Mock.mock('/api/getValueData', 'get', {
     }
   ]
 })
-// 模板数据
-Mock.mock('/api/getTemplateData', 'get', templateData)
+
 // 字典数据
 Mock.mock('/api/getDictionaryData', 'post', {
   code: 200,
