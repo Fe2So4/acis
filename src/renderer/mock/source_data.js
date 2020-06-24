@@ -1,8 +1,4 @@
-const Mock = require('mockjs')
-Mock.setup({
-  timeout: '200-600'
-})
-Mock.mock('/api/dataSource', 'get', {
+export default {
   code: 200,
   success: true,
   data: [
@@ -871,4 +867,4 @@ Mock.mock('/api/dataSource', 'get', {
     }
   ],
   msg: '操作成功'
-})
+}

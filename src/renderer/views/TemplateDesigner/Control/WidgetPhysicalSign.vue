@@ -11,6 +11,12 @@ import * as spritejs from 'spritejs'
 import { addListener, removeListener } from 'resize-detector'
 import debounce from 'lodash/debounce'
 import moment from 'moment'
+import { getSignData } from '@/api/medicalDocument'
+import request from '@/utils/requestForMock'
+import PhysicalSignLine from '@/model/PhysicalSignLine'
+import io from 'socket.io-client'
+
+const socket = io('http://localhost:3000')
 const { Scene, Group, Label, Polyline } = spritejs
 export default {
   props: {
@@ -27,15 +33,18 @@ export default {
     return {
       widgetStyle: {},
       layer: null,
-      layout: {}
+      layout: {},
+      lines: {}
     }
   },
   watch: {
     configuration: {
       deep: true,
       handler: function (val) {
-        this.setStyle()
-        this.resize()
+        if (this.editMode) {
+          this.setStyle()
+          this.resize()
+        }
       }
     }
   },
@@ -43,16 +52,26 @@ export default {
     this.setStyle()
     this.resize = debounce(this.domResizeListener, 20)
   },
-  mounted () {
+  async mounted () {
     this.renderScene()
     this.createGroups()
     this.setLayout()
     this.setContent()
-    addListener(this.$refs.physicalSign, this.resize)
+    if (this.editMode) {
+      addListener(this.$refs.physicalSign, this.resize)
+    }
+    await this.getPastSignData()
+    this.drawLines()
+    socket.on('physical sign', res => {
+      const { signId, ...value } = res
+      this.lines[signId].addPoint(value)
+    })
   },
   beforeDestroy () {
     this.scene = null
-    removeListener(this.$refs.physicalSign, this.resize)
+    if (this.editMode) {
+      removeListener(this.$refs.physicalSign, this.resize)
+    }
   },
   methods: {
     setStyle () {
@@ -536,6 +555,63 @@ export default {
           })
           grid.append(line)
         }
+      }
+    },
+    getPastSignData () {
+      if (this.editMode) {
+        return
+      }
+      return request({
+        method: 'POST',
+        url: getSignData,
+        data: {
+          pageIndex: 0
+        }
+      })
+        .then(res => {
+          const requestData = res.data.data
+          this.lineList = requestData.list
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    drawLines () {
+      const gridGroup = this.layer.getElementsByClassName('grid')[0]
+      this.lineList.forEach(item => {
+        const { min, max } = this.getYAxisValueRange(item.yIndex)
+        if ((min === max) === 0) {
+          return
+        }
+        this.lines[item.signId] = new PhysicalSignLine({
+          label: item.label,
+          color: item.color,
+          group: gridGroup,
+          layer: this.layer,
+          startTime: this.configuration.xAxis.startTime,
+          endTime: this.configuration.xAxis.endTime,
+          min,
+          max
+        })
+        item.list.forEach(value => {
+          this.lines[item.signId].addPoint(value)
+        })
+      })
+    },
+    // 获取某一个Y轴的最大最小值
+    getYAxisValueRange (yIndex) {
+      const yAxis = this.configuration.yAxis.list.find(
+        item => +item.index === yIndex
+      )
+      if (!yAxis) {
+        return {
+          min: 0,
+          max: 0
+        }
+      }
+      return {
+        min: yAxis.values[0].value,
+        max: yAxis.values[yAxis.values.length - 1].value
       }
     }
   }

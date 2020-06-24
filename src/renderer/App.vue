@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import '@/mock/dataSource'
+import '@/mock/mockData'
 export default {
   name: 'Acis',
   mounted () {
