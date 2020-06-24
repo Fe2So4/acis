@@ -18,7 +18,7 @@
     "postinstall": "npm run lint:fix",
     "mock": "node ./mock/server.js",
     "build_schedule": "node .electron-vue/build_schedule.js && electron-builder",
-    "dev_schedule": "node .electron-vue/dev-schedule-runner.js"
+    "dev_schedule": "cross-env BUILD_TARGET=schedule node .electron-vue/dev-schedule-runner.js"
   },
   "build": {
     "productName": "acis",
@@ -65,10 +65,13 @@
     "resize-detector": "^0.2.2",
     "spritejs": "^3.7.19",
     "vue": "^2.5.16",
+    "vue-contextmenu": "^1.5.10",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
-    "vuex-electron": "^1.0.0"
+    "vuex-electron": "^1.0.0",
+    "vxe-table": "^2.9.13",
+    "xe-utils": "^2.4.8"
   },
   "devDependencies": {
     "ajv": "^6.5.0",

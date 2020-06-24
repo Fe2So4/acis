@@ -1,0 +1,99 @@
+<template>
+  <div class="list">
+    <div
+      class="list-all"
+      @contextmenu="showMenu()"
+    >
+      <div
+        class="list-item"
+        :class="{'active':activeIndex == index}"
+        v-for="(item,index) in dataList"
+        :key="index"
+        @click="handleCurrent(item,index)"
+        @dblclick="handledbClick(item,index)"
+        @contextmenu="handleCurrent(item,index)"
+      >
+        {{ item.result }}
+      </div>
+    </div>
+    <vue-context-menu
+      :context-menu-data="contextMenuData"
+      @handleDocConfig="handleDocConfig"
+    />
+  </div>
+</template>
+<script>
+export default {
+  name: 'List',
+  data () {
+    return {
+      contextMenuData1: {
+        axis: {
+          x: null,
+          y: null
+        },
+        menulists: [{ btnName: '医生设置' }]
+      },
+      activeIndex: 0,
+      selectItem: {}
+    }
+  },
+  props: ['dataList', 'contextMenuData'],
+  computed: {
+
+  },
+  watch: {
+    dataList: {
+      handler (newValue, old) {
+        return newValue
+      },
+      deep: true,
+      immediate: true
+    }
+  },
+  methods: {
+    handleCurrent (item, i) {
+      this.activeIndex = i
+      this.selectItem = item
+    },
+    handleDocConfig () {
+      this.$emit('handleDocConfig', this.selectItem)
+    },
+    showMenu () {
+      // this.transferIndex1 = index // tranfer index to child component
+      event.preventDefault()
+      var x = event.clientX
+      var y = event.clientY
+      this.contextMenuData.axis = {
+        x,
+        y
+      }
+    },
+    handledbClick (item, i) {
+      // console.log(i)
+      this.$emit('handleDistribute', item)
+    }
+  },
+  mounted () {
+    // console.log(this.f_height,'height')
+  }
+}
+</script>
+<style lang="scss">
+    .list{
+        height:100%;
+        .list-all {
+            // position: relative;
+            height:100%;
+            overflow-y:auto;
+            .list-item {
+                font:12px/30px "";
+                padding-left:10px;
+                border-bottom:1px dashed #f3f6f9;
+            }
+            .active{
+              background:#f1f3f6;
+            }
+        }
+    }
+</style>

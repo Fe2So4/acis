@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <!-- <router-view /> -->
-    <div>我是排班小页面</div>
+    <router-view />
+    <!-- <div>我是排班小页面</div> -->
   </div>
 </template>
 
@@ -10,13 +10,7 @@
 export default {
   name: 'Schedule',
   mounted () {
-    // this.$electron.ipcRenderer.on('route', (e, locationName) => {
-    //   if (locationName) {
-    //     this.$router.push({
-    //       name: locationName
-    //     })
-    //   }
-    // })
+    this.$router.push({ name: 'HomeSchedule' })
   }
 }
 </script>

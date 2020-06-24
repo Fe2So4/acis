@@ -9,6 +9,10 @@ import 'normalize.css/normalize.css'
 import './styles/index.scss'
 import 'element-ui/lib/theme-chalk/index.css'
 import './utils/dialog'
+import 'xe-utils'
+import VXETable from 'vxe-table'
+import 'vxe-table/lib/index.css'
+Vue.use(VXETable)
 Vue.use(ElementUI)
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
