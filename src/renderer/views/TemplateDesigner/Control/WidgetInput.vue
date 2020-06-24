@@ -94,7 +94,7 @@ export default {
       styleObj = { ...styleObj, ...borderObj }
       this.widgetStyle = styleObj
     },
-    showSelect (e) {
+    async showSelect (e) {
       if (this.editMode) {
         return
       }
@@ -103,7 +103,7 @@ export default {
         dictClassName
       } = this.configuration.dictionarySource
       if (dictTableName && dictClassName) {
-        this.getDictionaryData(dictTableName, dictClassName)
+        await this.getDictionaryData(dictTableName, dictClassName)
         this.selectVisible = true
         setTimeout(() => {
           this.$refs.select.focus()
@@ -153,6 +153,12 @@ export default {
   .select {
     position: absolute;
     width: 100%;
+    height: 100%;
+  }
+  .select ::v-deep .el-input{
+    height: 100%;
+  }
+  .select ::v-deep .el-input__inner{
     height: 100%;
   }
 }

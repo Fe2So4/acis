@@ -13,7 +13,6 @@
         />
       </widget-wrapper>
     </div>
-    <!-- <pre>{{ widgetList }}</pre> -->
   </div>
 </template>
 
@@ -26,56 +25,49 @@ import WidgetWrapper from './WidgetWrapper'
 // import WidgetPhysicalSign from '../PageTemplateDesigner/WidgetPhysicalSign'
 // import WidgetNews from '../PageTemplateDesigner/WidgetNews'
 import { controls } from '../TemplateDesigner/getAllConfigurationPage'
-import { getTemplateData, getValueData } from '@/api/medicalDocument'
-import request from '@/utils/requestForMock'
 export default {
   name: 'ContentDisplayer',
   components: {
     WidgetWrapper,
     ...controls
+    // WidgetInput,
+    // WidgetTextarea,
+    // WidgetText,
+    // WidgetLine,
+    // WidgetPhysicalSign,
+    // WidgetNews
+  },
+  props: {
+    widgetList: {
+      type: Array,
+      default () {
+        return []
+      }
+    }
   },
   data () {
     return {
-      editMode: false,
-      widgetList: []
+      editMode: false
     }
   },
   computed: {
+
   },
   created () {
-    this.getTemplateAndValueData()
   },
   methods: {
-    getTemplateAndValueData () {
-      return Promise.all([
-        request(getTemplateData),
-        request(getValueData)
-      ]).then(res => {
-        const [widgetList, valueList] = [res[0].data.data, res[1].data.data]
-        widgetList.forEach(widget => {
-          if (widget.dataSource) {
-            const { tableName, className } = widget.dataSource
-            const valueItem = valueList.filter(
-              item =>
-                item.tableName === tableName && item.className === className
-            )
-            if (valueItem.length) {
-              widget.value = valueItem[0].value
-            }
-          }
-        })
 
-        this.widgetList = widgetList
-      })
-    }
   }
 }
 </script>
 <style lang='scss' scoped>
 .contentDisplayer {
   height: calc(100vh - 30px);
+  overflow: auto;
   .content {
     position: relative;
+    width: 210mm;
+    height: 297mm;
   }
 }
 </style>
