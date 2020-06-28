@@ -1,7 +1,9 @@
 import { Polyline, Label } from 'spritejs'
 import moment from 'moment'
-export default class PhysicalSignLine {
-  constructor ({ label, color, group, layer, startTime, endTime, min, max }) {
+export class PhysicalSignLine {
+  constructor ({ signId, name, label, color, group, layer, startTime, endTime, min, max }) {
+    this._signId = signId
+    this._name = name
     this._label = label
     this._color = color
     this._group = group
@@ -34,19 +36,19 @@ export default class PhysicalSignLine {
       verticalAlign: 'middle',
       fillColor: this._color,
       pos: [position[0] - 10, position[1] - 10],
-      zIndex: 1
+      zIndex: 1,
+      className: 'signLabel',
+      signId: this._signId
     })
     this._labels.set(label, position)
 
     let offsetPosition = [0, 0]
-
     const mousedownHandler = e => {
       const { x, y } = e
       offsetPosition = label.getOffsetPosition(x - 10, y - 10)
       this._layer.addEventListener('mousemove', mousemoveHandler)
       this._layer.addEventListener('mouseup', mouseupHandler)
     }
-
     const mousemoveHandler = e => {
       const { x, y } = e
       const groupOffsetPosition = this._group.getOffsetPosition(x, y)
@@ -54,19 +56,39 @@ export default class PhysicalSignLine {
       newPosY = Math.max(0, newPosY)
       const newPos = [position[0], newPosY]
       label.setAttribute('pos', [newPos[0] - 10, newPos[1] - 10])
+      label.setAttribute('fillColor', 'red')
       this._labels.set(label, newPos)
       this._drawLine()
     }
-
     const mouseupHandler = e => {
       this._layer.removeEventListener('mousemove', mousemoveHandler)
       this._layer.removeEventListener('mouseup', mouseupHandler)
     }
-
     label.addEventListener('mousedown', mousedownHandler)
-
     this._group.append(label)
     this._drawLine()
+  }
+
+  getPoint (label) {
+    const position = this._labels.get(label)
+    if (position) {
+      return this._valueAdaptor(position)
+    } else {
+      return null
+    }
+  }
+
+  getLegend () {
+    const legend = new Label(this._label + this._name)
+    legend.attr({
+      anchor: [0, 0],
+      fontSize: 12,
+      height: 20,
+      textAlign: 'center',
+      verticalAlign: 'middle',
+      fillColor: this._color
+    })
+    return legend
   }
 
   _drawLine () {
@@ -74,6 +96,7 @@ export default class PhysicalSignLine {
     this._line.setAttribute('points', points)
   }
 
+  // 时间和值转化为坐标
   _coordinateAdaptor ({ time, value }) {
     const thisMoment = +moment(time)
     let x = (thisMoment - this._startMoment) / (this._endMoment - this._startMoment) * this._group.attr('width')
@@ -84,5 +107,71 @@ export default class PhysicalSignLine {
       x,
       y
     }
+  }
+
+  // 坐标转化为时间和值
+  _valueAdaptor ([x, y]) {
+    let time = x / this._group.attr('width') * (this._endMoment - this._startMoment) + this._startMoment
+    time = moment(time).format('YYYY-MM-DD HH:mm')
+    let value = this._max - y / this._group.attr('height') * (this._max - this._min)
+    value = Math.round(value)
+    return {
+      time,
+      value
+    }
+  }
+}
+
+export class PhysicalSignLegends {
+  constructor (group) {
+    this._group = group
+    this.legends = []
+  }
+
+  addLegend ({ label, name, color }) {
+    const legend = new Label(label + name)
+    legend.attr({
+      anchor: [0, 0],
+      fontSize: 12,
+      height: 20,
+      textAlign: 'center',
+      verticalAlign: 'middle',
+      fillColor: color
+    })
+    this.legends.push(legend)
+    legend.attr('pos', [0, 20 * (this.legends.length - 1)])
+    this._group.append(legend)
+  }
+
+  clearLegends () {
+    this._group.removeAllChildren()
+  }
+}
+
+export class PhysicalSignEventTags {
+  constructor ({ group, startTime, endTime }) {
+    this._group = group
+    this._startMoment = +moment(startTime)
+    this._endMoment = +moment(endTime)
+  }
+
+  addTag ({ order, label, time, color }) {
+    const text = label || order + ''
+    const tag = new Label(text)
+    tag.attr({
+      anchor: [0, 0],
+      fontSize: 12,
+      width: 12,
+      textAlign: 'center',
+      verticalAlign: 'middle',
+      fillColor: color
+    })
+
+    const thisMoment = +moment(time)
+    let x = (thisMoment - this._startMoment) / (this._endMoment - this._startMoment) * this._group.attr('width')
+    x = Math.round(x)
+
+    tag.attr('pos', [x - 6, 10])
+    this._group.append(tag)
   }
 }

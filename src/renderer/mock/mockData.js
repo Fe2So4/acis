@@ -1,6 +1,7 @@
 import sourceData from './source_data'
 import templateData from './template_data'
 import signData from './sign_data'
+import eventData from './event_data'
 const Mock = require('mockjs')
 Mock.setup({
   timeout: '200-600'
@@ -27,23 +28,13 @@ Mock.mock('/api/getTemplateData', templateData)
 Mock.mock('/api/getValueData', {
   code: 200,
   success: true,
-  data: [
-    {
-      tableName: 'acis_ope_apply_info',
-      className: 'patient_id',
-      value: '123211'
-    },
-    {
-      tableName: 'acis_ope_apply_info',
-      className: 'visit_id',
-      value: '01101'
-    },
-    {
-      tableName: 'acis_ope_apply_info',
-      className: 'inpatient_ward',
-      value: '二病区'
+  data: {
+    acis_ope_apply_info: {
+      patient_id: '123211',
+      visit_id: '01101',
+      inpatient_ward: '二病区'
     }
-  ]
+  }
 })
 
 // 字典数据
@@ -64,3 +55,5 @@ Mock.mock('/api/getDictionaryData', 'post', {
 })
 // 体征数据
 Mock.mock('/api/getSignData', 'post', signData)
+// 事件数据
+Mock.mock('/api/getEventData', 'post', eventData)

@@ -5,6 +5,7 @@ export default {
     list: [
       {
         signId: 1,
+        name: '体温',
         yIndex: 0,
         label: '⊗',
         color: 'red',
@@ -25,6 +26,7 @@ export default {
       },
       {
         signId: 2,
+        name: '心跳',
         yIndex: 1,
         label: 'Ф',
         color: 'blue',

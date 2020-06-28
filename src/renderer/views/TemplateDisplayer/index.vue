@@ -54,17 +54,17 @@ export default {
           }
         })
       ]).then(res => {
-        const [widgetList, valueList] = [res[0].data.data, res[1].data.data]
+        const [widgetList, valueMap] = [res[0].data.data, res[1].data.data]
         widgetList.forEach(widget => {
           // 源数据赋值
           if (widget.dataSource) {
             const { tableName, className } = widget.dataSource
-            const valueItem = valueList.find(
-              item =>
-                item.tableName === tableName && item.className === className
-            )
-            if (valueItem) {
-              widget.value = valueItem.value
+            let value
+            if (valueMap[tableName] && valueMap[tableName][className]) {
+              value = valueMap[tableName][className]
+            }
+            if (value) {
+              widget.value = value
             }
           }
           // x轴起止时间更改
