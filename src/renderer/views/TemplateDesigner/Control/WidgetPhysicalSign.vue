@@ -31,6 +31,14 @@ export default {
     editMode: {
       type: Boolean,
       default: true
+    },
+    startTime: {
+      type: String,
+      default: ''
+    },
+    endTime: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -54,6 +62,15 @@ export default {
           this.resize()
         }
       }
+    },
+    startTime: {
+      handler: function (val) {
+        if (val) {
+          if (!this.editMode) {
+            this.getData()
+          }
+        }
+      }
     }
   },
   created () {
@@ -70,25 +87,12 @@ export default {
     } else {
       // 初始化图例区域
       this.setLegends()
-      // 请求折线数据
-      await this.getPastSignData()
-      // 绘制折线
-      this.drawLines()
-      // 绘制折线图例
-      this.drawLineLegends()
-
       // 获取拖动过的数据
       this.layer.addEventListener('mouseup', this.getChangedPoint)
       // 初始化事件标记区域
       this.setEventTags()
-      // 请求事件数据
-      await this.getPastEventData()
-      // 绘制事件标记
-      this.drawEventTags()
-      // 绘制事件图例
-      this.drawEventLegends()
-      // socket.io
-      this.getDataBySocketIO()
+      // 获取数据
+      this.getData()
     }
   },
   beforeDestroy () {
@@ -588,6 +592,26 @@ export default {
         }
       }
     },
+    async getData () {
+      // 清空折线、清空图例、清空事件
+      this.clearLines()
+      this.clearLegends()
+      this.clearEventTags()
+      // 请求折线数据
+      await this.getPastSignData()
+      // 绘制折线
+      this.drawLines()
+      // 绘制折线图例
+      this.drawLineLegends()
+      // 请求事件数据
+      await this.getPastEventData()
+      // 绘制事件标记
+      this.drawEventTags()
+      // 绘制事件图例
+      this.drawEventLegends()
+      // socket.io
+      this.getDataBySocketIO()
+    },
     getPastSignData () {
       return request({
         method: 'POST',
@@ -629,6 +653,16 @@ export default {
         })
       })
     },
+    clearLines () {
+      // 清空对象引用
+      this.lines = {}
+      // 清除group内的所有线
+      const gridGroup = this.layer.getElementsByClassName('grid')[0]
+      const lines = gridGroup.querySelectorAll('.signLine')
+      lines.forEach(el => gridGroup.removeChild(el))
+      const labels = gridGroup.querySelectorAll('.signLabel')
+      labels.forEach(el => gridGroup.removeChild(el))
+    },
     drawLineLegends () {
       this.lineList.forEach(item => {
         this.legends.addLegend(item)
@@ -638,6 +672,9 @@ export default {
       this.legends = new PhysicalSignLegends(
         this.layer.getElementsByClassName('legend')[0]
       )
+    },
+    clearLegends () {
+      this.legends.clear()
     },
     // 获取某一个Y轴的最大最小值
     getYAxisValueRange (yIndex) {
@@ -669,7 +706,10 @@ export default {
         endTime: this.configuration.xAxis.endTime
       })
     },
-    async getPastEventData () {
+    clearEventTags () {
+      this.eventTags.clear()
+    },
+    getPastEventData () {
       return request({
         method: 'POST',
         url: getEventData,
@@ -696,6 +736,10 @@ export default {
       })
     },
     getDataBySocketIO () {
+      // 与当前时间对比，如果结束时间为当前时间之前，则不需要建立连接
+      if (+moment(this.endTime) < new Date()) {
+        return
+      }
       this.socket = io('http://localhost:3000')
       this.socket.on('connect', () => {
         console.log('socket.io connected')
@@ -710,12 +754,8 @@ export default {
       })
       // 术中事件
       this.socket.on('operation event', res => {
-        console.log(res)
-
         this.eventTags.addTag(res)
         if (res.label) {
-          console.log(res)
-
           this.legends.addLegend(res)
         }
       })

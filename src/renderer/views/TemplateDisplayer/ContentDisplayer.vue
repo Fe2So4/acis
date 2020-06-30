@@ -10,6 +10,8 @@
           :is="item.name"
           :configuration="item"
           :edit-mode="editMode"
+          :start-time="startTime"
+          :end-time="endTime"
         />
       </widget-wrapper>
     </div>
@@ -42,6 +44,18 @@ export default {
       type: Array,
       default () {
         return []
+      }
+    },
+    startTime: {
+      type: String,
+      default () {
+        return ''
+      }
+    },
+    endTime: {
+      type: String,
+      default () {
+        return ''
       }
     }
   },

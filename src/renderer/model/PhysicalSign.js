@@ -18,7 +18,8 @@ export class PhysicalSignLine {
         pos: [0, 0],
         points: [],
         strokeColor: this._color,
-        lineWidth: 1
+        lineWidth: 1,
+        className: 'signLine'
       }
     )
     this._group.append(this._line)
@@ -143,7 +144,8 @@ export class PhysicalSignLegends {
     this._group.append(legend)
   }
 
-  clearLegends () {
+  clear () {
+    this.legends = []
     this._group.removeAllChildren()
   }
 }
@@ -164,7 +166,8 @@ export class PhysicalSignEventTags {
       width: 12,
       textAlign: 'center',
       verticalAlign: 'middle',
-      fillColor: color
+      fillColor: color,
+      className: 'eventTag'
     })
 
     const thisMoment = +moment(time)
@@ -173,5 +176,10 @@ export class PhysicalSignEventTags {
 
     tag.attr('pos', [x - 6, 10])
     this._group.append(tag)
+  }
+
+  clear () {
+    const tags = this._group.querySelectorAll('.eventTag')
+    tags.forEach(el => this._group.removeChild(el))
   }
 }

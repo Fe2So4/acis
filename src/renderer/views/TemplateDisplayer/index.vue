@@ -1,6 +1,10 @@
 <template>
   <div class="templateDesignerPage">
-    <content-displayer :widget-list="widgetList" />
+    <content-displayer
+      :widget-list="widgetList"
+      :start-time="startTime"
+      :end-time="endTime"
+    />
     <div>
       <el-button
         type="primary"
@@ -26,7 +30,9 @@ export default {
   },
   data () {
     return {
-      widgetList: []
+      widgetList: [],
+      startTime: '',
+      endTime: ''
     }
   },
   async created () {
@@ -83,6 +89,8 @@ export default {
         data: {}
       }).then(
         res => {
+          this.startTime = res.data.data.startTime
+          this.endTime = res.data.data.endTime
           return res.data.data
         }
       )
