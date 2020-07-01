@@ -3,19 +3,38 @@
     class="widgetNews"
     :style="widgetStyle"
   >
-    <div
-      v-for="(col,index) in (configuration.column-1)"
-      class="col"
-      :style="colStyle"
-      :key="index"
-    />
-    <div
-      class="col"
-      :style="lastColStyle"
-    />
+    <div class="lineContent">
+      <div
+        v-for="(col,index) in configuration.column"
+        class="col"
+        :style="colStyle(index)"
+        :key="index"
+      />
+    </div>
+    <div class="newsContent">
+      <div
+        class="news"
+        v-for="news in newsList"
+        :key="news.id"
+        :style="{width: colWidth}"
+      >
+        <div class="order">
+          {{ news.order }}
+        </div>
+        <div>
+          {{ news.startTime }}
+          <span v-if="news.endTime">>{{ news.endTime }}</span>
+          {{ news.name }}
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
+import io from 'socket.io-client'
+import moment from 'moment'
+import { getSocketData, getEventData } from '@/api/medicalDocument'
+import request from '@/utils/requestForMock'
 export default {
   name: 'WidgetText',
   props: {
@@ -26,6 +45,14 @@ export default {
     editMode: {
       type: Boolean,
       default: true
+    },
+    startTime: {
+      type: String,
+      default: ''
+    },
+    endTime: {
+      type: String,
+      default: ''
     }
   },
   watch: {
@@ -34,13 +61,40 @@ export default {
       handler: function (val) {
         this.setStyle()
       }
+    },
+    startTime: {
+      handler: function (val) {
+        if (val) {
+          if (!this.editMode) {
+            this.getData()
+          }
+        }
+      },
+      immediate: true
     }
   },
   data () {
     return {
       widgetStyle: {},
-      colStyle: {},
-      lastColStyle: {}
+      newsList: []
+    }
+  },
+  computed: {
+    colStyle () {
+      return index => {
+        return {
+          width: 100 / this.configuration.column + '%',
+          'border-right':
+            index !== this.configuration.column - 1
+              ? this.configuration.border.width +
+                'px solid' +
+                this.configuration.border.color
+              : 'none'
+        }
+      }
+    },
+    colWidth () {
+      return 100 / this.configuration.column + '%'
     }
   },
   created () {
@@ -62,15 +116,42 @@ export default {
 
       widgetStyle = { ...widgetStyle, ...borderObj }
       this.widgetStyle = widgetStyle
+    },
+    async getData () {
+      await this.getEventData()
+      this.getDataFromSocketIO()
+    },
+    getEventData () {
+      return request({
+        method: 'POST',
+        url: getEventData,
+        data: {}
+      }).then(
+        res => {
+          this.newsList = res.data.data.list
+        }
+      )
+    },
+    getDataFromSocketIO () {
+      if (!this.endTime) {
+        return
+      }
+      // 与当前时间对比，如果结束时间为当前时间之前，则不需要建立连接
+      if (+moment(this.endTime) < new Date()) {
+        return
+      }
+      this.socket = io(getSocketData)
+      this.socket.on('connect', () => {
+        console.log('socket.io connected')
+      })
+      this.socket.on('disconnect', () => {
+        console.log('socket.io disconnect')
+      })
 
-      const colWidth = (100 / this.configuration.column) + '%'
-      this.colStyle = {
-        width: colWidth,
-        'border-right': border.width + 'px solid' + border.color
-      }
-      this.lastColStyle = {
-        width: colWidth
-      }
+      // 术中事件
+      this.socket.on('operation event', res => {
+        this.newsList.push(res)
+      })
     }
   }
 }
@@ -79,15 +160,37 @@ export default {
 .widgetNews {
   width: 100%;
   height: 100%;
+  position: relative;
   overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  .col {
-    border-right: 1px solid black;
-    width: 33%;
+  .lineContent {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    .col {
+      border-right: 1px solid black;
+      width: 100%;
+    }
+    .col:last-child {
+      border-right: none;
+    }
   }
-  .col:last-child {
-    border-right: none;
+  .newsContent {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap:wrap;
+    align-content: flex-start;
+    .news {
+      display: flex;
+      .order {
+        flex: 0 0 20px;
+        text-align: center;
+      }
+    }
   }
 }
 </style>

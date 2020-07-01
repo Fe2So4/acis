@@ -12,11 +12,14 @@ import './utils/dialog'
 import 'xe-utils'
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/index.css'
+import Tooltip from './components/Tooltip/main'
 Vue.use(VXETable)
 Vue.use(ElementUI)
 if (!process.env.IS_WEB) { Vue.use(require('vue-electron')) }
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
+// 增加tooltip
+Vue.prototype.$tooltip = Tooltip
 /* eslint-disable no-new */
 new Vue({
   components: { App },

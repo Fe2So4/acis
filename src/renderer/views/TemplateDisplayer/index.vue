@@ -1,6 +1,10 @@
 <template>
   <div class="templateDesignerPage">
-    <content-displayer :widget-list="widgetList" />
+    <content-displayer
+      :widget-list="widgetList"
+      :start-time="startTime"
+      :end-time="endTime"
+    />
     <div>
       <el-button
         type="primary"
@@ -26,7 +30,9 @@ export default {
   },
   data () {
     return {
-      widgetList: []
+      widgetList: [],
+      startTime: '',
+      endTime: ''
     }
   },
   async created () {
@@ -54,17 +60,17 @@ export default {
           }
         })
       ]).then(res => {
-        const [widgetList, valueList] = [res[0].data.data, res[1].data.data]
+        const [widgetList, valueMap] = [res[0].data.data, res[1].data.data]
         widgetList.forEach(widget => {
           // 源数据赋值
           if (widget.dataSource) {
             const { tableName, className } = widget.dataSource
-            const valueItem = valueList.find(
-              item =>
-                item.tableName === tableName && item.className === className
-            )
-            if (valueItem) {
-              widget.value = valueItem.value
+            let value
+            if (valueMap[tableName] && valueMap[tableName][className]) {
+              value = valueMap[tableName][className]
+            }
+            if (value) {
+              widget.value = value
             }
           }
           // x轴起止时间更改
@@ -83,6 +89,8 @@ export default {
         data: {}
       }).then(
         res => {
+          this.startTime = res.data.data.startTime
+          this.endTime = res.data.data.endTime
           return res.data.data
         }
       )

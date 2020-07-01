@@ -3,6 +3,7 @@
     ref="physicalSign"
     class="widgetPhysicalSign"
     :style="widgetStyle"
+    :title="title"
   />
 </template>
 
@@ -11,12 +12,15 @@ import * as spritejs from 'spritejs'
 import { addListener, removeListener } from 'resize-detector'
 import debounce from 'lodash/debounce'
 import moment from 'moment'
-import { getSignData } from '@/api/medicalDocument'
+import { getSocketData, getSignData, getEventData } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
-import PhysicalSignLine from '@/model/PhysicalSignLine'
-// import io from 'socket.io-client'
+import {
+  PhysicalSignLine,
+  PhysicalSignLegends,
+  PhysicalSignEventTags
+} from '@/model/PhysicalSign'
+import io from 'socket.io-client'
 
-// const socket = io('http://localhost:3000')
 const { Scene, Group, Label, Polyline } = spritejs
 export default {
   props: {
@@ -27,14 +31,26 @@ export default {
     editMode: {
       type: Boolean,
       default: true
+    },
+    startTime: {
+      type: String,
+      default: ''
+    },
+    endTime: {
+      type: String,
+      default: ''
     }
   },
   data () {
     return {
       widgetStyle: {},
+      title: '',
       layer: null,
       layout: {},
-      lines: {}
+      lines: {},
+      legends: null,
+      eventTags: null,
+      socket: null
     }
   },
   watch: {
@@ -44,6 +60,15 @@ export default {
         if (this.editMode) {
           this.setStyle()
           this.resize()
+        }
+      }
+    },
+    startTime: {
+      handler: function (val) {
+        if (val) {
+          if (!this.editMode) {
+            this.getData()
+          }
         }
       }
     }
@@ -59,19 +84,27 @@ export default {
     this.setContent()
     if (this.editMode) {
       addListener(this.$refs.physicalSign, this.resize)
+    } else {
+      // 初始化图例区域
+      this.setLegends()
+      // 获取拖动过的数据
+      this.layer.addEventListener('mouseup', this.getChangedPoint)
+      // 初始化事件标记区域
+      this.setEventTags()
+      // 获取数据
+      this.getData()
+      // 添加grid展示详情效果
+      this.addGirdTooltip()
     }
-    await this.getPastSignData()
-    this.drawLines()
-    // socket.on('physical sign', res => {
-    //   const { signId, ...value } = res
-    //   this.lines[signId].addPoint(value)
-    // })
   },
   beforeDestroy () {
-    this.scene = null
     if (this.editMode) {
       removeListener(this.$refs.physicalSign, this.resize)
+    } else {
+      this.layer.removeEventListener('mouseup', this.getChangedPoint)
+      this.socket = null
     }
+    this.scene = null
   },
   methods: {
     setStyle () {
@@ -415,15 +448,19 @@ export default {
         const scale = yAxis.attr('height') / arrange
         values.forEach((t, i) => {
           const label = new Label(t.label.toString())
+          let posY = -(t.value - values[0].value) * scale
+          posY = Math.min(-7, posY)
+          posY = Math.max(-yAxis.attr('height') + 7, posY)
           label.attr({
             fontSize: 12,
             fontFamily: '宋体',
             textAlign: 'right',
             fillColor: 'black',
             width: width,
+            height: 18,
             padding: [0, 5, 0, 0],
             anchor: [1, 0.5],
-            pos: [width, -(t.value - values[0].value) * scale]
+            pos: [width, posY]
           })
           textGroup.append(label)
         })
@@ -557,10 +594,27 @@ export default {
         }
       }
     },
+    async getData () {
+      // 清空折线、清空图例、清空事件
+      this.clearLines()
+      this.clearLegends()
+      this.clearEventTags()
+      // 请求折线数据
+      await this.getPastSignData()
+      // 绘制折线
+      this.drawLines()
+      // 绘制折线图例
+      this.drawLineLegends()
+      // 请求事件数据
+      await this.getPastEventData()
+      // 绘制事件标记
+      this.drawEventTags()
+      // 绘制事件图例
+      this.drawEventLegends()
+      // socket.io
+      this.getDataBySocketIO()
+    },
     getPastSignData () {
-      if (this.editMode) {
-        return
-      }
       return request({
         method: 'POST',
         url: getSignData,
@@ -583,9 +637,12 @@ export default {
         if ((min === max) === 0) {
           return
         }
+        const { signId, name, label, color } = item
         this.lines[item.signId] = new PhysicalSignLine({
-          label: item.label,
-          color: item.color,
+          signId,
+          name,
+          label,
+          color,
           group: gridGroup,
           layer: this.layer,
           startTime: this.configuration.xAxis.startTime,
@@ -597,6 +654,29 @@ export default {
           this.lines[item.signId].addPoint(value)
         })
       })
+    },
+    clearLines () {
+      // 清空对象引用
+      this.lines = {}
+      // 清除group内的所有线
+      const gridGroup = this.layer.getElementsByClassName('grid')[0]
+      const lines = gridGroup.querySelectorAll('.signLine')
+      lines.forEach(el => gridGroup.removeChild(el))
+      const labels = gridGroup.querySelectorAll('.signLabel')
+      labels.forEach(el => gridGroup.removeChild(el))
+    },
+    drawLineLegends () {
+      this.lineList.forEach(item => {
+        this.legends.addLegend(item)
+      })
+    },
+    setLegends () {
+      this.legends = new PhysicalSignLegends(
+        this.layer.getElementsByClassName('legend')[0]
+      )
+    },
+    clearLegends () {
+      this.legends.clear()
     },
     // 获取某一个Y轴的最大最小值
     getYAxisValueRange (yIndex) {
@@ -612,6 +692,100 @@ export default {
       return {
         min: yAxis.values[0].value,
         max: yAxis.values[yAxis.values.length - 1].value
+      }
+    },
+    getChangedPoint (e) {
+      if (e.target instanceof Label && e.target.className === 'signLabel') {
+        const label = e.target
+        const line = this.lines[label.attr('signId')]
+        console.log(line.getPoint(label), label.attr('signId'))
+      }
+    },
+    setEventTags () {
+      this.eventTags = new PhysicalSignEventTags({
+        group: this.layer.getElementsByClassName('eventTag')[0],
+        startTime: this.configuration.xAxis.startTime,
+        endTime: this.configuration.xAxis.endTime
+      })
+    },
+    clearEventTags () {
+      this.eventTags.clear()
+    },
+    getPastEventData () {
+      return request({
+        method: 'POST',
+        url: getEventData,
+        data: {}
+      })
+        .then(res => {
+          const requestData = res.data.data
+          this.eventList = requestData.list
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    drawEventTags () {
+      this.eventList.forEach(event => {
+        this.eventTags.addTag(event)
+      })
+    },
+    drawEventLegends () {
+      this.eventList.forEach(event => {
+        if (event.label) {
+          this.legends.addLegend(event)
+        }
+      })
+    },
+    getDataBySocketIO () {
+      // 与当前时间对比，如果结束时间为当前时间之前，则不需要建立连接
+      if (+moment(this.endTime) < new Date()) {
+        return
+      }
+      this.socket = io(getSocketData)
+      this.socket.on('connect', () => {
+        console.log('socket.io connected')
+      })
+      this.socket.on('disconnect', () => {
+        console.log('socket.io disconnect')
+      })
+      // 体征曲线
+      this.socket.on('physical sign', res => {
+        const { signId, ...value } = res
+        this.lines[signId].addPoint(value)
+      })
+      // 术中事件
+      this.socket.on('operation event', res => {
+        this.eventTags.addTag(res)
+        if (res.label) {
+          this.legends.addLegend(res)
+        }
+      })
+    },
+    addGirdTooltip () {
+      const grid = this.layer.querySelector('.grid')
+      if (grid) {
+        const mousemoveHandler = e => {
+          if (e.target instanceof Label) {
+            const pointValue = e.target.attr('pointValue')
+            this.$tooltip({
+              dangerouslyUseHTMLString: true,
+              message: `
+                <p style="color:white">时间：${pointValue.time}</p>
+                <p style="color:white">值：${pointValue.value}</p>
+              `,
+              positionX: e.originalEvent.pageX,
+              positionY: e.originalEvent.pageY
+            })
+          } else {
+            this.$tooltip.remove()
+          }
+        }
+        const mouseleaveHandler = e => {
+          this.$tooltip.remove()
+        }
+        grid.addEventListener('mousemove', mousemoveHandler)
+        grid.addEventListener('mouseleave', mouseleaveHandler)
       }
     }
   }
