@@ -29,24 +29,28 @@ export class PhysicalSignLine {
     const { x, y } = this._coordinateAdaptor(value)
     const label = new Label(this._label)
     const position = [x, y]
+    const width = 16
+    const height = 16
     label.attr({
       anchor: [0, 0],
-      size: [20, 20],
+      width,
+      height,
       fontSize: 12,
       textAlign: 'center',
       verticalAlign: 'middle',
       fillColor: this._color,
-      pos: [position[0] - 10, position[1] - 10],
+      pos: [position[0] - width / 2, position[1] - height / 2],
       zIndex: 1,
       className: 'signLabel',
-      signId: this._signId
+      signId: this._signId,
+      pointValue: value
     })
     this._labels.set(label, position)
 
     let offsetPosition = [0, 0]
     const mousedownHandler = e => {
       const { x, y } = e
-      offsetPosition = label.getOffsetPosition(x - 10, y - 10)
+      offsetPosition = label.getOffsetPosition(x - width / 2, y - height / 2)
       this._layer.addEventListener('mousemove', mousemoveHandler)
       this._layer.addEventListener('mouseup', mouseupHandler)
     }
@@ -56,10 +60,11 @@ export class PhysicalSignLine {
       let newPosY = Math.min(groupOffsetPosition[1] - offsetPosition[1], this._group.attr('height'))
       newPosY = Math.max(0, newPosY)
       const newPos = [position[0], newPosY]
-      label.setAttribute('pos', [newPos[0] - 10, newPos[1] - 10])
+      label.setAttribute('pos', [newPos[0] - width / 2, newPos[1] - height / 2])
       label.setAttribute('fillColor', 'red')
       this._labels.set(label, newPos)
       this._drawLine()
+      label.attr('pointValue', this.getPoint(label))
     }
     const mouseupHandler = e => {
       this._layer.removeEventListener('mousemove', mousemoveHandler)

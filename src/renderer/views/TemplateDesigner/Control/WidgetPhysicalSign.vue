@@ -12,7 +12,7 @@ import * as spritejs from 'spritejs'
 import { addListener, removeListener } from 'resize-detector'
 import debounce from 'lodash/debounce'
 import moment from 'moment'
-import { getSignData, getEventData } from '@/api/medicalDocument'
+import { getSocketData, getSignData, getEventData } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
 import {
   PhysicalSignLine,
@@ -93,6 +93,8 @@ export default {
       this.setEventTags()
       // 获取数据
       this.getData()
+      // 添加grid展示详情效果
+      this.addGirdTooltip()
     }
   },
   beforeDestroy () {
@@ -740,7 +742,7 @@ export default {
       if (+moment(this.endTime) < new Date()) {
         return
       }
-      this.socket = io('http://localhost:3000')
+      this.socket = io(getSocketData)
       this.socket.on('connect', () => {
         console.log('socket.io connected')
       })
@@ -759,6 +761,32 @@ export default {
           this.legends.addLegend(res)
         }
       })
+    },
+    addGirdTooltip () {
+      const grid = this.layer.querySelector('.grid')
+      if (grid) {
+        const mousemoveHandler = e => {
+          if (e.target instanceof Label) {
+            const pointValue = e.target.attr('pointValue')
+            this.$tooltip({
+              dangerouslyUseHTMLString: true,
+              message: `
+                <p style="color:white">时间：${pointValue.time}</p>
+                <p style="color:white">值：${pointValue.value}</p>
+              `,
+              positionX: e.originalEvent.pageX,
+              positionY: e.originalEvent.pageY
+            })
+          } else {
+            this.$tooltip.remove()
+          }
+        }
+        const mouseleaveHandler = e => {
+          this.$tooltip.remove()
+        }
+        grid.addEventListener('mousemove', mousemoveHandler)
+        grid.addEventListener('mouseleave', mouseleaveHandler)
+      }
     }
   }
 }

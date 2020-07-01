@@ -2,6 +2,7 @@ const mock = process.env.NODE_ENV === 'development' ? !(process.env.MOCK === 'no
 
 const base = 'http://192.168.1.154:8090/'
 // const base = 'localhost:8090/'
+export const getSocketData = mock ? 'http://localhost:3000' : ''
 export const dataSource = mock ? '/api/dataSource' : base + 'acis/dataSource/queryDataSource'
 export const getTemplateInfo = mock ? '/api/getTemplateInfo' : base + ''
 export const getTemplateData = mock ? '/api/getTemplateData' : base + 'acis/dataSourceDict/queryDataSourceDict'

@@ -33,7 +33,7 @@
 <script>
 import io from 'socket.io-client'
 import moment from 'moment'
-import { getEventData } from '@/api/medicalDocument'
+import { getSocketData, getEventData } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
 export default {
   name: 'WidgetText',
@@ -140,7 +140,7 @@ export default {
       if (+moment(this.endTime) < new Date()) {
         return
       }
-      this.socket = io('http://localhost:3000')
+      this.socket = io(getSocketData)
       this.socket.on('connect', () => {
         console.log('socket.io connected')
       })
