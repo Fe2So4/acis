@@ -1,16 +1,14 @@
 <template lang="pug">
-  .drug-list(:style="style")
+  .menu-list(:style="style")
     ul
-      el-scrollbar(style="height:100%;" class="scrollbar")
-        li(v-for="(item,index) in list" :key="item.code" @click.stop="handleAddDrug(item)")
-          span {{item.name}}
+      li(v-for="(item,index) in menuList" :key="item.value" @click.stop="handleClick(item)")
+        span {{item.menuName}}
 </template>
 
 <script>
 export default {
   data () {
     return {
-      list: [{ name: '利多卡因', code: '0' }, { name: '利多卡因', code: '1' }, { name: '利多卡因', code: '2' }, { name: '利多卡因', code: '3' }]
     }
   },
   props: {
@@ -21,6 +19,12 @@ export default {
           positionX: 0,
           positionY: 0
         }
+      }
+    },
+    menuList: {
+      type: Array,
+      default: function () {
+        return []
       }
     }
   },
@@ -33,29 +37,31 @@ export default {
     }
   },
   methods: {
-    handleAddDrug (item) {
-      this.$emit('handleAddDrug', item)
+    handleClick (item) {
+      this.$emit('handleClick', item)
     }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-  .drug-list
+  .menu-list
     position absolute
-    height 200px
+    // height 200px
     width 100px
     z-index 10
     background #fff
     border 1px solid #000
     ul
-      height 100%
-      overflow-y auto
+      // height 100%
+      // overflow-y auto
       li
         border-bottom 1px solid #000
         font 12px/26px ''
         text-align center
         cursor pointer
+        &:last-child
+          border-bottom 0
         &:hover
           background #409EFF
 </style>

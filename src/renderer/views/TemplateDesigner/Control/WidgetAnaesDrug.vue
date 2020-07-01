@@ -7,7 +7,8 @@
     <drug-list
       v-if="drugListVisible"
       :position="position"
-      @handleAddDrug="handleAddDrug"
+      :menu-list="list"
+      @handleClick="handleAddDrug"
     />
     <drug-detail
       v-if="drugDetailVisible"
@@ -25,7 +26,7 @@ import * as spritejs from 'spritejs'
 import { addListener, removeListener } from 'resize-detector'
 import debounce from 'lodash/debounce'
 import moment from 'moment'
-import DrugList from '@/components/DrugList/index'
+import DrugList from '@/components/ContextMenu/index'
 import DrugDetail from '@/components/DrugDetail/index'
 const { Scene, Group, Label, Polyline } = spritejs
 export default {
@@ -112,6 +113,7 @@ export default {
           ]
         }
       ],
+      list: [{ menuName: '百草枯', value: '1' }, { menuName: '百草枯', value: '2' }, { menuName: '百草枯', value: '3' }],
       // 药品列表
       groupNo: null,
       startTime: null,
@@ -698,6 +700,7 @@ export default {
             this.groupNo = evt.target.attr('index')
             this.startTime = evt.x * interval
             if (this.drugList[this.groupNo]) {
+              this.drugListVisible = false
               this.drugDetailVisible = true
             } else {
               this.drugListVisible = true
@@ -712,7 +715,10 @@ export default {
       if (this.drugList[this.groupNo]) {
         this.drugDetailVisible = true
       } else {
-        this.drugList.push(param)
+        const obj = {}
+        obj.name = param.menuName
+        obj.code = param.value
+        this.drugList.push(obj)
         this.drugListVisible = false
         this.drugDetailVisible = true
       }
@@ -728,6 +734,10 @@ export default {
     },
     // 绘制用药线段
     setDrugLine () {
+      // 清空子元素
+      this.layer.getElementsByClassName('col').forEach(ref => {
+        ref.removeAllChildren()
+      })
       const grid = this.layer.getElementsByClassName('grid')[0]
       const height = grid.attr('height')
       const yScale = height / this.configuration.drugNumber
@@ -754,8 +764,7 @@ export default {
               pos: [startTime, Math.round(yScale / 2 - yScale / 4)]
             })
             dose.attr({
-              pos: [group.attr('width') / 2, group.attr('height') / 2],
-              anchor: [0, 0.5],
+              pos: [group.attr('width') / 2 - text / 2, 0],
               lineHeight: group.attr('height'),
               height: group.attr('height'),
               fontSize: 12,
@@ -765,7 +774,7 @@ export default {
               strokeWidth: 1
             })
             const leftLine = new Polyline({
-              pos: [0.5, 0],
+              pos: [-0.5, 0],
               points: [0, 0, 0, group.attr('height')],
               lineWidth: 1,
               strokeColor: 'blue'
@@ -778,7 +787,7 @@ export default {
             })
             const center = group.attr('width') / 2
             const leftCenterLine = new Polyline({
-              pos: [0.5, 0],
+              pos: [0, 0],
               points: [
                 0,
                 group.attr('height') / 2,
@@ -814,8 +823,7 @@ export default {
               pos: [startTime, Math.round(yScale / 2 - yScale / 4)]
             })
             dose.attr({
-              pos: [0, group.attr('height') / 2],
-              anchor: [0, 0.5],
+              pos: [0, 0],
               lineHeight: group.attr('height'),
               height: group.attr('height'),
               fontSize: 12,
@@ -831,6 +839,10 @@ export default {
       })
     },
     setDrugTotal () {
+      // 清空子元素
+      this.layer.getElementsByClassName('total').forEach(ref => {
+        ref.removeAllChildren()
+      })
       const legend = this.layer.getElementsByClassName('legend')[0]
       const height = legend.attr('height')
       const width = legend.attr('width')
@@ -846,7 +858,8 @@ export default {
           fontSize: 12,
           fillColor: 'blue',
           fontFamily: '宋体',
-          strokeWidth: 1
+          strokeWidth: 1,
+          className: 'total'
         })
         legend.append(label)
       })
