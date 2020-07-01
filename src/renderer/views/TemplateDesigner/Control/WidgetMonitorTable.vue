@@ -5,60 +5,201 @@
     //- .center(:style="{'width':centerWidth + 'px'}")
     .right
       ul
-        li(v-for="(item,index) of list" :key="index" class="rowHeight")
+        li(v-for="(item,index) of tableList" :key="item.name" class="rowHeight")
          .row-title(:style="{'width':centerWidth + 'px'}") {{item.name}}
          .column-content
-          .column(v-for="(col,i) of item.data" :key="col" @contextmenu.prevent="handleActiveColumn(index,i)")
-            select(v-if="item.name === '心电图'&&rowActive===index&&colActive===i" @blur="handleBlur" class="contextmenu")
+          .column(v-for="(col,i) of item.data" :key="i" @contextmenu.prevent="handleActiveColumn(index,i)")
+            select(v-if="item.dict && rowActive===index && colActive===i" @blur="handleBlur" class="contextmenu" @change="handleSelectFn($event)")
+              option(style="display:none;" value="")
               option(v-for="option in optionList" :value="option.value") {{option.label}}
-            input(v-else-if="rowActive===index&&colActive===i" @blur="handleBlur" type="text" :value="col" class="contextmenu")
-            span(v-else) {{col}}
-          //- .column(v-for="col of item.data" :key="col" style="border-right:1px solid #000;") {{col}}
-    //- vxe-grid(
-    //-   border
-    //-   highlight-hover-row
-    //-   width="100%"
-    //-   height="100%"
-    //-   class="reverse-table"
-    //-   :show-header="false"
-    //-   :columns="tableColumn"
-    //-   :data="tableData")
-
+            input(v-else-if="rowActive===index && colActive===i" @blur="handleBlur" type="text" :value="col.value" class="contextmenu")
+            span(v-else) {{col.value}}
 </template>
 <script>
 export default {
   data () {
     return {
-      leftWidth: '30',
       rowActive: null,
       colActive: null,
-      centerWidth: '128',
-      list: [{ name: '心电图', data: [1, 2, 3, 4, 5, 6, 7, 8] },
-        { name: '氧饱和度', data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] },
-        { name: '潮气里', data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] },
-        { name: 'f', data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] },
-        { name: 'PEAK', data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] },
-        { name: 'PEEP', data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] }],
+      list: [
+        { name: '心电图', data: [], colNum: 2, dict: true, code: '1' },
+        { name: '氧饱和度', data: [], colNum: 1, dict: false, code: '2' },
+        { name: '潮气里', data: [], colNum: 1, dict: false, code: '3' },
+        { name: 'f', data: [], colNum: 1, dict: false, code: '4' },
+        { name: 'PEAK', data: [], colNum: 1, dict: false, code: '5' },
+        { name: 'PEEP', data: [], colNum: 1, dict: false, code: '6' }
+      ],
       rowHeight: null,
-      optionList: [{ label: '正常', value: '1' }, { label: '无', value: '0' }, { label: '房颤', value: '2' }]
-      // tableColumn: [
-      //   { field: 'name', title: '姓名' },
-      //   { field: 'role', title: '角色' },
-      //   { field: 'sex', title: '性别' },
-      //   { field: 'age', title: '年龄' },
-      //   { field: 'address2', title: '地址' },
-      //   { field: 'date3', title: '时间' }
-      // ],
-      // tableData: [{ name: 'dyw', address2: 'hospital', role: 'admin', sex: '男', age: '22', date3: '2020-6-24' },
-      //   { name: 'dyw', address2: 'hospital', role: 'admin', sex: '男', age: '22', date3: '2020-6-24' },
-      //   { name: 'dyw', address2: 'hospital', role: 'admin', sex: '男', age: '22', date3: '2020-6-24' }]
+      startTime: '',
+      endTime: '',
+      dataList: [
+        {
+          name: '心电图',
+          code: '1',
+          data: [
+            { time: '2020-8-8 8:8', value: '窦性心律' },
+            { time: '2020-8-8 8:8', value: '窦性心律' },
+            { time: '2020-8-8 8:8', value: '窦性心律' }
+          ]
+        },
+        {
+          name: '氧饱和度',
+          code: '2',
+          data: [{ time: '2020-8-8 8:8', value: '20' }]
+        },
+        {
+          name: '潮气里',
+          code: '3',
+          data: [{ time: '2020-8-8 8:8', value: '20' }]
+        },
+        { name: 'f', code: '4', data: [{ time: '2020-8-8 8:8', value: '20' }] },
+        {
+          name: 'PEAK',
+          code: '5',
+          data: [{ time: '2020-8-8 8:8', value: '20' }]
+        },
+        {
+          name: 'PEEP',
+          code: '6',
+          data: [{ time: '2020-8-8 8:8', value: '20' }]
+        }
+      ],
+      optionList: [
+        { label: '正常', value: '0' },
+        { label: '无', value: '1' },
+        { label: '房颤', value: '2' }
+      ],
+      leftTitle: {
+        text: '监测',
+        width: 40,
+        lineHeight: 30
+      },
+      // 行标题宽度
+      rowTitle: {
+        width: 128
+      },
+      anaesColumn: {
+        num: 8
+      }
     }
   },
-  created () {
-    // this.tableData = window.MOCK_DATA_LIST.slice(0, 20)
-    // this.reverseTable()
+  props: {
+    configuration: {
+      type: Object,
+      default: () => ({
+        name: 'widget-monitor-table',
+        height: 400,
+        width: 788,
+        positionX: 0,
+        positionY: 100,
+        leftTitle: {
+          text: '监测',
+          width: 40,
+          lineHeight: 30
+        },
+        // 行标题宽度
+        rowTitle: {
+          width: 128
+        },
+        rowList: [
+          {
+            text: '心电图',
+            colNum: 2,
+            signCode: 212,
+            signItem: 'VTE',
+            label: '第1行'
+          },
+          {
+            text: '氧饱和度',
+            colNum: 1,
+            signCode: 212,
+            signItem: 'VTE',
+            label: '第2行'
+          },
+          {
+            text: '潮气量',
+            colNum: 1,
+            signCode: 212,
+            signItem: 'VTE',
+            label: '第3行'
+          },
+          {
+            text: 'f',
+            colNum: 1,
+            signCode: 212,
+            signItem: 'VTE',
+            label: '第4行'
+          },
+          {
+            text: 'PEAK',
+            colNum: 1,
+            signCode: 212,
+            signItem: 'VTE',
+            label: '第5行'
+          },
+          {
+            text: 'PEEP',
+            colNum: 1,
+            signCode: 212,
+            signItem: 'VTE',
+            label: '第6行'
+          },
+          {
+            text: '中心静脉压',
+            colNum: 1,
+            signCode: 212,
+            signItem: 'VTE',
+            label: '第7行'
+          },
+          {
+            text: '尿量',
+            colNum: 1,
+            signCode: 212,
+            signItem: 'VTE',
+            label: '第8行'
+          },
+          {
+            text: '累计失血量',
+            colNum: 1,
+            signCode: 212,
+            signItem: 'VTE',
+            label: '第9行'
+          }
+        ],
+        anaesColumn: {
+          num: 8
+        }
+      })
+    }
   },
+  computed: {
+    tableList () {
+      this.list.forEach((value, index, array) => {
+        const length = this.anaesColumn.num / value.colNum
+        for (let i = 0; i < length; i++) {
+          if (value.data[i]) {
+          } else {
+            value.data.push('')
+          }
+        }
+      })
+      return this.list
+    },
+    leftWidth () {
+      return this.configuration.leftTitle.width
+    },
+    centerWidth () {
+      return this.configuration.rowTitle.width
+    }
+  },
+  created () {},
   methods: {
+    // 获取数据
+    getDataList () {
+      this.dataList.forEach((value, index, array) => {
+        this.list[index].data = JSON.parse(JSON.stringify(value.data))
+      })
+    },
     // 反转函数
     reverseTable () {
       const tableData = this.tableData
@@ -69,24 +210,28 @@ export default {
         })
         return item
       })
-      this.tableColumn = [{
-        field: '0',
-        fixed: 'left',
-        width: 80
-      }].concat(tableData.map((item, index) => {
-        console.log(item.name)
-        if (item.name === 'name') {
-          return {
-            field: `${index + 1}`,
-            width: 200
-          }
-        } else {
-          return {
-            field: `${index + 1}`,
-            width: 120
-          }
+      this.tableColumn = [
+        {
+          field: '0',
+          fixed: 'left',
+          width: 80
         }
-      }))
+      ].concat(
+        tableData.map((item, index) => {
+          console.log(item.name)
+          if (item.name === 'name') {
+            return {
+              field: `${index + 1}`,
+              width: 200
+            }
+          } else {
+            return {
+              field: `${index + 1}`,
+              width: 120
+            }
+          }
+        })
+      )
     },
     // 计算行高
     getRowHeight () {
@@ -110,12 +255,27 @@ export default {
       // console.log(oinput.value)
     },
     handleBlur () {
-      const oinput = document.querySelector('input')
+      const oinput = document.querySelectorAll('.contextmenu')[0]
       this.list.forEach((value, index, array) => {
         if (index === this.rowActive) {
           value.data.forEach((item, i) => {
             if (this.colActive === i) {
               this.list[index].data[i] = oinput.value
+            }
+          })
+        }
+      })
+      this.rowActive = null
+      this.colActive = null
+    },
+    handleSelectFn (e) {
+      this.list.forEach((value, index, array) => {
+        if (index === this.rowActive) {
+          value.data.forEach((item, i) => {
+            if (this.colActive === i) {
+              this.list[index].data[i] = this.optionList[
+                e.target.selectedIndex - 1
+              ].label
             }
           })
         }
@@ -129,69 +289,101 @@ export default {
   },
   mounted () {
     this.getRowHeight()
+    this.getDataList()
   }
 }
 </script>
 <style lang="stylus" scoped>
-  .monitor
-    height 288px
-    width 100%
-    display flex
-    border 1px solid #000
-    box-sizing border-box
-    font-size 12px
-    .left
-      // flex 1
-      height 100%
-      border-right 1px solid #000
-      text-align center
-      display table
-      span
-        display table-cell
-        vertical-align middle
-    .center
-      // flex 1
-      height 100%
-      border-right 1px solid #000
-      ul
-        height 100%
-        background pink
-        li
-          text-align center
-          border-bottom 1px solid #000
-          &:last-child
-            border-bottom 0
-    .right
-      flex 1
-      height 100%
-      ul
-        height 100%
-        li
-          text-align center
-          box-sizing border-box
-          border-bottom 1px solid #000
-          display flex
-          &:last-child
-            border-bottom 0
-          .row-title
-            border-right 1px solid #000
-          .column-content
-            flex 1
-            display flex
-            height 100%
-            .column
-              flex 1
-              height 100%
-              border-right 1px solid #000000
-              position relative
-              &:last-child
-                border-right 0
-              .contextmenu
-                position absolute
-                left 0
-                top 0
-                height 100%
-                border unset
-                outline unset
-                width 100%
+.monitor {
+  height: 288px;
+  width: 100%;
+  display: flex;
+  border: 1px solid #000;
+  box-sizing: border-box;
+  font-size: 12px;
+
+  .left {
+    // flex 1
+    height: 100%;
+    border-right: 1px solid #000;
+    text-align: center;
+    display: table;
+
+    span {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
+
+  .center {
+    // flex 1
+    height: 100%;
+    border-right: 1px solid #000;
+
+    ul {
+      height: 100%;
+      background: pink;
+
+      li {
+        text-align: center;
+        border-bottom: 1px solid #000;
+
+        &:last-child {
+          border-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .right {
+    flex: 1;
+    height: 100%;
+
+    ul {
+      height: 100%;
+
+      li {
+        text-align: center;
+        box-sizing: border-box;
+        border-bottom: 1px solid #000;
+        display: flex;
+
+        &:last-child {
+          border-bottom: 0;
+        }
+
+        .row-title {
+          border-right: 1px solid #000;
+        }
+
+        .column-content {
+          flex: 1;
+          display: flex;
+          height: 100%;
+
+          .column {
+            flex: 1;
+            height: 100%;
+            border-right: 1px solid #000000;
+            position: relative;
+
+            &:last-child {
+              border-right: 0;
+            }
+
+            .contextmenu {
+              position: absolute;
+              left: 0;
+              top: 0;
+              height: 100%;
+              border: unset;
+              outline: unset;
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+}
 </style>

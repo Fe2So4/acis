@@ -14,7 +14,7 @@ import VXETable from 'vxe-table'
 import 'vxe-table/lib/index.css'
 Vue.use(VXETable)
 Vue.use(ElementUI)
-if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
+if (!process.env.IS_WEB) { Vue.use(require('vue-electron')) }
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 /* eslint-disable no-new */

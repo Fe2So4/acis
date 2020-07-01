@@ -77,6 +77,7 @@ export default class PhysicalSignLine {
   _coordinateAdaptor ({ time, value }) {
     const thisMoment = +moment(time)
     let x = (thisMoment - this._startMoment) / (this._endMoment - this._startMoment) * this._group.attr('width')
+    console.log(x)
     x = Math.round(x)
     let y = (this._max - value) / (this._max - this._min) * this._group.attr('height')
     y = Math.round(y)

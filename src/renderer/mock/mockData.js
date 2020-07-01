@@ -13,8 +13,8 @@ Mock.mock('/api/getTemplateInfo', 'post', {
   success: true,
   data: {
     templateId: 1,
-    startTime: '2020-06-23 09:00',
-    endTime: '2020-06-23 13:00',
+    startTime: '2020-07-01 09:00',
+    endTime: '2020-07-01 13:00',
     pageIndex: 0,
     pageTotal: 3
   }

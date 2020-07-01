@@ -14,9 +14,9 @@ import moment from 'moment'
 import { getSignData } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
 import PhysicalSignLine from '@/model/PhysicalSignLine'
-import io from 'socket.io-client'
+// import io from 'socket.io-client'
 
-const socket = io('http://localhost:3000')
+// const socket = io('http://localhost:3000')
 const { Scene, Group, Label, Polyline } = spritejs
 export default {
   props: {
@@ -62,10 +62,10 @@ export default {
     }
     await this.getPastSignData()
     this.drawLines()
-    socket.on('physical sign', res => {
-      const { signId, ...value } = res
-      this.lines[signId].addPoint(value)
-    })
+    // socket.on('physical sign', res => {
+    //   const { signId, ...value } = res
+    //   this.lines[signId].addPoint(value)
+    // })
   },
   beforeDestroy () {
     this.scene = null

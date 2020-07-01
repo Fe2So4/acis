@@ -11,7 +11,7 @@
         class="canvas"
         @click="onClickCanvas"
       /> -->
-      <!-- <widget-movable
+      <widget-movable
         v-for="(item,index) of widgetList"
         :key="index"
         :widget="item"
@@ -26,9 +26,9 @@
           :configuration="item"
           :edit-mode="editMode"
         />
-      </widget-movable> -->
+      </widget-movable>
       <!-- <pre>{{ widgetList }}</pre> -->
-      <widget-monitor-table />
+      <!-- <widget-monitor-table /> -->
     </div>
   </div>
 </template>
@@ -38,7 +38,7 @@ import { createNamespacedHelpers } from 'vuex'
 import getConfigurationItems from './WidgetConfigurationItems.js'
 // import { v4 as uuidv4 } from 'uuid'
 // import Mock from 'mockjs'
-// import WidgetMovable from './WidgetMovable'
+import WidgetMovable from './WidgetMovable'
 import { controls } from './getAllConfigurationPage'
 // import WidgetInput from './WidgetInput'
 // import WidgetTextarea from './WidgetTextarea'
@@ -54,7 +54,7 @@ const { mapState, mapActions } = createNamespacedHelpers(
 export default {
   name: 'ContentDesigner',
   components: {
-    // WidgetMovable,
+    WidgetMovable,
     ...controls
   },
   data () {

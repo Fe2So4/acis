@@ -44,8 +44,8 @@ export default function getConfigurationItems (widgetName) {
           text: '总量'
         },
         xAxis: {
-          startTime: '2018-02-01 08:00',
-          endTime: '2018-02-01 12:00',
+          startTime: '2020-07-01 09:00',
+          endTime: '2020-07-01 13:00',
           timeInterval: 15 * 60 * 1000,
           lineInterval: 3
         },
@@ -93,15 +93,15 @@ export default function getConfigurationItems (widgetName) {
           width: 128
         },
         rowList: [
-          { text: '心电图', colNum: 2 },
-          { text: '氧饱和度', colNum: 1 },
-          { text: '潮气量', colNum: 2 },
-          { text: 'f', colNum: 1 },
-          { text: 'PEAK', colNum: 2 },
-          { text: 'PEEP', colNum: 2 },
-          { text: '中心静脉压', colNum: 2 },
-          { text: '尿量', colNum: 1 },
-          { text: '累计失血量', colNum: 2 }
+          { text: '心电图', colNum: 2, signCode: 212, signItem: 'VTE', label: '第1行' },
+          { text: '氧饱和度', colNum: 1, signCode: 212, signItem: 'VTE', label: '第2行' },
+          { text: '潮气量', colNum: 2, signCode: 212, signItem: 'VTE', label: '第3行' },
+          { text: 'f', colNum: 1, signCode: 212, signItem: 'VTE', label: '第4行' },
+          { text: 'PEAK', colNum: 2, signCode: 212, signItem: 'VTE', label: '第5行' },
+          { text: 'PEEP', colNum: 2, signCode: 212, signItem: 'VTE', label: '第6行' },
+          { text: '中心静脉压', colNum: 2, signCode: 212, signItem: 'VTE', label: '第7行' },
+          { text: '尿量', colNum: 1, signCode: 212, signItem: 'VTE', label: '第8行' },
+          { text: '累计失血量', colNum: 2, signCode: 212, signItem: 'VTE', label: '第9行' }
         ],
         anaesColumn: {
           num: 8

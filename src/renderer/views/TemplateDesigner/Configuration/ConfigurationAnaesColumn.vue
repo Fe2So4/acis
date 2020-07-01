@@ -30,7 +30,7 @@ export default {
         num: currentValue
       })
       this.$emit('change', {
-        column: configuration
+        anaesColumn: configuration
       })
     }
   }

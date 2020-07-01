@@ -16,31 +16,7 @@ export default {
   data () {
     return {
       layer: null,
-      layout: {},
-      drugList: [{ name: '利多卡因', code: '1' }, { name: '安眠药', code: '2' }, { name: '降压药', code: '3' }] // 药品列表
-      // leftTitle: {
-      //   text: '监测',
-      //   width: 40,
-      //   lineHeight: 30
-      // },
-      // // 行标题宽度
-      // rowTitle: {
-      //   width: 128
-      // },
-      // rowList: [
-      //   { text: '心电图', colNum: 2 },
-      //   { text: '氧饱和度', colNum: 1 },
-      //   { text: '潮气量', colNum: 2 },
-      //   { text: 'f', colNum: 1 },
-      //   { text: 'PEAK', colNum: 2 },
-      //   { text: 'PEEP', colNum: 2 },
-      //   { text: '中心静脉压', colNum: 2 },
-      //   { text: '尿量', colNum: 1 },
-      //   { text: '累计失血量', colNum: 2 }
-      // ],
-      // anaesColumn: {
-      //   num: 8
-      // }
+      layout: {}
     }
   },
   props: {
@@ -58,15 +34,15 @@ export default {
             width: 128
           },
           rowList: [
-            { text: '心电图', colNum: 2 },
-            { text: '氧饱和度', colNum: 1 },
-            { text: '潮气量', colNum: 2 },
-            { text: 'f', colNum: 1 },
-            { text: 'PEAK', colNum: 2 },
-            { text: 'PEEP', colNum: 2 },
-            { text: '中心静脉压', colNum: 2 },
-            { text: '尿量', colNum: 1 },
-            { text: '累计失血量', colNum: 2 }
+            // { text: '心电图', colNum: 2 },
+            // { text: '氧饱和度', colNum: 1 },
+            // { text: '潮气量', colNum: 2 },
+            // { text: 'f', colNum: 1 },
+            // { text: 'PEAK', colNum: 2 },
+            // { text: 'PEEP', colNum: 2 },
+            // { text: '中心静脉压', colNum: 2 },
+            // { text: '尿量', colNum: 1 },
+            // { text: '累计失血量', colNum: 2 }
           ],
           anaesColumn: {
             num: 8
@@ -273,7 +249,7 @@ export default {
             lineWidth: 1
           })
           if (j % this.configuration.rowList[i].colNum === 0 && this.configuration.rowList[i].colNum !== 1) {
-            console.log(j, this.configuration.rowList[i].colNum)
+            // console.log(j, this.configuration.rowList[i].colNum)
             continue
           }
           rightPart.append(line)

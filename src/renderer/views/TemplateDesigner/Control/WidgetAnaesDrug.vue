@@ -2,7 +2,22 @@
   <div
     ref="anaesDrug"
     class="anaesDrug"
-  />
+    @click="handleClearRightClick"
+  >
+    <drug-list
+      v-if="drugListVisible"
+      :position="position"
+      @handleAddDrug="handleAddDrug"
+    />
+    <drug-detail
+      v-if="drugDetailVisible"
+      :start-time="startTime"
+      :drug-detail-visible="drugDetailVisible"
+      @handleClose="handleCloseDrugDetail"
+      @handleSubmit="handleSubmit"
+    />
+    <canvas id="canvas" />
+  </div>
 </template>
 
 <script>
@@ -10,45 +25,131 @@ import * as spritejs from 'spritejs'
 import { addListener, removeListener } from 'resize-detector'
 import debounce from 'lodash/debounce'
 import moment from 'moment'
+import DrugList from '@/components/DrugList/index'
+import DrugDetail from '@/components/DrugDetail/index'
 const { Scene, Group, Label, Polyline } = spritejs
 export default {
   name: 'WidgetAnaesDrug',
   data () {
     return {
       layer: null,
+      drugListVisible: false,
+      position: { positionX: 0, positionY: 0 },
       layout: {},
-      drugList: [{ name: '利多卡因', code: '1' }, { name: '安眠药', code: '2' }, { name: '降压药', code: '3' }] // 药品列表
+      drugList: [
+        {
+          name: '药品名称',
+          code: '0',
+          total: '30',
+          data: [
+            {
+              startTime: '2020-7-1 10:00',
+              endTime: '2020-7-1 10:30',
+              dose: '32mg/l',
+              continue: false,
+              speed: '32',
+              speedUnit: 'mg/l',
+              doseUnit: 'mg',
+              concentrationUnit: '%'
+            },
+            {
+              startTime: '2020-7-1 10:40',
+              endTime: '2020-7-1 11:00',
+              dose: '32mg/l',
+              continue: true,
+              speed: '32',
+              speedUnit: 'mg/l',
+              doseUnit: 'mg',
+              concentrationUnit: '%'
+            },
+            {
+              startTime: '2020-7-1 11:10',
+              endTime: '2020-7-1 12:00',
+              dose: '32mg/l',
+              continue: true,
+              speed: '32',
+              speedUnit: 'mg/l',
+              doseUnit: 'mg',
+              concentrationUnit: '%'
+            }
+          ]
+        },
+        {
+          name: '百草枯',
+          code: '1',
+          total: '50',
+          data: [
+            {
+              startTime: '2020-7-1 10:00',
+              endTime: '2020-7-1 10:30',
+              dose: '32mg/l',
+              continue: true,
+              speed: '32',
+              speedUnit: 'mg/l',
+              doseUnit: 'mg',
+              concentrationUnit: '%'
+            },
+            {
+              startTime: '2020-7-1 10:45',
+              endTime: '2020-7-1 11:00',
+              dose: '32',
+              continue: true,
+              speed: '32',
+              speedUnit: 'mg/l',
+              doseUnit: 'mg',
+              concentrationUnit: '%'
+            },
+            {
+              startTime: '2020-7-1 11:15',
+              endTime: '2020-7-1 11:45',
+              dose: '32mg/l',
+              continue: false,
+              speed: '32',
+              speedUnit: 'mg/l',
+              doseUnit: 'mg',
+              concentrationUnit: '%'
+            }
+          ]
+        }
+      ],
+      // 药品列表
+      groupNo: null,
+      startTime: null,
+      drugDetailVisible: false
     }
   },
   props: {
     configuration: {
       type: Object,
-      default: () => (
-        {
-          leftPartWidthRate: 0.18,
-          rightPartWidthRate: 0.1,
-          leftTitle: {
-            text: '麻醉用药',
-            width: 40,
-            lineHeight: 30
-          },
-          timeTitle: {
-            text: '时间',
-            height: 30, // 是否显示顶部时间条，将高度置为0即可
-            lineHeight: 30
-          },
-          totalTitle: {
-            text: '总量'
-          },
-          xAxis: {
-            startTime: '2018-02-01 08:00',
-            endTime: '2018-02-01 12:00',
-            timeInterval: 15 * 60 * 1000,
-            lineInterval: 3
-          },
-          drugNumber: 10
-        })
+      default: () => ({
+        leftPartWidthRate: 0.18,
+        rightPartWidthRate: 0.1,
+        leftTitle: {
+          text: '麻醉用药',
+          width: 40,
+          lineHeight: 30
+        },
+        timeTitle: {
+          text: '时间',
+          height: 30, // 是否显示顶部时间条，将高度置为0即可
+          lineHeight: 30
+        },
+        totalTitle: {
+          text: '总量'
+        },
+        xAxis: {
+          startTime: '2020-07-01 09:00',
+          endTime: '2020-07-01 13:00',
+          timeInterval: 15 * 60 * 1000,
+          lineInterval: 3
+        },
+        drugNumber: 10
+      })
     }
+  },
+  components: {
+    DrugList,
+    DrugDetail
   },
   watch: {
     configuration: {
@@ -56,6 +157,13 @@ export default {
       handler: function (val) {
         this.resize()
       }
+    },
+    drugList: {
+      handler (newVal, old) {
+        return newVal
+      },
+      deep: true,
+      immediate: true
     }
   },
   created () {
@@ -66,6 +174,8 @@ export default {
     this.createGroups()
     this.setLayout()
     this.setContent()
+    this.setDrugLine()
+    this.setDrugTotal()
     addListener(this.$refs.anaesDrug, this.resize)
   },
   beforeDestroy () {
@@ -82,8 +192,8 @@ export default {
       this.scene = new Scene({
         container: this.$refs.anaesDrug,
         width: this.$refs.width,
-        height: this.$refs.height,
-        mode: 'static'
+        height: this.$refs.height
+        // mode: 'static'
       })
       this.layer = this.scene.layer()
     },
@@ -150,7 +260,10 @@ export default {
       // leftPart/leftTitle
       const leftTitle = leftPart.getElementsByClassName('leftTitle')[0]
       leftTitle.attr({
-        size: [this.configuration.leftTitle.width || 0, leftPart.attr('height')],
+        size: [
+          this.configuration.leftTitle.width || 0,
+          leftPart.attr('height')
+        ],
         padding: [0, 10, 0, 10]
       })
       const leftTitleBorderRightLine = new Polyline({
@@ -183,7 +296,12 @@ export default {
       // })
       const timeTitleBorderBottomLine = new Polyline({
         pos: [0, 0],
-        points: [0, timeTitle.attr('height') - 0.5, timeTitle.attr('width') - 0.5, timeTitle.attr('height') - 0.5],
+        points: [
+          0,
+          timeTitle.attr('height') - 0.5,
+          timeTitle.attr('width') - 0.5,
+          timeTitle.attr('height') - 0.5
+        ],
         strokeColor: 'black',
         lineWidth: 1
       })
@@ -192,11 +310,19 @@ export default {
       // leftPart/leftMain/drugList
       const drugList = leftMain.getElementsByClassName('drugList')[0]
       drugList.attr({
-        size: [leftMain.attr('width'), leftMain.attr('height') - timeTitle.attr('height')],
+        size: [
+          leftMain.attr('width'),
+          leftMain.attr('height') - timeTitle.attr('height')
+        ],
         pos: [0, timeTitle.attr('height')]
       })
       const drugListBorderRightLine = new Polyline({
-        points: [drugList.attr('width') - 0.5, 0, drugList.attr('width') - 0.5, drugList.attr('height') - 0.5],
+        points: [
+          drugList.attr('width') - 0.5,
+          0,
+          drugList.attr('width') - 0.5,
+          drugList.attr('height') - 0.5
+        ],
         strokeColor: 'black',
         lineWidth: 1
       })
@@ -206,7 +332,9 @@ export default {
         size: [
           Math.round(
             this.layer.width *
-              (1 - this.configuration.leftPartWidthRate - this.configuration.rightPartWidthRate)
+              (1 -
+                this.configuration.leftPartWidthRate -
+                this.configuration.rightPartWidthRate)
           ),
           this.layer.height
         ],
@@ -236,8 +364,7 @@ export default {
       grid.attr({
         size: [
           middlePart.attr('width'),
-          middlePart.attr('height') -
-            this.configuration.timeTitle.height
+          middlePart.attr('height') - this.configuration.timeTitle.height
         ],
         pos: [0, xAxis.attr('height')]
       })
@@ -296,12 +423,14 @@ export default {
       this.setXAxis()
       this.setGrid()
       this.setTotalTitle()
+      this.setTotalLine()
     },
     setDrugContent () {
       const leftPart = this.layer.getElementsByClassName('leftPart')[0]
       const drugList = leftPart.getElementsByClassName('drugList')[0]
       const width = Math.round(drugList.attr('width'))
-      const lineHeight = Math.round(drugList.attr('height')) / this.configuration.drugNumber
+      const lineHeight =
+        Math.round(drugList.attr('height')) / this.configuration.drugNumber
       for (let i = 0; i < this.configuration.drugNumber - 1; i++) {
         const line = new Polyline({
           pos: [0, Math.round(lineHeight * (i + 1)) - 0.5],
@@ -311,6 +440,31 @@ export default {
         })
         drugList.append(line)
       }
+      this.setDrug()
+      // for (let i = 0; i < this.configuration.drugNumber; i++) {
+      //   if (this.drugList[i]) {
+      //     const text = new Label(this.drugList[i].name)
+      //     text.attr({
+      //       pos: [0, lineHeight * i],
+      //       anchor: [0, 0],
+      //       fontSize: 12,
+      //       fontFamily: '宋体',
+      //       textAlign: 'center',
+      //       fillColor: 'blue',
+      //       width: width,
+      //       height: lineHeight,
+      //       lineHeight: lineHeight
+      //     })
+      //     drugList.append(text)
+      //   }
+      // }
+    },
+    setDrug () {
+      const leftPart = this.layer.getElementsByClassName('leftPart')[0]
+      const drugList = leftPart.getElementsByClassName('drugList')[0]
+      const width = Math.round(drugList.attr('width'))
+      const lineHeight =
+        Math.round(drugList.attr('height')) / this.configuration.drugNumber
       for (let i = 0; i < this.configuration.drugNumber; i++) {
         if (this.drugList[i]) {
           const text = new Label(this.drugList[i].name)
@@ -402,6 +556,23 @@ export default {
       })
       totalTitle.append(text)
     },
+    setTotalLine () {
+      const legend = this.layer.getElementsByClassName('legend')[0]
+      const height = legend.attr('height')
+      const width = legend.attr('width')
+      const yScale = height / this.configuration.drugNumber
+      for (let index = 0; index < this.configuration.drugNumber; index++) {
+        if (index) {
+          const mainLine = new Polyline({
+            pos: [0, Math.round(index * yScale) - 0.5],
+            points: [0, 0, width, 0],
+            strokeColor: 'gray',
+            lineWidth: 1
+          })
+          legend.append(mainLine)
+        }
+      }
+    },
     setXAxisList () {
       const startMoment = +moment(this.configuration.xAxis.startTime)
       const endMoment = +moment(this.configuration.xAxis.endTime)
@@ -456,7 +627,8 @@ export default {
           const line = new Polyline({
             pos: [
               Math.round(
-                index * xScale + i * (xScale / this.configuration.xAxis.lineInterval)
+                index * xScale +
+                  i * (xScale / this.configuration.xAxis.lineInterval)
               ) - 0.5,
               0
             ],
@@ -484,6 +656,15 @@ export default {
           })
           grid.append(mainLine)
         }
+        const row = new Group({
+          pos: [0, Math.round(index * yScale) - 0.5],
+          // bgcolor: 'red',
+          size: [width, yScale],
+          index: index,
+          className: 'row'
+          // pointerEvents: 'none'
+        })
+        grid.append(row)
         // for (let i = 1; i < this.yAxis.lineInterval; i++) {
         //   const line = new Polyline({
         //     pos: [
@@ -500,6 +681,190 @@ export default {
         //   grid.append(line)
         // }
       }
+      this.handleGridRightClick()
+    },
+    // 网格区右击
+    handleGridRightClick () {
+      const grid = this.layer.getElementsByClassName('grid')[0]
+      const width = grid.attr('width')
+      const xAxislist = this.configuration.xAxis.list
+      const xScale = Math.floor(width / xAxislist.length)
+      const interval = Math.floor(
+        this.configuration.xAxis.timeInterval / xScale
+      )
+      grid.addEventListener('mousedown', evt => {
+        if (evt.originalEvent.button === 2) {
+          if (evt.target.attr('className') === 'row') {
+            this.groupNo = evt.target.attr('index')
+            this.startTime = evt.x * interval
+            if (this.drugList[this.groupNo]) {
+              this.drugDetailVisible = true
+            } else {
+              this.drugListVisible = true
+            }
+            this.position.positionX = evt.x
+            this.position.positionY = evt.y
+          }
+        }
+      })
+    },
+    handleAddDrug (param) {
+      if (this.drugList[this.groupNo]) {
+        this.drugDetailVisible = true
+      } else {
+        this.drugList.push(param)
+        this.drugListVisible = false
+        this.drugDetailVisible = true
+      }
+      // this.setDrug()
+    },
+    handleClearRightClick () {
+      this.drugListVisible = false
+      this.groupNo = null
+    },
+    handleCloseDrugDetail () {
+      this.drugDetailVisible = false
+      this.startTime = null
+    },
+    // 绘制用药线段
+    setDrugLine () {
+      const grid = this.layer.getElementsByClassName('grid')[0]
+      const height = grid.attr('height')
+      const yScale = height / this.configuration.drugNumber
+      var canvas = document.getElementById('canvas')
+      var ctx = canvas.getContext('2d')
+      const row = grid.getElementsByClassName('row')
+      this.drugList.forEach((value, index, array) => {
+        value.data.forEach((item, i) => {
+          const dose = new Label(item.dose)
+          const text = Math.ceil(ctx.measureText(item.dose).width)
+          let group = null
+          const width = grid.attr('width')
+          const interval = width / (moment(this.configuration.xAxis.endTime) - moment(this.configuration.xAxis.startTime))
+          const startTime = Math.round((moment(item.startTime) - moment(this.configuration.xAxis.startTime)) * interval)
+          let endTime = null
+          if (item.endTime !== '') {
+            endTime = Math.round((moment(item.endTime) - moment(this.configuration.xAxis.startTime)) * interval)
+          }
+          if (item.continue) {
+            group = new Group({
+              className: 'col',
+              colIndex: i,
+              size: [endTime - startTime, Math.round(yScale / 2)],
+              pos: [startTime, Math.round(yScale / 2 - yScale / 4)]
+            })
+            dose.attr({
+              pos: [group.attr('width') / 2, group.attr('height') / 2],
+              anchor: [0, 0.5],
+              lineHeight: group.attr('height'),
+              height: group.attr('height'),
+              fontSize: 12,
+              fillColor: 'blue',
+              fontFamily: '宋体',
+              textAlign: 'center',
+              strokeWidth: 1
+            })
+            const leftLine = new Polyline({
+              pos: [0.5, 0],
+              points: [0, 0, 0, group.attr('height')],
+              lineWidth: 1,
+              strokeColor: 'blue'
+            })
+            const rightLine = new Polyline({
+              pos: [group.attr('width') - 0.5, 0],
+              points: [0, 0, 0, group.attr('height')],
+              lineWidth: 1,
+              strokeColor: 'blue'
+            })
+            const center = group.attr('width') / 2
+            const leftCenterLine = new Polyline({
+              pos: [0.5, 0],
+              points: [
+                0,
+                group.attr('height') / 2,
+                center - text / 2 - 4,
+                group.attr('height') / 2
+              ],
+              lineWidth: 1,
+              strokeColor: 'blue'
+            })
+            const rightCenterLine = new Polyline({
+              pos: [0, 0],
+              points: [
+                center + text / 2 + 4,
+                group.attr('height') / 2,
+                group.attr('width'),
+                group.attr('height') / 2
+              ],
+              lineWidth: 1,
+              strokeColor: 'blue'
+            })
+            group.append(
+              leftLine,
+              rightLine,
+              leftCenterLine,
+              rightCenterLine,
+              dose
+            )
+          } else {
+            group = new Group({
+              className: 'col',
+              colIndex: i,
+              size: [text, Math.round(yScale / 2)],
+              pos: [startTime, Math.round(yScale / 2 - yScale / 4)]
+            })
+            dose.attr({
+              pos: [0, group.attr('height') / 2],
+              anchor: [0, 0.5],
+              lineHeight: group.attr('height'),
+              height: group.attr('height'),
+              fontSize: 12,
+              fillColor: 'blue',
+              fontFamily: '宋体',
+              textAlign: 'center',
+              strokeWidth: 1
+            })
+            group.append(dose)
+          }
+          row[index].append(group)
+        })
+      })
+    },
+    setDrugTotal () {
+      const legend = this.layer.getElementsByClassName('legend')[0]
+      const height = legend.attr('height')
+      const width = legend.attr('width')
+      const yScale = height / this.configuration.drugNumber
+      this.drugList.forEach((value, index, array) => {
+        const label = new Label(value.total)
+        label.attr({
+          pos: [0, yScale * index],
+          anchor: [0, 0],
+          textAlign: 'center',
+          width: width,
+          lineHeight: yScale,
+          fontSize: 12,
+          fillColor: 'blue',
+          fontFamily: '宋体',
+          strokeWidth: 1
+        })
+        legend.append(label)
+      })
+    },
+    handleSubmit (param) {
+      // let data = []
+      if (this.drugList[this.groupNo].data) {
+        this.drugList[this.groupNo].data.push(param)
+      } else {
+        const data = []
+        data.push(param)
+        this.drugList[this.groupNo].data = data
+        this.drugList[this.groupNo].total = param.dose
+      }
+      this.drugDetailVisible = false
+      this.setDrug()
+      this.setDrugLine()
+      this.setDrugTotal()
     }
   }
 }
@@ -511,6 +876,8 @@ export default {
   border: 1px solid black;
   box-sizing: border-box;
   margin: 0 auto;
-  background:#fff;
+  position: relative;
+  background: #fff;
+  overflow: unset !important;
 }
 </style>
