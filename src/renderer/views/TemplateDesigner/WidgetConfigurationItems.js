@@ -18,7 +18,9 @@ export default function getConfigurationItems (widgetName) {
   // 字典
   const dictionarySource = {
     dictTableName: '',
-    dictClassName: ''
+    conditionClassNameId: '',
+    dictClassName: '',
+    dictRelationName: ''
   }
   switch (widgetName) {
     case 'widget-checkbox-group':

@@ -124,15 +124,15 @@ export default {
     //         values: [
     //           {
     //             label: '℃',
-    //             value: 0
+    //             value: 20
     //           },
     //           {
-    //             label: 10,
-    //             value: 10
+    //             label: 30,
+    //             value: 30
     //           },
     //           {
     //             label: '到顶啦',
-    //             value: 20
+    //             value: 40
     //           }
     //         ]
     //       },
@@ -145,12 +145,12 @@ export default {
     //             value: 0
     //           },
     //           {
-    //             label: '50',
-    //             value: '50'
+    //             label: '200',
+    //             value: '200'
     //           },
     //           {
-    //             label: '100',
-    //             value: '100'
+    //             label: '400',
+    //             value: '400'
     //           }
     //         ]
     //       }

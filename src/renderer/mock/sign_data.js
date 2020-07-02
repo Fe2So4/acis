@@ -1,50 +1,73 @@
 export default {
   code: 200,
   success: true,
-  data: {
-    list: [
-      {
-        signId: 1,
-        name: '体温',
-        yIndex: 0,
-        label: '⊗',
-        color: 'red',
-        list: [
-          {
-            time: '2020-07-01 09:00',
-            value: 10
-          },
-          {
-            time: '2020-07-01 09:05',
-            value: 12
-          },
-          {
-            time: '2020-07-01 09:10',
-            value: 3
-          }
-        ]
-      },
-      {
-        signId: 2,
-        name: '心跳',
-        yIndex: 1,
-        label: 'Ф',
-        color: 'blue',
-        list: [
-          {
-            time: '2020-07-01 09:00',
-            value: 100
-          },
-          {
-            time: '2020-07-01 09:05',
-            value: 16
-          },
-          {
-            time: '2020-07-01 09:10',
-            value: 75
-          }
-        ]
-      }
-    ]
-  }
+  data: [
+    {
+      itemCode: '44',
+      itemName: 'PULSE',
+      itemUnit: 'bpm',
+      disColor: '32768',
+      drawIcon: '●',
+      list: [
+        {
+          itemCode: '102',
+          itemValue: '326.0',
+          timePoint: '2020-07-01 09:00:00',
+          isChange: '0'
+        },
+        {
+          itemCode: '103',
+          itemValue: '318.0',
+          timePoint: '2020-07-01 09:05:00',
+          isChange: '0'
+        }
+      ],
+      yindex: 1
+    },
+    {
+      itemCode: '100',
+      itemName: '体温',
+      itemUnit: '℃',
+      disColor: '16711680',
+      drawIcon: '×',
+      list: [
+        {
+          itemCode: '100',
+          itemValue: '36.0',
+          timePoint: '2020-07-01 09:00:00',
+          isChange: '0'
+        },
+        {
+          itemCode: '100',
+          itemValue: '38.0',
+          timePoint: '2020-07-01 09:05:00',
+          isChange: '0'
+        }
+      ],
+      yindex: 0
+    },
+    {
+      itemCode: '112',
+      itemName: 'ETCO2',
+      itemUnit: 'mmHg',
+      disColor: '0',
+      drawIcon: '△',
+      list: [
+        {
+          itemCode: '120',
+          itemValue: '326.0',
+          timePoint: '2020-07-01 09:00:00',
+          isChange: '0'
+        },
+        {
+          itemCode: '130',
+          itemValue: '39.0',
+          timePoint: '2020-07-01 09:05:00',
+          isChange: '0'
+        }
+      ],
+      yindex: 1
+    }
+  ],
+  msg: '操作成功'
 }

@@ -29,8 +29,8 @@ export class PhysicalSignLine {
     const { x, y } = this._coordinateAdaptor(value)
     const label = new Label(this._label)
     const position = [x, y]
-    const width = 16
-    const height = 16
+    const width = 12
+    const height = 14
     label.attr({
       anchor: [0, 0],
       width,
@@ -64,7 +64,7 @@ export class PhysicalSignLine {
       label.setAttribute('fillColor', 'red')
       this._labels.set(label, newPos)
       this._drawLine()
-      label.attr('pointValue', this.getPoint(label))
+      label.attr('pointValue', { ...this.getPoint(label), code: value.code })
     }
     const mouseupHandler = e => {
       this._layer.removeEventListener('mousemove', mousemoveHandler)
