@@ -1,4 +1,5 @@
 import sourceData from './source_data'
+import dictionaryTableData from './dictionary_table_data'
 import templateData from './template_data'
 import signData from './sign_data'
 import eventData from './event_data'
@@ -8,6 +9,8 @@ Mock.setup({
 })
 // 源数据表名和字段名
 Mock.mock('/api/dataSource', 'get', sourceData)
+// 字典表名、字段名、关系名
+Mock.mock('/api/getDictionaryTableData', 'get', dictionaryTableData)
 // 模板信息
 Mock.mock('/api/getTemplateInfo', 'post', {
   code: 200,

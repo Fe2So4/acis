@@ -12,7 +12,11 @@ import * as spritejs from 'spritejs'
 import { addListener, removeListener } from 'resize-detector'
 import debounce from 'lodash/debounce'
 import moment from 'moment'
-import { getSocketData, getSignData, getEventData } from '@/api/medicalDocument'
+import {
+  getSocketData,
+  getSignData,
+  getEventData
+} from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
 import {
   PhysicalSignLine,
@@ -619,12 +623,13 @@ export default {
         method: 'POST',
         url: getSignData,
         data: {
-          pageIndex: 0
+          startTime: this.startTime,
+          endTime: this.endTime
         }
       })
         .then(res => {
           const requestData = res.data.data
-          this.lineList = requestData.list
+          this.lineList = requestData
         })
         .catch(err => {
           console.log(err)
@@ -633,16 +638,21 @@ export default {
     drawLines () {
       const gridGroup = this.layer.getElementsByClassName('grid')[0]
       this.lineList.forEach(item => {
-        const { min, max } = this.getYAxisValueRange(item.yIndex)
+        const { min, max } = this.getYAxisValueRange(item.yindex)
         if ((min === max) === 0) {
           return
         }
-        const { signId, name, label, color } = item
-        this.lines[item.signId] = new PhysicalSignLine({
+        const {
+          itemCode: signId,
+          itemName: name,
+          drawIcon: label,
+          disColor: color
+        } = item
+        this.lines[signId] = new PhysicalSignLine({
           signId,
           name,
           label,
-          color,
+          color: '#' + color,
           group: gridGroup,
           layer: this.layer,
           startTime: this.configuration.xAxis.startTime,
@@ -651,7 +661,11 @@ export default {
           max
         })
         item.list.forEach(value => {
-          this.lines[item.signId].addPoint(value)
+          this.lines[signId].addPoint({
+            time: value.timePoint,
+            value: value.itemValue,
+            code: value.itemCode
+          })
         })
       })
     },
@@ -667,7 +681,11 @@ export default {
     },
     drawLineLegends () {
       this.lineList.forEach(item => {
-        this.legends.addLegend(item)
+        this.legends.addLegend({
+          label: item.drawIcon,
+          name: item.itemName,
+          color: '#' + item.disColor
+        })
       })
     },
     setLegends () {

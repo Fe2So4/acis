@@ -67,18 +67,21 @@ export default {
   async created () {
     await this.getDataSource()
     if (this.value.tableName) {
-      this.classes = this.tables.filter(
+      const table = this.tables.find(
         item => item.name === this.value.tableName
-      )[0].children
+      )
+      if (table) {
+        this.classes = table.children
+      }
     }
   },
   methods: {
     onChangeTableName (currentValue, oldValue) {
-      const classes = this.tables.filter(
+      const table = this.tables.find(
         item => item.name === currentValue
       )
-      if (classes.length) {
-        this.classes = classes[0].children
+      if (table) {
+        this.classes = table.children
       } else {
         this.classes = []
       }

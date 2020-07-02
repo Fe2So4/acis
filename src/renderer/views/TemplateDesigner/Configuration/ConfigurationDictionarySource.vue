@@ -9,13 +9,13 @@
       >
         <el-option
           v-for="item in tables"
-          :key="item.id"
-          :label="item.name"
-          :value="item.name"
+          :key="item.tableName"
+          :label="item.tableName"
+          :value="item.tableName"
         >
           <span>
-            {{ item.name }}
-            <strong>（{{ item.chinaName }}）</strong>
+            {{ item.tableName }}
+            <strong>（{{ item.tableExplain }}）</strong>
           </span>
         </el-option>
       </el-select>
@@ -29,13 +29,33 @@
       >
         <el-option
           v-for="item in classes"
-          :key="item.id"
-          :label="item.name"
-          :value="item.name"
+          :key="item.showClassName"
+          :label="item.showClassName"
+          :value="item.showClassName"
         >
           <span>
-            {{ item.name }}
-            <strong>（{{ item.chinaName }}）</strong>
+            {{ item.showClassName }}
+            <strong>（{{ item.showClassNameExplain }}）</strong>
+          </span>
+        </el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="字典关系名">
+      <el-select
+        :value="value.dictRelationName"
+        placeholder="请选择"
+        @change="onChangeRelationName"
+        clearable
+      >
+        <el-option
+          v-for="item in relations"
+          :key="item.dictId"
+          :label="item.dictId"
+          :value="item.dictId"
+        >
+          <span>
+            {{ item.dictId }}
+            <strong>（{{ item.dictName }}）</strong>
           </span>
         </el-option>
       </el-select>
@@ -45,7 +65,7 @@
 
 <script>
 import request from '@/utils/requestForMock'
-import { dataSource } from '@/api/medicalDocument'
+import { getDictionaryTableData } from '@/api/medicalDocument'
 export default {
   name: 'ConfigurationDictionarySource',
   model: {
@@ -61,45 +81,75 @@ export default {
   data () {
     return {
       tables: [],
-      classes: []
+      classes: [],
+      relations: []
     }
   },
   async created () {
-    await this.getDataSource()
+    await this.getDictionaryTableData()
     if (this.value.dictTableName) {
-      this.classes = this.tables.filter(
-        item => item.name === this.value.dictTableName
-      )[0].children
+      const table = this.tables.find(
+        item => item.tableName === this.value.dictTableName
+      )
+      if (table) {
+        this.classes = table.tableInfos
+      }
+      if (this.value.dictClassName) {
+        const dictClass = this.classes.find(
+          item => item.showClassName === this.value.dictClassName
+        )
+        if (dictClass) {
+          this.relations = dictClass.classNameValue
+        }
+      }
     }
   },
   methods: {
     onChangeTableName (currentValue, oldValue) {
-      const classes = this.tables.filter(
-        item => item.name === currentValue
-      )
-      if (classes.length) {
-        this.classes = classes[0].children
+      const table = this.tables.find(item => item.tableName === currentValue)
+      if (table) {
+        this.classes = table.tableInfos
       } else {
         this.classes = []
       }
+      this.relations = []
       const configuration = Object.assign({}, this.value, {
         dictTableName: currentValue,
-        dictClassName: ''
+        conditionClassNameId: table ? table.conditionClassNameId : '',
+        dictClassName: '',
+        dictRelationName: ''
       })
       this.$emit('change', {
         dictionarySource: configuration
       })
     },
     onChangeClassName (currentValue, oldValue) {
+      const dictClass = this.classes.find(
+        item => item.showClassName === currentValue
+      )
+      if (dictClass) {
+        this.relations = dictClass.classNameValue
+      } else {
+        this.relations = []
+      }
       const configuration = Object.assign({}, this.value, {
-        dictClassName: currentValue
+        dictClassName: currentValue,
+        dictRelationName: ''
       })
       this.$emit('change', {
         dictionarySource: configuration
       })
     },
-    getDataSource () {
-      return request(dataSource)
+    onChangeRelationName (currentValue, oldValue) {
+      const configuration = Object.assign({}, this.value, {
+        dictRelationName: currentValue
+      })
+      this.$emit('change', {
+        dictionarySource: configuration
+      })
+    },
+    getDictionaryTableData () {
+      return request(getDictionaryTableData)
         .then(res => {
           this.tables = res.data.data
         })
