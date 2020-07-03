@@ -45,14 +45,15 @@ export default {
     .signs-data{
         width: 100%;
         height: 100%;
+        background: #121421;
+        box-shadow:-5px 1px 5px 0px rgba(0, 0, 0, 0.4);
         .title{
             font-size: 14px;
             line-height: 26px;
             padding-left: 5px;
-            background: #f8f9fa;
+            color:#FEFEFF;
         }
         ul {
-            background:#000;
             height: calc(100% - 26px);
             padding-top: 10px;
             li{

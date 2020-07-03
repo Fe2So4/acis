@@ -49,6 +49,7 @@ export default {
   }
   .el-aside {
     // width: auto !important;
+    // margin-right: 20px;
     position: relative;
     overflow: unset;
     box-shadow:4px 3px 5px 0px rgba(0, 0, 0, 0.4);

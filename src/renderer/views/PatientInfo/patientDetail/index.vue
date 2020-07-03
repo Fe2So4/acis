@@ -1,11 +1,5 @@
 <template>
   <div class="patient-detail">
-    <div class="title">
-      <i
-        class="el-icon-document"
-        style="color:#144177;margin-right:5px"
-      />患者详情
-    </div>
     <div class="content">
       <el-scrollbar
         style="height:100%;"
@@ -47,7 +41,15 @@ export default {
 </script>
 <style lang="scss" scoped>
     .patient-detail{
-        height: 100%;
+      margin-top:20px;
+      color:#9BA3D5;
+      height: calc(100% - 192px);
+      // display: flex;
+      padding:20px;
+      background:#181C27;
+      box-shadow:0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+      border-radius:5px;
+        // height: 100%;
         flex: 1;
         // background:#f8f9fa;
         .title{

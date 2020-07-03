@@ -50,7 +50,6 @@ export default {
             font-size:14px;
             line-height:26px;
             color:#15428b;
-            background:#f8f9fa;
             // border-bottom:1px solid #144177;
             // border-top:1px solid #144177;
             text-indent: 10px;

@@ -1,7 +1,7 @@
 <template>
   <div class="operation-personnel">
     <div class="title">
-      手术人员
+      <i />手术人员
     </div>
     <div class="content">
       <el-row :gutter="22">
@@ -44,24 +44,34 @@ export default {
     .operation-personnel{
         height: 100%;
         flex:1;
-        color:#808080;
+        margin-bottom:20px;
         font-size:14px;
+        border:2px solid rgba(53,62,86,1);
+        border-radius:10px;
         .title{
             font-size:14px;
             line-height:26px;
-            color:#15428b;
-            background:#f8f9fa;
-            // border-bottom:1px solid #144177;
-            // border-top:1px solid #144177;
+            color:#FEFEFF;
             text-indent: 10px;
+             i{
+              width:2px;
+              height:20px;
+              display: inline-block;
+              vertical-align: middle;
+              margin-right:8px;
+              background:linear-gradient(0deg,rgba(12,133,226,1),rgba(236,33,88,1));
+            }
         }
         span{
-            font-size:14px;
-            line-height: 26px;
-            color:#000;
+          font-size:14px;
+          line-height: 26px;
+          color:#9BA3D5;
+          padding-top:0;
         }
         .content{
-            padding: 15px;
+          padding: 15px;
+          padding-top: 0;
+          color: #D0DAE5;
         }
     }
 </style>

@@ -40,7 +40,9 @@
               <span
                 v-for="(_item,index) in item.subNav"
                 :key="_item.index"
-                :class="{'buttonActive':activeIndex === index}"
+                :class="{'rightActive':activeIndex === index && oddEven(index),
+                         'leftActive':activeIndex===index&&!oddEven(index)}"
+                @click="handleChangeButton(index)"
               >{{ _item.name }}</span>
             </div>
           </el-collapse-item>
@@ -98,19 +100,34 @@ export default {
         }
       ],
       overviewList: [],
-      activeIndex: 1
+      activeIndex: null
     }
   },
   components: {
     // Overview
   },
+  computed: {
+    oddEven (index) {
+      return function (index) {
+        if ((index + 1) % 2 === 0) {
+          return true
+        } else {
+          return false
+        }
+      }
+    }
+  },
   methods: {
+    handleChangeButton (index) {
+      this.activeIndex = index
+    },
     handleShowOverview () {
       if (this.isCollapse === true) {
         this.showOverflow = !this.showOverflow
       }
     },
     handleChange (active) {
+      this.activeIndex = null
       this.activesNames = active
     },
     handleOpen (key, keyPath) {
@@ -174,10 +191,18 @@ export default {
       color:#9BA3D5;
       font-size: 14px;
       cursor: pointer;
+      &:hover{
+        color:#e3e7fc;
+      }
     }
-    span.buttonActive{
+    span.rightActive{
       background:linear-gradient(90deg,rgba(89,247,199,1),rgba(42,131,247,1));
       border-radius:15px 0px 0px 15px;
+      color:#EDF1F9;
+    }
+    span.leftActive{
+      background:linear-gradient(90deg,rgba(42,131,247,1),rgba(89,247,199,1));
+      border-radius:0 15px 15px 0;
       color:#EDF1F9;
     }
   }

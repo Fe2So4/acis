@@ -50,12 +50,17 @@ if (process.env.BUILD_TARGET === 'schedule') {
       {
         path: '/home',
         name: 'Home',
-        redirect: '/home/patientInfo',
+        redirect: '/home/patientList',
         component: () => import('@/views/HomeNew/index'),
         children: [{
+          path: 'patientList',
+          name: 'PatientList',
+          component: () => import('@/views/PatientList/index')
+        },
+        {
           path: 'patientInfo',
           name: 'PatientInfo',
-          component: () => import('@/views/PatientInfoNew/index')
+          component: () => import('@/views/PatientInfo/index')
         },
         {
           path: 'formContainer',
