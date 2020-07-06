@@ -25,9 +25,11 @@ export class PhysicalSignLine {
     this._group.append(this._line)
   }
 
-  addPoint (value) {
-    const { x, y } = this._coordinateAdaptor(value)
-    const label = new Label(this._label)
+  addPoint ({ time, value }) {
+    const { x, y } = this._coordinateAdaptor({ time, value })
+    const thisMoment = +moment(time, 'YYYY-MM-DD HH:mm:ss')
+    const text = thisMoment % (5 * 60 * 1000) === 0 ? this._label : ''
+    const label = new Label(text)
     const position = [x, y]
     const width = 12
     const height = 14
@@ -43,7 +45,7 @@ export class PhysicalSignLine {
       zIndex: 1,
       className: 'signLabel',
       signId: this._signId,
-      pointValue: value
+      pointValue: { time, value }
     })
     this._labels.set(label, position)
 
@@ -64,7 +66,7 @@ export class PhysicalSignLine {
       label.setAttribute('fillColor', 'red')
       this._labels.set(label, newPos)
       this._drawLine()
-      label.attr('pointValue', { ...this.getPoint(label), code: value.code })
+      label.attr('pointValue', this.getPoint(label))
     }
     const mouseupHandler = e => {
       this._layer.removeEventListener('mousemove', mousemoveHandler)
@@ -175,7 +177,7 @@ export class PhysicalSignEventTags {
       className: 'eventTag'
     })
 
-    const thisMoment = +moment(time)
+    const thisMoment = +moment(time, 'YYYY-MM-DD HH:mm:ss')
     let x = (thisMoment - this._startMoment) / (this._endMoment - this._startMoment) * this._group.attr('width')
     x = Math.round(x)
 

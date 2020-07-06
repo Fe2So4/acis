@@ -663,8 +663,7 @@ export default {
         item.list.forEach(value => {
           this.lines[signId].addPoint({
             time: value.timePoint,
-            value: value.itemValue,
-            code: value.itemCode
+            value: value.itemValue
           })
         })
       })
@@ -737,11 +736,63 @@ export default {
       })
         .then(res => {
           const requestData = res.data.data
-          this.eventList = requestData.list
+          this.eventList = this.convertEventData(requestData)
         })
         .catch(err => {
           console.log(err)
         })
+    },
+    convertEventData (eventData) {
+      if (!Array.isArray(eventData)) {
+        return []
+      }
+      const startMoment = +moment(this.startTime)
+      const endMoment = +moment(this.endTime)
+      let order = 0
+      const list = eventData.reduce((arr, item) => {
+        const eventArr = []
+        const {
+          eventCode,
+          detailCode,
+          detailName: name,
+          drawIcon: label,
+          iconColor,
+          eventStartTime,
+          eventEndTime
+        } = item
+        if (eventStartTime) {
+          const eventStartMoment = +moment(eventStartTime, 'YYYY-MM-DD HH:mm:ss')
+          if (eventStartMoment >= startMoment && eventStartMoment <= endMoment) {
+            eventArr.push({
+              eventId: eventCode + '' + detailCode,
+              order: ++order,
+              name,
+              label,
+              color: iconColor ? '#' + iconColor : 'black',
+              time: eventStartTime,
+              startTime: eventStartTime,
+              endTime: eventEndTime
+            })
+          }
+        }
+        if (eventEndTime) {
+          const eventEndMoment = +moment(eventEndTime, 'YYYY-MM-DD HH:mm:ss')
+          if (eventEndMoment >= startMoment && eventEndMoment <= endMoment) {
+            eventArr.push({
+              eventId: eventCode + '' + detailCode,
+              order: ++order,
+              name,
+              label,
+              color: iconColor ? '#' + iconColor : 'black',
+              time: eventEndTime,
+              startTime: eventStartTime,
+              endTime: eventEndTime
+            })
+          }
+        }
+        return arr.concat(eventArr)
+      }, [])
+      return list
     },
     drawEventTags () {
       this.eventList.forEach(event => {
@@ -756,21 +807,38 @@ export default {
       })
     },
     getDataBySocketIO () {
+      console.log(this.endTime)
+
       // 与当前时间对比，如果结束时间为当前时间之前，则不需要建立连接
       if (+moment(this.endTime) < new Date()) {
         return
       }
-      this.socket = io(getSocketData)
+      const loginUserNum = 'b0f9d8bda9244397a44cb8ff278937d9'
+      this.socket = io(getSocketData, {
+        query: {
+          loginUserNum
+        }
+      })
       this.socket.on('connect', () => {
         console.log('socket.io connected')
+      })
+      this.socket.on('reconnect_error', (e) => {
+        console.error(e)
       })
       this.socket.on('disconnect', () => {
         console.log('socket.io disconnect')
       })
       // 体征曲线
-      this.socket.on('physical sign', res => {
-        const { signId, ...value } = res
-        this.lines[signId].addPoint(value)
+      this.socket.on('push_event', res => {
+        if (Array.isArray(res)) {
+          res.forEach(item => {
+            const { itemCode: signId, ...value } = item
+            this.lines[signId].addPoint({
+              time: value.timePoint,
+              value: value.itemValue
+            })
+          })
+        }
       })
       // 术中事件
       this.socket.on('operation event', res => {

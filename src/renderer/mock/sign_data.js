@@ -10,15 +10,21 @@ export default {
       drawIcon: '●',
       list: [
         {
-          itemCode: '102',
+          itemCode: '44',
           itemValue: '326.0',
           timePoint: '2020-07-01 09:00:00',
           isChange: '0'
         },
         {
-          itemCode: '103',
+          itemCode: '44',
           itemValue: '318.0',
           timePoint: '2020-07-01 09:05:00',
+          isChange: '0'
+        },
+        {
+          itemCode: '44',
+          itemValue: '320.0',
+          timePoint: '2020-07-01 09:34:00',
           isChange: '0'
         }
       ],
@@ -54,13 +60,13 @@ export default {
       drawIcon: '△',
       list: [
         {
-          itemCode: '120',
+          itemCode: '112',
           itemValue: '326.0',
           timePoint: '2020-07-01 09:00:00',
           isChange: '0'
         },
         {
-          itemCode: '130',
+          itemCode: '112',
           itemValue: '39.0',
           timePoint: '2020-07-01 09:05:00',
           isChange: '0'

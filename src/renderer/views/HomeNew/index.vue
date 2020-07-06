@@ -9,7 +9,8 @@
           <Header />
         </el-header>
         <el-main>
-          <router-view :key="key" />
+          <!-- <router-view :key="key" /> -->
+          <router-view />
         </el-main>
       </el-container>
     </el-container>
