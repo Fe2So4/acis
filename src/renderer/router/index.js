@@ -60,7 +60,19 @@ if (process.env.BUILD_TARGET === 'schedule') {
         {
           path: 'patientInfo',
           name: 'PatientInfo',
-          component: () => import('@/views/PatientInfo/index')
+          component: () => import('@/views/PatientInfo/index'),
+          children: [
+            {
+              path: 'patientDetail',
+              name: 'PatientDetail',
+              component: () => import('@/views/PatientInfo/patientDetail/index')
+            },
+            {
+              path: 'medicalDocument/:templateId',
+              name: 'MedicalDocument',
+              component: () => import('@/views/MedicalDocument/index')
+            }
+          ]
         },
         {
           path: 'formContainer',

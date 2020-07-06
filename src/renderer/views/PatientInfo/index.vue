@@ -3,7 +3,7 @@
     <div class="left">
       <operation-status />
       <tab-nav />
-      <patient-detail />
+      <router-view />
     </div>
     <div class="right">
       <signs-data />
@@ -11,7 +11,6 @@
   </div>
 </template>
 <script>
-import PatientDetail from './patientDetail/index'
 import OperationStatus from './operationStatus/index'
 import SignsData from '@/components/SignsData/index'
 import TabNav from './tabNav/index'
@@ -21,7 +20,6 @@ export default {
     return {}
   },
   components: {
-    PatientDetail,
     OperationStatus,
     TabNav,
     SignsData
