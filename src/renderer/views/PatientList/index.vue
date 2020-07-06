@@ -1,11 +1,8 @@
 <template>
   <div class="patient-info">
-    <!-- <patient-list />
-    <patient-detail /> -->
     <div
       class="search"
     >
-      <!-- style="height:100%;" -->
       <el-scrollbar
         class="rowScrollbar"
       >
@@ -47,6 +44,7 @@
                 v-model="opeRoom"
                 size="mini"
                 placeholder=""
+                style="width:160px;"
               >
                 <el-option
                   v-for="item in options"
@@ -64,6 +62,7 @@
               </el-button>
               <el-button
                 size="mini"
+                @click="hanldeSearchMore"
               >
                 <i
                   class="el-icon-d-arrow-right"
@@ -79,13 +78,20 @@
             size="mini"
           >
             <el-form-item label="ID">
-              <el-input v-model="searchForm.id" />
+              <el-input
+                v-model="searchForm.id"
+                style="width:130px;"
+              />
             </el-form-item>
             <el-form-item label="姓名">
-              <el-input v-model="searchForm.name" />
+              <el-input
+                v-model="searchForm.name"
+                style="width:130px;"
+              />
             </el-form-item>
             <el-form-item label="日期">
               <el-date-picker
+                style="width:130px"
                 v-model="searchForm.date"
                 type="date"
                 placeholder=""
@@ -108,6 +114,49 @@
           </el-form>
         </el-row>
       </el-scrollbar>
+      <div
+        class="other-search"
+        v-show="showMore"
+      >
+        <el-row>
+          <el-form
+            :inline="true"
+            :model="searchForm"
+            size="mini"
+          >
+            <el-form-item label="麻醉方法">
+              <el-input v-model="searchForm.anaesMethod" />
+            </el-form-item>
+            <el-form-item label="麻醉医生">
+              <el-input v-model="searchForm.anaesDoc" />
+            </el-form-item>
+            <el-form-item label="终止日期">
+              <el-date-picker
+                v-model="searchForm.endDate"
+                format="MM-dd HH:mm"
+                value-format="MM-dd HH:mm"
+              />
+            </el-form-item>
+            <el-form-item label="状态">
+              <el-input v-model="searchForm.status" />
+            </el-form-item>
+          </el-form>
+        </el-row>
+        <el-row>
+          <el-form
+            :inline="true"
+            :model="searchForm"
+            size="mini"
+          >
+            <el-form-item label="住院科室">
+              <el-input v-model="searchForm.dept" />
+            </el-form-item>
+            <el-form-item label="手术名称">
+              <el-input v-model="searchForm.opeName" />
+            </el-form-item>
+          </el-form>
+        </el-row>
+      </div>
     </div>
     <div class="patient-card">
       <el-scrollbar
@@ -175,7 +224,13 @@ export default {
       searchForm: {
         id: '',
         name: '',
-        date: ''
+        date: '',
+        endDate: '',
+        anaesDoc: '',
+        anaesMethod: '',
+        status: '',
+        dept: '',
+        opeName: ''
       },
       opeRoom: '',
       options: [{
@@ -201,8 +256,8 @@ export default {
       filterList: [{ label: '全部', value: '1' }, { label: '术前', value: '2' }, { label: '术中', value: '3' }, { label: '术后', value: '4' }],
       tabPosition: '1',
       operationStatus: '',
-      statusList: [{ label: '急诊', value: '1' }, { label: '本人', value: '2' },
-        { label: '隔离', value: '3' }, { label: '放射', value: '4' }]
+      statusList: [{ label: '急诊', value: '1' }, { label: '本人的', value: '2' }, { label: '隔离', value: '3' }, { label: '放射', value: '4' }],
+      showMore: false
     }
   },
   components: {
@@ -213,6 +268,9 @@ export default {
     handleJump (item) {
       console.log(1)
       this.$router.push('/home/patientInfo')
+    },
+    hanldeSearchMore () {
+      this.showMore = !this.showMore
     }
   }
 }
@@ -232,6 +290,18 @@ export default {
     border-radius:5px;
     width:100%;
     padding:20px;
+    position:relative;
+    .other-search{
+      position:absolute;
+      padding:20px 20px 0 20px;
+      width:100%;
+      background:#181c27;
+      box-shadow:0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+      border-radius:5px;
+      top:120px;
+      left:0;
+      z-index: 1;
+    }
   }
   .el-radio-group{
     margin-bottom:0 !important;

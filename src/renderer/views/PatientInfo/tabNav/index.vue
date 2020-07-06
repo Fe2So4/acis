@@ -29,13 +29,19 @@ export default {
   border-radius 5px
   background #181C27
   color #9BA3D5
+  height 40px
+  overflow hidden
   ul
     display flex
+    margin-top 4px
+    padding-left 15px
     li
-      line-height 40px
+      line-height 30px
       cursor pointer
       padding: 0 5px
       font-size 14px
+      // transition all 0.3s
       &.isActive
         color #0094ff
+        border-bottom 2px solid #0094ff
 </style>
