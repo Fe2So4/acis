@@ -35,14 +35,3 @@ export default {
   ],
   msg: '操作成功'
 }
-
-// {
-//   eventId: 4,
-//   order: 4,
-//   name: '再次进入手术室',
-//   label: '',
-//   color: 'black',
-//   time: '2020-07-01 09:55',
-//   startTime: '09:30',
-//   endTime: '10:30'
-// },

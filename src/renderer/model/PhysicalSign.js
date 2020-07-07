@@ -62,7 +62,10 @@ export class PhysicalSignLine {
       let newPosY = Math.min(groupOffsetPosition[1] - offsetPosition[1], this._group.attr('height'))
       newPosY = Math.max(0, newPosY)
       const newPos = [position[0], newPosY]
-      label.setAttribute('pos', [newPos[0] - width / 2, newPos[1] - height / 2])
+      label.setAttribute('pos', [
+        Math.round(newPos[0] - width / 2),
+        Math.round(newPos[1] - height / 2)
+      ])
       label.setAttribute('fillColor', 'red')
       this._labels.set(label, newPos)
       this._drawLine()
@@ -171,6 +174,7 @@ export class PhysicalSignEventTags {
       anchor: [0, 0],
       fontSize: 12,
       width: 12,
+      height: 14,
       textAlign: 'center',
       verticalAlign: 'middle',
       fillColor: color,
@@ -180,8 +184,10 @@ export class PhysicalSignEventTags {
     const thisMoment = +moment(time, 'YYYY-MM-DD HH:mm:ss')
     let x = (thisMoment - this._startMoment) / (this._endMoment - this._startMoment) * this._group.attr('width')
     x = Math.round(x)
+    let y = this._group.attr('height') / 2 - 7
+    y = Math.round(y)
 
-    tag.attr('pos', [x - 6, 10])
+    tag.attr('pos', [x - 6, y])
     this._group.append(tag)
   }
 

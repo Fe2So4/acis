@@ -15,7 +15,8 @@ import moment from 'moment'
 import {
   getSocketData,
   getSignData,
-  getEventData
+  getEventData,
+  getEventDictData
 } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
 import {
@@ -66,15 +67,6 @@ export default {
           this.resize()
         }
       }
-    },
-    startTime: {
-      handler: function (val) {
-        if (val) {
-          if (!this.editMode) {
-            this.getData()
-          }
-        }
-      }
     }
   },
   created () {
@@ -91,14 +83,29 @@ export default {
     } else {
       // 初始化图例区域
       this.setLegends()
-      // 获取拖动过的数据
-      this.layer.addEventListener('mouseup', this.getChangedPoint)
       // 初始化事件标记区域
       this.setEventTags()
       // 获取数据
       this.getData()
       // 添加grid展示详情效果
       this.addGirdTooltip()
+      // 添加eventTag区域右击菜单
+      this.addEventTagCtxMenu()
+      // 获取拖动过的数据
+      this.layer.addEventListener('mouseup', this.getChangedPoint)
+      // 注册刷新事件
+      this.$eventHub.$on('document-refresh', () => {
+        // 获取数据
+        this.getData()
+      })
+      // 注册刷新事件
+      this.$eventHub.$on('document-redraw', () => {
+        // 重新绘制
+        this.setLayout()
+        this.setContent()
+        // 获取数据
+        this.getData()
+      })
     }
   },
   beforeDestroy () {
@@ -391,21 +398,22 @@ export default {
       this.setTotalTitle()
     },
     setLeftTitle () {
-      const leftTitle = this.layer.getElementsByClassName('leftTitle')[0]
+      const leftTitle = this.layer.querySelector('.leftTitle')
+      if (!leftTitle) return
       const width = leftTitle.attr('width')
       const height = leftTitle.attr('height')
       const textArr = this.configuration.leftTitle.text.split('')
       const lineHeight = this.configuration.leftTitle.lineHeight
       const titleTextGroup = new Group()
       titleTextGroup.attr({
-        size: [width - 1, textArr.length * lineHeight],
+        size: [Math.round(width - 1), Math.round(textArr.length * lineHeight)],
         pos: [width / 2, height / 2],
         anchor: [0.5, 0.5]
       })
       textArr.forEach((item, i, arr) => {
         const title = new Label(item)
         title.attr({
-          pos: [0, lineHeight * i - (lineHeight * arr.length) / 2],
+          pos: [0, Math.round(lineHeight * i - (lineHeight * arr.length) / 2)],
           anchor: [0.5, 0],
           fontSize: 12,
           fontFamily: '宋体',
@@ -420,7 +428,8 @@ export default {
       leftTitle.append(titleTextGroup)
     },
     setTimeTitle () {
-      const timeTitle = this.layer.getElementsByClassName('timeTitle')[0]
+      const timeTitle = this.layer.querySelector('.timeTitle')
+      if (!timeTitle) return
       const text = new Label(this.configuration.timeTitle.text)
       text.attr({
         fontSize: 12,
@@ -434,7 +443,8 @@ export default {
       timeTitle.append(text)
     },
     setYAxis () {
-      const yAxis = this.layer.getElementsByClassName('yAxis')[0]
+      const yAxis = this.layer.querySelector('.yAxis')
+      if (!yAxis) return
       const width = Math.round(
         yAxis.attr('width') / this.configuration.yAxis.list.length
       )
@@ -453,8 +463,10 @@ export default {
         values.forEach((t, i) => {
           const label = new Label(t.label.toString())
           let posY = -(t.value - values[0].value) * scale
+          posY = Math.round(posY)
           posY = Math.min(-7, posY)
           posY = Math.max(-yAxis.attr('height') + 7, posY)
+          posY = posY + 9
           label.attr({
             fontSize: 12,
             fontFamily: '宋体',
@@ -463,7 +475,7 @@ export default {
             width: width,
             height: 18,
             padding: [0, 5, 0, 0],
-            anchor: [1, 0.5],
+            anchor: [1, 1],
             pos: [width, posY]
           })
           textGroup.append(label)
@@ -471,7 +483,8 @@ export default {
       })
     },
     setEventTitle () {
-      const eventTitle = this.layer.getElementsByClassName('eventTitle')[0]
+      const eventTitle = this.layer.querySelector('.eventTitle')
+      if (!eventTitle) return
       const text = new Label(this.configuration.eventTitle.text)
       text.attr({
         fontSize: 12,
@@ -485,7 +498,8 @@ export default {
       eventTitle.append(text)
     },
     setTotalTitle () {
-      const totalTitle = this.layer.getElementsByClassName('totalTitle')[0]
+      const totalTitle = this.layer.querySelector('.totalTitle')
+      if (!totalTitle) return
       const text = new Label(this.configuration.totalTitle.text)
       text.attr({
         fontSize: 12,
@@ -512,7 +526,8 @@ export default {
       this.xAxisList = list
     },
     setXAxis () {
-      const xAxis = this.layer.getElementsByClassName('xAxis')[0]
+      const xAxis = this.layer.querySelector('.xAxis')
+      if (!xAxis) return
       const width = xAxis.attr('width')
       const height = xAxis.attr('height')
       const list = this.xAxisList
@@ -533,7 +548,8 @@ export default {
       })
     },
     setGrid () {
-      const grid = this.layer.getElementsByClassName('grid')[0]
+      const grid = this.layer.querySelector('.grid')
+      if (!grid) return
       const width = grid.attr('width')
       const height = grid.attr('height')
       const xAxislist = this.xAxisList
@@ -807,8 +823,6 @@ export default {
       })
     },
     getDataBySocketIO () {
-      console.log(this.endTime)
-
       // 与当前时间对比，如果结束时间为当前时间之前，则不需要建立连接
       if (+moment(this.endTime) < new Date()) {
         return
@@ -873,6 +887,45 @@ export default {
         grid.addEventListener('mousemove', mousemoveHandler)
         grid.addEventListener('mouseleave', mouseleaveHandler)
       }
+    },
+    addEventTagCtxMenu () {
+      const eventTag = this.layer.querySelector('.eventTag')
+      if (!eventTag) return
+      const mouseupHandler = async e => {
+        if (e.originalEvent.button === 2) {
+          if (!this.eventDictList) {
+            await this.getEventDictData()
+          }
+          const list = this.eventDictList.map(item => {
+            return {
+              label: item.detailName
+            }
+          })
+          const that = this
+          this.$ctxMenu({
+            list,
+            posX: e.originalEvent.pageX,
+            posY: e.originalEvent.pageY,
+            onSelectMenuItem (e) {
+              e = that.eventDictList.find(item => e.label === item.detailName)
+              if (e) {
+                that.$emit('select-event-time-range', e)
+              }
+            }
+          })
+        }
+      }
+      eventTag.addEventListener('mouseup', mouseupHandler)
+    },
+    getEventDictData () {
+      return request({
+        method: 'GET',
+        url: getEventDictData
+      }).then(
+        res => {
+          this.eventDictList = res.data.data
+        }
+      )
     }
   }
 }

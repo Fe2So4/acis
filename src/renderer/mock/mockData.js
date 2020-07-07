@@ -3,6 +3,8 @@ import dictionaryTableData from './dictionary_table_data'
 import templateData from './template_data'
 import signData from './sign_data'
 import eventData from './event_data'
+import eventDictData from './event_dict_data'
+import addData from './add_data'
 const Mock = require('mockjs')
 Mock.setup({
   timeout: '200-600'
@@ -60,3 +62,7 @@ Mock.mock('/api/getDictionaryData', 'post', {
 Mock.mock('/api/getSignData', 'post', signData)
 // 事件数据
 Mock.mock('/api/getEventData', 'post', eventData)
+// 事件字典数据
+Mock.mock('/api/getEventDictData', eventDictData)
+// 新增事件
+Mock.mock('/api/addNewEvent', 'post', addData)

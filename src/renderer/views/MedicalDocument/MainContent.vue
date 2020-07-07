@@ -16,6 +16,7 @@
             :edit-mode="editMode"
             :start-time="startTime"
             :end-time="endTime"
+            @select-event-time-range="onSelectEventTimeRange"
           />
         </widget-wrapper>
       </div>
@@ -60,6 +61,11 @@ export default {
         }
       ],
       editMode: false
+    }
+  },
+  methods: {
+    onSelectEventTimeRange (e) {
+      this.$emit('select-event-time-range', e)
     }
   }
 }
