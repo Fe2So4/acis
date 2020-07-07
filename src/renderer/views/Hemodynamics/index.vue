@@ -173,6 +173,7 @@ export default {
 <style lang="scss" scoped>
     .hemodynamics{
       height: 100%;
+      width: 1082px;
       display: flex;
       flex-direction: column;
       .el-input{

@@ -193,12 +193,12 @@
                 >
                   <div style="display:flex;justify-content:center;">
                     <img
-                      style="height:20px;width:20px;"
+                      style="height:26px;width:26px;"
                       :src="_item.icon"
                       alt=""
                     >
                   </div>
-                  <div :style="{color:_item.color,fontSize:'12px',textAlign:'center'}">
+                  <div :style="{color:_item.color,fontSize:'14px',textAlign:'center'}">
                     {{ _item.title }}
                   </div>
                 </div>
@@ -216,7 +216,7 @@
 import icon1 from '@/assets/emergency.png'
 import icon2 from '@/assets/quarantine.png'
 import icon3 from '@/assets/radiation.png'
-import icon4 from '@/assets/solid-person.png'
+// import icon4 from '@/assets/solid-person.png'
 export default {
   name: 'PatientInfo',
   data () {
@@ -251,8 +251,7 @@ export default {
       }],
       iconList: [{ title: '急诊', icon: icon1, color: 'red' },
         { title: '隔离', icon: icon2, color: 'orange' },
-        { title: '放射', icon: icon3, color: 'yellow' },
-        { title: '本人', icon: icon4, color: '#0094ff' }],
+        { title: '放射', icon: icon3, color: 'yellow' }],
       filterList: [{ label: '全部', value: '1' }, { label: '术前', value: '2' }, { label: '术中', value: '3' }, { label: '术后', value: '4' }],
       tabPosition: '1',
       operationStatus: '',

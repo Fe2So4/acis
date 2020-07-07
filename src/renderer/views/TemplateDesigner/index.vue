@@ -24,6 +24,7 @@ export default {
 <style lang="scss" scoped>
 .templateDesignerPage {
   display: flex;
-  height: 100%;
+  // height: 100%;
+  height:800px;
 }
 </style>

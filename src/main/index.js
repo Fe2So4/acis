@@ -23,8 +23,8 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     height: 563,
     useContentSize: true,
-    width: 1000,
-    frame: false
+    width: 1000
+    // frame: false
     // movable: false// 可否移动
   })
 

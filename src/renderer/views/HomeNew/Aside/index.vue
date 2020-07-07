@@ -42,31 +42,41 @@
                 :key="_item.index"
                 :class="{'rightActive':activeIndex === index && oddEven(index),
                          'leftActive':activeIndex===index&&!oddEven(index)}"
-                @click="handleChangeButton(index)"
+                @click="handleChangeButton(_item,index)"
               >{{ _item.name }}</span>
             </div>
           </el-collapse-item>
         </el-collapse>
       </el-scrollbar>
     </div>
+    <Dialog
+      @close="handleDialogClose"
+      :title="dialogTitle"
+      :component-name="componentName"
+      v-if="showDialog"
+    />
   </div>
 </template>
 <script>
+import Dialog from '@/components/Dialog/index'
 // import Overview from '../../../components/OperationOverview/index'
 export default {
   name: 'Aside',
   data () {
     return {
+      dialogTitle: '术中列表',
       activesNames: '1',
       isCollapse: false,
       showOverflow: false,
+      showDialog: true,
+      componentName: '',
       navList: [
         {
           name: '大事件',
           index: '1',
           subNav: [
-            { name: '麻药', index: '1-1', route: 'Event' },
-            { name: '用药', index: '1-2', route: 'Event' }
+            { name: '麻药', index: '1-1', componentName: 'Event' },
+            { name: '用药', index: '1-2', componentName: 'Event' }
           ],
           icon: 'el-icon-star-on'
         },
@@ -75,7 +85,7 @@ export default {
           name: '患者操作',
           index: '3',
           subNav: [
-            { name: '手术概览', index: '3-1', route: 'OperationOverview' }
+            { name: '手术概览', index: '3-1', componentName: 'OperationOverview' }
           ],
           icon: 'el-icon-s-data'
         },
@@ -83,8 +93,9 @@ export default {
           name: '常用功能',
           index: '4',
           subNav: [
-            { name: '血流动力', index: '4-1', route: 'Hemodynamics' },
-            { name: '模板管理', index: '4-2', route: 'TemplateManagement' }
+            { name: '血流动力', index: '4-1', componentName: 'Hemodynamics' },
+            { name: '模板管理', index: '4-2', componentName: 'TemplateManagement' },
+            { name: '手术交班', componentName: 'OperationHandover', index: '4-3' }
           ],
           icon: 'el-icon-monitor'
         },
@@ -92,19 +103,25 @@ export default {
           name: '其他',
           index: '5',
           subNav: [
-            { name: '系统配置', index: '5-1', route: 'ConfigurationSystem' },
-            { name: '模板设计器', index: '5-2', route: 'TemplateDesigner' },
-            { name: '模板展示', index: '5-3', route: 'TemplateDisplayer' }
+            { name: '系统配置', index: '5-1', componentName: 'ConfigurationSystem' },
+            // { name: '模板设计器', index: '5-2', route: 'TemplateDesigner' },
+            { name: '模板设计器', index: '5-2', componentName: 'TemplateDesigner' },
+            { name: '模板展示', index: '5-3', componentName: 'TemplateDisplayer' },
+            { name: '修改密码', index: '5-4', componentName: 'ChangePass' }
           ],
           icon: 'el-icon-s-tools'
         }
       ],
       overviewList: [],
-      activeIndex: null
+      activeIndex: null,
+      path: ''
     }
   },
   components: {
     // Overview
+    Dialog
+    // ChangePass
+    // Hemodynamics
   },
   computed: {
     oddEven (index) {
@@ -118,8 +135,21 @@ export default {
     }
   },
   methods: {
-    handleChangeButton (index) {
+    handleDialogClose () {
+      this.showDialog = false
+      this.activeIndex = false
+    },
+    handleClose (done) {
+      done()
+    },
+    handleChangeButton (item, index) {
       this.activeIndex = index
+      this.showDialog = true
+      this.dialogTitle = item.name
+      this.componentName = item.componentName
+      // this.path = item.route
+      // console.log(this.$router)
+      // this.$router.push('/template-designer')
     },
     handleShowOverview () {
       if (this.isCollapse === true) {
@@ -133,9 +163,9 @@ export default {
     handleOpen (key, keyPath) {
       // console.log(key, keyPath)
     },
-    handleClose (key, keyPath) {
-      // console.log(key, keyPath)
-    },
+    // handleClose (key, keyPath) {
+    //   // console.log(key, keyPath)
+    // },
     handleCloseMenu () {
       if (this.showOverflow === false) {
         this.isCollapse = !this.isCollapse

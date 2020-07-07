@@ -56,13 +56,14 @@ export default {
     // }
   },
   mounted () {
-    this.$electron.ipcRenderer.send('show-window')
+    // this.$electron.ipcRenderer.send('show-window')
   }
 }
 </script>
 <style lang="scss" scoped>
   .template{
     height: 100%;
+    height: 400px;
     .content{
       height:calc(100% - 62px)
     }
