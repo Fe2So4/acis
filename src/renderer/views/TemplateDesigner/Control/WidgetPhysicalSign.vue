@@ -633,6 +633,8 @@ export default {
       this.drawEventLegends()
       // socket.io
       this.getDataBySocketIO()
+
+      this.$emit('finish')
     },
     getPastSignData () {
       return request({
@@ -777,8 +779,14 @@ export default {
           eventEndTime
         } = item
         if (eventStartTime) {
-          const eventStartMoment = +moment(eventStartTime, 'YYYY-MM-DD HH:mm:ss')
-          if (eventStartMoment >= startMoment && eventStartMoment <= endMoment) {
+          const eventStartMoment = +moment(
+            eventStartTime,
+            'YYYY-MM-DD HH:mm:ss'
+          )
+          if (
+            eventStartMoment >= startMoment &&
+            eventStartMoment <= endMoment
+          ) {
             eventArr.push({
               eventId: eventCode + '' + detailCode,
               order: ++order,
@@ -836,7 +844,7 @@ export default {
       this.socket.on('connect', () => {
         console.log('socket.io connected')
       })
-      this.socket.on('reconnect_error', (e) => {
+      this.socket.on('reconnect_error', e => {
         console.error(e)
       })
       this.socket.on('disconnect', () => {
@@ -921,11 +929,9 @@ export default {
       return request({
         method: 'GET',
         url: getEventDictData
-      }).then(
-        res => {
-          this.eventDictList = res.data.data
-        }
-      )
+      }).then(res => {
+        this.eventDictList = res.data.data
+      })
     }
   }
 }

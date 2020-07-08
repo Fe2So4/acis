@@ -1,6 +1,7 @@
 <template>
   <div class="medicalDocument">
     <main-content
+      ref="mainContent"
       :widget-list="widgetList"
       :start-time="startTime"
       :end-time="endTime"
@@ -168,7 +169,9 @@ export default {
       this.$eventHub.$emit('document-refresh')
     },
     onPrint () {
-      window.print()
+      this.$electron.ipcRenderer.send('print-document', {
+        path: `/printDocument/${this.$route.params.templateId}/${this.pageIndex}`
+      })
     },
     onPrintAll () {},
     onRefresh () {

@@ -163,6 +163,7 @@ export default {
   height: 100%;
   width: 100%;
   font-size: 14px;
+  overflow: hidden;
   // position: relative;
   .title {
     color: #0094ff;

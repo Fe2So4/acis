@@ -36,7 +36,7 @@ import moment from 'moment'
 import { getSocketData, getEventData } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
 export default {
-  name: 'WidgetText',
+  name: 'WidgetNews',
   props: {
     configuration: {
       type: Object,
@@ -61,16 +61,6 @@ export default {
       handler: function (val) {
         this.setStyle()
       }
-    },
-    startTime: {
-      handler: function (val) {
-        if (val) {
-          if (!this.editMode) {
-            this.getData()
-          }
-        }
-      },
-      immediate: true
     }
   },
   data () {
@@ -99,6 +89,17 @@ export default {
   },
   created () {
     this.setStyle()
+    if (!this.editMode) {
+      this.getData()
+    }
+  },
+  mounted () {
+    this.$eventHub.$on('document-refresh', () => {
+      this.getData()
+    })
+    this.$eventHub.$on('document-redraw', () => {
+      this.getData()
+    })
   },
   methods: {
     setStyle () {

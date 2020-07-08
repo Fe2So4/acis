@@ -16,6 +16,11 @@ export default {
         })
       }
     })
+    this.$electron.ipcRenderer.on('printRoute', (e, printRoute) => {
+      if (printRoute) {
+        this.$router.push(printRoute)
+      }
+    })
   }
 }
 </script>
