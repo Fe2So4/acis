@@ -15,10 +15,7 @@ import 'xe-utils'
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/index.css'
 import Tooltip from './components/Tooltip/main'
-// 解决vxe-table和element-ui兼容问题
-import VXETablePluginElement from 'vxe-table-plugin-element'
-import 'vxe-table-plugin-element/dist/style.css'
-VXETable.use(VXETablePluginElement)
+import CtxMenu from './components/CtxMenu/main'
 Vue.use(VXETable)
 Vue.use(ElementUI)
 if (!process.env.IS_WEB) { Vue.use(require('vue-electron')) }
@@ -26,6 +23,10 @@ Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 // 增加tooltip
 Vue.prototype.$tooltip = Tooltip
+// 增加右击菜单
+Vue.prototype.$ctxMenu = CtxMenu
+// 增加广播功能
+Vue.prototype.$eventHub = new Vue()
 /* eslint-disable no-new */
 new Vue({
   components: { App },

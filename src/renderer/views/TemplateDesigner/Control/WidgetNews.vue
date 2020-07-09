@@ -15,7 +15,7 @@
       <div
         class="news"
         v-for="news in newsList"
-        :key="news.id"
+        :key="news.order"
         :style="{width: colWidth}"
       >
         <div class="order">
@@ -36,7 +36,7 @@ import moment from 'moment'
 import { getSocketData, getEventData } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
 export default {
-  name: 'WidgetText',
+  name: 'WidgetNews',
   props: {
     configuration: {
       type: Object,
@@ -61,16 +61,6 @@ export default {
       handler: function (val) {
         this.setStyle()
       }
-    },
-    startTime: {
-      handler: function (val) {
-        if (val) {
-          if (!this.editMode) {
-            this.getData()
-          }
-        }
-      },
-      immediate: true
     }
   },
   data () {
@@ -99,6 +89,17 @@ export default {
   },
   created () {
     this.setStyle()
+    if (!this.editMode) {
+      this.getData()
+    }
+  },
+  mounted () {
+    this.$eventHub.$on('document-refresh', () => {
+      this.getData()
+    })
+    this.$eventHub.$on('document-redraw', () => {
+      this.getData()
+    })
   },
   methods: {
     setStyle () {
@@ -128,9 +129,61 @@ export default {
         data: {}
       }).then(
         res => {
-          this.newsList = res.data.data.list
+          this.newsList = this.convertEventData(res.data.data)
         }
       )
+    },
+    convertEventData (eventData) {
+      if (!Array.isArray(eventData)) {
+        return []
+      }
+      const startMoment = +moment(this.startTime)
+      const endMoment = +moment(this.endTime)
+      let order = 0
+      const list = eventData.reduce((arr, item) => {
+        const eventArr = []
+        const {
+          eventCode,
+          detailCode,
+          detailName: name,
+          drawIcon: label,
+          iconColor,
+          eventStartTime,
+          eventEndTime
+        } = item
+        if (eventStartTime) {
+          const eventStartMoment = +moment(eventStartTime, 'YYYY-MM-DD HH:mm:ss')
+          if (eventStartMoment >= startMoment && eventStartMoment <= endMoment) {
+            eventArr.push({
+              eventId: eventCode + '' + detailCode,
+              order: ++order,
+              name,
+              label,
+              color: iconColor ? '#' + iconColor : 'black',
+              time: eventStartTime,
+              startTime: eventStartTime,
+              endTime: eventEndTime
+            })
+          }
+        }
+        if (eventEndTime) {
+          const eventEndMoment = +moment(eventEndTime, 'YYYY-MM-DD HH:mm:ss')
+          if (eventEndMoment >= startMoment && eventEndMoment <= endMoment) {
+            eventArr.push({
+              eventId: eventCode + '' + detailCode,
+              order: ++order,
+              name,
+              label,
+              color: iconColor ? '#' + iconColor : 'black',
+              time: eventEndTime,
+              startTime: eventStartTime,
+              endTime: eventEndTime
+            })
+          }
+        }
+        return arr.concat(eventArr)
+      }, [])
+      return list
     },
     getDataFromSocketIO () {
       if (!this.endTime) {

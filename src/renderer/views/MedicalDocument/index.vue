@@ -1,9 +1,11 @@
 <template>
   <div class="medicalDocument">
     <main-content
+      ref="mainContent"
       :widget-list="widgetList"
       :start-time="startTime"
       :end-time="endTime"
+      @select-event-time-range="onSelectEventTimeRange"
     />
     <bottom-buttons
       :is-intraoperative="isIntraoperative"
@@ -18,6 +20,12 @@
       @save="onSave"
       @configure="onConfigure"
     />
+    <dialog-event-time-range
+      v-if="dialogEventTimeRangeVisible"
+      :visible.sync="dialogEventTimeRangeVisible"
+      :event-data="dialogEventData"
+      @event-added-successfully="onEventAddedSuccuessfully"
+    />
   </div>
 </template>
 
@@ -30,11 +38,13 @@ import {
 import request from '@/utils/requestForMock'
 import MainContent from './MainContent'
 import BottomButtons from './BottomButtons'
+import DialogEventTimeRange from './DialogEventTimeRange'
 export default {
   name: 'MedicalDocument',
   components: {
     MainContent,
-    BottomButtons
+    BottomButtons,
+    DialogEventTimeRange
   },
   data () {
     return {
@@ -44,7 +54,9 @@ export default {
       totalPage: 1,
       pageIndex: 0,
       isIntraoperative: false,
-      isRescueMode: false
+      isRescueMode: false,
+      dialogEventTimeRangeVisible: false,
+      dialogEventData: null
     }
   },
   created () {
@@ -84,7 +96,7 @@ export default {
               }
             }
           })
-          this.widgetList = widgetList
+          this.tempList = widgetList
           return res[0].data.data.isIntraoperative
         }
       )
@@ -120,11 +132,14 @@ export default {
           this.endTime = endTime
           this.totalPage = pageTotal
           this.pageIndex = pageIndex
-          // // x轴起止时间更改
-          // if (widget.xAxis) {
-          //   widget.xAxis.startTime = startTime
-          //   widget.xAxis.endTime = endTime
-          // }
+          this.tempList.forEach(widget => {
+            // x轴起止时间更改
+            if (widget.xAxis) {
+              widget.xAxis.startTime = startTime
+              widget.xAxis.endTime = endTime
+            }
+          })
+          this.widgetList = this.tempList
           return res.data.data
         }
       )
@@ -136,17 +151,32 @@ export default {
       }
       this.isIntraoperative = isIntraoperative
     },
-    onChangePage (pageIndex) {
-      this.getIntraoperativeData(pageIndex)
+    onSelectEventTimeRange (e) {
+      this.dialogEventData = e
+      this.dialogEventTimeRangeVisible = true
     },
-    onChangeRescueMode (rescueMode) {
+    async onChangePage (pageIndex) {
+      await this.getIntraoperativeData(pageIndex)
+      this.$eventHub.$emit('document-redraw')
+    },
+    async onChangeRescueMode (rescueMode) {
       this.isRescueMode = rescueMode
-      this.getIntraoperativeData(0)
+      await this.getIntraoperativeData(0)
+      this.$eventHub.$emit('document-redraw')
     },
-    onPrint () {},
+    onEventAddedSuccuessfully () {
+      this.getData(this.pageIndex)
+      this.$eventHub.$emit('document-refresh')
+    },
+    onPrint () {
+      this.$electron.ipcRenderer.send('print-document', {
+        path: `/printDocument/${this.$route.params.templateId}/${this.pageIndex}`
+      })
+    },
     onPrintAll () {},
     onRefresh () {
       this.getData(this.pageIndex)
+      this.$eventHub.$emit('document-refresh')
     },
     onSave () {},
     onConfigure () {}

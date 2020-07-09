@@ -23,8 +23,11 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     height: 563,
     useContentSize: true,
-    width: 1000
-    // frame: false
+    width: 1000,
+    frame: false,
+    webPreferences: {
+      nodeIntegration: true
+    }
     // movable: false// 可否移动
   })
 
@@ -126,3 +129,44 @@ const createNewWindow = (locationName, title) => {
 ipcMain.on('open-new-window', (e, locationName, title) => {
   createNewWindow(locationName, title)
 })
+// ---------------------------------打印功能 start--------------
+// 新建打印窗口
+const printWindows = new Set()
+const createPrintWindow = (printRoute) => {
+  let newPrintWindow = new BrowserWindow({
+    // show: false,
+    webPreferences: {
+      webSecurity: false,
+      nodeIntegration: true
+    }
+  })
+
+  newPrintWindow.loadURL(winURL)
+  newPrintWindow.once('ready-to-show', () => {
+    newPrintWindow.show()
+  })
+
+  newPrintWindow.webContents.on('did-finish-load', () => {
+    newPrintWindow.webContents.send('printRoute', printRoute)
+  })
+
+  newPrintWindow.on('closed', () => {
+    printWindows.delete(newPrintWindow)
+    newPrintWindow = null
+  })
+
+  printWindows.add(newPrintWindow)
+  return newPrintWindow
+}
+
+let printWin
+ipcMain.on('print-document', (e, printRoute) => {
+  console.log(printRoute)
+
+  printWin = createPrintWindow(printRoute)
+})
+ipcMain.on('ready-to-print', () => {
+  printWin.webContents.print()
+})
+
+// ---------------------------------打印功能 end--------------

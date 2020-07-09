@@ -80,6 +80,11 @@ if (process.env.BUILD_TARGET === 'schedule') {
           component: () => import('@/views/FormContainer/index')
         }]
       },
+      {
+        path: '/printDocument/:templateId/:pageIndex',
+        name: 'PrintDocument',
+        component: () => import('@/views/PrintDocument/index')
+      },
       ...customDialogs,
       {
         path: '*',
