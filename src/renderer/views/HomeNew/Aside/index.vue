@@ -68,7 +68,7 @@ export default {
       activesNames: '1',
       isCollapse: false,
       showOverflow: false,
-      showDialog: true,
+      showDialog: false,
       componentName: '',
       navList: [
         {
@@ -85,7 +85,11 @@ export default {
           name: '患者操作',
           index: '3',
           subNav: [
-            { name: '手术概览', index: '3-1', componentName: 'OperationOverview' }
+            { name: '手术概览', index: '3-1', componentName: 'OperationOverview' },
+            { name: '术中患者列表', index: '3-2', componentName: 'IntraoperativePatients' },
+            { name: '术中登记', index: '3-3', componentName: 'IntraoperativeRegistration' },
+            { name: '患者详情', index: '3-4', componentName: 'PatientDetail' },
+            { name: '手术取消', index: '3-5', componentName: 'OperationCancel' }
           ],
           icon: 'el-icon-s-data'
         },
@@ -95,7 +99,9 @@ export default {
           subNav: [
             { name: '血流动力', index: '4-1', componentName: 'Hemodynamics' },
             { name: '模板管理', index: '4-2', componentName: 'TemplateManagement' },
-            { name: '手术交班', componentName: 'OperationHandover', index: '4-3' }
+            { name: '手术交班', componentName: 'OperationHandover', index: '4-3' },
+            { name: 'PACU状态', componentName: 'PacuStatus', index: '4-4' },
+            { name: '设备采集', componentName: 'DeviceGather', index: '4-5' }
           ],
           icon: 'el-icon-monitor'
         },
@@ -147,9 +153,6 @@ export default {
       this.showDialog = true
       this.dialogTitle = item.name
       this.componentName = item.componentName
-      // this.path = item.route
-      // console.log(this.$router)
-      // this.$router.push('/template-designer')
     },
     handleShowOverview () {
       if (this.isCollapse === true) {

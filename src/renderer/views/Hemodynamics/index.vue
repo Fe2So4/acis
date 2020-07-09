@@ -3,6 +3,7 @@
     <div class="top">
       血流动力学计算
     </div>
+    <el-divider style="margin:10px 0;" />
     <div class="middle">
       <el-radio-group v-model="radio">
         <el-radio :label="3">
@@ -26,84 +27,84 @@
                 v-model="name"
                 size="mini"
               />
-              <span>g.m</span>
+              <span>cm</span>
             </el-form-item>
             <el-form-item label="体重:">
               <el-input
                 v-model="name"
                 size="mini"
               />
-              <span>g.m</span>
+              <span>kg</span>
             </el-form-item>
             <el-form-item label="CVPm:">
               <el-input
                 v-model="name"
                 size="mini"
               />
-              <span>g.m</span>
+              <span>mmHg</span>
             </el-form-item>
             <el-form-item label="ABPs:">
               <el-input
                 v-model="name"
                 size="mini"
               />
-              <span>g.m</span>
+              <span>mmHg</span>
             </el-form-item>
             <el-form-item label="ABPd:">
               <el-input
                 v-model="name"
                 size="mini"
               />
-              <span>g.m</span>
+              <span>mmHg</span>
             </el-form-item>
             <el-form-item label="ABPm:">
               <el-input
                 v-model="name"
                 size="mini"
               />
-              <span>g.m</span>
+              <span>mmHg</span>
             </el-form-item>
             <el-form-item label="HR:">
               <el-input
                 v-model="name"
                 size="mini"
               />
-              <span>g.m</span>
+              <span>beat/min</span>
             </el-form-item>
             <el-form-item label="C.O.:">
               <el-input
                 v-model="name"
                 size="mini"
               />
-              <span>g.m</span>
+              <span>L/min</span>
             </el-form-item>
             <el-form-item label="PAWP:">
               <el-input
                 v-model="name"
                 size="mini"
               />
-              <span>g.m</span>
+              <span>mmHg</span>
             </el-form-item>
             <el-form-item label="PAPs:">
               <el-input
                 v-model="name"
                 size="mini"
               />
-              <span>g.m</span>
+              <span>mmHg</span>
             </el-form-item>
             <el-form-item label="PAPd:">
               <el-input
                 v-model="name"
                 size="mini"
               />
-              <span>g.m</span>
+              <span>mmHg</span>
             </el-form-item>
             <el-form-item label="PAPm">
               <el-input
                 v-model="name"
                 size="mini"
               />
-              <span>g.m</span>
+              <span>mmHg</span>
             </el-form-item>
           </el-form>
         </div>
@@ -113,15 +114,16 @@
             label-width="80px"
           >
             <el-form-item
-              label="BSA:"
-              v-for="(item,index) in 12"
+              v-for="(item,index) in resultList"
+              :label="item.name"
               :key="index"
             >
               <el-input
-                v-model="name"
+                :value="item.value"
                 size="mini"
+                :disabled="true"
               />
-              <span>g.m</span>
+              <span>{{ item.unit }}</span>
             </el-form-item>
           </el-form>
         </div>
@@ -131,22 +133,25 @@
             label-width="80px"
           >
             <el-form-item
-              label="BSA:"
-              v-for="(item,index) in 12"
+              v-for="(item,index) in list"
+              :label="item.name"
               :key="index"
             >
               <el-input
-                v-model="name"
+                :value="item.value"
                 size="mini"
+                :disabled="true"
               />
-              <span>g.m</span>
             </el-form-item>
           </el-form>
         </div>
       </div>
     </div>
     <div class="option">
-      <el-button size="mini">
+      <el-button
+        size="mini"
+        type="primary"
+      >
         计算结果（R）
       </el-button>
       <el-button size="mini">
@@ -162,7 +167,70 @@ export default {
     return {
       radio: '3',
       name: '',
-      labelPosition: 'right'
+      labelPosition: 'right',
+      resultList: [
+        {
+          name: 'BSA:',
+          unit: 'm&sup2',
+          value: ''
+        },
+        {
+          name: 'SV:',
+          unit: 'DS.cm&sup2',
+          value: ''
+        },
+        {
+          name: 'SVR:',
+          unit: 'DS.cm&sup2',
+          value: ''
+        },
+        {
+          name: 'PVR:',
+          unit: 'DS.cm&sup2',
+          value: ''
+        },
+        {
+          name: 'LCW:',
+          unit: 'kg.m/min',
+          value: ''
+        },
+        {
+          name: 'LVSW:',
+          unit: 'g.m',
+          value: ''
+        },
+        {
+          name: 'C.I:',
+          unit: 'L/(min.m&sup2)',
+          value: ''
+        },
+        {
+          name: 'SI:',
+          unit: 'ml/(beat.m&sup2)',
+          value: ''
+        },
+        {
+          name: 'SVRI:',
+          unit: 'DS.m&sup2/cm&sup2',
+          value: ''
+        },
+        {
+          name: 'PVRI:',
+          unit: 'DS.m&sup2/cm&sup2',
+          value: ''
+        },
+        {
+          name: 'LCWI:',
+          unit: 'kg.m/(min.m&sup2)',
+          value: ''
+        },
+        {
+          name: 'LVSWI:',
+          unit: 'g.m/m&sup2',
+          value: ''
+        }
+      ],
+      list: [{ name: 'RCW', value: '' }, { name: 'RCWI', value: '' }, { name: 'RVSW', value: '' }, { name: 'RVSWI', value: '' }]
     }
   },
   mounted () {
@@ -173,27 +241,25 @@ export default {
 <style lang="scss" scoped>
     .hemodynamics{
       height: 100%;
-      width: 1082px;
+      width: 1042px;
       display: flex;
       flex-direction: column;
+      color:#9BA3D5;
       .el-input{
-        max-width: 217px;
+        max-width: 90px;
       }
       .top{
-        font:16px/26px '';
-        background: #f8f9fa;
+        font:14px/28px '';
         padding-left: 10px;
       }
       .middle{
         height:calc(100% - 74px);
         .el-radio-group{
           padding:5px 10px 5px 10px;
-          background: wheat;
         }
         .content{
           height: calc(100% - 26px);
           display: flex;
-          // justify-content: ;
           .el-form{
             .el-form-item{
              margin-bottom:10px;
@@ -206,14 +272,15 @@ export default {
             flex: 1;
           }
           .right{
-            flex: 1
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
           }
         }
         }
       .option{
-        background: #f8f9fa;
         text-align: right;
-        // padding:10px 0;
         padding:10px 10px 10px 0;
         z-index: 9999;
       }

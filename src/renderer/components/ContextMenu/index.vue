@@ -1,14 +1,21 @@
 <template lang="pug">
   .menu-list(:style="style")
-    ul
-      li(v-for="(item,index) in menuList" :key="item.value" @click.stop="handleClick(item)")
-        span {{item.menuName}}
+    el-scrollbar(style="height: 100%"
+      :wrap-style="wrapStyle")
+      ul
+        li(v-for="(item,index) in menuList" :key="item.value" @click.stop="handleClick(item)")
+          span {{item.menuName}}
 </template>
 
 <script>
 export default {
   data () {
     return {
+      wrapStyle: [
+        {
+          'overflow-x': 'hidden'
+        }
+      ]
     }
   },
   props: {
@@ -47,7 +54,7 @@ export default {
 <style lang="stylus" scoped>
   .menu-list
     position absolute
-    // height 200px
+    height 200px
     width 100px
     z-index 10
     background #fff

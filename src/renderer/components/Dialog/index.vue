@@ -6,8 +6,13 @@
        span {{title}}
        i(class="el-icon-close" @click="handleClose")
       .dialog-body
-        //- component(:is="componentName")
-        <operation-handover/>
+        component(:is="componentName")
+        //- <operation-handover/>
+        //- <hemody-namics />
+        //- IntraoperativePatients
+        //- IntraoperativeRegistration
+        //- PatientDetail
+        //- DeviceGather
     //- .dialog-footer
 </template>
 <script>
@@ -18,6 +23,11 @@ import TemplateManagement from '@/views/TemplateManagement/index'
 import TemplateDesigner from '@/views/TemplateDesigner/index'
 import ConfigurationSystem from '@/views/ConfigurationSystem/index'
 import OperationHandover from '@/views/OperationHandover/index'
+import IntraoperativePatients from '@/views/IntraoperativePatients/index'
+import IntraoperativeRegistration from '@/views/IntraoperativeRegistration/index'
+import PatientDetail from '@/views/PatientDetail/index'
+import DeviceGather from '@/views/DeviceGather/index'
+import OperationCancel from '@/views/OperationCancel/index'
 export default {
   name: 'Dialog',
   data () {
@@ -42,7 +52,12 @@ export default {
     TemplateManagement,
     TemplateDesigner,
     ConfigurationSystem,
-    OperationHandover
+    OperationHandover,
+    IntraoperativePatients,
+    IntraoperativeRegistration,
+    PatientDetail,
+    DeviceGather,
+    OperationCancel
   },
   methods: {
     handleClose () {
@@ -59,7 +74,7 @@ export default {
     height 100vh
     left 0
     top 0
-    z-index 1
+    z-index 2
     display flex
     justify-content center
     align-items center

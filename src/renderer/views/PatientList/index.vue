@@ -211,12 +211,9 @@
   </div>
 </template>
 <script>
-// import PatientList from './patientList/index'
-// import PatientDetail from './patientDetail/index'
 import icon1 from '@/assets/emergency.png'
 import icon2 from '@/assets/quarantine.png'
 import icon3 from '@/assets/radiation.png'
-// import icon4 from '@/assets/solid-person.png'
 export default {
   name: 'PatientInfo',
   data () {
@@ -260,12 +257,9 @@ export default {
     }
   },
   components: {
-    // PatientList,
-    // PatientDetail
   },
   methods: {
     handleJump (item) {
-      console.log(1)
       this.$router.push('/home/patientInfo')
     },
     hanldeSearchMore () {

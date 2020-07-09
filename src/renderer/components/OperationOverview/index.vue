@@ -1,28 +1,30 @@
 <template>
   <div class="overview">
-    <ul>
-      <li
-        v-for="(item,index) in list"
-        :key="index"
-      >
-        <div class="top">
-          <span>{{ item.cardNo }}</span>
-          <span>{{ item.patientName }}</span>
-          <span>入复苏室</span>
-        </div>
-        <div class="content">
-          <div class="room">
-            {{ item.room }}
+    <el-scrollbar
+      style="height:100%;"
+      class="scrollbar"
+    >
+      <ul>
+        <li
+          v-for="(item,index) in list"
+          :key="index"
+          @click="handleJump(item)"
+        >
+          <div class="title">
+            <span>手术室 {{ item.room }}</span>
+            <span>{{ item.opeStatus }}</span>
           </div>
-          <div class="info">
-            <p>麻醉：{{ item.anaesName }}</p>
-            <p>医生：{{ item.doctor }}</p>
-            <p>时间：{{ item.time }}</p>
-            <p>术名：{{ item.opeName }}</p>
+          <div class="content">
+            <div class="info">
+              <p>患者 <span>{{ item.name }}</span> <span>{{ item.opeId }}</span> <span>{{ item.hospitalNo }}</span></p>
+              <p>手术 <span>{{ item.opeName }}</span></p>
+              <p>时间 <span>{{ item.time }}</span></p>
+              <p>术者 <span>{{ item.doctor }}</span> 麻醉 <span>{{ item.anaesDoctor }}</span></p>
+            </div>
           </div>
-        </div>
-      </li>
-    </ul>
+        </li>
+      </ul>
+    </el-scrollbar>
   </div>
 </template>
 <script>
@@ -40,6 +42,11 @@ export default {
       }
     }
   },
+  methods: {
+    handleJump (item) {
+
+    }
+  },
   mounted () {
 
   }
@@ -48,51 +55,71 @@ export default {
 <style lang="scss" scoped>
     .overview{
       height:100%;
-      font-size:12px;
-      // background:#f8f9fa;
-      ul{
-        height:100%;
-        padding:10px;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, 200px);
-        justify-content: space-around;
-        li{
-          // width: 200px;
-          margin-bottom: 10px;
-          border-radius:5px;
-          background: #f8f9fa;
-          box-sizing: border-box;
-          box-shadow: 0 0 5px #f8f9fa;
-          .top{
+      font-size:14px;
+        ul{
+          display: grid;
+          grid-template-columns: repeat(auto-fill, 392px);
+          grid-column-gap: 20px;
+          grid-row-gap: 20px;
+          padding:12px;
+          li{
+            box-shadow:0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            border-radius:5px;
+            padding:0 0 14px 0;
+            background:#181C27;
+            border:1px solid #181c27;
+            // width: 464px;
+            height:164px;
+            font-size:14px;
             display: flex;
-            // background:;
-            justify-content: space-between;
-            padding:5px 5px;
-          }
-          .content{
-            display: flex;
-            background:#fff;
-            .room{
-              text-align: center;
-              font-size: 30px;
-              color: #cd5c5c;
-              font-weight: 600;
-              width: 50px;
-              line-height:80px;
-              // display: flex;
-              // justify-items: center;
-            }
-            .info{
+            flex-direction: column;
+            transition: all 0.3s;
+            .title{
               display: flex;
-              flex-direction: column;
-              justify-content: space-around;
-              p{
-                margin:unset;
+              justify-content: space-between;
+              span{
+                // color:#7f85a9;
+                color:#FFFFFF;
+                padding:0 10px;
+                line-height:28px;
+                &:last-child{
+                  color:#0094ff;
+                }
               }
+            }
+            .content{
+              flex: 1;
+              display: flex;
+              overflow: hidden;
+              .info{
+                margin:0 30px 0 20px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                p{
+                  padding:0;
+                  margin:0;
+                  color:#9BA3D5;
+                  span{
+                    color:#D0DAE5;
+                    line-height: 28px;
+                  }
+                }
+              }
+              .status{
+                width:74px;
+                display:flex;
+                flex-direction:column;
+                justify-content:space-around;
+              }
+            }
+            &:hover{
+              border:1px solid #0094ff;
+              background:#262c3c;
             }
           }
         }
-      }
     }
 </style>
 <style>

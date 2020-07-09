@@ -25,6 +25,7 @@ export default {
 .templateDesignerPage {
   display: flex;
   // height: 100%;
-  height:800px;
+  width:90vw;
+  height:80vh;
 }
 </style>

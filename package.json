@@ -2,7 +2,7 @@
   "name": "acis",
   "version": "0.0.1",
   "author": "dyw-design <1875742887@qq.com>",
-  "description": "An electron-vue project",
+  "description": "acis",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
@@ -74,6 +74,7 @@
     "vuex": "^3.0.1",
     "vuex-electron": "^1.0.0",
     "vxe-table": "^2.9.13",
+    "vxe-table-plugin-element": "^1.8.9",
     "xe-utils": "^2.4.8"
   },
   "devDependencies": {
