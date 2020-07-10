@@ -8,21 +8,23 @@
         class="documentContent"
         :style="sizeStyle"
       >
-        <widget-wrapper
-          v-for="(item,index) of widgetList"
-          :key="index"
-          :widget="item"
-        >
-          <component
-            :is="item.name"
-            :configuration="item"
-            :edit-mode="editMode"
-            :start-time="startTime"
-            :end-time="endTime"
-            @select-event-time-range="onSelectEventTimeRange"
-            @change="onChange($event, item)"
-          />
-        </widget-wrapper>
+        <div class="widgetContent">
+          <widget-wrapper
+            v-for="(item,index) of widgetList"
+            :key="index"
+            :widget="item"
+          >
+            <component
+              :is="item.name"
+              :configuration="item"
+              :edit-mode="editMode"
+              :start-time="startTime"
+              :end-time="endTime"
+              @select-event-time-range="onSelectEventTimeRange"
+              @change="onChange($event, item)"
+            />
+          </widget-wrapper>
+        </div>
       </div>
     </el-scrollbar>
   </div>
@@ -74,8 +76,8 @@ export default {
   computed: {
     sizeStyle () {
       return {
-        width: `${this.paperSetting.width}mm`,
-        height: `${this.paperSetting.height}mm`
+        width: `calc(${this.paperSetting.width}mm + 100px)`,
+        height: `calc(${this.paperSetting.height}mm + 100px)`
       }
     }
   },
@@ -96,12 +98,16 @@ export default {
   height: calc(100% - 36px);
   overflow: auto;
   .documentContent {
-    overflow: hidden;
+    padding: 50px;
     margin: 20px auto;
     background: rgba(227, 227, 227, 1);
     box-shadow: 0px 20px 45px 5px rgba(0, 0, 0, 0.5);
     border-radius: 5px;
-    position: relative;
+    .widgetContent {
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+    }
   }
 }
 </style>

@@ -47,15 +47,9 @@ Mock.mock('/api/getDictionaryData', 'post', {
   code: 200,
   success: true,
   data: [
-    {
-      value: '一病区'
-    },
-    {
-      value: '二病区'
-    },
-    {
-      value: '三病区'
-    }
+    '一病区',
+    '二病区',
+    '三病区'
   ]
 })
 // 体征数据

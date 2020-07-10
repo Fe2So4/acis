@@ -7,6 +7,7 @@
       :style="widgetStyle"
       v-model="configuration.value"
       :placeholder="configuration.placeholder"
+      @input="onInut"
     />
   </div>
 </template>
@@ -55,6 +56,9 @@ export default {
 
       styleObj = { ...styleObj, ...borderObj }
       this.widgetStyle = styleObj
+    },
+    onInut (e) {
+      this.configuration.value = e.target.value
     }
   }
 }

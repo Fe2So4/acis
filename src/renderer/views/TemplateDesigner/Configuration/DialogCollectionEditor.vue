@@ -163,4 +163,7 @@ export default {
     // border: 1px solid #666;
   }
 }
+.content ::v-deep .el-table tr{
+    background: #181C27;
+  }
 </style>

@@ -15,7 +15,7 @@
             v-show="Object.keys(group).length"
           >
             <el-form
-              label-width="80px"
+              label-width="100px"
               size="small"
             >
               <component
@@ -34,7 +34,7 @@
             name="paperSetting"
           >
             <el-form
-              label-width="80px"
+              label-width="100px"
               size="small"
             >
               <configuration-paper
@@ -66,7 +66,7 @@ export default {
       id: null,
       name: null,
       configurationItemNames: [],
-      activeNames: ['layout', 'position', 'custom'],
+      activeNames: ['layout', 'position', 'custom', 'data'],
       wrapStyle: [
         {
           'overflow-x': 'hidden'

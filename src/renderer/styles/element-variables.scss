@@ -9,7 +9,9 @@ $--color-text-regular: #9BA3D5;
 /// color|1|Border Color|3
 $--border-color-base: #353E56;
 
-
+// Background
+/// color|1|Background Color|4
+$--background-color-base: #F5F7FA !default;
 
 
 /* Checkbox
@@ -61,6 +63,17 @@ $--select-option-hover-background: #0d0f16;
 -------------------------- */
 /// color||Color|0
 $--popover-background-color: $--custom-el-background-color;
+
+/* Table
+-------------------------- */
+/// color||Color|0
+$--table-border-color: $--dialog-background-color;
+/// color||Color|0
+$--table-row-hover-background-color: $--custom-el-background-color;
+$--table-current-row-background-color: $--custom-el-background-color;
+/// color||Color|0
+$--table-header-background-color: $--dialog-background-color;
+
 /* 改变 icon 字体路径变量，必需 */
 $--font-path: '~element-ui/lib/theme-chalk/fonts';
 

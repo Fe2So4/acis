@@ -10,16 +10,16 @@ export default {
         {
           classNameValue: [
             {
-              dict_id: 'E0012',
-              dict_name: '用药单位'
+              dictId: 'E0012',
+              dictName: '用药单位'
             },
             {
-              dict_id: 'E0013',
-              dict_name: '用药单位'
+              dictId: 'E0013',
+              dictName: '用药单位'
             },
             {
-              dict_id: 'E0014',
-              dict_name: '用药单位'
+              dictId: 'E0014',
+              dictName: '用药单位'
             }
           ],
           showClassName: 'dict_code',
@@ -28,16 +28,16 @@ export default {
         {
           classNameValue: [
             {
-              dict_id: 'E0012',
-              dict_name: '用药单位'
+              dictId: 'E0012',
+              dictName: '用药单位'
             },
             {
-              dict_id: 'E0013',
-              dict_name: '用药单位'
+              dictId: 'E0013',
+              dictName: '用药单位'
             },
             {
-              dict_id: 'E0014',
-              dict_name: '用药单位'
+              dictId: 'E0014',
+              dictName: '用药单位'
             }
           ],
           showClassName: 'dict_code1',
@@ -53,16 +53,16 @@ export default {
         {
           classNameValue: [
             {
-              dict_id: 'E0012',
-              dict_name: '用药单位'
+              dictId: 'E0012',
+              dictName: '用药单位'
             },
             {
-              dict_id: 'E0013',
-              dict_name: '用药单位'
+              dictId: 'E0013',
+              dictName: '用药单位'
             },
             {
-              dict_id: 'E0014',
-              dict_name: '用药单位'
+              dictId: 'E0014',
+              dictName: '用药单位'
             }
           ],
           showClassName: 'dict_code',
@@ -71,16 +71,16 @@ export default {
         {
           classNameValue: [
             {
-              dict_id: 'E0012',
-              dict_name: '用药单位'
+              dictId: 'E0012',
+              dictName: '用药单位'
             },
             {
-              dict_id: 'E0013',
-              dict_name: '用药单位'
+              dictId: 'E0013',
+              dictName: '用药单位'
             },
             {
-              dict_id: 'E0014',
-              dict_name: '用药单位'
+              dictId: 'E0014',
+              dictName: '用药单位'
             }
           ],
           showClassName: 'dict_code1',
