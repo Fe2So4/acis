@@ -34,8 +34,8 @@ npm run lint
 #  -OperationCancel 手术取消
 #  -IntraoperativeRegistration 术中登记
 #  -IntraoperativePatient 术中患者列表
+#  -RealtimeStatus 实时状态
 #  -Schedule 手术排班
-#  -ScheduleReport 手术排班表
 #  -ScheduleReport 手术排班表
 ```
 

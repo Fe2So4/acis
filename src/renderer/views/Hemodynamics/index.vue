@@ -245,8 +245,8 @@ export default {
 </script>
 <style lang="scss" scoped>
     .hemodynamics{
-      height: 100%;
-      width: 1042px;
+      height: 80vh;
+      width: 80vw;
       display: flex;
       flex-direction: column;
       color:#9BA3D5;

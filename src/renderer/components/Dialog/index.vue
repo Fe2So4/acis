@@ -1,12 +1,12 @@
 <template lang="pug">
-  .dialog
+  .dialog(@click.stop="()=>{}")
     //- .dialog-mask
     .dialog-content
       .dialog-title
        span {{title}}
        i(class="el-icon-close" @click="handleClose")
       .dialog-body
-        component(:is= "componentName")
+        //- component(:is= "componentName")
         //- <operation-handover/>
         //- Hemodynamics
         //- IntraoperativePatients
@@ -16,6 +16,8 @@
         //- StateMaintain
         //- ResuscitationBed
         //- RealtimeStatus
+        //- PacuStatus
+        AnaesScore
     //- .dialog-footer
 </template>
 <script>
@@ -34,6 +36,9 @@ import OperationCancel from '@/views/OperationCancel/index'
 import StateMaintain from '@/views/StateMaintain/index'
 import ResuscitationBed from '@/views/ResuscitationBed/index'
 import RealtimeStatus from '@/views/RealtimeStatus/index'
+import PacuStatus from '@/views/PacuStatus/index'
+import Dictionary from '@/views/Dictionary/index'
+import AnaesScore from '@/views/AnaesScore/index'
 export default {
   name: 'Dialog',
   data () {
@@ -66,7 +71,10 @@ export default {
     OperationCancel,
     StateMaintain,
     ResuscitationBed,
-    RealtimeStatus
+    RealtimeStatus,
+    PacuStatus,
+    Dictionary,
+    AnaesScore
   },
   methods: {
     handleClose () {
