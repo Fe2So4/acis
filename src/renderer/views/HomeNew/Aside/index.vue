@@ -91,7 +91,9 @@ export default {
             { name: '患者详情', index: '3-4', componentName: 'PatientDetail' },
             { name: '手术取消', index: '3-5', componentName: 'OperationCancel' },
             { name: '复苏进程', index: '3-6', componentName: 'OperationCancel' },
-            { name: '复苏床位', index: '3-7', componentName: 'ResuscitationBed' }
+            { name: '复苏床位', index: '3-7', componentName: 'ResuscitationBed' },
+            { name: '实时状态', index: '3-8', componentName: 'RealtimeStatus' },
+            { name: '麻醉评分', index: '3-9', componentName: 'AnaesScore' }
           ],
           icon: 'el-icon-s-data'
         },
@@ -103,7 +105,8 @@ export default {
             { name: '模板管理', index: '4-2', componentName: 'TemplateManagement' },
             { name: '手术交班', componentName: 'OperationHandover', index: '4-3' },
             { name: 'PACU状态', componentName: 'PacuStatus', index: '4-4' },
-            { name: '设备采集', componentName: 'DeviceGather', index: '4-5' }
+            { name: '设备采集', componentName: 'DeviceGather', index: '4-5' },
+            { name: '字典', componentName: 'Dictionary', index: '4-6' }
           ],
           icon: 'el-icon-monitor'
         },

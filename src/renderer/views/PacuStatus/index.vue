@@ -1,12 +1,8 @@
 <template lang="pug">
-  .realtime-status
+  .pacu-status
     el-form(:model="form" :inline="true" size="mini")
       el-form-item(label="日期" )
         el-date-picker(type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="form.date")
-      el-form-item(label="手术科室")
-        el-input(v-model="form.dept")
-      el-form-item(label="手术间")
-        el-input(v-model="form.room")
       el-form-item
         div(class="status")
           span(v-for="item in list" :key="item.label" style="margin-right:10px;")
@@ -31,10 +27,9 @@
                 li(v-for="item in opeList" :key="item.room")
                   .relative(v-for="(_item,index) in item.patientList" :style="setPosition(_item.startTime)")
                     .detail
-                      .ready
-                      .operating
-                      .wake
-                      .circle(:style="{background:_item.state === '1'?'#24E760':'#FF4045'}")
+                      .withTube
+                      .withoutTube
+                      //- .circle(:style="{background:_item.state === '1'?'#24E760':'#FF4045'}")
                       p(class="patient-info") {{_item.name}} {{_item.sex}} {{_item.age}} {{_item.impatientArea}} {{_item.patient}}
                       p(class="ope-info") {{_item.anaesDoc}} {{_item.anaesMethod}} {{_item.opeName}}
 </template>
@@ -43,7 +38,7 @@ import * as spritejs from 'spritejs'
 import moment from 'moment'
 const { Scene, Group, Polyline, Label } = spritejs
 export default {
-  name: 'RealtimeStatus',
+  name: 'PacuStatus',
   data () {
     return {
       form: {
@@ -53,9 +48,8 @@ export default {
       },
       layer: null,
       scene: null,
-      list: [{ label: '择期', color: '#24E760', type: 'circle' }, { label: '急诊', color: '#FF4045', type: 'circle' },
-        { label: '准备', color: '#69A7FB', type: 'rectangle' }, { label: '手术中', color: '#F7CF42', type: 'rectangle' },
-        { label: '苏醒期', color: '#15D18D', type: 'rectangle' }],
+      list: [{ label: '带管', color: '#69A7FB', type: 'rectangle' },
+        { label: '不带管', color: '#15D18D', type: 'rectangle' }],
       numberList: [{ room: '02', finish: '1', total: '2' }, { room: '03', finish: '1', total: '2' }],
       timeList: [],
       opeList: [{
@@ -230,7 +224,7 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-  .realtime-status
+  .pacu-status
     height 70vh
     width 80vw
     color #9BA3D5
@@ -238,6 +232,7 @@ export default {
     .status
       display flex
       line-height 28px
+      margin-left 20px
       .circle
         vertical-align middle
         display inline-block
@@ -296,12 +291,12 @@ export default {
                   .wake
                     width 120px
                     background #15D18D
-                  .ready
+                  .withTube
                     width 140px
                     background #69A7FB
-                  .operating
+                  .withoutTube
                     width 160px
-                    background #F7CF42
+                    background #15D18D
                   .circle
                     position absolute
                     left 10px
