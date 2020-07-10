@@ -12,7 +12,7 @@
     />
     <drug-detail
       v-if="drugDetailVisible"
-      :start-time="startTime"
+      :start-time="drugStartTime"
       :drug-detail-visible="drugDetailVisible"
       @handleClose="handleCloseDrugDetail"
       @handleSubmit="handleSubmit"
@@ -116,37 +116,27 @@ export default {
       list: [{ menuName: '百草枯', value: '1' }, { menuName: '百草枯', value: '2' }, { menuName: '百草枯', value: '3' }],
       // 药品列表
       groupNo: null,
-      startTime: null,
-      drugDetailVisible: false
+      drugStartTime: null,
+      drugDetailVisible: false,
+      widgetStyle: {}
     }
   },
   props: {
     configuration: {
       type: Object,
-      default: () => ({
-        leftPartWidthRate: 0.18,
-        rightPartWidthRate: 0.1,
-        leftTitle: {
-          text: '麻醉用药',
-          width: 40,
-          lineHeight: 30
-        },
-        timeTitle: {
-          text: '时间',
-          height: 30, // 是否显示顶部时间条，将高度置为0即可
-          lineHeight: 30
-        },
-        totalTitle: {
-          text: '总量'
-        },
-        xAxis: {
-          startTime: '2020-07-01 09:00',
-          endTime: '2020-07-01 13:00',
-          timeInterval: 15 * 60 * 1000,
-          lineInterval: 3
-        },
-        drugNumber: 10
-      })
+      required: true
+    },
+    editMode: {
+      type: Boolean,
+      default: true
+    },
+    startTime: {
+      type: String,
+      default: ''
+    },
+    endTime: {
+      type: String,
+      default: ''
     }
   },
   components: {
@@ -157,7 +147,10 @@ export default {
     configuration: {
       deep: true,
       handler: function (val) {
-        this.resize()
+        if (this.editMode) {
+          this.resize()
+          // this.setStyle()
+        }
       }
     },
     drugList: {
@@ -185,6 +178,17 @@ export default {
     removeListener(this.$refs.anaesDrug, this.resize)
   },
   methods: {
+    // setStyle () {
+    //   const { border } = this.configuration
+    //   let styleObj = {}
+    //   const borderObj = border.position.reduce((obj, item) => {
+    //     obj['border-' + item] = border.width + 'px solid ' + border.color
+    //     return obj
+    //   }, {})
+
+    //   styleObj = { ...styleObj, ...borderObj }
+    //   this.widgetStyle = styleObj
+    // },
     domResizeListener () {
       this.scene.resize()
       this.setLayout()
@@ -431,8 +435,7 @@ export default {
       const leftPart = this.layer.getElementsByClassName('leftPart')[0]
       const drugList = leftPart.getElementsByClassName('drugList')[0]
       const width = Math.round(drugList.attr('width'))
-      const lineHeight =
-        Math.round(drugList.attr('height')) / this.configuration.drugNumber
+      const lineHeight = Math.round(drugList.attr('height')) / this.configuration.drugNumber
       for (let i = 0; i < this.configuration.drugNumber - 1; i++) {
         const line = new Polyline({
           pos: [0, Math.round(lineHeight * (i + 1)) - 0.5],
@@ -462,26 +465,28 @@ export default {
       // }
     },
     setDrug () {
-      const leftPart = this.layer.getElementsByClassName('leftPart')[0]
-      const drugList = leftPart.getElementsByClassName('drugList')[0]
-      const width = Math.round(drugList.attr('width'))
-      const lineHeight =
-        Math.round(drugList.attr('height')) / this.configuration.drugNumber
-      for (let i = 0; i < this.configuration.drugNumber; i++) {
-        if (this.drugList[i]) {
-          const text = new Label(this.drugList[i].name)
-          text.attr({
-            pos: [0, lineHeight * i],
-            anchor: [0, 0],
-            fontSize: 12,
-            fontFamily: '宋体',
-            textAlign: 'center',
-            fillColor: 'blue',
-            width: width,
-            height: lineHeight,
-            lineHeight: lineHeight
-          })
-          drugList.append(text)
+      if (!this.editMode) {
+        const leftPart = this.layer.getElementsByClassName('leftPart')[0]
+        const drugList = leftPart.getElementsByClassName('drugList')[0]
+        const width = Math.round(drugList.attr('width'))
+        const lineHeight =
+          Math.round(drugList.attr('height')) / this.configuration.drugNumber
+        for (let i = 0; i < this.configuration.drugNumber; i++) {
+          if (this.drugList[i]) {
+            const text = new Label(this.drugList[i].name)
+            text.attr({
+              pos: [0, lineHeight * i],
+              anchor: [0, 0],
+              fontSize: 12,
+              fontFamily: '宋体',
+              textAlign: 'center',
+              fillColor: 'blue',
+              width: width,
+              height: lineHeight,
+              lineHeight: lineHeight
+            })
+            drugList.append(text)
+          }
         }
       }
     },
@@ -584,15 +589,16 @@ export default {
           // value: i - startMoment,
           label: moment(i).format('HH:mm')
         })
-        i += this.configuration.xAxis.timeInterval
+        i += this.configuration.xAxis.timeInterval * 60 * 1000
       }
-      this.configuration.xAxis.list = list
+      this.xAxisList = list
     },
     setXAxis () {
       const xAxis = this.layer.getElementsByClassName('xAxis')[0]
+      if (!xAxis) return
       const width = xAxis.attr('width')
       const height = xAxis.attr('height')
-      const list = this.configuration.xAxis.list
+      const list = this.xAxisList
       const scale = width / list.length
       list.forEach((item, index, arr) => {
         const label = new Label(item.label.toString())
@@ -613,7 +619,7 @@ export default {
       const grid = this.layer.getElementsByClassName('grid')[0]
       const width = grid.attr('width')
       const height = grid.attr('height')
-      const xAxislist = this.configuration.xAxis.list
+      const xAxislist = this.xAxisList
       const xScale = width / xAxislist.length
       xAxislist.forEach((item, index, arr) => {
         if (index) {
@@ -687,197 +693,212 @@ export default {
     },
     // 网格区右击
     handleGridRightClick () {
-      const grid = this.layer.getElementsByClassName('grid')[0]
-      const width = grid.attr('width')
-      const xAxislist = this.configuration.xAxis.list
-      const xScale = Math.floor(width / xAxislist.length)
-      const interval = Math.floor(
-        this.configuration.xAxis.timeInterval / xScale
-      )
-      grid.addEventListener('mousedown', evt => {
-        if (evt.originalEvent.button === 2) {
-          if (evt.target.attr('className') === 'row') {
-            this.groupNo = evt.target.attr('index')
-            this.startTime = evt.x * interval
-            if (this.drugList[this.groupNo]) {
-              this.drugListVisible = false
-              this.drugDetailVisible = true
-            } else {
-              this.drugListVisible = true
+      if (!this.editMode) {
+        const grid = this.layer.getElementsByClassName('grid')[0]
+        const width = grid.attr('width')
+        const xAxislist = this.configuration.xAxis.list
+        const xScale = Math.floor(width / xAxislist.length)
+        const interval = Math.floor(
+          this.configuration.xAxis.timeInterval / xScale
+        )
+        grid.addEventListener('mousedown', evt => {
+          if (evt.originalEvent.button === 2) {
+            if (evt.target.attr('className') === 'row') {
+              this.groupNo = evt.target.attr('index')
+              this.drugStartTime = evt.x * interval
+              if (this.drugList[this.groupNo]) {
+                this.drugListVisible = false
+                this.drugDetailVisible = true
+              } else {
+                this.drugListVisible = true
+              }
+              this.position.positionX = evt.x
+              this.position.positionY = evt.y
             }
-            this.position.positionX = evt.x
-            this.position.positionY = evt.y
           }
-        }
-      })
+        })
+      }
     },
     handleAddDrug (param) {
-      if (this.drugList[this.groupNo]) {
-        this.drugDetailVisible = true
-      } else {
-        const obj = {}
-        obj.name = param.menuName
-        obj.code = param.value
-        this.drugList.push(obj)
-        this.drugListVisible = false
-        this.drugDetailVisible = true
+      if (!this.editMode) {
+        if (this.drugList[this.groupNo]) {
+          this.drugDetailVisible = true
+        } else {
+          const obj = {}
+          obj.name = param.menuName
+          obj.code = param.value
+          this.drugList.push(obj)
+          this.drugListVisible = false
+          this.drugDetailVisible = true
+        }
       }
       // this.setDrug()
     },
     handleClearRightClick () {
-      this.drugListVisible = false
-      this.groupNo = null
+      if (!this.editMode) {
+        this.drugListVisible = false
+        this.groupNo = null
+      }
     },
     handleCloseDrugDetail () {
-      this.drugDetailVisible = false
-      this.startTime = null
+      if (!this.editMode) {
+        this.drugDetailVisible = false
+        this.drugStartTime = null
+      }
     },
     // 绘制用药线段
     setDrugLine () {
       // 清空子元素
-      this.layer.getElementsByClassName('col').forEach(ref => {
-        ref.removeAllChildren()
-      })
-      const grid = this.layer.getElementsByClassName('grid')[0]
-      const height = grid.attr('height')
-      const yScale = height / this.configuration.drugNumber
-      var canvas = document.getElementById('canvas')
-      var ctx = canvas.getContext('2d')
-      const row = grid.getElementsByClassName('row')
-      this.drugList.forEach((value, index, array) => {
-        value.data.forEach((item, i) => {
-          const dose = new Label(item.dose)
-          const text = Math.ceil(ctx.measureText(item.dose).width)
-          let group = null
-          const width = grid.attr('width')
-          const interval = width / (moment(this.configuration.xAxis.endTime) - moment(this.configuration.xAxis.startTime))
-          const startTime = Math.round((moment(item.startTime) - moment(this.configuration.xAxis.startTime)) * interval)
-          let endTime = null
-          if (item.endTime !== '') {
-            endTime = Math.round((moment(item.endTime) - moment(this.configuration.xAxis.startTime)) * interval)
-          }
-          if (item.continue) {
-            group = new Group({
-              className: 'col',
-              colIndex: i,
-              size: [endTime - startTime, Math.round(yScale / 2)],
-              pos: [startTime, Math.round(yScale / 2 - yScale / 4)]
-            })
-            dose.attr({
-              pos: [group.attr('width') / 2 - text / 2, 0],
-              lineHeight: group.attr('height'),
-              height: group.attr('height'),
-              fontSize: 12,
-              fillColor: 'blue',
-              fontFamily: '宋体',
-              textAlign: 'center',
-              strokeWidth: 1
-            })
-            const leftLine = new Polyline({
-              pos: [-0.5, 0],
-              points: [0, 0, 0, group.attr('height')],
-              lineWidth: 1,
-              strokeColor: 'blue'
-            })
-            const rightLine = new Polyline({
-              pos: [group.attr('width') - 0.5, 0],
-              points: [0, 0, 0, group.attr('height')],
-              lineWidth: 1,
-              strokeColor: 'blue'
-            })
-            const center = group.attr('width') / 2
-            const leftCenterLine = new Polyline({
-              pos: [0, 0],
-              points: [
-                0,
-                group.attr('height') / 2,
-                center - text / 2 - 4,
-                group.attr('height') / 2
-              ],
-              lineWidth: 1,
-              strokeColor: 'blue'
-            })
-            const rightCenterLine = new Polyline({
-              pos: [0, 0],
-              points: [
-                center + text / 2 + 4,
-                group.attr('height') / 2,
-                group.attr('width'),
-                group.attr('height') / 2
-              ],
-              lineWidth: 1,
-              strokeColor: 'blue'
-            })
-            group.append(
-              leftLine,
-              rightLine,
-              leftCenterLine,
-              rightCenterLine,
-              dose
-            )
-          } else {
-            group = new Group({
-              className: 'col',
-              colIndex: i,
-              size: [text, Math.round(yScale / 2)],
-              pos: [startTime, Math.round(yScale / 2 - yScale / 4)]
-            })
-            dose.attr({
-              pos: [0, 0],
-              lineHeight: group.attr('height'),
-              height: group.attr('height'),
-              fontSize: 12,
-              fillColor: 'blue',
-              fontFamily: '宋体',
-              textAlign: 'center',
-              strokeWidth: 1
-            })
-            group.append(dose)
-          }
-          row[index].append(group)
+      if (!this.editMode) {
+        this.layer.getElementsByClassName('col').forEach(ref => {
+          ref.removeAllChildren()
         })
-      })
+        const grid = this.layer.getElementsByClassName('grid')[0]
+        const height = grid.attr('height')
+        const yScale = height / this.configuration.drugNumber
+        var canvas = document.getElementById('canvas')
+        var ctx = canvas.getContext('2d')
+        const row = grid.getElementsByClassName('row')
+        this.drugList.forEach((value, index, array) => {
+          value.data.forEach((item, i) => {
+            const dose = new Label(item.dose)
+            const text = Math.ceil(ctx.measureText(item.dose).width)
+            let group = null
+            const width = grid.attr('width')
+            const interval = width / (moment(this.configuration.xAxis.endTime) - moment(this.configuration.xAxis.startTime))
+            const startTime = Math.round((moment(item.startTime) - moment(this.configuration.xAxis.startTime)) * interval)
+            let endTime = null
+            if (item.endTime !== '') {
+              endTime = Math.round((moment(item.endTime) - moment(this.configuration.xAxis.startTime)) * interval)
+            }
+            if (item.continue) {
+              group = new Group({
+                className: 'col',
+                colIndex: i,
+                size: [endTime - startTime, Math.round(yScale / 2)],
+                pos: [startTime, Math.round(yScale / 2 - yScale / 4)]
+              })
+              dose.attr({
+                pos: [group.attr('width') / 2 - text / 2, 0],
+                lineHeight: group.attr('height'),
+                height: group.attr('height'),
+                fontSize: 12,
+                fillColor: 'blue',
+                fontFamily: '宋体',
+                textAlign: 'center',
+                strokeWidth: 1
+              })
+              const leftLine = new Polyline({
+                pos: [-0.5, 0],
+                points: [0, 0, 0, group.attr('height')],
+                lineWidth: 1,
+                strokeColor: 'blue'
+              })
+              const rightLine = new Polyline({
+                pos: [group.attr('width') - 0.5, 0],
+                points: [0, 0, 0, group.attr('height')],
+                lineWidth: 1,
+                strokeColor: 'blue'
+              })
+              const center = group.attr('width') / 2
+              const leftCenterLine = new Polyline({
+                pos: [0, 0],
+                points: [
+                  0,
+                  group.attr('height') / 2,
+                  center - text / 2 - 4,
+                  group.attr('height') / 2
+                ],
+                lineWidth: 1,
+                strokeColor: 'blue'
+              })
+              const rightCenterLine = new Polyline({
+                pos: [0, 0],
+                points: [
+                  center + text / 2 + 4,
+                  group.attr('height') / 2,
+                  group.attr('width'),
+                  group.attr('height') / 2
+                ],
+                lineWidth: 1,
+                strokeColor: 'blue'
+              })
+              group.append(
+                leftLine,
+                rightLine,
+                leftCenterLine,
+                rightCenterLine,
+                dose
+              )
+            } else {
+              group = new Group({
+                className: 'col',
+                colIndex: i,
+                size: [text, Math.round(yScale / 2)],
+                pos: [startTime, Math.round(yScale / 2 - yScale / 4)]
+              })
+              dose.attr({
+                pos: [0, 0],
+                lineHeight: group.attr('height'),
+                height: group.attr('height'),
+                fontSize: 12,
+                fillColor: 'blue',
+                fontFamily: '宋体',
+                textAlign: 'center',
+                strokeWidth: 1
+              })
+              group.append(dose)
+            }
+            row[index].append(group)
+          })
+        })
+      }
     },
+    // 绘制用药总量
     setDrugTotal () {
-      // 清空子元素
-      this.layer.getElementsByClassName('total').forEach(ref => {
-        ref.removeAllChildren()
-      })
-      const legend = this.layer.getElementsByClassName('legend')[0]
-      const height = legend.attr('height')
-      const width = legend.attr('width')
-      const yScale = height / this.configuration.drugNumber
-      this.drugList.forEach((value, index, array) => {
-        const label = new Label(value.total)
-        label.attr({
-          pos: [0, yScale * index],
-          anchor: [0, 0],
-          textAlign: 'center',
-          width: width,
-          lineHeight: yScale,
-          fontSize: 12,
-          fillColor: 'blue',
-          fontFamily: '宋体',
-          strokeWidth: 1,
-          className: 'total'
+      if (!this.editMode) {
+        // 清空子元素
+        this.layer.getElementsByClassName('total').forEach(ref => {
+          ref.removeAllChildren()
         })
-        legend.append(label)
-      })
+        const legend = this.layer.getElementsByClassName('legend')[0]
+        const height = legend.attr('height')
+        const width = legend.attr('width')
+        const yScale = height / this.configuration.drugNumber
+        this.drugList.forEach((value, index, array) => {
+          const label = new Label(value.total)
+          label.attr({
+            pos: [0, yScale * index],
+            anchor: [0, 0],
+            textAlign: 'center',
+            width: width,
+            lineHeight: yScale,
+            fontSize: 12,
+            fillColor: 'blue',
+            fontFamily: '宋体',
+            strokeWidth: 1,
+            className: 'total'
+          })
+          legend.append(label)
+        })
+      }
     },
     handleSubmit (param) {
       // let data = []
-      if (this.drugList[this.groupNo].data) {
-        this.drugList[this.groupNo].data.push(param)
-      } else {
-        const data = []
-        data.push(param)
-        this.drugList[this.groupNo].data = data
-        this.drugList[this.groupNo].total = param.dose
+      if (!this.editMode) {
+        if (this.drugList[this.groupNo].data) {
+          this.drugList[this.groupNo].data.push(param)
+        } else {
+          const data = []
+          data.push(param)
+          this.drugList[this.groupNo].data = data
+          this.drugList[this.groupNo].total = param.dose
+        }
+        this.drugDetailVisible = false
+        this.setDrug()
+        this.setDrugLine()
+        this.setDrugTotal()
       }
-      this.drugDetailVisible = false
-      this.setDrug()
-      this.setDrugLine()
-      this.setDrugTotal()
     }
   }
 }

@@ -60,7 +60,7 @@ export default function getConfigurationItems (widgetName) {
         xAxis: {
           startTime: '2020-07-01 09:00',
           endTime: '2020-07-01 13:00',
-          timeInterval: 15 * 60 * 1000,
+          timeInterval: 15,
           lineInterval: 3
         },
         drugNumber: 10

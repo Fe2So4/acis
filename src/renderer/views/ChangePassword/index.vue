@@ -48,6 +48,7 @@ export default {
   h2
     text-align center;
     font-size 18px;
+    color #9BA3D5
     font-weight 600;
   .form-box
     width 450px

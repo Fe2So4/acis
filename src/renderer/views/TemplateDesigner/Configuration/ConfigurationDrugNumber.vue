@@ -25,7 +25,7 @@ export default {
   methods: {
     onChange (currentValue, oldValue) {
       this.$emit('change', {
-        height: currentValue
+        drugNumber: currentValue
       })
     }
   }

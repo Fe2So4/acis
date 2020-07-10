@@ -6,7 +6,7 @@
        span {{title}}
        i(class="el-icon-close" @click="handleClose")
       .dialog-body
-        //- component(:is= "componentName")
+        component(:is= "componentName")
         //- <operation-handover/>
         //- Hemodynamics
         //- IntraoperativePatients
@@ -17,7 +17,7 @@
         //- ResuscitationBed
         //- RealtimeStatus
         //- PacuStatus
-        AnaesScore
+        //- AnaesScore
     //- .dialog-footer
 </template>
 <script>
