@@ -3,6 +3,8 @@ export default {
   success: true,
   data: {
     list: [
+      { id: 'paper', name: 'paper', width: 210, height: 107 },
+      { collections: [{ label: '男', value: '男' }, { label: '女', value: '女' }], height: 30, id: '0510588f-6cc9-4483-9dc2-4f34e9b29e64', name: 'widget-checkbox-group', positionX: 394, positionY: 20, singleSelect: '1', width: 215 },
       {
         border: {
           color: '#000000',
@@ -19,8 +21,10 @@ export default {
           tableName: 'acis_ope_apply_info'
         },
         dictionarySource: {
+          dictTableName: '',
+          conditionClassNameId: '',
           dictClassName: '',
-          dictTableName: ''
+          dictRelationName: ''
         },
         font: {
           lineHeight: 30,
@@ -54,8 +58,10 @@ export default {
           tableName: 'acis_ope_apply_info'
         },
         dictionarySource: {
+          dictTableName: 'acis_ope_apply_info',
+          conditionClassNameId: '',
           dictClassName: 'patient_id',
-          dictTableName: 'acis_ope_apply_info'
+          dictRelationName: ''
         },
         font: {
           lineHeight: 30,

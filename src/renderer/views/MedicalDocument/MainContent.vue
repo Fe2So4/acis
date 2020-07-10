@@ -4,7 +4,10 @@
       style="height: 100%"
       :wrap-style="wrapStyle"
     >
-      <div class="documentContent">
+      <div
+        class="documentContent"
+        :style="sizeStyle"
+      >
         <widget-wrapper
           v-for="(item,index) of widgetList"
           :key="index"
@@ -17,6 +20,7 @@
             :start-time="startTime"
             :end-time="endTime"
             @select-event-time-range="onSelectEventTimeRange"
+            @change="onChange($event, item)"
           />
         </widget-wrapper>
       </div>
@@ -51,6 +55,10 @@ export default {
       default () {
         return ''
       }
+    },
+    paperSetting: {
+      type: Object,
+      required: true
     }
   },
   data () {
@@ -63,9 +71,20 @@ export default {
       editMode: false
     }
   },
+  computed: {
+    sizeStyle () {
+      return {
+        width: `${this.paperSetting.width}mm`,
+        height: `${this.paperSetting.height}mm`
+      }
+    }
+  },
   methods: {
     onSelectEventTimeRange (e) {
       this.$emit('select-event-time-range', e)
+    },
+    onChange (e, widget) {
+      widget.value = e
     }
   }
 }
@@ -77,8 +96,7 @@ export default {
   height: calc(100% - 36px);
   overflow: auto;
   .documentContent {
-    width: 210mm;
-    height: 297mm;
+    overflow: hidden;
     margin: 20px auto;
     background: rgba(227, 227, 227, 1);
     box-shadow: 0px 20px 45px 5px rgba(0, 0, 0, 0.5);

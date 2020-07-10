@@ -2,16 +2,24 @@ const state = () => ({
   widgetMap: new Map(), // 控件属性map集
   widgetList: [], // 控件属性列表
   activeWidgetId: null, // 激活项id
-  designerWidth: 904,
-  designerHeight: 1366,
-  designerActive: false
+  paperSettingVisible: false,
+  paperSetting: {
+    id: 'paper',
+    name: 'paper',
+    width: 210,
+    height: 297
+  }
 })
 
 const getters = {
   // 获取当前激活项属性
   activeWidget: state => state.widgetMap.get(state.activeWidgetId),
-  // 获取当前模板激活状态
-  designerActive: state => state.designerActive
+  // 纸张宽
+  paperWidth: state => state.paperSetting.width,
+  // 纸张高
+  paperHeight: state => state.paperSetting.height,
+  // 所有配置
+  templateData: state => [state.paperSetting, ...state.widgetList]
 }
 
 const mutations = {
@@ -36,17 +44,12 @@ const mutations = {
     // 设置当前激活项
     state.activeWidgetId = id
   },
-  // 设置模板激活状态
-  SET_DESIGNER_ACTIVE (state, payload) {
-    state.designerActive = payload
+  // 设置纸张设置显示状态
+  SET_PAPER_SETTING_VISIBLE (state, visible) {
+    state.paperSettingVisible = visible
   },
-  // 设置模板宽度
-  SET_DESIGNER_WIDTH (state, payload) {
-    state.designerWidth = payload
-  },
-  // 设置模板高度
-  SET_DESIGNER_HEIGHT (state, payload) {
-    state.designerHeight = payload
+  SET_PAPER_SETTING (state, value) {
+    state.paperSetting = value
   }
 }
 
@@ -59,17 +62,24 @@ const actions = {
     commit('DELETE_WIDGET', id)
     commit('SET_WIDGET_LIST')
   },
-  setActiveWidget ({ commit }, widget) {
+  setActiveWidget ({ commit, dispatch }, widget) {
     commit('SET_ACTIVE_WIDGET', widget)
+    if (!widget) {
+      dispatch('hidePaperSetting')
+    }
   },
-  setDesignerActive ({ commit }, payload) {
-    commit('SET_DESIGNER_ACTIVE', payload)
+  // 显示纸张设置
+  showPaperSetting ({ commit, dispatch }) {
+    dispatch('setActiveWidget', null)
+    commit('SET_PAPER_SETTING_VISIBLE', true)
   },
-  setDesignerWidth ({ commit }, payload) {
-    commit('SET_DESIGNER_WIDTH', payload)
+  // 隐藏纸张设置
+  hidePaperSetting ({ commit }) {
+    commit('SET_PAPER_SETTING_VISIBLE', false)
   },
-  setDesignerHeight ({ commit }, payload) {
-    commit('SET_DESIGNER_Height', payload)
+  // 设置纸张设置
+  setPaperSetting ({ commit }, value) {
+    commit('SET_PAPER_SETTING', value)
   }
 }
 

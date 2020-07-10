@@ -10,6 +10,7 @@
       :configuration="dialogCollectionEditorConfig"
       :value="value"
       @change="onChangeList"
+      append-to-body
     />
   </div>
 </template>

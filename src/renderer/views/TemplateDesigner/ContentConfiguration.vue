@@ -1,77 +1,51 @@
 <template>
   <div class="contentConfiguration">
-    <el-collapse
-      v-model="activeNames"
-      v-if="!designerActive"
+    <el-scrollbar
+      style="height:100%"
+      :wrap-style="wrapStyle"
     >
-      <div
-        v-for="(group, groupName) of configurationGroups"
-        :key="groupName"
-      >
-        <el-collapse-item
-          :title="convertChinese(groupName)"
-          :name="groupName"
-          v-show="Object.keys(group).length"
+      <el-collapse v-model="activeNames">
+        <div
+          v-for="(group, groupName) of configurationGroups"
+          :key="groupName"
         >
-          <el-form
-            ref="form"
-            :model="properties"
-            label-width="80px"
-            size="small"
+          <el-collapse-item
+            :title="convertChinese(groupName)"
+            :name="groupName"
+            v-show="Object.keys(group).length"
           >
-            <component
-              v-for="(property,key) of group"
-              :key="key"
-              :is="configurationComponent(key)"
-              :value="properties[key]"
-              @change="onChange"
-            />
-          </el-form>
-        </el-collapse-item>
-      </div>
-    </el-collapse>
-    <el-collapse
-      v-else
-      v-model="activeNames"
-    >
-      <el-collapse-item
-        title="布局"
-        name="layout"
-      >
-        <el-form
-          ref="form"
-          label-width="80px"
-          size="small"
-        >
-          <el-form-item label="宽度">
-            <el-input-number
-              v-model="width"
-              :min="0"
-              controls-position="right"
-              @change="onChangeWidth"
-            />
-          </el-form-item>
-          <el-form-item label="高度">
-            <el-input-number
-              v-model="height"
-              :min="0"
-              controls-position="right"
-              @change="onChangeHeight"
-            />
-          </el-form-item>
-        </el-form>
-      </el-collapse-item>
-    </el-collapse>
-    <!-- <el-form
-      ref="form"
-      label-width="80px"
-      size="small"
-    >
-      <configuration-collections
-        :value="data"
-        @change="onChange"
-      />
-    </el-form> -->
+            <el-form
+              label-width="80px"
+              size="small"
+            >
+              <component
+                v-for="(property,key) of group"
+                :key="key"
+                :is="configurationComponent(key)"
+                :value="properties[key]"
+                @change="onChange"
+              />
+            </el-form>
+          </el-collapse-item>
+        </div>
+        <div v-show="paperSettingVisible">
+          <el-collapse-item
+            title="纸张设置"
+            name="paperSetting"
+          >
+            <el-form
+              label-width="80px"
+              size="small"
+            >
+              <configuration-paper
+                @change="onChangePaperSetting"
+                :value="paperSetting"
+              />
+            </el-form>
+          </el-collapse-item>
+        </div>
+      </el-collapse>
+    </el-scrollbar>
   </div>
 </template>
 <script>
@@ -92,7 +66,12 @@ export default {
       id: null,
       name: null,
       configurationItemNames: [],
-      activeNames: ['layout', 'position', 'custom']
+      activeNames: ['layout', 'position', 'custom'],
+      wrapStyle: [
+        {
+          'overflow-x': 'hidden'
+        }
+      ]
     }
   },
   components: {
@@ -101,7 +80,6 @@ export default {
   watch: {
     activeWidget: {
       handler: function (val, oldVal) {
-        console.log(val)
         if (val) {
           const { id, name, ...properties } = val
           this.id = id
@@ -111,23 +89,11 @@ export default {
         }
       },
       deep: true
-    },
-    designerWidth: {
-      handler (newVal, old) {
-        this.width = newVal
-      },
-      immediate: true
-    },
-    designerHeight: {
-      handler (newVal, old) {
-        this.height = newVal
-      },
-      immediate: true
     }
   },
   computed: {
-    ...mapGetters(['activeWidget', 'designerActive']),
-    ...mapState(['activeWidgetId', 'designerWidth', 'designerHeight']),
+    ...mapGetters(['activeWidget']),
+    ...mapState(['activeWidgetId', 'paperSettingVisible', 'paperSetting']),
     configurationGroups () {
       const groups = {
         layout: {},
@@ -158,13 +124,17 @@ export default {
             break
           case 'custom':
             name = '自定义'
+            break
+          case 'data':
+            name = '数据源'
+            break
         }
         return name
       }
     }
   },
   methods: {
-    ...mapActions(['setWidgetMap', 'setDesignerWidth', 'setDesignerHeight']),
+    ...mapActions(['setWidgetMap', 'setPaperSetting']),
     onChangeWidth () {
       this.setDesignerWidth(this.width)
     },
@@ -179,13 +149,14 @@ export default {
     },
     configurationComponent (name) {
       return 'Configuration' + name.slice(0, 1).toUpperCase() + name.slice(1)
+    },
+    onChangePaperSetting (paperSetting) {
+      this.setPaperSetting(paperSetting)
     }
   },
-  beforeCreate () {
-
-  },
+  beforeCreate () {},
   created () {
-    console.log(pages, 'create')
+    // console.log(pages, 'create')
   }
 }
 </script>
@@ -193,12 +164,14 @@ export default {
 .contentConfiguration {
   height: 100%;
   flex: 0 1 400px;
-  background: blanchedalmond;
-  padding: 20px;
+  background: #364058;
   overflow: auto;
+  .el-collapse {
+    border: none;
+  }
 }
-.contentConfiguration /deep/ .el-collapse-item__header{
+.contentConfiguration /deep/ .el-collapse-item__header {
   height: 30px;
-  background:#f8f9fa;
+  background: #5d709b;
 }
 </style>

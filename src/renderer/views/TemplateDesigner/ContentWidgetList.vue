@@ -1,14 +1,37 @@
 <template>
   <div class="widgetList">
-    <widget-copiable
-      v-for="widget of widgetList"
-      :key="widget.name"
-      :widget="widget"
-    />
+    <el-scrollbar
+      style="height:100%"
+      :wrap-style="wrapStyle"
+    >
+      <widget-copiable
+        v-for="widget of widgetList"
+        :key="widget.name"
+        :widget="widget"
+      />
+      <hr>
+      <div
+        class="button"
+        @click="setPaper"
+      >
+        设置纸张
+      </div>
+      <hr>
+      <div
+        class="button"
+        @click="saveTemplate"
+      >
+        保存
+      </div>
+    </el-scrollbar>
   </div>
 </template>
 <script>
 import WidgetCopiable from './WidgetCopiable'
+import { createNamespacedHelpers } from 'vuex'
+const { mapActions, mapGetters } = createNamespacedHelpers(
+  'PageTemplateDesigner'
+)
 export default {
   name: 'ContentWidgetList',
   components: {
@@ -30,32 +53,28 @@ export default {
           name: 'widget-line'
         },
         {
-          label: '复选框',
-          name: 'widget-checkbox'
+          label: '多行文本',
+          name: 'widget-textarea'
         },
         {
-          label: '面板',
-          name: 'widget-panel'
+          label: '多选框组',
+          name: 'widget-checkbox-group'
         },
         {
           label: '体征曲线',
           name: 'widget-physical-sign'
         },
         {
+          label: '备注',
+          name: 'widget-news'
+        },
+        {
           label: '麻醉用药',
           name: 'widget-anaes-drug'
         },
         {
-          label: '多行文本',
-          name: 'widget-textarea'
-        },
-        {
           label: '输液输血',
           name: 'widget-in-out'
-        },
-        {
-          label: '多选框组',
-          name: 'widget-checkbox-group'
         },
         {
           label: '监测表格',
@@ -65,7 +84,25 @@ export default {
           label: '图片',
           name: 'widget-image'
         }
+      ],
+      wrapStyle: [
+        {
+          'overflow-x': 'hidden',
+          padding: '10px'
+        }
       ]
+    }
+  },
+  computed: {
+    ...mapGetters(['templateData'])
+  },
+  methods: {
+    ...mapActions(['showPaperSetting']),
+    setPaper () {
+      this.showPaperSetting()
+    },
+    saveTemplate () {
+      console.log(JSON.stringify(this.templateData))
     }
   }
 }
@@ -74,7 +111,23 @@ export default {
 .widgetList {
   // flex: 0 1 200px;
   height: 100%;
-  background: palevioletred;
-  padding: 10px;
+  background: #364058;
+  overflow: auto;
+
+  hr {
+    border-color: #5d709b;
+  }
+
+  .button {
+    cursor: pointer;
+    width: 100px;
+    height: 30px;
+    background: #f8f8f2;
+    line-height: 30px;
+    margin: 5px 10px;
+    text-align: center;
+    border-radius: 4px;
+    color: #333;
+  }
 }
 </style>
