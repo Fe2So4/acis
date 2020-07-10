@@ -108,6 +108,11 @@
             </el-form-item>
           </el-form>
         </div>
+        <div class="arow">
+          <!-- <i class="el-icon-minus" /> -->
+          <!-- <i class="el-icon-arrow-right" /> -->
+          <i class="el-icon-right" />
+        </div>
         <div class="center">
           <el-form
             :label-position="labelPosition"
@@ -267,6 +272,11 @@ export default {
           }
           .left{
             flex: 1;
+          }
+          .arow{
+            font-size: 38px;
+            color:#0094FF;
+            line-height: 600px;
           }
           .center{
             flex: 1;

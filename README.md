@@ -18,10 +18,28 @@ npm run build
 # lint all JS/Vue component files in `src/`
 npm run lint
 
+# 页面文件夹结构
+# views
+#  -Login 登录
+#  -Home 首页
+#  -PatientList 首页患者列表
+#  -PatientInfo 患者信息详情页
+#  -ChangePassword 修改密码
+#  -ConfigurationSystem 系统配置
+#  -DeviceGather 设备采集
+#  -Hemodynamics 血流动力学
+#  -StateMaintain 状态维护（术后状态维护）
+#  -OperationOverview 手术概览
+#  -OperationHandover 手术交班
+#  -OperationCancel 手术取消
+#  -IntraoperativeRegistration 术中登记
+#  -IntraoperativePatient 术中患者列表
+#  -Schedule 手术排班
+#  -ScheduleReport 手术排班表
+#  -ScheduleReport 手术排班表
 ```
 
 ---
-
 This project was generated with [electron-vue](https://github.com/SimulatedGREG/electron-vue) using [vue-cli](https://github.com/vuejs/vue-cli). Documentation about the original structure can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/index.html).
 
 

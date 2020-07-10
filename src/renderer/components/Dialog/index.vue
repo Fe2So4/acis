@@ -6,13 +6,16 @@
        span {{title}}
        i(class="el-icon-close" @click="handleClose")
       .dialog-body
-        component(:is="componentName")
+        component(:is= "componentName")
         //- <operation-handover/>
-        //- <hemody-namics />
+        //- Hemodynamics
         //- IntraoperativePatients
         //- IntraoperativeRegistration
         //- PatientDetail
         //- DeviceGather
+        //- StateMaintain
+        //- ResuscitationBed
+        //- RealtimeStatus
     //- .dialog-footer
 </template>
 <script>
@@ -28,6 +31,9 @@ import IntraoperativeRegistration from '@/views/IntraoperativeRegistration/index
 import PatientDetail from '@/views/PatientDetail/index'
 import DeviceGather from '@/views/DeviceGather/index'
 import OperationCancel from '@/views/OperationCancel/index'
+import StateMaintain from '@/views/StateMaintain/index'
+import ResuscitationBed from '@/views/ResuscitationBed/index'
+import RealtimeStatus from '@/views/RealtimeStatus/index'
 export default {
   name: 'Dialog',
   data () {
@@ -57,7 +63,10 @@ export default {
     IntraoperativeRegistration,
     PatientDetail,
     DeviceGather,
-    OperationCancel
+    OperationCancel,
+    StateMaintain,
+    ResuscitationBed,
+    RealtimeStatus
   },
   methods: {
     handleClose () {

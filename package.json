@@ -89,7 +89,6 @@
     "babel-register": "^6.26.0",
     "cfonts": "^2.1.2",
     "chalk": "^2.4.1",
-    "concurrently": "^5.2.0",
     "copy-webpack-plugin": "^4.5.1",
     "cross-env": "^5.1.6",
     "css-loader": "^0.28.11",

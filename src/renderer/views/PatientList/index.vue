@@ -404,5 +404,5 @@ export default {
   }
   .rowScrollbar .el-scrollbar__wrap .el-scrollbar__view{
    white-space: nowrap;
-}
+  }
 </style>
