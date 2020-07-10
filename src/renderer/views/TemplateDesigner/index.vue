@@ -17,7 +17,7 @@ export default {
     ContentConfiguration
   },
   mounted () {
-    this.$electron.ipcRenderer.send('show-window')
+    // this.$electron.ipcRenderer.send('show-window')
   }
 }
 </script>

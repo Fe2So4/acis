@@ -45,7 +45,7 @@ export default {
 .widgetCopiable {
   width: 100px;
   height: 30px;
-  background: #f9f9f9;
+  background: #f8f8f2;
   line-height: 30px;
   margin:5px 10px;
   text-align: center;

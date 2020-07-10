@@ -20,7 +20,8 @@
 </template>
 <script>
 const {
-  BrowserWindow
+  BrowserWindow,
+  dialog
 } = require('electron').remote
 const win = BrowserWindow.getAllWindows()[0]
 export default {
@@ -54,7 +55,23 @@ export default {
       }
     },
     closeWindow () {
-      win.close()
+      dialog.showMessageBox({
+        type: 'warning',
+        // 按钮文字
+        buttons: ['确认', '取消'],
+        // 默认选择的按钮索引值
+        defaultId: 1,
+        title: '警告',
+        message: '是否确认退出当前程序',
+        // 触发退出的索引值
+        cancelId: 1
+      }).then(
+        res => {
+          if (res.response === 0) {
+            win.close()
+          }
+        }
+      )
     }
   }
 }

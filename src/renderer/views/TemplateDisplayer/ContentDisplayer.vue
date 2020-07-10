@@ -20,24 +20,12 @@
 
 <script>
 import WidgetWrapper from './WidgetWrapper'
-// import WidgetInput from '../PageTemplateDesigner/WidgetInput'
-// import WidgetTextarea from '../PageTemplateDesigner/WidgetTextarea'
-// import WidgetText from '../PageTemplateDesigner/WidgetText'
-// import WidgetLine from '../PageTemplateDesigner/WidgetLine'
-// import WidgetPhysicalSign from '../PageTemplateDesigner/WidgetPhysicalSign'
-// import WidgetNews from '../PageTemplateDesigner/WidgetNews'
 import { controls } from '../TemplateDesigner/getAllConfigurationPage'
 export default {
   name: 'ContentDisplayer',
   components: {
     WidgetWrapper,
     ...controls
-    // WidgetInput,
-    // WidgetTextarea,
-    // WidgetText,
-    // WidgetLine,
-    // WidgetPhysicalSign,
-    // WidgetNews
   },
   props: {
     widgetList: {

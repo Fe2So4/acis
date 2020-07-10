@@ -5,6 +5,7 @@
       :widget-list="widgetList"
       :start-time="startTime"
       :end-time="endTime"
+      :paper-setting="paperSetting"
       @select-event-time-range="onSelectEventTimeRange"
     />
     <bottom-buttons
@@ -56,7 +57,8 @@ export default {
       isIntraoperative: false,
       isRescueMode: false,
       dialogEventTimeRangeVisible: false,
-      dialogEventData: null
+      dialogEventData: null,
+      paperSetting: {}
     }
   },
   created () {
@@ -96,6 +98,7 @@ export default {
               }
             }
           })
+          this.paperSetting = widgetList.shift()
           this.tempList = widgetList
           return res[0].data.data.isIntraoperative
         }

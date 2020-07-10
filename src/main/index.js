@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow, Menu, ipcMain, dialog } from 'electron'
+import { app, BrowserWindow, Menu, ipcMain } from 'electron'
 import '../renderer/store'
 
 /**
@@ -33,23 +33,8 @@ function createWindow () {
 
   mainWindow.loadURL(winURL)
 
-  mainWindow.on('close', e => {
-    const quitDialog = dialog.showMessageBox({
-      type: 'warning',
-      // 按钮文字
-      buttons: ['确认', '取消'],
-      // 默认选择的按钮索引值
-      defaultId: 1,
-      title: '警告',
-      message: '是否确认退出当前程序',
-      // 触发退出的索引值
-      cancelId: 1
-    })
-
-    if (quitDialog) {
-      e.preventDefault()
-    }
-  })
+  // 显示开发者工具
+  mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', () => {
     mainWindow = null

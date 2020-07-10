@@ -26,7 +26,16 @@ export default function getConfigurationItems (widgetName) {
     case 'widget-checkbox-group':
       return {
         singleSelect: '1',
-        collections: [{ label: '项目1', value: '1' }, { label: '项目2', value: '2' }]
+        collections: [
+          {
+            label: '项目1',
+            value: '1'
+          },
+          {
+            label: '项目2',
+            value: '2'
+          }
+        ]
       }
     case 'widget-anaes-drug':
       return {
@@ -176,7 +185,8 @@ export default function getConfigurationItems (widgetName) {
       return {
         font,
         border,
-        placeholder: '占位内容',
+        // placeholder: '占位内容',
+        placeholder: '',
         readonly: false,
         dataSource,
         multiSelect: false,

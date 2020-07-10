@@ -34,30 +34,22 @@
       </div>
       <div>
         <el-form
-          label-width="80px"
+          label-width="100px"
           size="mini"
         >
           <el-form-item
             v-for="(rowValue, rowKey) in currentRow"
             :key="rowKey"
-            :label="rowKey"
+            :label="configField(rowKey).description"
           >
             <span v-if="isArray(rowValue)">
-              <el-button @click="onClickConfiguration(configField(rowKey).config)">
-                配置
-              </el-button>
-              <!-- <DialogCollectionEditorContent
-                v-if="configField(rowKey).config.visible"
-                :configuration="configField(rowKey).config"
-                :value="rowValue"
-                @change="onChangeValue($event,rowKey)"
-              /> -->
+              <el-button @click="onClickConfiguration(configField(rowKey).config)">配置</el-button>
               <DialogCollectionEditor
                 v-if="configField(rowKey).config.visible"
                 :configuration="configField(rowKey).config"
                 :value="rowValue"
-                append-to-body
                 @change="onChangeValue($event,rowKey)"
+                append-to-body
               />
             </span>
             <el-input
@@ -70,12 +62,14 @@
         </el-form>
       </div>
     </div>
-    <span
-      slot="footer"
-    >
-      <el-button @click="configuration.visible = false">取 消</el-button>
+    <span slot="footer">
+      <el-button
+        size="mini"
+        @click="configuration.visible = false"
+      >取 消</el-button>
       <el-button
         type="primary"
+        size="mini"
         @click="onClickConfirm"
       >确 定</el-button>
     </span>
@@ -85,12 +79,8 @@
 <script>
 import isArray from 'lodash/isArray'
 import isNumber from 'lodash/isNumber'
-// import DialogCollectionEditorContent from './DialogCollectionEditorContent'
 export default {
   name: 'DialogCollectionEditor',
-  components: {
-    // DialogCollectionEditorContent
-  },
   props: {
     configuration: {
       type: Object,
@@ -114,8 +104,10 @@ export default {
       return this.$attrs['append-to-body']
     },
     configField () {
-      return (name) => {
-        const field = this.configuration.field.filter(item => item.name === name)
+      return name => {
+        const field = this.configuration.field.filter(
+          item => item.name === name
+        )
         if (field.length) {
           return field[0]
         }
@@ -161,12 +153,11 @@ export default {
     }
   }
 }
-
 </script>
 <style lang='scss' scoped>
 .content {
   display: flex;
-  &>div {
+  & > div {
     width: 50%;
     margin: 10px;
     // border: 1px solid #666;

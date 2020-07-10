@@ -1,35 +1,39 @@
 <template>
   <div class="designer">
-    <div
-      class="designerContent"
-      @drop="onDrop"
-      @dragover="onDragOver"
-      ref="designerContent"
-      @click.self="() => setActiveWidget(null)"
+    <el-scrollbar
+      style="height:100%"
+      :wrap-style="wrapStyle"
     >
-      <!-- <canvas
+      <div
+        class="designerContent"
+        :style="paperSizeStyle"
+        @drop="onDrop"
+        @dragover="onDragOver"
+        ref="designerContent"
+        @click.self="() => setActiveWidget(null)"
+      >
+        <!-- <canvas
         class="canvas"
         @click="onClickCanvas"
       /> -->
-      <widget-movable
-        v-for="(item,index) of widgetList"
-        :key="index"
-        :widget="item"
-        @widget-delete="onWidgetDelete"
-        @widget-resize="onWidgetResize"
-        @widget-active="onWidgetActive"
-        @widget-move="onWidgetMove"
-        @widget-drag-start="onWidgetDragStart"
-      >
-        <component
-          :is="item.name"
-          :configuration="item"
-          :edit-mode="editMode"
-        />
-      </widget-movable>
-      <!-- <pre>{{ widgetList }}</pre> -->
-      <!-- <widget-monitor-table /> -->
-    </div>
+        <widget-movable
+          v-for="(item,index) of widgetList"
+          :key="index"
+          :widget="item"
+          @widget-delete="onWidgetDelete"
+          @widget-resize="onWidgetResize"
+          @widget-active="onWidgetActive"
+          @widget-move="onWidgetMove"
+          @widget-drag-start="onWidgetDragStart"
+        >
+          <component
+            :is="item.name"
+            :configuration="item"
+            :edit-mode="editMode"
+          />
+        </widget-movable>
+      </div>
+    </el-scrollbar>
   </div>
 </template>
 <script>
@@ -40,14 +44,8 @@ import getConfigurationItems from './WidgetConfigurationItems.js'
 // import Mock from 'mockjs'
 import WidgetMovable from './WidgetMovable'
 import { controls } from './getAllConfigurationPage'
-// import WidgetInput from './WidgetInput'
-// import WidgetTextarea from './WidgetTextarea'
-// import WidgetText from './WidgetText'
-// import WidgetLine from './WidgetLine'
-// import WidgetPhysicalSign from './WidgetPhysicalSign'
-// import WidgetNews from './WidgetNews'
 // const Random = Mock.Random
-const { mapState, mapActions } = createNamespacedHelpers(
+const { mapState, mapGetters, mapActions } = createNamespacedHelpers(
   'PageTemplateDesigner'
 )
 // import * as _ from 'lodash'
@@ -65,14 +63,12 @@ export default {
       },
       adsorptionDistance: 5,
       editMode: true,
-      widget: {
-        id: '',
-        name: '',
-        width: '',
-        height: '',
-        positionX: '',
-        positionY: ''
-      }
+      wrapStyle: [
+        {
+          'overflow-x': 'hidden',
+          padding: '20px 0'
+        }
+      ]
     }
   },
   computed: {
@@ -80,30 +76,19 @@ export default {
       widgetMap: state => state.widgetMap,
       widgetList: state => state.widgetList,
       activeWidgetId: state => state.activeWidgetId
-    })
-    // ...mapGetters(['activeWidgetId'])
+    }),
+    ...mapGetters([
+      'paperWidth',
+      'paperHeight'
+    ]),
+    paperSizeStyle () {
+      return {
+        width: `${this.paperWidth}mm`,
+        height: `${this.paperHeight}mm`
+      }
+    }
   },
-  created () {
-    // var data = Mock.mock({
-    // // 属性 list 的值是一个数组，其中含有 1 到 10 个元素
-    //   'list|100-200': [{
-    //     // 属性 id 是一个自增数，起始值为 1，每次增 1
-    //     id: function () {
-    //       return uuidv4()
-    //     },
-    //     name: 'widget-input',
-    //     'width|10-200': 10,
-    //     'height|10-30': 10,
-    //     'positionX|0-200': 0,
-    //     'positionY|0-400': 0
-    //   }]
-    // })
-    // // 输出结果
-    // console.log(data.list.length)
-    // data.list.forEach(item => {
-    //   this.setWidgetMap(item)
-    // })
-  },
+  created () {},
   methods: {
     ...mapActions(['setWidgetMap', 'deleteWidget', 'setActiveWidget']),
     onDragOver (e) {
@@ -668,13 +653,11 @@ export default {
 <style lang="scss" scoped>
 .designer {
   height: 100%;
-  flex: 1 1 600px;
-  background: cornsilk;
+  flex: 1 1 800px;
+  background: #465474;
   overflow: auto;
 }
 .designerContent {
-  width: 210mm;
-  height: 297mm;
   background: white;
   margin: 0 auto;
   border: 1px dashed palevioletred;

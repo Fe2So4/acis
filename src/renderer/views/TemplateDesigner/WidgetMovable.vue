@@ -308,15 +308,16 @@ export default {
     },
     // 边界修正
     correctPositon ({ positionX, positionY, width, height }) {
+      const designerContent = this.$parent.$parent.$refs.designerContent
       positionX = positionX < 0 ? 0 : positionX
       positionY = positionY < 0 ? 0 : positionY
       positionX =
-        positionX + width > this.$parent.$refs.designerContent.clientWidth
-          ? this.$parent.$refs.designerContent.clientWidth - width
+        positionX + width > designerContent.clientWidth
+          ? designerContent.clientWidth - width
           : positionX
       positionY =
-        positionY + height > this.$parent.$refs.designerContent.clientHeight
-          ? this.$parent.$refs.designerContent.clientHeight - height
+        positionY + height > designerContent.clientHeight
+          ? designerContent.clientHeight - height
           : positionY
       return {
         positionX,
@@ -335,7 +336,7 @@ export default {
     height: 100%;
     position: absolute;
     border: 2px solid transparent;
-    z-index: 1;
+    z-index: 2;
   }
   .circle {
     width: 8px;
@@ -343,7 +344,7 @@ export default {
     background: rebeccapurple;
     position: absolute;
     border-radius: 2px;
-    z-index: 1;
+    z-index: 2;
   }
 }
 </style>
