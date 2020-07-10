@@ -23,7 +23,7 @@ const getters = {
 }
 
 const mutations = {
-// 设置控件属性map集
+  // 设置控件属性map集
   SET_WIDGET_MAP (state, widget) {
     let originalData = state.widgetMap.get(widget.id)
     if (originalData) {
@@ -31,6 +31,9 @@ const mutations = {
     } else {
       state.widgetMap.set(widget.id, widget)
     }
+  },
+  CLEAR_WIDGET_MAP (state) {
+    state.widgetMap = new Map()
   },
   DELETE_WIDGET (state, id) {
     // 删除页面控件操作
@@ -80,6 +83,16 @@ const actions = {
   // 设置纸张设置
   setPaperSetting ({ commit }, value) {
     commit('SET_PAPER_SETTING', value)
+  },
+  initStore ({ commit, dispatch }, list) {
+    if (!Array.isArray(list)) return
+    commit('CLEAR_WIDGET_MAP')
+    commit('SET_WIDGET_LIST')
+    const paperSetting = list.shift()
+    commit('SET_PAPER_SETTING', paperSetting)
+    list.forEach(widget => {
+      dispatch('setWidgetMap', widget)
+    })
   }
 }
 

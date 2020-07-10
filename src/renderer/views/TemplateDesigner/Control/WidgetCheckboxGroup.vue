@@ -1,5 +1,8 @@
 <template>
-  <div class="checkbox-group">
+  <div
+    class="checkbox-group"
+    :style="widgetStyle"
+  >
     <el-checkbox-group
       v-model="checkedOptions"
       @change="onChange"
@@ -9,11 +12,9 @@
         :label="option.label"
         :key="option.value"
       >
-        {{ option.label }}
+        <span :style="fontStyle">{{ option.label }}</span>
       </el-checkbox>
     </el-checkbox-group>
-    {{ checkedOptions }}
-    configuration.value:{{ configuration.value }}
   </div>
 </template>
 <script>
@@ -29,81 +30,59 @@ export default {
       default: true
     }
   },
-
-  data () {
-    return {
-      checkedOptions: []
-    }
-  },
-  computed: {
-    // checkedOptions: {
-    //   get () {
-    //     if (Array.isArray(this.configuration.value)) {
-    //       return this.configuration.value
-    //     } else {
-    //       if (typeof this.configuration.value === 'undefined') {
-    //         return []
-    //       } else {
-    //         return [this.configuration.value]
-    //       }
-    //     }
-    //   },
-    //   set (val) {
-    //     console.log(val)
-
-    //     this.configuration.value = ['男']
-    //     console.log(this.configuration.value)
-    //   }
-    // }
-    // checkedOptions () {
-    //   if (Array.isArray(this.configuration.value)) {
-    //     return this.configuration.value
-    //   } else {
-    //     if (typeof this.configuration.value === 'undefined') {
-    //       return []
-    //     } else {
-    //       return [this.configuration.value]
-    //     }
-    //   }
-    // }
-  },
   watch: {
     configuration: {
       deep: true,
       handler: function (val) {
-        if (!this.editMode) {
-          if (Array.isArray(this.configuration.value)) {
-            this.checkedOptions = [...this.configuration.value]
-          } else {
-            if (typeof this.configuration.value === 'undefined') {
-              this.checkedOptions = []
-            } else {
-              this.checkedOptions = [this.configuration.value]
-            }
-          }
+        this.setStyle()
+      }
+    }
+  },
+  data () {
+    return {
+      widgetStyle: {},
+      fontStyle: {},
+      checkedOptions: []
+    }
+  },
+  created () {
+    this.setStyle()
+    if (!this.editMode) {
+      if (Array.isArray(this.configuration.value)) {
+        this.checkedOptions = [...this.configuration.value]
+      } else {
+        if (typeof this.configuration.value === 'undefined') {
+          this.checkedOptions = []
+        } else {
+          this.checkedOptions = this.configuration.value.split(',')
         }
       }
     }
   },
-  created () {
-    // if (!this.editMode) {
-    //   if (Array.isArray(this.configuration.value)) {
-    //     this.checkedOptions = [...this.configuration.value]
-    //   } else {
-    //     if (typeof this.configuration.value === 'undefined') {
-    //       this.checkedOptions = []
-    //     } else {
-    //       this.checkedOptions = [this.configuration.value]
-    //     }
-    //   }
-    // }
-  },
   methods: {
+    setStyle () {
+      const { font, border } = this.configuration
+      let styleObj = {
+        lineHeight: font.lineHeight + 'px',
+        textAlign: font.textAlign
+      }
+      const borderObj = border.position.reduce((obj, item) => {
+        obj['border-' + item] = border.width + 'px solid ' + border.color
+        return obj
+      }, {})
+
+      styleObj = { ...styleObj, ...borderObj }
+      this.widgetStyle = styleObj
+      this.fontStyle = {
+        fontSize: font.size + 'pt',
+        fontWeight: font.weight
+      }
+    },
     onChange (val) {
       if (this.configuration.singleSelect === '1' && val.length > 1) {
         this.checkedOptions.shift()
       }
-      this.$emit('change', val)
+      this.$emit('change', val.join(','))
     }
   }
 }

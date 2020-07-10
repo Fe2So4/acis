@@ -146,12 +146,18 @@ const createPrintWindow = (printRoute) => {
 
 let printWin
 ipcMain.on('print-document', (e, printRoute) => {
-  console.log(printRoute)
-
   printWin = createPrintWindow(printRoute)
 })
 ipcMain.on('ready-to-print', () => {
-  printWin.webContents.print()
+  printWin.webContents.print({
+    margins: {
+      marginType: 'custom',
+      top: 50,
+      bottom: 50,
+      left: 50,
+      right: 10
+    }
+  })
 })
 
 // ---------------------------------打印功能 end--------------

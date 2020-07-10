@@ -181,7 +181,15 @@ export default {
       this.getData(this.pageIndex)
       this.$eventHub.$emit('document-refresh')
     },
-    onSave () {},
+    onSave () {
+      const list = this.widgetList
+        .filter(widget => widget.value)
+        .map(widget => ({
+          id: widget.id,
+          value: widget.value
+        }))
+      console.log(list)
+    },
     onConfigure () {}
   }
 }
@@ -192,5 +200,6 @@ export default {
   width: 100%;
   height: calc(100% - 172px);
   position: relative;
+  font-family: '宋体';
 }
 </style>

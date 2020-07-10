@@ -7,6 +7,7 @@
       :placeholder="configuration.placeholder"
       :readonly="configuration.readonly"
       :value="configuration.value"
+      @input="onInput"
       @[showSelectEvent]="showSelect"
     >
     <el-select
@@ -24,9 +25,9 @@
     >
       <el-option
         v-for="item in options"
-        :key="item.value"
-        :label="item.value"
-        :value="item.value"
+        :key="item"
+        :label="item"
+        :value="item"
       />
     </el-select>
   </div>
@@ -133,6 +134,9 @@ export default {
       } else {
         this.configuration.value = val
       }
+    },
+    onInput (e) {
+      this.configuration.value = e.target.value
     }
   }
 }
@@ -160,6 +164,12 @@ export default {
   }
   .select ::v-deep .el-input__inner{
     height: 100%;
+    background: transparent;
+    opacity: 0;
+  }
+  .select ::v-deep .el-select__tags,
+  .select ::v-deep .el-input__suffix{
+    display: none;
   }
 }
 </style>

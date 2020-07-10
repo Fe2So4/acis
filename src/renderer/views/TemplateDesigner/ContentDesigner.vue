@@ -5,33 +5,37 @@
       :wrap-style="wrapStyle"
     >
       <div
-        class="designerContent"
+        class="pageContent"
         :style="paperSizeStyle"
-        @drop="onDrop"
-        @dragover="onDragOver"
-        ref="designerContent"
-        @click.self="() => setActiveWidget(null)"
       >
-        <!-- <canvas
+        <div
+          class="designerContent"
+          @drop="onDrop"
+          @dragover="onDragOver"
+          ref="designerContent"
+          @click.self="() => setActiveWidget(null)"
+        >
+          <!-- <canvas
         class="canvas"
         @click="onClickCanvas"
-      /> -->
-        <widget-movable
-          v-for="(item,index) of widgetList"
-          :key="index"
-          :widget="item"
-          @widget-delete="onWidgetDelete"
-          @widget-resize="onWidgetResize"
-          @widget-active="onWidgetActive"
-          @widget-move="onWidgetMove"
-          @widget-drag-start="onWidgetDragStart"
-        >
-          <component
-            :is="item.name"
-            :configuration="item"
-            :edit-mode="editMode"
-          />
-        </widget-movable>
+          />-->
+          <widget-movable
+            v-for="(item,index) of widgetList"
+            :key="index"
+            :widget="item"
+            @widget-delete="onWidgetDelete"
+            @widget-resize="onWidgetResize"
+            @widget-active="onWidgetActive"
+            @widget-move="onWidgetMove"
+            @widget-drag-start="onWidgetDragStart"
+          >
+            <component
+              :is="item.name"
+              :configuration="item"
+              :edit-mode="editMode"
+            />
+          </widget-movable>
+        </div>
       </div>
     </el-scrollbar>
   </div>
@@ -77,14 +81,11 @@ export default {
       widgetList: state => state.widgetList,
       activeWidgetId: state => state.activeWidgetId
     }),
-    ...mapGetters([
-      'paperWidth',
-      'paperHeight'
-    ]),
+    ...mapGetters(['paperWidth', 'paperHeight']),
     paperSizeStyle () {
       return {
-        width: `${this.paperWidth}mm`,
-        height: `${this.paperHeight}mm`
+        width: `calc(${this.paperWidth}mm + 100px)`,
+        height: `calc(${this.paperHeight}mm + 100px)`
       }
     }
   },
@@ -218,10 +219,8 @@ export default {
         return
       }
       if (
-        positionX + width >
-          this.$refs.designerContent.clientWidth ||
-        positionY + height >
-          this.$refs.designerContent.clientHeight
+        positionX + width > this.$refs.designerContent.clientWidth ||
+        positionY + height > this.$refs.designerContent.clientHeight
       ) {
         return
       }
@@ -656,13 +655,19 @@ export default {
   flex: 1 1 800px;
   background: #465474;
   overflow: auto;
+  font-family: "宋体";
+}
+.pageContent {
+  padding: 50px;
+  background: #cacaca;
+  margin: 0 auto;
 }
 .designerContent {
   background: white;
-  margin: 0 auto;
   border: 1px dashed palevioletred;
   position: relative;
   overflow: hidden;
+  height: 100%;
 
   .canvas {
     position: absolute;

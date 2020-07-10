@@ -7,6 +7,7 @@
       :start-time="startTime"
       :end-time="endTime"
       @widget-finish="onWidgetFinish"
+      :paper-setting="paperSetting"
     />
   </div>
 </template>
@@ -33,7 +34,8 @@ export default {
       totalPage: 1,
       pageIndex: 0,
       isIntraoperative: false,
-      isRescueMode: false
+      isRescueMode: false,
+      paperSetting: {}
     }
   },
   created () {
@@ -75,6 +77,7 @@ export default {
             }
           }
         })
+        this.paperSetting = widgetList.shift()
         this.tempList = widgetList
         return res[0].data.data.isIntraoperative
       })
@@ -152,4 +155,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.printDocument {
+  font-family: "宋体";
+}
 </style>

@@ -6,9 +6,13 @@
   </div>
 </template>
 <script>
+import { createNamespacedHelpers } from 'vuex'
+import { getTemplateData } from '@/api/medicalDocument'
+import request from '@/utils/requestForMock'
 import ContentWidgetList from './ContentWidgetList'
 import ContentDesigner from './ContentDesigner'
 import ContentConfiguration from './ContentConfiguration'
+const { mapActions } = createNamespacedHelpers('PageTemplateDesigner')
 export default {
   name: 'PageTemplateDesigner',
   components: {
@@ -16,9 +20,29 @@ export default {
     ContentDesigner,
     ContentConfiguration
   },
-  mounted () {
-    // this.$electron.ipcRenderer.send('show-window')
+  created () {
+    this.getTemplateData().then(
+      res => {
+        console.log(res)
+        this.initStore(res.data.data.list)
+      }
+    )
+  },
+  methods: {
+    ...mapActions([
+      'initStore'
+    ]),
+    getTemplateData () {
+      return request({
+        method: 'POST',
+        data: {},
+        url: getTemplateData
+      })
+    }
   }
+  // mounted () {
+  // this.$electron.ipcRenderer.send('show-window')
+  // }
 }
 </script>
 <style lang="scss" scoped>

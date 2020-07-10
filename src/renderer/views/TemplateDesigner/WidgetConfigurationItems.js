@@ -25,6 +25,8 @@ export default function getConfigurationItems (widgetName) {
   switch (widgetName) {
     case 'widget-checkbox-group':
       return {
+        border,
+        font,
         singleSelect: '1',
         collections: [
           {
@@ -35,7 +37,8 @@ export default function getConfigurationItems (widgetName) {
             label: '项目2',
             value: '2'
           }
-        ]
+        ],
+        dataSource
       }
     case 'widget-anaes-drug':
       return {
