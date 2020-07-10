@@ -99,10 +99,4 @@ Router.prototype.push = function push (location) {
   return originalPush.call(this, location).catch(err => err)
 }
 
-router.beforeEach((to, from, next) => {
-  if (to.name !== from.name) {
-    next()
-  }
-})
-
 export default router

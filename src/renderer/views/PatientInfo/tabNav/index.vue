@@ -54,6 +54,7 @@ export default {
     handleClick (item) {
       this.navIndex = item.index
       this.$router.push(item.path)
+      this.$emit('changeRoute')
     }
   }
 }
