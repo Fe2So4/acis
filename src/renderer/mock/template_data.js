@@ -283,7 +283,7 @@ export default {
         positionX: 0,
         positionY: 307,
         width: 331
-      },
+      }
       // {
       //   bloodTransfusion: {
       //     num: 2,
@@ -460,86 +460,86 @@ export default {
       //   },
       //   width: 792
       // },
-      {
-        drugNumber: 10,
-        height: 154,
-        id: '979362f8-3d5a-4d2d-9911-503cad5437fc',
-        leftPartWidthRate: 0.18,
-        leftTitle: {
-          lineHeight: 30,
-          text: '麻醉用药',
-          width: 50
-        },
-        name: 'widget-anaes-drug',
-        positionX: 0,
-        positionY: 469,
-        rightPartWidthRate: 0.1,
-        timeTitle: {
-          height: 30,
-          lineHeight: 30,
-          text: '时间'
-        },
-        totalTitle: {
-          text: '总量'
-        },
-        width: 792,
-        xAxis: {
-          endTime: '2020-07-01 13:00',
-          lineInterval: 3,
-          startTime: '2020-07-01 09:00',
-          timeInterval: 900000,
-          list: [
-            {
-              label: '09:00'
-            },
-            {
-              label: '09:15'
-            },
-            {
-              label: '09:30'
-            },
-            {
-              label: '09:45'
-            },
-            {
-              label: '10:00'
-            },
-            {
-              label: '10:15'
-            },
-            {
-              label: '10:30'
-            },
-            {
-              label: '10:45'
-            },
-            {
-              label: '11:00'
-            },
-            {
-              label: '11:15'
-            },
-            {
-              label: '11:30'
-            },
-            {
-              label: '11:45'
-            },
-            {
-              label: '12:00'
-            },
-            {
-              label: '12:15'
-            },
-            {
-              label: '12:30'
-            },
-            {
-              label: '12:45'
-            }
-          ]
-        }
-      }
+      // {
+      //   drugNumber: 10,
+      //   height: 154,
+      //   id: '979362f8-3d5a-4d2d-9911-503cad5437fc',
+      //   leftPartWidthRate: 0.18,
+      //   leftTitle: {
+      //     lineHeight: 30,
+      //     text: '麻醉用药',
+      //     width: 50
+      //   },
+      //   name: 'widget-anaes-drug',
+      //   positionX: 0,
+      //   positionY: 469,
+      //   rightPartWidthRate: 0.1,
+      //   timeTitle: {
+      //     height: 30,
+      //     lineHeight: 30,
+      //     text: '时间'
+      //   },
+      //   totalTitle: {
+      //     text: '总量'
+      //   },
+      //   width: 792,
+      //   xAxis: {
+      //     endTime: '2020-07-01 13:00',
+      //     lineInterval: 3,
+      //     startTime: '2020-07-01 09:00',
+      //     timeInterval: 900000,
+      //     list: [
+      //       {
+      //         label: '09:00'
+      //       },
+      //       {
+      //         label: '09:15'
+      //       },
+      //       {
+      //         label: '09:30'
+      //       },
+      //       {
+      //         label: '09:45'
+      //       },
+      //       {
+      //         label: '10:00'
+      //       },
+      //       {
+      //         label: '10:15'
+      //       },
+      //       {
+      //         label: '10:30'
+      //       },
+      //       {
+      //         label: '10:45'
+      //       },
+      //       {
+      //         label: '11:00'
+      //       },
+      //       {
+      //         label: '11:15'
+      //       },
+      //       {
+      //         label: '11:30'
+      //       },
+      //       {
+      //         label: '11:45'
+      //       },
+      //       {
+      //         label: '12:00'
+      //       },
+      //       {
+      //         label: '12:15'
+      //       },
+      //       {
+      //         label: '12:30'
+      //       },
+      //       {
+      //         label: '12:45'
+      //       }
+      //     ]
+      //   }
+      // }
     ],
     isIntraoperative: true
   }
