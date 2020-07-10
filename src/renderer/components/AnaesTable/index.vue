@@ -7,6 +7,7 @@
       ref="xTable"
       align="center"
       height="100%"
+      auto-resize
       class="anaesTable"
       :loading="loading"
       :data="tableData"

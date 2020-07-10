@@ -1,16 +1,16 @@
 <template lang="pug">
-  .intraoperative-patient
-    List(:list="patientList")
+  .bed
+    PatientList(:list="patientList")
 </template>
 <script>
-import List from '@/components/OperationOverview/index'
+import PatientList from '@/components/OperationOverview/index'
 export default {
-  name: 'IntraoperativePatients',
+  name: 'ResuscitationBed',
   data () {
     return {
       patientList: [{
         room: 'P1',
-        opeStatus: '出手术室',
+        opeStatus: '入复苏室',
         house: '01',
         name: '钱书明',
         opeId: '100000000',
@@ -20,8 +20,8 @@ export default {
         doctor: '李炎飞',
         anaesDoctor: '李炎飞'
       }, {
-        room: 'P2',
-        opeStatus: '出手术室',
+        room: 'P1',
+        opeStatus: '入复苏室',
         house: '01',
         name: '钱书明',
         opeId: '100000000',
@@ -31,8 +31,8 @@ export default {
         doctor: '李炎飞',
         anaesDoctor: '李炎飞'
       }, {
-        room: 'P3',
-        opeStatus: '出手术室',
+        room: 'P1',
+        opeStatus: '入复苏室',
         house: '01',
         name: '钱书明',
         opeId: '100000000',
@@ -42,8 +42,8 @@ export default {
         doctor: '李炎飞',
         anaesDoctor: '李炎飞'
       }, {
-        room: 'P4',
-        opeStatus: '出手术室',
+        room: 'P1',
+        opeStatus: '入复苏室',
         house: '01',
         name: '钱书明',
         opeId: '100000000',
@@ -53,8 +53,8 @@ export default {
         doctor: '李炎飞',
         anaesDoctor: '李炎飞'
       }, {
-        room: 'P5',
-        opeStatus: '出手术室',
+        room: 'P1',
+        opeStatus: '入复苏室',
         house: '01',
         name: '钱书明',
         opeId: '100000000',
@@ -64,8 +64,8 @@ export default {
         doctor: '李炎飞',
         anaesDoctor: '李炎飞'
       }, {
-        room: 'P6',
-        opeStatus: '出手术室',
+        room: 'P1',
+        opeStatus: '入复苏室',
         house: '01',
         name: '钱书明',
         opeId: '100000000',
@@ -78,15 +78,12 @@ export default {
     }
   },
   components: {
-    List
-  },
-  methods: {
-
+    PatientList
   }
 }
 </script>
 <style lang="stylus" scoped>
-  .intraoperative-patient
+  .bed
+    width 66vw
     height 80vh
-    // padding 0 12px
 </style>

@@ -16,6 +16,12 @@ import VXETable from 'vxe-table'
 import 'vxe-table/lib/index.css'
 import Tooltip from './components/Tooltip/main'
 import CtxMenu from './components/CtxMenu/main'
+import VXETablePluginElement from 'vxe-table-plugin-element'
+import 'vxe-table-plugin-element/dist/style.css'
+// ...
+// 解决vxe - table与element - ui兼容性问题
+// ...
+VXETable.use(VXETablePluginElement)
 Vue.use(VXETable)
 Vue.use(ElementUI)
 if (!process.env.IS_WEB) { Vue.use(require('vue-electron')) }

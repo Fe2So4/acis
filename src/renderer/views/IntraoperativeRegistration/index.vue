@@ -36,6 +36,7 @@
           <div class="event-table">
             <vxe-table
               border
+              auto-resize
               show-header-overflow
               show-overflow
               keep-source
@@ -65,6 +66,7 @@
       <div class="bottom-content">
         <vxe-table
           border
+          auto-resize
           show-header-overflow
           show-overflow
           height="100%"

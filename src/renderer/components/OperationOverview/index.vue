@@ -15,6 +15,12 @@
             <span>{{ item.opeStatus }}</span>
           </div>
           <div class="content">
+            <div
+              class="room"
+              v-if="item.opeStatus === '入复苏室'"
+            >
+              <span>{{ item.room }}</span>
+            </div>
             <div class="info">
               <p>患者 <span>{{ item.name }}</span> <span>{{ item.opeId }}</span> <span>{{ item.hospitalNo }}</span></p>
               <p>手术 <span>{{ item.opeName }}</span></p>
@@ -62,6 +68,7 @@ export default {
           grid-column-gap: 20px;
           grid-row-gap: 20px;
           padding:12px;
+          justify-content: center;
           li{
             box-shadow:0px 0px 12px 3px rgba(0, 0, 0, 0.4);
             cursor: pointer;
@@ -92,6 +99,22 @@ export default {
               flex: 1;
               display: flex;
               overflow: hidden;
+              .room{
+                width:100px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                span{
+                  width: 100%;
+                  height:46px;
+                  display: block;
+                  line-height:46px;
+                  font-size:32px;
+                  font-weight:bold;
+                  color: #fff;
+                  text-align: center;
+                }
+              }
               .info{
                 margin:0 30px 0 20px;
                 display: flex;

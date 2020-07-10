@@ -68,7 +68,7 @@ export default {
       activesNames: '1',
       isCollapse: false,
       showOverflow: false,
-      showDialog: false,
+      showDialog: true,
       componentName: '',
       navList: [
         {
@@ -89,7 +89,9 @@ export default {
             { name: '术中患者列表', index: '3-2', componentName: 'IntraoperativePatients' },
             { name: '术中登记', index: '3-3', componentName: 'IntraoperativeRegistration' },
             { name: '患者详情', index: '3-4', componentName: 'PatientDetail' },
-            { name: '手术取消', index: '3-5', componentName: 'OperationCancel' }
+            { name: '手术取消', index: '3-5', componentName: 'OperationCancel' },
+            { name: '复苏进程', index: '3-6', componentName: 'OperationCancel' },
+            { name: '复苏床位', index: '3-7', componentName: 'ResuscitationBed' }
           ],
           icon: 'el-icon-s-data'
         },
