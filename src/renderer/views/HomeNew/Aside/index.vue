@@ -68,7 +68,7 @@ export default {
       activesNames: '1',
       isCollapse: false,
       showOverflow: false,
-      showDialog: true,
+      showDialog: false,
       componentName: '',
       navList: [
         {

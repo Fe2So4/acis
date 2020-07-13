@@ -696,7 +696,7 @@ export default {
       if (!this.editMode) {
         const grid = this.layer.getElementsByClassName('grid')[0]
         const width = grid.attr('width')
-        const xAxislist = this.configuration.xAxis.list
+        const xAxislist = this.xAxisList
         const xScale = Math.floor(width / xAxislist.length)
         const interval = Math.floor(
           this.configuration.xAxis.timeInterval / xScale
