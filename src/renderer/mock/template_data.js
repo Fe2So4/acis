@@ -283,98 +283,48 @@ export default {
       //   positionY: 307,
       //   width: 331
       // },
-      // {
-      //   bloodTransfusion: {
-      //     num: 2,
-      //     text: '输血'
-      //   },
-      //   drugNumber: 10,
-      //   height: 203,
-      //   id: '578761b8-c1e1-4a55-aeb7-859f06793aa4',
-      //   infusion: {
-      //     num: 3,
-      //     text: '输液'
-      //   },
-      //   leftPartWidthRate: 0.18,
-      //   leftTitle: {
-      //     lineHeight: 30,
-      //     text: '输液输血',
-      //     width: 40
-      //   },
-      //   name: 'widget-in-out',
-      //   outPut: {
-      //     num: 0,
-      //     text: '用量'
-      //   },
-      //   positionX: 0,
-      //   positionY: 622,
-      //   rightPartWidthRate: 0.1,
-      //   timeTitle: {
-      //     height: 0,
-      //     lineHeight: 30,
-      //     text: '时间'
-      //   },
-      //   totalTitle: {
-      //     text: '总量'
-      //   },
-      //   width: 792,
-      //   xAxis: {
-      //     endTime: '2018-02-01 12:00',
-      //     lineInterval: 3,
-      //     startTime: '2018-02-01 08:00',
-      //     timeInterval: 900000,
-      //     list: [
-      //       {
-      //         label: '08:00'
-      //       },
-      //       {
-      //         label: '08:15'
-      //       },
-      //       {
-      //         label: '08:30'
-      //       },
-      //       {
-      //         label: '08:45'
-      //       },
-      //       {
-      //         label: '09:00'
-      //       },
-      //       {
-      //         label: '09:15'
-      //       },
-      //       {
-      //         label: '09:30'
-      //       },
-      //       {
-      //         label: '09:45'
-      //       },
-      //       {
-      //         label: '10:00'
-      //       },
-      //       {
-      //         label: '10:15'
-      //       },
-      //       {
-      //         label: '10:30'
-      //       },
-      //       {
-      //         label: '10:45'
-      //       },
-      //       {
-      //         label: '11:00'
-      //       },
-      //       {
-      //         label: '11:15'
-      //       },
-      //       {
-      //         label: '11:30'
-      //       },
-      //       {
-      //         label: '11:45'
-      //       }
-      //     ]
-      //   }
-      // },
+      {
+        bloodTransfusion: {
+          num: 2,
+          text: '输血'
+        },
+        drugNumber: 10,
+        height: 203,
+        id: '578761b8-c1e1-4a55-aeb7-859f06793aa4',
+        infusion: {
+          num: 3,
+          text: '输液'
+        },
+        leftPartWidthRate: 0.18,
+        leftTitle: {
+          lineHeight: 30,
+          text: '输液输血',
+          width: 40
+        },
+        name: 'widget-in-out',
+        outPut: {
+          num: 0,
+          text: '用量'
+        },
+        positionX: 0,
+        positionY: 622,
+        rightPartWidthRate: 0.1,
+        timeTitle: {
+          height: 0,
+          lineHeight: 30,
+          text: '时间'
+        },
+        totalTitle: {
+          text: '总量'
+        },
+        width: 792,
+        xAxis: {
+          endTime: '2018-02-01 12:00',
+          lineInterval: 3,
+          startTime: '2018-02-01 08:00',
+          timeInterval: 15
+        }
+      }
       // {
       //   anaesColumn: {
       //     num: 8
@@ -460,36 +410,36 @@ export default {
       //   width: 792
       // },
 
-      {
-        drugNumber: 10,
-        height: 154,
-        id: '979362f8-3d5a-4d2d-9911-503cad5437fc',
-        leftPartWidthRate: 0.18,
-        leftTitle: {
-          lineHeight: 30,
-          text: '麻醉用药',
-          width: 50
-        },
-        name: 'widget-anaes-drug',
-        positionX: 0,
-        positionY: 469,
-        rightPartWidthRate: 0.1,
-        timeTitle: {
-          height: 30,
-          lineHeight: 30,
-          text: '时间'
-        },
-        totalTitle: {
-          text: '总量'
-        },
-        width: 792,
-        xAxis: {
-          endTime: '2020-07-01 13:00',
-          lineInterval: 3,
-          startTime: '2020-07-01 09:00',
-          timeInterval: 15
-        }
-      }
+      // {
+      //   drugNumber: 10,
+      //   height: 154,
+      //   id: '979362f8-3d5a-4d2d-9911-503cad5437fc',
+      //   leftPartWidthRate: 0.18,
+      //   leftTitle: {
+      //     lineHeight: 30,
+      //     text: '麻醉用药',
+      //     width: 50
+      //   },
+      //   name: 'widget-anaes-drug',
+      //   positionX: 0,
+      //   positionY: 469,
+      //   rightPartWidthRate: 0.1,
+      //   timeTitle: {
+      //     height: 30,
+      //     lineHeight: 30,
+      //     text: '时间'
+      //   },
+      //   totalTitle: {
+      //     text: '总量'
+      //   },
+      //   width: 792,
+      //   xAxis: {
+      //     endTime: '2020-07-01 13:00',
+      //     lineInterval: 3,
+      //     startTime: '2020-07-01 09:00',
+      //     timeInterval: 15
+      //   }
+      // }
     ],
     isIntraoperative: true
   }

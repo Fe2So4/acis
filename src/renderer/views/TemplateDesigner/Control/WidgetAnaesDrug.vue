@@ -113,8 +113,8 @@ export default {
           ]
         }
       ],
-      list: [{ menuName: '百草枯', value: '1' }, { menuName: '百草枯', value: '2' }, { menuName: '百草枯', value: '3' }],
       // 药品列表
+      list: [{ menuName: '百草枯', value: '1' }, { menuName: '百草枯', value: '2' }, { menuName: '百草枯', value: '3' }],
       groupNo: null,
       drugStartTime: null,
       drugDetailVisible: false,
@@ -470,7 +470,7 @@ export default {
         const drugList = leftPart.getElementsByClassName('drugList')[0]
         const width = Math.round(drugList.attr('width'))
         const lineHeight =
-          Math.round(drugList.attr('height')) / this.configuration.drugNumber
+          Math.round(drugList.attr('height') / this.configuration.drugNumber)
         for (let i = 0; i < this.configuration.drugNumber; i++) {
           if (this.drugList[i]) {
             const text = new Label(this.drugList[i].name)
@@ -699,7 +699,7 @@ export default {
         const xAxislist = this.xAxisList
         const xScale = Math.floor(width / xAxislist.length)
         const interval = Math.floor(
-          this.configuration.xAxis.timeInterval / xScale
+          this.configuration.xAxis.timeInterval * 60 * 1000 / xScale
         )
         grid.addEventListener('mousedown', evt => {
           if (evt.originalEvent.button === 2) {
@@ -805,9 +805,9 @@ export default {
                 pos: [0, 0],
                 points: [
                   0,
-                  group.attr('height') / 2,
+                  group.attr('height') / 2 - 0.5,
                   center - text / 2 - 4,
-                  group.attr('height') / 2
+                  group.attr('height') / 2 - 0.5
                 ],
                 lineWidth: 1,
                 strokeColor: 'blue'
@@ -816,9 +816,9 @@ export default {
                 pos: [0, 0],
                 points: [
                   center + text / 2 + 4,
-                  group.attr('height') / 2,
+                  group.attr('height') / 2 - 0.5,
                   group.attr('width'),
-                  group.attr('height') / 2
+                  group.attr('height') / 2 - 0.5
                 ],
                 lineWidth: 1,
                 strokeColor: 'blue'
@@ -911,7 +911,6 @@ export default {
   box-sizing: border-box;
   margin: 0 auto;
   position: relative;
-  background: #fff;
   overflow: unset !important;
 }
 </style>

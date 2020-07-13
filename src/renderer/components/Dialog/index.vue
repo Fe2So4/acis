@@ -26,6 +26,7 @@ import ChangePass from '@/views/ChangePassword/index'
 import Event from '@/views/Event/index'
 import TemplateManagement from '@/views/TemplateManagement/index'
 import TemplateDesigner from '@/views/TemplateDesigner/index'
+import TemplateDisplayer from '@/views/TemplateDisplayer/index'
 import ConfigurationSystem from '@/views/ConfigurationSystem/index'
 import OperationHandover from '@/views/OperationHandover/index'
 import IntraoperativePatients from '@/views/IntraoperativePatients/index'
@@ -74,7 +75,8 @@ export default {
     RealtimeStatus,
     PacuStatus,
     Dictionary,
-    AnaesScore
+    AnaesScore,
+    TemplateDisplayer
   },
   methods: {
     handleClose () {
