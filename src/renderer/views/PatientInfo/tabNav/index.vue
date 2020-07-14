@@ -41,7 +41,6 @@ export default {
   async created () {
     await this.getDocumentsList()
     this.handleClick(this.navList[0])
-    // this.getTestData()
   },
   methods: {
     handleClick (item) {
@@ -62,19 +61,6 @@ export default {
             }
           })
         }
-      )
-    },
-    getTestData () {
-      return request({
-        method: 'GET',
-        url: 'http://192.168.1.196:8090/acis/intraoperative/info/getAcisIntraoBloodDataInfo',
-        params: {
-          operationId: 'b0f9d8bda9244397a44cb8ff278937d9',
-          startTime: '2020-04-10 09:30:00',
-          endTime: '2020-04-10 13:40:00'
-        }
-      }).then(
-        res => { console.log(res) }
       )
     }
   }
