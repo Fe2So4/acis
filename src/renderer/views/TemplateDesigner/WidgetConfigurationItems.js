@@ -91,7 +91,7 @@ export default function getConfigurationItems (widgetName) {
         xAxis: {
           startTime: '2018-02-01 08:00',
           endTime: '2018-02-01 12:00',
-          timeInterval: 15 * 60 * 1000,
+          timeInterval: 15,
           lineInterval: 3
         },
         drugNumber: 10,
@@ -99,7 +99,7 @@ export default function getConfigurationItems (widgetName) {
         bloodTransfusion: {
           text: '输血', num: 2
         },
-        outPut: { text: '用量', num: 0 }
+        outPut: { text: '出量', num: 0 }
       }
     case 'widget-anaes-table':
       return {
