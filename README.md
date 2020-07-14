@@ -35,8 +35,16 @@ npm run lint
 #  -IntraoperativeRegistration 术中登记
 #  -IntraoperativePatient 术中患者列表
 #  -RealtimeStatus 实时状态
+#  -ResuscitationBed 复苏床位
+#  -PacuStatus PACU状态
 #  -Schedule 手术排班
 #  -ScheduleReport 手术排班表
+#  -AnaesScore 麻醉评分
+#  -InspectionInformation 检验信息
+#  -Dictiona 字典
+#  -TemplateDesigner 文书设计
+#  -TemplateDesigner 文书展示
+#  -TemplateManagement 模板管理 
 ```
 
 ---
