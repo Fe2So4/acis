@@ -1,5 +1,7 @@
 <template>
-  <div class="medicalDocument">
+  <div
+    class="medicalDocument"
+  >
     <main-content
       ref="mainContent"
       :widget-list="widgetList"
@@ -27,25 +29,33 @@
       :event-data="dialogEventData"
       @event-added-successfully="onEventAddedSuccuessfully"
     />
+    <dialog-designer
+      v-if="dialogDesignerVisible"
+      :visible.sync="dialogDesignerVisible"
+      :template-id="$route.params.templateId"
+      @update-successfully="onUpdateSuccessfully"
+    />
   </div>
 </template>
 
 <script>
 import {
   getTemplateInfo,
-  getTemplateData,
-  getValueData
+  getTemplateData
+  // getValueData
 } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
 import MainContent from './MainContent'
 import BottomButtons from './BottomButtons'
 import DialogEventTimeRange from './DialogEventTimeRange'
+import DialogDesigner from './DialogDesigner'
 export default {
   name: 'MedicalDocument',
   components: {
     MainContent,
     BottomButtons,
-    DialogEventTimeRange
+    DialogEventTimeRange,
+    DialogDesigner
   },
   data () {
     return {
@@ -58,28 +68,39 @@ export default {
       isRescueMode: false,
       dialogEventTimeRangeVisible: false,
       dialogEventData: null,
-      paperSetting: {}
+      paperSetting: {},
+      dialogDesignerVisible: false
     }
   },
   created () {
     this.getData(0)
   },
+  beforeRouteUpdate (to, from, done) {
+    console.log('beforeRouteUpdate')
+    done()
+  },
   methods: {
     // 通用接口 - 获取模板和源数据表中查出的信息
     getTemplateAndValueData () {
+      const requestData = {
+        templateCode: this.$route.params.templateId
+      }
       return Promise.all([
         request({
           url: getTemplateData,
           method: 'POST',
-          data: {
-            templateCode: this.$route.params.templateId
-          }
+          params: requestData
         }),
-        request({
-          url: getValueData,
-          method: 'POST',
+        // request({
+        //   url: getValueData,
+        //   method: 'POST',
+        //   data: {
+        //     templateCode: this.$route.params.templateId
+        //   }
+        // })
+        Promise.resolve({
           data: {
-            templateCode: this.$route.params.templateId
+            data: {}
           }
         })
       ]).then(
@@ -89,16 +110,26 @@ export default {
           // 源数据赋值
             if (widget.dataSource) {
               const { tableName, className } = widget.dataSource
-              let value
+              let value = ''
               if (valueMap[tableName] && valueMap[tableName][className]) {
                 value = valueMap[tableName][className]
               }
-              if (value) {
-                widget.value = value
-              }
+              widget.value = value
             }
           })
-          this.paperSetting = widgetList.shift()
+          let paperSettingIndex
+          const paperSetting = widgetList.find((item, index) => {
+            if (item.id === 'paper') {
+              paperSettingIndex = index
+              return true
+            }
+            return false
+          })
+          if (typeof paperSettingIndex !== 'number') {
+            return Promise.reject(new Error('未找到纸张配置'))
+          }
+          this.paperSetting = paperSetting
+          widgetList.splice(paperSettingIndex, 1)
           this.tempList = widgetList
           return res[0].data.data.isIntraoperative
         }
@@ -114,7 +145,7 @@ export default {
         intervalTime = 5
         pageTimeInterval = 4
       }
-      return request({
+      request({
         method: 'POST',
         url: getTemplateInfo,
         data: {
@@ -123,35 +154,53 @@ export default {
           pageIndex,
           pageTimeInterval
         }
-      }).then(
-        res => {
-          const {
-            startTime,
-            endTime,
-            pageTotal,
-            pageIndex
-          } = res.data.data
-          this.startTime = startTime
-          this.endTime = endTime
-          this.totalPage = pageTotal
-          this.pageIndex = pageIndex
-          this.tempList.forEach(widget => {
-            // x轴起止时间更改
-            if (widget.xAxis) {
-              widget.xAxis.startTime = startTime
-              widget.xAxis.endTime = endTime
+      })
+      // 模拟数据 -------------------start--------------------------
+      return Promise.resolve(
+        {
+          data: {
+            code: 200,
+            success: true,
+            data: {
+              templateId: 1,
+              startTime: '2020-07-14 16:00',
+              endTime: '2020-07-14 20:00',
+              pageIndex: 1,
+              pageTotal: 3
             }
-          })
-          this.widgetList = this.tempList
-          return res.data.data
+          }
         }
       )
+      // 模拟数据 -----------------end----------------------------
+        .then(
+          res => {
+            const {
+              startTime,
+              endTime,
+              pageTotal,
+              pageIndex
+            } = res.data.data
+            this.startTime = startTime
+            this.endTime = endTime
+            this.totalPage = pageTotal
+            this.pageIndex = pageIndex
+            this.tempList.forEach(widget => {
+            // x轴起止时间更改
+              if (widget.xAxis) {
+                widget.xAxis.startTime = startTime
+                widget.xAxis.endTime = endTime
+              }
+            })
+            return res.data.data
+          }
+        )
     },
     async getData (pageIndex) {
       const isIntraoperative = await this.getTemplateAndValueData()
       if (isIntraoperative) {
         await this.getIntraoperativeData(pageIndex)
       }
+      this.widgetList = this.tempList
       this.isIntraoperative = isIntraoperative
     },
     onSelectEventTimeRange (e) {
@@ -183,14 +232,27 @@ export default {
     },
     onSave () {
       const list = this.widgetList
-        .filter(widget => widget.value)
+        .filter(widget => widget.value || widget.required)
         .map(widget => ({
           id: widget.id,
-          value: widget.value
+          value: widget.value,
+          required: widget.required
         }))
-      console.log(list)
+      let flag = true
+      list.forEach(widget => {
+        if (widget.required && !widget.value) {
+          flag = false
+        }
+      })
+      console.log(flag, list)
     },
-    onConfigure () {}
+    onConfigure () {
+      this.dialogDesignerVisible = true
+    },
+    onUpdateSuccessfully () {
+      this.getData(this.pageIndex)
+      this.$eventHub.$emit('document-refresh')
+    }
   }
 }
 </script>

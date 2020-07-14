@@ -9,13 +9,23 @@
         class="contextMenu"
         :style="positionStyle"
       >
-        <div
-          v-for="(item, index) in list"
-          :key="index"
-          @click="selectMenuItem(item)"
+        <el-scrollbar
+          :wrap-style="wrapStyle"
         >
-          {{ item.label }}
-        </div>
+          <div class="content">
+            <div class="iconContent" />
+            <div class="labelContent">
+              <div
+                class="label"
+                v-for="(item, index) in list"
+                :key="index"
+                @click="selectMenuItem(item)"
+              >
+                {{ item.label }}
+              </div>
+            </div>
+          </div>
+        </el-scrollbar>
       </div>
     </div>
   </transition>
@@ -25,21 +35,15 @@
 export default {
   data () {
     return {
-      list: [
-        {
-          label: '菜单一',
-          value: 1
-        }, {
-          label: '菜单二',
-          value: 2
-        }, {
-          label: '菜单三',
-          value: 3
-        }
-      ],
+      list: [],
       posX: 0,
       posY: 0,
-      visible: false
+      visible: false,
+      wrapStyle: [
+        {
+          'max-height': '150px'
+        }
+      ]
     }
   },
   computed: {
@@ -71,32 +75,50 @@ export default {
   top: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0);
+  background: rgba(0, 0, 0, 0);
 }
 .contextMenu {
   position: relative;
-  border: 1px solid #999;
-  background: white;
+  border: 1px solid #39425c;
   border-radius: 4px;
-  overflow: hidden;
-  width: 100px;
-  & > div {
-    border-bottom: 1px solid #999;
-    padding: 10px;
-    cursor: pointer;
-    &:hover {
-      background: aliceblue;
+  width: 180px;
+  overflow: auto;
+  .content {
+    display: flex;
+    .iconContent {
+      flex: 1 1 30px;
+      background: #2c3140;
+      padding: 2px 0;
     }
-    &:last-child {
-      border: none;
+    .labelContent {
+      flex: 1 1 150px;
+      background: #1e222e;
+      padding: 2px 0;
+
+      .label {
+        cursor: pointer;
+        line-height: 24px;
+        font-size: 12px;
+        height: 24px;
+        color: #9ba3d5;
+        text-indent: 8px;
+        white-space: nowrap;
+        width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &:hover {
+          color: #388ff7;
+        }
+      }
     }
   }
 }
 .fade-enter-active {
-  animation: fade .3s;
+  animation: fade 0.3s;
 }
 .fade-leave-active {
-  animation: fade .3s reverse;
+  animation: fade 0.1s reverse;
 }
 @keyframes fade {
   0% {
@@ -105,6 +127,5 @@ export default {
   100% {
     opacity: 1;
   }
-
 }
 </style>

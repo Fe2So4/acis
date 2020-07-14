@@ -26,6 +26,7 @@ function createWindow () {
     width: 1000,
     frame: false,
     webPreferences: {
+      // webSecurity: false,
       nodeIntegration: true
     }
     // movable: false// 可否移动

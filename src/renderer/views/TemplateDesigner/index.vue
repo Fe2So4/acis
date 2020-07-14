@@ -1,6 +1,6 @@
 <template>
   <div class="templateDesignerPage">
-    <content-widget-list />
+    <content-widget-list @show-template-data="onShowTemplateData" />
     <content-designer />
     <content-configuration />
   </div>
@@ -20,29 +20,41 @@ export default {
     ContentDesigner,
     ContentConfiguration
   },
+  props: {
+    templateId: {
+      required: false,
+      type: String || Number,
+      default: null
+    }
+  },
   created () {
     this.getTemplateData().then(
       res => {
-        console.log(res)
         this.initStore(res.data.data.list)
       }
     )
   },
   methods: {
     ...mapActions([
-      'initStore'
+      'initStore',
+      'setTemplateId'
     ]),
     getTemplateData () {
+      const requestData = {}
+      if (this.templateId) {
+        this.setTemplateId(this.templateId)
+        requestData.templateCode = this.templateId
+      }
       return request({
         method: 'POST',
-        data: {},
+        params: requestData,
         url: getTemplateData
       })
+    },
+    onShowTemplateData (dataStr) {
+      this.$emit('show-template-data', dataStr)
     }
   }
-  // mounted () {
-  // this.$electron.ipcRenderer.send('show-window')
-  // }
 }
 </script>
 <style lang="scss" scoped>

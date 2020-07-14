@@ -27,9 +27,11 @@
   </div>
 </template>
 <script>
+import request from '@/utils/requestForMock'
+import { updateDocument } from '@/api/medicalDocument'
 import WidgetCopiable from './WidgetCopiable'
 import { createNamespacedHelpers } from 'vuex'
-const { mapActions, mapGetters } = createNamespacedHelpers(
+const { mapActions, mapGetters, mapState } = createNamespacedHelpers(
   'PageTemplateDesigner'
 )
 export default {
@@ -94,15 +96,39 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['templateData'])
+    ...mapGetters(['templateData']),
+    ...mapState({
+      templateId: state => state.templateId
+    })
   },
   methods: {
     ...mapActions(['showPaperSetting']),
     setPaper () {
       this.showPaperSetting()
     },
+    // 保存模板
     saveTemplate () {
-      console.log(JSON.stringify(this.templateData))
+      this.$emit('show-template-data', JSON.stringify(this.templateData))
+      return request({
+        method: 'POST',
+        url: updateDocument + `?templateCode=${this.templateId}`,
+        data: this.templateData
+      }).then(
+        res => {
+          if (res.data.success) {
+            this.$message({
+              message: '保存成功',
+              type: 'success',
+              duration: 1000
+            })
+          } else {
+            this.$message({
+              message: '保存失败',
+              type: 'error'
+            })
+          }
+        }
+      )
     }
   }
 }

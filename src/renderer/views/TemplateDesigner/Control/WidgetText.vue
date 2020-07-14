@@ -42,6 +42,7 @@ export default {
         fontSize: font.size + 'pt',
         fontWeight: font.weight,
         lineHeight: font.lineHeight + 'px',
+        color: font.color,
         textAlign: font.textAlign
       }
       const borderObj = border.position.reduce((obj, item) => {

@@ -15,7 +15,7 @@
             v-show="Object.keys(group).length"
           >
             <el-form
-              label-width="100px"
+              label-width="120px"
               size="small"
             >
               <component
@@ -34,7 +34,7 @@
             name="paperSetting"
           >
             <el-form
-              label-width="100px"
+              label-width="120px"
               size="small"
             >
               <configuration-paper
@@ -153,10 +153,6 @@ export default {
     onChangePaperSetting (paperSetting) {
       this.setPaperSetting(paperSetting)
     }
-  },
-  beforeCreate () {},
-  created () {
-    // console.log(pages, 'create')
   }
 }
 </script>
@@ -170,8 +166,33 @@ export default {
     border: none;
   }
 }
+
 .contentConfiguration /deep/ .el-collapse-item__header {
   height: 30px;
-  background: #5d709b;
+  border: unset;
+  background: #121421;
+  color: #9ba3d5;
+  font-size: 14px;
+  padding-left: 20px;
+  position: relative;
+  .header-icon {
+    font-size: 20px;
+    margin-right: 16px;
+  }
+}
+.contentConfiguration /deep/ .el-collapse-item__wrap {
+  background: #121421;
+  border: unset;
+}
+.contentConfiguration /deep/ .el-collapse-item__content {
+  background: #121421;
+  border: unset;
+  padding: 30px 0;
+}
+.contentConfiguration /deep/ .el-collapse-item__header.is-active {
+  background: rgba(28, 31, 50, 1);
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.05);
+  color: #edf1f9;
+  font-size: 16px;
 }
 </style>

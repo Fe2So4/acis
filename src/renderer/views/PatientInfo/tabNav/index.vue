@@ -5,27 +5,18 @@
         div(:class="{'isActive': item.index === navIndex}") {{item.label}}
 </template>
 <script>
+import request from '@/utils/requestForMock'
+import { getDocumentsList } from '@/api/medicalDocument'
 export default {
   data () {
     return {
-      documentList: [
-        {
-          label: '术中记录单',
-          templateId: 1
-        }, {
-          label: '术后记录单',
-          templateId: 2
-        }, {
-          label: '啥啥啥文书',
-          templateId: 3
-        }
-      ],
+      documentsList: [],
       navIndex: 0
     }
   },
   computed: {
     navList () {
-      const navs = this.documentList.map((item, index) => {
+      const navs = this.documentsList.map((item, index) => {
         return {
           index: index + 1,
           label: item.label,
@@ -47,14 +38,44 @@ export default {
       return navs
     }
   },
-  created () {
+  async created () {
+    await this.getDocumentsList()
     this.handleClick(this.navList[0])
+    // this.getTestData()
   },
   methods: {
     handleClick (item) {
       this.navIndex = item.index
       this.$router.push(item.path)
       this.$emit('changeRoute')
+    },
+    getDocumentsList () {
+      return request({
+        method: 'POST',
+        url: getDocumentsList
+      }).then(
+        res => {
+          this.documentsList = res.data.data.map(item => {
+            return {
+              label: item.templateName,
+              templateId: item.templateCode
+            }
+          })
+        }
+      )
+    },
+    getTestData () {
+      return request({
+        method: 'GET',
+        url: 'http://192.168.1.196:8090/acis/intraoperative/info/getAcisIntraoBloodDataInfo',
+        params: {
+          operationId: 'b0f9d8bda9244397a44cb8ff278937d9',
+          startTime: '2020-04-10 09:30:00',
+          endTime: '2020-04-10 13:40:00'
+        }
+      }).then(
+        res => { console.log(res) }
+      )
     }
   }
 }

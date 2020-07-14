@@ -331,6 +331,7 @@ export default {
 .widgetMovable {
   position: absolute;
   background: transparent;
+  color: black;
   .mask {
     width: 100%;
     height: 100%;
