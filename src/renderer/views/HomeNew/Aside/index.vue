@@ -68,7 +68,7 @@ export default {
       activesNames: '1',
       isCollapse: false,
       showOverflow: false,
-      showDialog: false,
+      showDialog: true,
       componentName: '',
       navList: [
         {
@@ -93,7 +93,9 @@ export default {
             { name: '复苏进程', index: '3-6', componentName: 'OperationCancel' },
             { name: '复苏床位', index: '3-7', componentName: 'ResuscitationBed' },
             { name: '实时状态', index: '3-8', componentName: 'RealtimeStatus' },
-            { name: '麻醉评分', index: '3-9', componentName: 'AnaesScore' }
+            { name: '麻醉评分', index: '3-9', componentName: 'AnaesScore' },
+            { name: '检验信息', index: '3-10', componentName: 'InspectionInformation' },
+            { name: '医嘱信息', index: '3-11', componentName: 'MedicalOrderInformation' }
           ],
           icon: 'el-icon-s-data'
         },

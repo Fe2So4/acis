@@ -6,27 +6,39 @@
         el-tab-pane(label="Balthazar胰腺病变CT严重性指数评分" name="0")
           Balthazar
         el-tab-pane(label="Child-Pugh肝脏疾病患者手术危险性评分" name="1")
+          ChildPugh
         el-tab-pane(label="GOLDMAN心脏高危因素评分" name="2")
+          GoldMan
         el-tab-pane(label="Lutz麻醉危险性评分" name="3")
+          Lutz
         el-tab-pane(label="PARS麻醉恢复评分" name="4")
+          Pars
         el-tab-pane(label="APACHE2评分" name="5")
+          Apache
         el-tab-pane(label="TISS评分" name="6")
+          Tiss
 </template>
 <script>
 import Balthazar from './Balthazar/index'
+import Lutz from './Lutz/index'
+import Tiss from './Tiss/index'
+import ChildPugh from './ChildPugh/index'
+import Pars from './Pars/index'
+import GoldMan from './GoldMan/index'
+import Apache from './Apache/index'
 export default {
   name: 'AnaesScore',
   data () {
     return {
-      activeName: '0'
+      activeName: '5'
     }
   },
   components: {
-    Balthazar
+    Balthazar, Lutz, Tiss, ChildPugh, Pars, GoldMan, Apache
   },
   methods: {
     handleClick (tab, event) {
-      console.log(tab, event)
+      // console.log(tab, event)
     }
   }
 }
@@ -34,7 +46,7 @@ export default {
 <style lang="stylus" scoped>
   .anaes-score
     height 80vh
-    width 70vw
+    width 80vw
     .title
       line-height 28px
       font-size 14px

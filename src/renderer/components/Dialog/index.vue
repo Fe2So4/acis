@@ -6,7 +6,7 @@
        span {{title}}
        i(class="el-icon-close" @click="handleClose")
       .dialog-body
-        component(:is= "componentName")
+        //- component(:is= "componentName")
         //- <operation-handover/>
         //- Hemodynamics
         //- IntraoperativePatients
@@ -18,6 +18,9 @@
         //- RealtimeStatus
         //- PacuStatus
         //- AnaesScore
+        //- InspectionInformation
+        //- PatientWarning
+        MedicalOrderInformation
     //- .dialog-footer
 </template>
 <script>
@@ -40,6 +43,9 @@ import RealtimeStatus from '@/views/RealtimeStatus/index'
 import PacuStatus from '@/views/PacuStatus/index'
 import Dictionary from '@/views/Dictionary/index'
 import AnaesScore from '@/views/AnaesScore/index'
+import InspectionInformation from '@/views/InspectionInformation/index'
+import PatientWarning from '@/views/PatientWarning/index'
+import MedicalOrderInformation from '@/views/MedicalOrderInformation/index'
 export default {
   name: 'Dialog',
   data () {
@@ -76,7 +82,10 @@ export default {
     PacuStatus,
     Dictionary,
     AnaesScore,
-    TemplateDisplayer
+    TemplateDisplayer,
+    InspectionInformation,
+    PatientWarning,
+    MedicalOrderInformation
   },
   methods: {
     handleClose () {
