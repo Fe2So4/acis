@@ -258,9 +258,7 @@ export default {
         return request({
           method: 'POST',
           url: saveDocumentData,
-          data: {
-            customDataList
-          },
+          data: customDataList,
           params: {
             templateCode: this.templateId,
             operationId: 'qwe16',
