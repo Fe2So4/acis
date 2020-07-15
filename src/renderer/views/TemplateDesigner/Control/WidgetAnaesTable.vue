@@ -266,6 +266,6 @@ export default {
     border: 1px solid black;
     box-sizing: border-box;
     margin: 0 auto;
-    background:#fff;
+    // background:#fff;
   }
 </style>

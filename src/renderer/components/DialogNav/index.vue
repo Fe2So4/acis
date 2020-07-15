@@ -6,7 +6,7 @@
        span {{title}}
        i(class="el-icon-close" @click="handleClose")
       .dialog-body
-        //- component(:is= "componentName")
+        component(:is="componentName")
         //- <operation-handover/>
         //- Hemodynamics
         //- IntraoperativePatients
@@ -20,7 +20,11 @@
         //- AnaesScore
         //- InspectionInformation
         //- PatientWarning
-        MedicalOrderInformation
+        //- MedicalOrderInformation
+        //- InspectionResult
+        //- MedicalRecordCourse
+        //- EmergencyTreatment
+        //- OperationLevel
     //- .dialog-footer
 </template>
 <script>
@@ -46,8 +50,12 @@ import AnaesScore from '@/views/AnaesScore/index'
 import InspectionInformation from '@/views/InspectionInformation/index'
 import PatientWarning from '@/views/PatientWarning/index'
 import MedicalOrderInformation from '@/views/MedicalOrderInformation/index'
+import InspectionResult from '@/views/InspectionResult/index'
+import MedicalRecordCourse from '@/views/MedicalRecordCourse/index'
+import EmergencyTreatment from '@/views/EmergencyTreatment/index'
+import OperationLevel from '@/views/OperationLevel/index'
 export default {
-  name: 'Dialog',
+  name: 'DialogNav',
   data () {
     return {
       // componentName: 'ChangePass'
@@ -85,7 +93,11 @@ export default {
     TemplateDisplayer,
     InspectionInformation,
     PatientWarning,
-    MedicalOrderInformation
+    MedicalOrderInformation,
+    InspectionResult,
+    MedicalRecordCourse,
+    EmergencyTreatment,
+    OperationLevel
   },
   methods: {
     handleClose () {
@@ -96,6 +108,7 @@ export default {
 </script>
 <style lang="stylus" scoped>
   .dialog
+    -webkit-app-region:no-drag;
     font-size 14px
     position fixed
     width 100vw

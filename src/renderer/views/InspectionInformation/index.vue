@@ -1,6 +1,20 @@
 <template lang="pug">
   .inspection-information
-    .title 检验信息
+    //- .title 检验信息
+    .title
+       el-form(:inline="true" size="mini")
+        el-form-item(label="起止时间")
+          el-date-picker(
+            size="mini"
+            v-model="date"
+            type="datetimerange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期")
+        el-form-item
+          el-button(type="primary") 搜索
+        el-form-item
+          el-button 同步检验信息
     .content(class="clearfix")
       .left
         vxe-table(
@@ -19,6 +33,7 @@
           vxe-table-column(field="testName" title="检验名称" width="120")
           vxe-table-column(field="testType" title="检验类别" width="120")
           vxe-table-column(field="testDate" title="检验日期" width="120")
+      el-divider(direction="vertical")
       .right
         vxe-table(
           border
@@ -48,7 +63,8 @@ export default {
       testData: [{ testNo: '123', testName: '123', testType: '12', testDate: '2020-7-14' }],
       resultData: [{ itemName: '123', result: '123', unit: 'mg/l', value: '123' }],
       dialogVisible: false,
-      title: ''
+      title: '',
+      date: ''
     }
   },
   components: {
@@ -73,13 +89,15 @@ export default {
       color #9BA3D5
       line-height 28px
     .content
-      height calc(100% - 28px)
+      height calc(100% - 48px)
+      .el-divider--vertical
+        width 0
       .left
-        width 50%
+        // width 50%
         float left
         height 100%
       .right
         height 100%
-        width 50%
+        // width 50%
         float right
 </style>

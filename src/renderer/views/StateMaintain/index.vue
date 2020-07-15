@@ -1,5 +1,5 @@
 <template lang="pug">
-  .device-gather
+  .state-maintain
     .title 术后状态维护
     el-form(:model="form" :inline="true" size="mini")
       el-form-item(label="日期" )
@@ -62,6 +62,7 @@
 </template>
 <script>
 export default {
+  name: 'StateMaintain',
   data () {
     return {
       form: {
@@ -79,7 +80,7 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-  .device-gather
+  .state-maintain
     height 70vh
     width 60vw
     .title

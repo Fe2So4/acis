@@ -2,6 +2,7 @@
   .medical-order-information
     .title
       span 医嘱信息
+      el-date-picker(type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="time" size="mini")
       el-radio-group(v-model="radio1")
         el-radio(:label="3") 全部
         el-radio(:label="6") 临时
@@ -41,7 +42,8 @@ export default {
     return {
       tableData: [],
       radio1: '',
-      radio2: ''
+      radio2: '',
+      time: ''
     }
   },
   methods: {
@@ -61,6 +63,8 @@ export default {
         background #1E222E
         padding 5px
         border-radius 5px
+        margin-left 20px
+      .el-date-picker
         margin-left 20px
     .table
       height calc(100% - 38px)
