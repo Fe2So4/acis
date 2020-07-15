@@ -43,8 +43,11 @@ npm run lint
 #  -InspectionInformation 检验信息
 #  -Dictiona 字典
 #  -TemplateDesigner 文书设计
-#  -TemplateDesigner 文书展示
-#  -TemplateManagement 模板管理 
+#  -TemplateDisplayer 文书展示
+#  -TemplateManagement 模板管理
+#  -MedicalRecordCourse 病历病程 
+#  -EmergencyTreatment 急诊登记 
+#  -OperationInfo 手术信息 
 ```
 
 ---

@@ -572,8 +572,8 @@ export default {
       const lineHeight = this.configuration.leftTitle.lineHeight
       const titleTextGroup = new Group()
       titleTextGroup.attr({
-        size: [40 - 1, textArr.length * lineHeight],
-        pos: [40 / 2, height / 2],
+        size: [this.configuration.leftTitle.width - 1, textArr.length * lineHeight],
+        pos: [this.configuration.leftTitle.width / 2, height / 2],
         anchor: [0.5, 0.5]
       })
       textArr.forEach((item, i, arr) => {

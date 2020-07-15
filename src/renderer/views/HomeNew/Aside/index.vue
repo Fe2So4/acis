@@ -58,7 +58,7 @@
   </div>
 </template>
 <script>
-import Dialog from '@/components/Dialog/index'
+import Dialog from '@/components/DialogNav/index'
 // import Overview from '../../../components/OperationOverview/index'
 export default {
   name: 'Aside',
@@ -68,7 +68,7 @@ export default {
       activesNames: '1',
       isCollapse: false,
       showOverflow: false,
-      showDialog: true,
+      showDialog: false,
       componentName: '',
       navList: [
         {
@@ -95,7 +95,11 @@ export default {
             { name: '实时状态', index: '3-8', componentName: 'RealtimeStatus' },
             { name: '麻醉评分', index: '3-9', componentName: 'AnaesScore' },
             { name: '检验信息', index: '3-10', componentName: 'InspectionInformation' },
-            { name: '医嘱信息', index: '3-11', componentName: 'MedicalOrderInformation' }
+            { name: '医嘱信息', index: '3-11', componentName: 'MedicalOrderInformation' },
+            { name: '检查结果', index: '3-12', componentName: 'InspectionResult' },
+            { name: '病历病程', index: '3-13', componentName: 'MedicalRecordCourse' },
+            { name: '状态维护', index: '3-14', componentName: 'StateMaintain' },
+            { name: '手术等级', index: '3-15', componentName: 'OperationLevel' }
           ],
           icon: 'el-icon-s-data'
         },
@@ -156,7 +160,7 @@ export default {
       done()
     },
     handleChangeButton (item, index) {
-      this.activeIndex = index
+      this.activeIndex = index || null
       this.showDialog = true
       this.dialogTitle = item.name
       this.componentName = item.componentName
@@ -173,9 +177,6 @@ export default {
     handleOpen (key, keyPath) {
       // console.log(key, keyPath)
     },
-    // handleClose (key, keyPath) {
-    //   // console.log(key, keyPath)
-    // },
     handleCloseMenu () {
       if (this.showOverflow === false) {
         this.isCollapse = !this.isCollapse
@@ -195,6 +196,10 @@ export default {
   },
   mounted () {
     this.getOverviewList()
+    this.$eventHub.$on('show-dialog', (item) => {
+      // 激活弹窗
+      this.handleChangeButton(item)
+    })
   }
 }
 </script>

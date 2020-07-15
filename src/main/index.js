@@ -25,13 +25,14 @@ function createWindow () {
     useContentSize: true,
     width: 1000,
     frame: false,
+    // fullscreen: true, // 是否全屏
     webPreferences: {
       // webSecurity: false,
       nodeIntegration: true
     }
     // movable: false// 可否移动
   })
-
+  mainWindow.maximize()
   mainWindow.loadURL(winURL)
 
   // 显示开发者工具
