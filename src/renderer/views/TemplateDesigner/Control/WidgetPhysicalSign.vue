@@ -637,93 +637,14 @@ export default {
       this.$emit('finish')
     },
     getPastSignData () {
-      request({
+      return request({
         method: 'POST',
         url: getSignData,
         data: {
           startTime: this.startTime,
-          endTime: this.endTime
-        }
-      })
-      return Promise.resolve({
-        data: {
-          code: 200,
-          success: true,
-          data: [
-            {
-              itemCode: '44',
-              itemName: 'PULSE',
-              itemUnit: 'bpm',
-              disColor: '32768',
-              drawIcon: '●',
-              list: [],
-              yindex: 0
-            },
-            {
-              itemCode: '100',
-              itemName: '体温',
-              itemUnit: '℃',
-              disColor: '16711680',
-              drawIcon: '×',
-              list: [],
-              yindex: 0
-            },
-            {
-              itemCode: '112',
-              itemName: 'ETCO2',
-              itemUnit: 'mmHg',
-              disColor: '0',
-              drawIcon: '△',
-              list: [],
-              yindex: 0
-            },
-            {
-              itemCode: '89',
-              itemName: '不知道是什么',
-              itemUnit: 'mmHg',
-              disColor: '0',
-              drawIcon: '☆',
-              list: [],
-              yindex: 0
-            },
-            {
-              itemCode: '90',
-              itemName: '也不知道是什么',
-              itemUnit: 'mmHg',
-              disColor: '0',
-              drawIcon: '□',
-              list: [],
-              yindex: 0
-            },
-            {
-              itemCode: '92',
-              itemName: '还是不知道是什么',
-              itemUnit: 'mmHg',
-              disColor: '0',
-              drawIcon: '☆',
-              list: [],
-              yindex: 0
-            },
-            {
-              itemCode: '67',
-              itemName: '居然还有',
-              itemUnit: 'mmHg',
-              disColor: '0',
-              drawIcon: '&',
-              list: [],
-              yindex: 0
-            },
-            {
-              itemCode: '65',
-              itemName: '又来一个',
-              itemUnit: 'mmHg',
-              disColor: '333333',
-              drawIcon: '☆',
-              list: [],
-              yindex: 0
-            }
-          ],
-          msg: '操作成功'
+          endTime: this.endTime,
+          dataMode: 1, // 5-正常模式 1-抢救模式
+          operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
         }
       })
         .then(res => {
@@ -834,9 +755,13 @@ export default {
     },
     getPastEventData () {
       return request({
-        method: 'POST',
+        method: 'GET',
         url: getEventData,
-        data: {}
+        params: {
+          startTime: this.startTime,
+          endTime: this.endTime,
+          operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
+        }
       })
         .then(res => {
           const requestData = res.data.data
@@ -957,13 +882,6 @@ export default {
               value: value.itemValue
             })
           })
-        }
-      })
-      // 术中事件
-      this.socket.on('operation event', res => {
-        this.eventTags.addTag(res)
-        if (res.label) {
-          this.legends.addLegend(res)
         }
       })
     },

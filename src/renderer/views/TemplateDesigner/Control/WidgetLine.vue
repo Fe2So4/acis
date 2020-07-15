@@ -61,6 +61,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .widgetLine {
+  -webkit-print-color-adjust: exact;
   width: 100%;
   height: 100%;
   position: relative;

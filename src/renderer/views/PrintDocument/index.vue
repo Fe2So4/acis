@@ -61,7 +61,7 @@ export default {
         // request({
         //   url: getValueData,
         //   method: 'POST',
-        //   data: {
+        //   params: {
         //     templateCode: this.$route.params.templateId
         //   }
         // })
@@ -112,7 +112,7 @@ export default {
         method: 'POST',
         url: getTemplateInfo,
         data: {
-          operationId: '',
+          operationId: 'b0f9d8bda9244397a44cb8ff278937d9',
           intervalTime,
           pageIndex,
           pageTimeInterval
@@ -161,10 +161,11 @@ export default {
           break
         }
       }
+      console.log(this.canvasWidgetList.length)
       if (this.canvasWidgetList.length === 0) {
         setTimeout(() => {
           this.$electron.ipcRenderer.send('ready-to-print')
-        }, 2000)
+        }, 300)
       }
     }
   }

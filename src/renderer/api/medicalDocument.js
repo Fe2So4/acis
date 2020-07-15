@@ -3,38 +3,87 @@ const mock =
     ? !(process.env.MOCK === 'none')
     : false
 
-// const base = 'http://192.168.1.149:8090/'
 const base = 'http://localhost:8090/'
+// 李
+// const baseLi = process.env.NODE_ENV === 'development' ? 'http://192.168.1.149:8090/' : base
+// 谢
+const baseXie =
+  process.env.NODE_ENV === 'development' ? 'http://192.168.1.196:8090/' : base
+// 钟
+const baseZhong =
+  process.env.NODE_ENV === 'development' ? 'http://192.168.1.190:8090/' : base
 
-// socket.io 地址 - 李
+// socket.io 地址 - 李 - 2020-07-14
 export const getSocketData = 'http://192.168.1.149:9099'
 // export const getSocketData = 'http://192.168.1.154:9099/'
-export const dataSource = mock
-  ? '/api/dataSource'
-  : base + 'acis/dataSource/queryDataSource'
-export const getDictionaryTableData = mock
-  ? '/api/getDictionaryTableData'
-  : base + 'acis/common/templateDataSource/showTemplateDataSource'
-export const getTemplateInfo = mock ? '/api/getTemplateInfo' : ''
+
+// 文书设计器和展示公共 ------------------------------start-----------------------------
 // 获取模板数据json - 钟 - 2020-07-13
 export const getTemplateData = mock
   ? '/api/getTemplateData'
-  : base + 'acis/common/template/templateShowing'
-export const getValueData = mock ? '/api/getValueData' : ''
-// 获取字典源数据 - 钟 - 2020-07-14
-export const getDictionaryData = mock
-  ? '/api/getDictionaryData'
-  : base + 'acis/common/template/showDictionaryData'
-export const getSignData = mock ? '/api/getSignData' : ''
-export const getEventData = mock ? '/api/getEventData' : ''
-export const getEventDictData = mock ? '/api/getEventDictData' : ''
-// 增加新事件
-export const addNewEvent = mock ? '/api/addNewEvent' : ''
+  : baseZhong + 'acis/common/template/templateShowing'
+// 文书设计器和展示公共 ------------------------------end-------------------------------
+
+// 文书设计器相关 ------------------------------start-------------------------------
+// 获取获取源数据表名字段名列表 - 钟 - 2020-07-15
+export const dataSource = mock
+  ? '/api/dataSource'
+  : baseZhong + 'acis/templetewrit/dataSource/getTempleteDataSource'
+
+// 获取获取字典表表名字段名列表 - 钟 - 2020-07-15
+export const getDictionaryTableData = mock
+  ? '/api/getDictionaryTableData'
+  : baseZhong + 'acis/common/templateDataSource/showTemplateDataSource'
+
+// 文书模板保存 - 谢 - 2020-07-15
+export const updateDocument = mock
+  ? '/api/updateDocument'
+  : baseXie + 'acis/templatewrit/templete/acisTempleteUpdateTemplate'
+// 文书设计器相关 ------------------------------end-------------------------------
+
+// 文书展示相关 --------------------------------start---------------------------------
+// 获取文书分页信息 - 谢 - 2020-07-15
+export const getTemplateInfo = mock
+  ? '/api/getTemplateInfo'
+  : baseXie + 'acis/intraoperative/info/getIntraoMonitorDataByTimeInterval'
+
+// 回显从源数据表中查出的值 - 钟 - 2020-07-15
+export const getValueData = mock
+  ? '/api/getValueData'
+  : baseZhong + 'acis/common/template/queryFillInTemplateInfo'
+
+// 获取体征数据 - 谢 - 2020-07-15
+export const getSignData = mock
+  ? '/api/getSignData'
+  : baseXie + 'acis/intraoperative/info/getIntraoMonitorData'
+
+// 获取事件数据 - 谢 - 2020-07-15
+export const getEventData = mock
+  ? '/api/getEventData'
+  : baseXie + 'acis/intraoperative/info/getAcisIntraoEventInfo'
+
+// 获取事件列表 - 谢 - 2020-07-15
+export const getEventDictData = mock
+  ? '/api/getEventDictData'
+  : baseXie + 'acis/intraoperative/dict/getAcisIntraoEventDict'
+
+// 增加新事件 - 谢 - 2020-07-15
+export const addNewEvent = mock
+  ? '/api/addNewEvent'
+  : baseXie + 'acis/intraoperative/info/addAcisIntraoEvents'
+
 // 获取文书列表 - 钟 - 2020-07-13
 export const getDocumentsList = mock
   ? '/api/getDocumentsList'
-  : base + 'acis/templatewrit/templete/queryTemplateListTest'
-// 文书保存 - 钟 - 2020-07-13
-export const updateDocument = mock
-  ? '/api/updateDocument'
-  : base + 'acis/templatewrit/templete/acisTempleteUpdateTemplate'
+  : baseZhong + 'acis/templatewrit/templete/queryTemplateListTest'
+
+// 获取字典源数据 - 钟 - 2020-07-14
+export const getDictionaryData = mock
+  ? '/api/getDictionaryData'
+  : baseZhong + 'acis/common/template/showDictionaryData'
+
+// 文书保存 - 钟 - 2020-07-15
+export const saveDocumentData = mock
+  ? '/api/saveDocumentData'
+  : baseZhong + 'acis/common/template/saveCustomData'
+// 文书展示相关 --------------------------------end---------------------------------

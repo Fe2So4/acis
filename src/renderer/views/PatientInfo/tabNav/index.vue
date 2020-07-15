@@ -10,15 +10,17 @@ import { getDocumentsList } from '@/api/medicalDocument'
 export default {
   data () {
     return {
-      documentsList: [],
-      navIndex: 0
+      documentsList: []
     }
   },
   computed: {
+    navIndex () {
+      return this.$route.params.templateId || 0
+    },
     navList () {
       const navs = this.documentsList.map((item, index) => {
         return {
-          index: index + 1,
+          index: item.templateId,
           label: item.label,
           path: {
             name: 'MedicalDocument',
@@ -44,9 +46,7 @@ export default {
   },
   methods: {
     handleClick (item) {
-      this.navIndex = item.index
       this.$router.push(item.path)
-      this.$emit('changeRoute')
     },
     getDocumentsList () {
       return request({

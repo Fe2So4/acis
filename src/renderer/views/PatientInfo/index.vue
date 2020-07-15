@@ -2,8 +2,8 @@
   <div class="patient-info">
     <div class="left">
       <operation-status />
-      <tab-nav @changeRoute="onChangeRoute" />
-      <router-view :key="routekey" />
+      <tab-nav />
+      <router-view />
     </div>
     <div class="right">
       <signs-data />
@@ -20,16 +20,6 @@ export default {
     OperationStatus,
     TabNav,
     SignsData
-  },
-  data () {
-    return {
-      routekey: 0
-    }
-  },
-  methods: {
-    onChangeRoute () {
-      this.routekey++
-    }
   }
 }
 </script>
