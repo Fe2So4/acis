@@ -22,6 +22,13 @@
         @change="onChangeFontSize"
       />
     </el-form-item>
+    <el-form-item label="文字颜色">
+      <el-color-picker
+        :value="value.color"
+        size="mini"
+        @change="onChangeFontColor"
+      />
+    </el-form-item>
     <el-form-item label="文字行高">
       <el-input-number
         :value="value.lineHeight"
@@ -109,6 +116,15 @@ export default {
     onChangeTextAlign (currentValue, oldValue) {
       const configuration = Object.assign({}, this.value, {
         textAlign: currentValue
+      })
+      this.$emit('change', {
+        font: configuration
+      })
+    },
+    onChangeFontColor (currentValue, oldValue) {
+      currentValue = currentValue || '#000000'
+      const configuration = Object.assign({}, this.value, {
+        color: currentValue
       })
       this.$emit('change', {
         font: configuration

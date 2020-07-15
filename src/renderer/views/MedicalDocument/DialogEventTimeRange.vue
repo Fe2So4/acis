@@ -3,6 +3,7 @@
     <el-dialog
       :title="eventData.detailName"
       :visible="visible"
+      @close="onCancel"
     >
       <el-form>
         <el-form-item

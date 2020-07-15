@@ -1,3 +1,5 @@
+import getConfigurationItems from '../../views/TemplateDesigner/WidgetConfigurationItems.js'
+
 const state = () => ({
   widgetMap: new Map(), // 控件属性map集
   widgetList: [], // 控件属性列表
@@ -8,7 +10,8 @@ const state = () => ({
     name: 'paper',
     width: 210,
     height: 297
-  }
+  },
+  templateId: null
 })
 
 const getters = {
@@ -25,6 +28,7 @@ const getters = {
 const mutations = {
   // 设置控件属性map集
   SET_WIDGET_MAP (state, widget) {
+    widget = Object.assign({}, getConfigurationItems(widget.name), widget)
     let originalData = state.widgetMap.get(widget.id)
     if (originalData) {
       originalData = Object.assign(originalData, widget)
@@ -53,6 +57,9 @@ const mutations = {
   },
   SET_PAPER_SETTING (state, value) {
     state.paperSetting = value
+  },
+  SET_TEMPLATE_ID (state, id) {
+    state.templateId = id
   }
 }
 
@@ -84,8 +91,14 @@ const actions = {
   setPaperSetting ({ commit }, value) {
     commit('SET_PAPER_SETTING', value)
   },
+  // 设置templateId
+  setTemplateId ({ commit }, id) {
+    commit('SET_TEMPLATE_ID', id)
+  },
+  // 重置store
   initStore ({ commit, dispatch }, list) {
     if (!Array.isArray(list)) return
+    commit('SET_ACTIVE_WIDGET', null)
     commit('CLEAR_WIDGET_MAP')
     commit('SET_WIDGET_LIST')
     const paperSetting = list.shift()

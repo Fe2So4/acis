@@ -27,6 +27,7 @@ function createWindow () {
     frame: false,
     // fullscreen: true, // 是否全屏
     webPreferences: {
+      // webSecurity: false,
       nodeIntegration: true
     }
     // movable: false// 可否移动

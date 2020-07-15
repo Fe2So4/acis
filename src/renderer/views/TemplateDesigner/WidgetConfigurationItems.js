@@ -1,14 +1,17 @@
 export default function getConfigurationItems (widgetName) {
+  // 边框
   const border = {
     position: ['top', 'right', 'bottom', 'left'],
     color: '#000000',
     width: 1
   }
+  // 文字
   const font = {
     size: 9,
     weight: 'normal',
     lineHeight: 30,
-    textAlign: 'left'
+    textAlign: 'left',
+    color: '#000000'
   }
   // 源数据
   const dataSource = {
@@ -22,12 +25,15 @@ export default function getConfigurationItems (widgetName) {
     dictClassName: '',
     dictRelationName: ''
   }
+  // 必填
+  const required = false
   switch (widgetName) {
     case 'widget-checkbox-group':
       return {
         border,
         font,
         singleSelect: '1',
+        labelMargin: 30,
         collections: [
           {
             label: '项目1',
@@ -188,9 +194,9 @@ export default function getConfigurationItems (widgetName) {
       return {
         font,
         border,
-        // placeholder: '占位内容',
         placeholder: '',
         readonly: false,
+        required,
         dataSource,
         multiSelect: false,
         dictionarySource
@@ -200,6 +206,8 @@ export default function getConfigurationItems (widgetName) {
         font,
         border,
         placeholder: '占位内容',
+        readonly: false,
+        required,
         dataSource
       }
     case 'widget-text':

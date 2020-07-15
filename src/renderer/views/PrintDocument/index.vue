@@ -15,8 +15,8 @@
 <script>
 import {
   getTemplateInfo,
-  getTemplateData,
-  getValueData
+  getTemplateData
+  // getValueData
 } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
 import MainContent from './MainContent'
@@ -35,7 +35,8 @@ export default {
       pageIndex: 0,
       isIntraoperative: false,
       isRescueMode: false,
-      paperSetting: {}
+      paperSetting: {},
+      canvasWidgetList: []
     }
   },
   created () {
@@ -48,17 +49,22 @@ export default {
         request({
           url: getTemplateData,
           method: 'POST',
-          data: {
+          params: {
             templateCode: this.$route.params.templateId
           }
         }),
-        request({
-          url: getValueData,
-          method: 'POST',
+        Promise.resolve({
           data: {
-            templateCode: this.$route.params.templateId
+            data: {}
           }
         })
+        // request({
+        //   url: getValueData,
+        //   method: 'POST',
+        //   data: {
+        //     templateCode: this.$route.params.templateId
+        //   }
+        // })
       ]).then(res => {
         const [widgetList, valueMap] = [
           res[0].data.data.list,
@@ -72,12 +78,22 @@ export default {
             if (valueMap[tableName] && valueMap[tableName][className]) {
               value = valueMap[tableName][className]
             }
-            if (value) {
-              widget.value = value
-            }
+            widget.value = value
           }
         })
-        this.paperSetting = widgetList.shift()
+        let paperSettingIndex
+        const paperSetting = widgetList.find((item, index) => {
+          if (item.id === 'paper') {
+            paperSettingIndex = index
+            return true
+          }
+          return false
+        })
+        if (typeof paperSettingIndex !== 'number') {
+          return Promise.reject(new Error('未找到纸张配置'))
+        }
+        this.paperSetting = paperSetting
+        widgetList.splice(paperSettingIndex, 1)
         this.tempList = widgetList
         return res[0].data.data.isIntraoperative
       })
@@ -114,7 +130,6 @@ export default {
             widget.xAxis.endTime = endTime
           }
         })
-        this.widgetList = this.tempList
         this.canvasWidgetList = this.getCanvasWidget()
         return res.data.data
       })
@@ -124,7 +139,9 @@ export default {
       if (isIntraoperative) {
         await this.getIntraoperativeData(pageIndex)
       }
+      this.widgetList = this.tempList
       this.isIntraoperative = isIntraoperative
+      this.onWidgetFinish()
     },
     getCanvasWidget () {
       const canvasWidgets = ['widget-physical-sign']
@@ -147,7 +164,7 @@ export default {
       if (this.canvasWidgetList.length === 0) {
         setTimeout(() => {
           this.$electron.ipcRenderer.send('ready-to-print')
-        }, 300)
+        }, 2000)
       }
     }
   }

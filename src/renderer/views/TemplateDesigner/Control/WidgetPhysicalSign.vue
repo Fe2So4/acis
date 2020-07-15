@@ -637,7 +637,7 @@ export default {
       this.$emit('finish')
     },
     getPastSignData () {
-      return request({
+      request({
         method: 'POST',
         url: getSignData,
         data: {
@@ -645,8 +645,90 @@ export default {
           endTime: this.endTime
         }
       })
+      return Promise.resolve({
+        data: {
+          code: 200,
+          success: true,
+          data: [
+            {
+              itemCode: '44',
+              itemName: 'PULSE',
+              itemUnit: 'bpm',
+              disColor: '32768',
+              drawIcon: '●',
+              list: [],
+              yindex: 0
+            },
+            {
+              itemCode: '100',
+              itemName: '体温',
+              itemUnit: '℃',
+              disColor: '16711680',
+              drawIcon: '×',
+              list: [],
+              yindex: 0
+            },
+            {
+              itemCode: '112',
+              itemName: 'ETCO2',
+              itemUnit: 'mmHg',
+              disColor: '0',
+              drawIcon: '△',
+              list: [],
+              yindex: 0
+            },
+            {
+              itemCode: '89',
+              itemName: '不知道是什么',
+              itemUnit: 'mmHg',
+              disColor: '0',
+              drawIcon: '☆',
+              list: [],
+              yindex: 0
+            },
+            {
+              itemCode: '90',
+              itemName: '也不知道是什么',
+              itemUnit: 'mmHg',
+              disColor: '0',
+              drawIcon: '□',
+              list: [],
+              yindex: 0
+            },
+            {
+              itemCode: '92',
+              itemName: '还是不知道是什么',
+              itemUnit: 'mmHg',
+              disColor: '0',
+              drawIcon: '☆',
+              list: [],
+              yindex: 0
+            },
+            {
+              itemCode: '67',
+              itemName: '居然还有',
+              itemUnit: 'mmHg',
+              disColor: '0',
+              drawIcon: '&',
+              list: [],
+              yindex: 0
+            },
+            {
+              itemCode: '65',
+              itemName: '又来一个',
+              itemUnit: 'mmHg',
+              disColor: '333333',
+              drawIcon: '☆',
+              list: [],
+              yindex: 0
+            }
+          ],
+          msg: '操作成功'
+        }
+      })
         .then(res => {
           const requestData = res.data.data
+          console.log(requestData)
           this.lineList = requestData
         })
         .catch(err => {
@@ -655,36 +737,38 @@ export default {
     },
     drawLines () {
       const gridGroup = this.layer.getElementsByClassName('grid')[0]
-      this.lineList.forEach(item => {
-        const { min, max } = this.getYAxisValueRange(item.yindex)
-        if ((min === max) === 0) {
-          return
-        }
-        const {
-          itemCode: signId,
-          itemName: name,
-          drawIcon: label,
-          disColor: color
-        } = item
-        this.lines[signId] = new PhysicalSignLine({
-          signId,
-          name,
-          label,
-          color: '#' + color,
-          group: gridGroup,
-          layer: this.layer,
-          startTime: this.configuration.xAxis.startTime,
-          endTime: this.configuration.xAxis.endTime,
-          min,
-          max
-        })
-        item.list.forEach(value => {
-          this.lines[signId].addPoint({
-            time: value.timePoint,
-            value: value.itemValue
+      if (Array.isArray(this.lineList)) {
+        this.lineList.forEach(item => {
+          const { min, max } = this.getYAxisValueRange(item.yindex)
+          if ((min === max) === 0) {
+            return
+          }
+          const {
+            itemCode: signId,
+            itemName: name,
+            drawIcon: label,
+            disColor: color
+          } = item
+          this.lines[signId] = new PhysicalSignLine({
+            signId,
+            name,
+            label,
+            color: '#' + color,
+            group: gridGroup,
+            layer: this.layer,
+            startTime: this.configuration.xAxis.startTime,
+            endTime: this.configuration.xAxis.endTime,
+            min,
+            max
+          })
+          item.list.forEach(value => {
+            this.lines[signId].addPoint({
+              time: value.timePoint,
+              value: value.itemValue
+            })
           })
         })
-      })
+      }
     },
     clearLines () {
       // 清空对象引用
@@ -697,13 +781,15 @@ export default {
       labels.forEach(el => gridGroup.removeChild(el))
     },
     drawLineLegends () {
-      this.lineList.forEach(item => {
-        this.legends.addLegend({
-          label: item.drawIcon,
-          name: item.itemName,
-          color: '#' + item.disColor
+      if (Array.isArray(this.lineList)) {
+        this.lineList.forEach(item => {
+          this.legends.addLegend({
+            label: item.drawIcon,
+            name: item.itemName,
+            color: '#' + item.disColor
+          })
         })
-      })
+      }
     },
     setLegends () {
       this.legends = new PhysicalSignLegends(
@@ -819,16 +905,20 @@ export default {
       return list
     },
     drawEventTags () {
-      this.eventList.forEach(event => {
-        this.eventTags.addTag(event)
-      })
+      if (Array.isArray(this.eventList)) {
+        this.eventList.forEach(event => {
+          this.eventTags.addTag(event)
+        })
+      }
     },
     drawEventLegends () {
-      this.eventList.forEach(event => {
-        if (event.label) {
-          this.legends.addLegend(event)
-        }
-      })
+      if (Array.isArray(this.eventList)) {
+        this.eventList.forEach(event => {
+          if (event.label) {
+            this.legends.addLegend(event)
+          }
+        })
+      }
     },
     getDataBySocketIO () {
       // 与当前时间对比，如果结束时间为当前时间之前，则不需要建立连接
@@ -851,11 +941,18 @@ export default {
         console.log('socket.io disconnect')
       })
       // 体征曲线
-      this.socket.on('push_event', res => {
+      const that = this
+      this.socket.on('push_sign_event', res => {
+        console.log(res)
         if (Array.isArray(res)) {
+          // 回应socket.io
+          that.socket.emit('push_sign_event', {
+            loginUserNum,
+            content: res
+          })
           res.forEach(item => {
             const { itemCode: signId, ...value } = item
-            this.lines[signId].addPoint({
+            that.lines[signId].addPoint({
               time: value.timePoint,
               value: value.itemValue
             })

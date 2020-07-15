@@ -4,12 +4,8 @@
       class="buttons leftButtons"
       v-if="isIntraoperative"
     >
-      <div>
-        第{{ +pageIndex + 1 }}页
-      </div>
-      <div>
-        共{{ totalPage }}页
-      </div>
+      <div>第{{ +pageIndex + 1 }}页</div>
+      <div>共{{ totalPage }}页</div>
       <div
         class="button"
         @click="$emit('changePage', 0)"
@@ -135,12 +131,13 @@ export default {
   padding: 4px 0;
   background: rgba(23, 27, 39, 1);
   box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
-  display: flex;
-  justify-content: space-between;
+  // display: flex;
+  // justify-content: space-between;
   color: rgba(154, 163, 212, 1);
   font-size: 14px;
   font-weight: 400;
-
+  overflow: hidden;
+  // flex-direction: row-reverse;
   .buttons {
     display: flex;
     & > div {
@@ -162,11 +159,13 @@ export default {
   }
 
   .leftButtons {
+    float: left;
     & > div {
       border-right: 1px solid #465274;
     }
   }
   .rightButtons {
+    float: right;
     & > div {
       border-left: 1px solid #465274;
     }

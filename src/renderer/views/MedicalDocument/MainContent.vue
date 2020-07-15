@@ -98,6 +98,9 @@ export default {
   height: calc(100% - 36px);
   overflow: auto;
   .documentContent {
+    width: calc(210mm + 100px);
+    height: 0;
+    transition:0.3s;
     padding: 50px;
     margin: 20px auto;
     background: rgba(227, 227, 227, 1);

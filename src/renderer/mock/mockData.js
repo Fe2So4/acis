@@ -5,6 +5,7 @@ import signData from './sign_data'
 import eventData from './event_data'
 import eventDictData from './event_dict_data'
 import addData from './add_data'
+import documentsList from './documents_list'
 const Mock = require('mockjs')
 Mock.setup({
   timeout: '200-600'
@@ -27,7 +28,7 @@ Mock.mock('/api/getTemplateInfo', 'post', {
 })
 
 // 模板数据
-Mock.mock('/api/getTemplateData', templateData)
+Mock.mock(/^\/api\/getTemplateData/, templateData)
 
 // 获取源数据表中查出的结果
 Mock.mock('/api/getValueData', {
@@ -43,7 +44,7 @@ Mock.mock('/api/getValueData', {
 })
 
 // 字典数据
-Mock.mock('/api/getDictionaryData', 'post', {
+Mock.mock(/^\/api\/getDictionaryData/, 'post', {
   code: 200,
   success: true,
   data: [
@@ -60,3 +61,7 @@ Mock.mock('/api/getEventData', 'post', eventData)
 Mock.mock('/api/getEventDictData', eventDictData)
 // 新增事件
 Mock.mock('/api/addNewEvent', 'post', addData)
+// 获取文书列表
+Mock.mock('/api/getDocumentsList', 'post', documentsList)
+// 文书保存
+Mock.mock(/^\/api\/updateDocument/, 'post', addData)

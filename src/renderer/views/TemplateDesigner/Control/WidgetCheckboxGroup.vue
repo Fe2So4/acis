@@ -11,6 +11,7 @@
         v-for="option in configuration.collections"
         :label="option.label"
         :key="option.value"
+        :style="checkboxStyle"
       >
         <span :style="fontStyle">{{ option.label }}</span>
       </el-checkbox>
@@ -42,6 +43,7 @@ export default {
     return {
       widgetStyle: {},
       fontStyle: {},
+      checkboxStyle: {},
       checkedOptions: []
     }
   },
@@ -75,7 +77,11 @@ export default {
       this.widgetStyle = styleObj
       this.fontStyle = {
         fontSize: font.size + 'pt',
-        fontWeight: font.weight
+        fontWeight: font.weight,
+        color: font.color
+      }
+      this.checkboxStyle = {
+        'margin-right': this.configuration.labelMargin + 'px'
       }
     },
     onChange (val) {
@@ -91,6 +97,7 @@ export default {
 .checkbox-group {
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 .checkbox-group /deep/ .el-checkbox {
   color: #000;

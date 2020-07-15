@@ -5,8 +5,9 @@
     <textarea
       class="textarea"
       :style="widgetStyle"
-      v-model="configuration.value"
+      :value="configuration.value"
       :placeholder="configuration.placeholder"
+      :readonly="configuration.readonly"
       @input="onInut"
     />
   </div>
@@ -47,6 +48,7 @@ export default {
         fontSize: font.size + 'pt',
         fontWeight: font.weight,
         lineHeight: font.lineHeight + 'px',
+        color: font.color,
         textAlign: font.textAlign
       }
       const borderObj = border.position.reduce((obj, item) => {

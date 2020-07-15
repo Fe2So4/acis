@@ -85,6 +85,7 @@ export default {
         fontSize: font.size + 'pt',
         fontWeight: font.weight,
         lineHeight: font.lineHeight + 'px',
+        color: font.color,
         textAlign: font.textAlign
       }
       const borderObj = border.position.reduce((obj, item) => {
@@ -101,10 +102,22 @@ export default {
       }
       const {
         dictTableName,
-        dictClassName
+        dictClassName,
+        dictRelationName,
+        conditionClassNameId
       } = this.configuration.dictionarySource
-      if (dictTableName && dictClassName) {
-        await this.getDictionaryData(dictTableName, dictClassName)
+      if (
+        dictTableName &&
+        dictClassName &&
+        dictRelationName &&
+        conditionClassNameId
+      ) {
+        await this.getDictionaryData(
+          dictTableName,
+          dictClassName,
+          dictRelationName,
+          conditionClassNameId
+        )
         this.selectVisible = true
         setTimeout(() => {
           this.$refs.select.focus()
@@ -116,19 +129,27 @@ export default {
         this.selectVisible = false
       }
     },
-    getDictionaryData (dictTableName, dictClassName) {
+    getDictionaryData (
+      dictTableName,
+      dictClassName,
+      dictRelationName,
+      conditionClassNameId
+    ) {
       return request({
         method: 'POST',
         url: getDictionaryData,
-        data: {
-          dictTableName,
-          dictClassName
+        params: {
+          tableName: dictTableName,
+          className: dictClassName,
+          showContent: conditionClassNameId,
+          detailId: dictRelationName
         }
       }).then(res => {
         this.options = res.data.data
       })
     },
     onSelectChange (val) {
+      console.log(val)
       if (this.configuration.multiSelect) {
         this.configuration.value = val.join(',')
       } else {
@@ -159,16 +180,16 @@ export default {
     width: 100%;
     height: 100%;
   }
-  .select ::v-deep .el-input{
+  .select ::v-deep .el-input {
     height: 100%;
   }
-  .select ::v-deep .el-input__inner{
+  .select ::v-deep .el-input__inner {
     height: 100%;
     background: transparent;
     opacity: 0;
   }
   .select ::v-deep .el-select__tags,
-  .select ::v-deep .el-input__suffix{
+  .select ::v-deep .el-input__suffix {
     display: none;
   }
 }

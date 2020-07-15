@@ -1,7 +1,6 @@
 <template>
   <div
     class="widgetLine"
-    :style="widgetStyle"
   >
     <div
       class="line"
@@ -42,20 +41,18 @@ export default {
   methods: {
     setStyle () {
       if (this.configuration.direction === 'horizontal') {
-        this.widgetStyle = {
-          'flex-direction': 'column'
-        }
         this.lineStyle = {
-          height: '1px',
-          width: '100%'
+          height: 0,
+          width: '100%',
+          left: 0,
+          top: '50%'
         }
       } else {
-        this.widgetStyle = {
-          'flex-direction': 'row'
-        }
         this.lineStyle = {
           height: '100%',
-          width: '1px'
+          width: 0,
+          left: '50%',
+          top: 0
         }
       }
     }
@@ -66,13 +63,13 @@ export default {
 .widgetLine {
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  position: relative;
   .line {
+    position: absolute;
     width: 100%;
-    height: 1px;
-    background: black;
+    height: 0;
+    background: #000000;
+    border: 0.5px solid black;
   }
 }
 </style>
