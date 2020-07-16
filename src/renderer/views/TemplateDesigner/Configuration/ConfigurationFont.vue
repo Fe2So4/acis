@@ -22,6 +22,14 @@
         @change="onChangeFontSize"
       />
     </el-form-item>
+    <el-form-item label="首行缩进(pt)">
+      <el-input-number
+        :value="value.textIndent"
+        :min="0"
+        controls-position="right"
+        @change="onChangeFontTextIndent"
+      />
+    </el-form-item>
     <el-form-item label="文字颜色">
       <el-color-picker
         :value="value.color"
@@ -100,6 +108,14 @@ export default {
     onChangeFontSize (currentValue, oldValue) {
       const configuration = Object.assign({}, this.value, {
         size: currentValue
+      })
+      this.$emit('change', {
+        font: configuration
+      })
+    },
+    onChangeFontTextIndent (currentValue, oldValue) {
+      const configuration = Object.assign({}, this.value, {
+        textIndent: currentValue
       })
       this.$emit('change', {
         font: configuration

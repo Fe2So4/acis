@@ -22,7 +22,7 @@ function createWindow () {
    */
   mainWindow = new BrowserWindow({
     height: 563,
-    useContentSize: true,
+    // useContentSize: true,
     width: 1000,
     frame: false,
     // fullscreen: true, // 是否全屏
@@ -32,7 +32,7 @@ function createWindow () {
     }
     // movable: false// 可否移动
   })
-  mainWindow.maximize()
+  // mainWindow.maximize()
   mainWindow.loadURL(winURL)
 
   // 显示开发者工具

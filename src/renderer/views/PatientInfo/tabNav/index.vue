@@ -11,7 +11,12 @@ import { getDocumentsList } from '@/api/medicalDocument'
 export default {
   data () {
     return {
-      documentsList: []
+      documentsList: [],
+      wrapStyle: [
+        {
+
+        }
+      ]
     }
   },
   computed: {
@@ -75,6 +80,7 @@ export default {
   border-radius: 5px;
   background: #181C27;
   color: #9BA3D5;
+  width: 100%;
 
   ul {
     // width 100%
@@ -89,6 +95,7 @@ export default {
       &>div {
         line-height: 30px;
         height: 30px;
+        white-space: nowrap;
 
         &.isActive {
         color: #0094ff;

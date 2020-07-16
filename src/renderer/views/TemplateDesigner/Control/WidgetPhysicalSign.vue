@@ -44,6 +44,15 @@ export default {
     endTime: {
       type: String,
       default: ''
+    },
+    isRescueMode: {
+      type: Boolean,
+      default: false
+    },
+    operationId: {
+      type: String,
+      required: false,
+      default: ''
     }
   },
   data () {
@@ -92,7 +101,8 @@ export default {
       // 添加eventTag区域右击菜单
       this.addEventTagCtxMenu()
       // 获取拖动过的数据
-      this.layer.addEventListener('mouseup', this.getChangedPoint)
+      this.layer.addEventListener('mousedown', this.setSelectedPoint)
+      document.addEventListener('mouseup', this.getChangedPoint)
       // 注册刷新事件
       this.$eventHub.$on('document-refresh', () => {
         // 获取数据
@@ -112,8 +122,12 @@ export default {
     if (this.editMode) {
       removeListener(this.$refs.physicalSign, this.resize)
     } else {
-      this.layer.removeEventListener('mouseup', this.getChangedPoint)
-      this.socket = null
+      this.layer.removeEventListener('mousedown', this.setSelectedPoint)
+      document.removeEventListener('mouseup', this.getChangedPoint)
+      if (this.socket) {
+        this.socket.close()
+        this.socket = null
+      }
     }
     this.scene = null
   },
@@ -620,7 +634,8 @@ export default {
       this.clearLegends()
       this.clearEventTags()
       // 请求折线数据
-      await this.getPastSignData()
+      const signData = await this.getPastSignData()
+      if (signData === false) return
       // 绘制折线
       this.drawLines()
       // 绘制折线图例
@@ -637,24 +652,27 @@ export default {
       this.$emit('finish')
     },
     getPastSignData () {
-      return request({
-        method: 'POST',
-        url: getSignData,
-        data: {
-          startTime: this.startTime,
-          endTime: this.endTime,
-          dataMode: 1, // 5-正常模式 1-抢救模式
-          operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
-        }
-      })
-        .then(res => {
-          const requestData = res.data.data
-          console.log(requestData)
-          this.lineList = requestData
+      if (this.startTime && this.endTime) {
+        return request({
+          method: 'POST',
+          url: getSignData,
+          data: {
+            startTime: this.startTime,
+            endTime: this.endTime,
+            dataMode: this.isRescueMode ? 1 : 5, // 5-正常模式 1-抢救模式
+            operationId: this.operationId
+          }
         })
-        .catch(err => {
-          console.log(err)
-        })
+          .then(res => {
+            const requestData = res.data.data
+            this.lineList = requestData
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      } else {
+        return Promise.resolve(false)
+      }
     },
     drawLines () {
       const gridGroup = this.layer.getElementsByClassName('grid')[0]
@@ -736,11 +754,24 @@ export default {
         max: yAxis.values[yAxis.values.length - 1].value
       }
     },
-    getChangedPoint (e) {
+    setSelectedPoint (e) {
       if (e.target instanceof Label && e.target.className === 'signLabel') {
-        const label = e.target
+        this.configuration.dirty = true
+        this.selectedPoint = e.target
+      }
+    },
+    getChangedPoint () {
+      const label = this.selectedPoint
+      if (label) {
         const line = this.lines[label.attr('signId')]
-        console.log(line.getPoint(label), label.attr('signId'))
+        const pointData = {
+          itemCode: label.attr('signId'),
+          itemName: label.attr('signName'),
+          itemValue: line.getPoint(label),
+          timePoint: label.attr('timePoint')
+        }
+        this.$emit('change-sign-data', pointData)
+        this.selectedPoint = null
       }
     },
     setEventTags () {
@@ -760,7 +791,7 @@ export default {
         params: {
           startTime: this.startTime,
           endTime: this.endTime,
-          operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
+          operationId: this.operationId
         }
       })
         .then(res => {
@@ -800,7 +831,6 @@ export default {
           ) {
             eventArr.push({
               eventId: eventCode + '' + detailCode,
-              order: ++order,
               name,
               label,
               color: iconColor ? '#' + iconColor : 'black',
@@ -815,7 +845,6 @@ export default {
           if (eventEndMoment >= startMoment && eventEndMoment <= endMoment) {
             eventArr.push({
               eventId: eventCode + '' + detailCode,
-              order: ++order,
               name,
               label,
               color: iconColor ? '#' + iconColor : 'black',
@@ -827,6 +856,14 @@ export default {
         }
         return arr.concat(eventArr)
       }, [])
+      list.sort(
+        (a, b) =>
+          +moment(a.time, 'YYYY-MM-DD HH:mm:ss') -
+          +moment(b.time, 'YYYY-MM-DD HH:mm:ss')
+      )
+      list.forEach(item => {
+        item.order = ++order
+      })
       return list
     },
     drawEventTags () {
@@ -846,8 +883,16 @@ export default {
       }
     },
     getDataBySocketIO () {
+      // 如果没有传入的时间
+      if (!this.startTime || !this.endTime) {
+        return
+      }
       // 与当前时间对比，如果结束时间为当前时间之前，则不需要建立连接
-      if (+moment(this.endTime) < new Date()) {
+      const now = new Date()
+      if (+moment(this.endTime) < now) {
+        if (this.socket) {
+          this.socket.close()
+        }
         return
       }
       const loginUserNum = 'b0f9d8bda9244397a44cb8ff278937d9'
@@ -868,7 +913,6 @@ export default {
       // 体征曲线
       const that = this
       this.socket.on('push_sign_event', res => {
-        console.log(res)
         if (Array.isArray(res)) {
           // 回应socket.io
           that.socket.emit('push_sign_event', {
@@ -890,12 +934,12 @@ export default {
       if (grid) {
         const mousemoveHandler = e => {
           if (e.target instanceof Label) {
-            const pointValue = e.target.attr('pointValue')
             this.$tooltip({
               dangerouslyUseHTMLString: true,
               message: `
-                <p style="color:white">时间：${pointValue.time}</p>
-                <p style="color:white">值：${pointValue.value}</p>
+                <p style="color:white">名称：${e.target.attr('signName')}</p>
+                <p style="color:white">时间：${e.target.attr('timePoint')}</p>
+                <p style="color:white">值：${e.target.attr('pointValue')}</p>
               `,
               positionX: e.originalEvent.pageX,
               positionY: e.originalEvent.pageY

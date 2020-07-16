@@ -68,7 +68,8 @@ export default {
       },
       set: function (currentValue) {
         const configuration = Object.assign({}, this.value, {
-          startTime: '2018-01-01 ' + currentValue
+          startTime: '2018-01-01 ' + currentValue,
+          endTime: '2018-01-01 ' + this.endTime
         })
         this.$emit('change', {
           xAxis: configuration
@@ -81,6 +82,7 @@ export default {
       },
       set: function (currentValue) {
         const configuration = Object.assign({}, this.value, {
+          startTime: '2018-01-01 ' + this.startTime,
           endTime: '2018-01-01 ' + currentValue
         })
         this.$emit('change', {

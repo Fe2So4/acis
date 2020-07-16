@@ -60,7 +60,7 @@ Tooltip.remove = function () {
       instance.$el.parentNode.removeChild(instance.$el)
       instance.$destroy(true)
       instance = null
-    }, 100)
+    })
   }
 }
 

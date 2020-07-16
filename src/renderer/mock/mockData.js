@@ -67,3 +67,5 @@ Mock.mock('/api/getDocumentsList', 'post', documentsList)
 Mock.mock(/^\/api\/updateDocument/, 'post', addData)
 // 文书数据保存
 Mock.mock(/^\/api\/saveDocumentData/, 'post', addData)
+// 体征数据保存
+Mock.mock(/^\/api\/saveChangedSignData/, 'post', addData)

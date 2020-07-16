@@ -52,6 +52,11 @@ export default {
     endTime: {
       type: String,
       default: ''
+    },
+    operationId: {
+      type: String,
+      required: false,
+      default: ''
     }
   },
   watch: {
@@ -113,7 +118,8 @@ export default {
         fontWeight: font.weight,
         lineHeight: font.lineHeight + 'px',
         color: font.color,
-        textAlign: font.textAlign
+        textAlign: font.textAlign,
+        textIndent: font.textIndent + 'pt'
       }
       const borderObj = border.position.reduce((obj, item) => {
         obj['border-' + item] = border.width + 'px solid ' + border.color
@@ -133,7 +139,7 @@ export default {
         params: {
           startTime: this.startTime,
           endTime: this.endTime,
-          operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
+          operationId: this.operationId
         }
       }).then(
         res => {
@@ -164,7 +170,6 @@ export default {
           if (eventStartMoment >= startMoment && eventStartMoment <= endMoment) {
             eventArr.push({
               eventId: eventCode + '' + detailCode,
-              order: ++order,
               name: name + (eventEndTime ? '开始' : ''),
               label,
               color: iconColor ? '#' + iconColor : 'black',
@@ -179,7 +184,6 @@ export default {
           if (eventEndMoment >= startMoment && eventEndMoment <= endMoment) {
             eventArr.push({
               eventId: eventCode + '' + detailCode,
-              order: ++order,
               name: name + '结束',
               label,
               color: iconColor ? '#' + iconColor : 'black',
@@ -191,6 +195,14 @@ export default {
         }
         return arr.concat(eventArr)
       }, [])
+      list.sort(
+        (a, b) =>
+          +moment(a.time, 'YYYY-MM-DD HH:mm:ss') -
+          +moment(b.time, 'YYYY-MM-DD HH:mm:ss')
+      )
+      list.forEach(item => {
+        item.order = ++order
+      })
       return list
     }
   }

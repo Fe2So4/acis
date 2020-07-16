@@ -8,7 +8,7 @@ function request (options) {
     .catch(err => {
       Message({
         type: 'error',
-        message: err
+        message: JSON.stringify(err, '', 2)
       })
     })
 }
