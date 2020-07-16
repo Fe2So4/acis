@@ -7,6 +7,7 @@
        i(class="el-icon-close" @click="handleClose")
       .dialog-body
         component(:is="componentName")
+        //- OperationOverview
         //- <operation-handover/>
         //- Hemodynamics
         //- IntraoperativePatients
@@ -25,6 +26,8 @@
         //- MedicalRecordCourse
         //- EmergencyTreatment
         //- OperationLevel
+        //- OperationArrangement
+        //- About
     //- .dialog-footer
 </template>
 <script>
@@ -54,6 +57,9 @@ import InspectionResult from '@/views/InspectionResult/index'
 import MedicalRecordCourse from '@/views/MedicalRecordCourse/index'
 import EmergencyTreatment from '@/views/EmergencyTreatment/index'
 import OperationLevel from '@/views/OperationLevel/index'
+import OperationArrangement from '@/views/OperationArrangement/index'
+import About from '@/views/About/index'
+import OperationOverview from '@/views/OperationOverview/index'
 export default {
   name: 'DialogNav',
   data () {
@@ -97,7 +103,10 @@ export default {
     InspectionResult,
     MedicalRecordCourse,
     EmergencyTreatment,
-    OperationLevel
+    OperationLevel,
+    OperationArrangement,
+    About,
+    OperationOverview
   },
   methods: {
     handleClose () {
@@ -120,7 +129,7 @@ export default {
     justify-content center
     align-items center
     .dialog-content
-      padding 0px 20px 40px
+      padding 0px 20px 20px
       background #181C27
       box-shadow 0px 0px 12px 3px rgba(0, 0, 0, 0.4)
       border-radius 10px

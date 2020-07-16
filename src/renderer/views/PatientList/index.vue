@@ -98,7 +98,7 @@
               />
             </el-form-item>
             <el-form-item>
-              <el-button @click="handleRegister">
+              <el-button @click="handleRegister(1)">
                 急诊登记
               </el-button>
               <el-button>
@@ -107,7 +107,7 @@
               <el-button>
                 明天列表
               </el-button>
-              <el-button>
+              <el-button @click="handleRegister(2)">
                 手术排台
               </el-button>
             </el-form-item>
@@ -262,8 +262,12 @@ export default {
     handleJump (item) {
       this.$router.push('/home/patientInfo')
     },
-    handleRegister () {
-      this.$eventHub.$emit('show-dialog', { name: '急诊登记', componentName: 'EmergencyTreatment' })
+    handleRegister (param) {
+      if (param === 1) {
+        this.$eventHub.$emit('show-dialog', { name: '急诊登记', componentName: 'EmergencyTreatment' })
+      } else {
+        this.$eventHub.$emit('show-dialog', { name: '手术排台', componentName: 'OperationArrangement' })
+      }
     },
     hanldeSearchMore () {
       this.showMore = !this.showMore

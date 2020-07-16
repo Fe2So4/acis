@@ -17,7 +17,7 @@
           <div class="content">
             <div
               class="room"
-              v-if="item.opeStatus === '入复苏室'"
+              v-if="showRoom"
             >
               <span>{{ item.room }}</span>
             </div>
@@ -46,6 +46,10 @@ export default {
       default: function () {
         return []
       }
+    },
+    showRoom: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {

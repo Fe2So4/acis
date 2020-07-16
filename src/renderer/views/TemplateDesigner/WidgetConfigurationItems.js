@@ -50,6 +50,7 @@ export default function getConfigurationItems (widgetName) {
       return {
         leftPartWidthRate: 0.18,
         rightPartWidthRate: 0.1,
+        border,
         leftTitle: {
           text: '麻醉用药',
           width: 50,
@@ -64,8 +65,8 @@ export default function getConfigurationItems (widgetName) {
           text: '总量'
         },
         xAxis: {
-          startTime: '2020-07-01 09:00',
-          endTime: '2020-07-01 13:00',
+          startTime: '2018-01-01 08:00',
+          endTime: '2018-01-01 12:00',
           timeInterval: 15,
           lineInterval: 3
         },
@@ -73,6 +74,7 @@ export default function getConfigurationItems (widgetName) {
       }
     case 'widget-in-out':
       return {
+        border,
         leftPartWidthRate: 0.18,
         rightPartWidthRate: 0.1,
         leftTitle: {
@@ -89,8 +91,8 @@ export default function getConfigurationItems (widgetName) {
           text: '总量'
         },
         xAxis: {
-          startTime: '2018-02-01 08:00',
-          endTime: '2018-02-01 12:00',
+          startTime: '2018-01-01 08:00',
+          endTime: '2018-01-01 12:00',
           timeInterval: 15,
           lineInterval: 3
         },
@@ -103,6 +105,7 @@ export default function getConfigurationItems (widgetName) {
       }
     case 'widget-anaes-table':
       return {
+        border,
         leftTitle: {
           text: '监测',
           width: 40,

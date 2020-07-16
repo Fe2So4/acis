@@ -1,5 +1,5 @@
 <template>
-  <div class="patient-info">
+  <div class="patient-info clearfix">
     <div class="left">
       <operation-status />
       <tab-nav />
@@ -27,12 +27,16 @@ export default {
 .patient-info {
   height: 100%;
   padding-left:12px;
-  display: flex;
+  // display: flex;
   .left{
-    flex: 1;
+    float:left;
+    width:calc(100% - 220px);
+    height: 100%;
   }
   .right{
     width:200px;
+    float: right;
+    height:100%;
     margin-left:20px;
   }
 }

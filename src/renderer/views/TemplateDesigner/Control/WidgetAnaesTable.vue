@@ -2,6 +2,7 @@
   <div
     ref="anaesTable"
     class="anaesTable"
+    :style="widgetStyle"
   />
 </template>
 
@@ -16,49 +17,41 @@ export default {
   data () {
     return {
       layer: null,
-      layout: {}
+      layout: {},
+      widgetStyle: {}
     }
   },
   props: {
     configuration: {
       type: Object,
-      default: () => (
-        {
-          leftTitle: {
-            text: '监测',
-            width: 40,
-            lineHeight: 30
-          },
-          // 行标题宽度
-          rowTitle: {
-            width: 128
-          },
-          rowList: [
-            // { text: '心电图', colNum: 2 },
-            // { text: '氧饱和度', colNum: 1 },
-            // { text: '潮气量', colNum: 2 },
-            // { text: 'f', colNum: 1 },
-            // { text: 'PEAK', colNum: 2 },
-            // { text: 'PEEP', colNum: 2 },
-            // { text: '中心静脉压', colNum: 2 },
-            // { text: '尿量', colNum: 1 },
-            // { text: '累计失血量', colNum: 2 }
-          ],
-          anaesColumn: {
-            num: 8
-          }
-        })
+      required: true
+    },
+    editMode: {
+      type: Boolean,
+      default: true
+    },
+    startTime: {
+      type: String,
+      default: ''
+    },
+    endTime: {
+      type: String,
+      default: ''
     }
   },
   watch: {
     configuration: {
       deep: true,
       handler: function (val) {
-        this.resize()
+        if (this.editMode) {
+          this.resize()
+          this.setStyle()
+        }
       }
     }
   },
   created () {
+    this.setStyle()
     this.resize = debounce(this.domResizeListener, 20)
   },
   mounted () {
@@ -73,6 +66,17 @@ export default {
     removeListener(this.$refs.anaesTable, this.resize)
   },
   methods: {
+    setStyle () {
+      const { border } = this.configuration
+      let styleObj = {}
+      const borderObj = border.position.reduce((obj, item) => {
+        obj['border-' + item] = border.width + 'px solid ' + border.color
+        return obj
+      }, {})
+
+      styleObj = { ...styleObj, ...borderObj }
+      this.widgetStyle = styleObj
+    },
     domResizeListener () {
       this.scene.resize()
       this.setLayout()
@@ -263,7 +267,7 @@ export default {
   .anaesTable {
     height: 100%;
     width: 100%;
-    border: 1px solid black;
+    // border: 1px solid black;
     box-sizing: border-box;
     margin: 0 auto;
     // background:#fff;

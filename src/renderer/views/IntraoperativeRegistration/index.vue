@@ -277,7 +277,8 @@ export default {
   background-color: #a8a8a8;
 }
 .scroll div::-webkit-scrollbar-thumb:active {
-  background-color: #787878;
+  /* background-color: #787878; */
+  background-color: rgba(144, 147, 153, 0.3)
 }
 /*边角，即两个滚动条的交汇处*/
 .scroll div::-webkit-scrollbar-corner {

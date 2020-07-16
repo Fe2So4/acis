@@ -2,6 +2,7 @@
   <div
     ref="inOut"
     class="inOut"
+    :style="widgetStyle"
     @click="handleClearRightClick"
   >
     <drug-list
@@ -38,6 +39,7 @@ export default {
       drugListVisible: false,
       layout: {},
       // drugList: [], // 药品列表
+      widgetStyle: {},
       list: [],
       groupNo: null,
       infusionList: [
@@ -175,7 +177,7 @@ export default {
       handler: function (val) {
         if (this.editMode) {
           this.resize()
-          // this.setStyle()
+          this.setStyle()
         }
       }
     }
@@ -185,6 +187,7 @@ export default {
     DrugDetail
   },
   created () {
+    this.setStyle()
     this.resize = debounce(this.domResizeListener, 20)
   },
   mounted () {
@@ -203,6 +206,16 @@ export default {
     removeListener(this.$refs.inOut, this.resize)
   },
   methods: {
+    setStyle () {
+      const { border } = this.configuration
+      let styleObj = {}
+      const borderObj = border.position.reduce((obj, item) => {
+        obj['border-' + item] = border.width + 'px solid ' + border.color
+        return obj
+      }, {})
+      styleObj = { ...styleObj, ...borderObj }
+      this.widgetStyle = styleObj
+    },
     domResizeListener () {
       this.scene.resize()
       this.setLayout()
@@ -1356,9 +1369,9 @@ export default {
 .inOut {
   height: 100%;
   width: 100%;
-  border: 1px solid black;
+  // border: 1px solid black;
   box-sizing: border-box;
   margin: 0 auto;
-  background: #fff;
+  // background: #fff;
 }
 </style>

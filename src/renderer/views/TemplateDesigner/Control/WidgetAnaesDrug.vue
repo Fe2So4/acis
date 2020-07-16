@@ -2,6 +2,7 @@
   <div
     ref="anaesDrug"
     class="anaesDrug"
+    :style="widgetStyle"
     @click="handleClearRightClick"
   >
     <drug-list
@@ -44,8 +45,8 @@ export default {
           total: '30',
           data: [
             {
-              startTime: '2020-7-1 10:00',
-              endTime: '2020-7-1 10:30',
+              startTime: '2018-1-1 10:00',
+              endTime: '2018-1-1 10:30',
               dose: '32mg/l',
               continue: false,
               speed: '32',
@@ -54,8 +55,8 @@ export default {
               concentrationUnit: '%'
             },
             {
-              startTime: '2020-7-1 10:40',
-              endTime: '2020-7-1 11:00',
+              startTime: '2018-1-1 10:40',
+              endTime: '2018-1-1 11:00',
               dose: '32mg/l',
               continue: true,
               speed: '32',
@@ -64,8 +65,8 @@ export default {
               concentrationUnit: '%'
             },
             {
-              startTime: '2020-7-1 11:10',
-              endTime: '2020-7-1 12:00',
+              startTime: '2018-1-1 11:10',
+              endTime: '2018-1-1 12:00',
               dose: '32mg/l',
               continue: true,
               speed: '32',
@@ -81,8 +82,8 @@ export default {
           total: '50',
           data: [
             {
-              startTime: '2020-7-1 10:00',
-              endTime: '2020-7-1 10:30',
+              startTime: '2018-1-1 10:00',
+              endTime: '2018-1-1 10:30',
               dose: '32mg/l',
               continue: true,
               speed: '32',
@@ -91,8 +92,8 @@ export default {
               concentrationUnit: '%'
             },
             {
-              startTime: '2020-7-1 10:45',
-              endTime: '2020-7-1 11:00',
+              startTime: '2018-1-1 10:45',
+              endTime: '2018-1-1 11:00',
               dose: '32',
               continue: true,
               speed: '32',
@@ -101,8 +102,8 @@ export default {
               concentrationUnit: '%'
             },
             {
-              startTime: '2020-7-1 11:15',
-              endTime: '2020-7-1 11:45',
+              startTime: '2018-1-1 11:15',
+              endTime: '2018-1-1 11:45',
               dose: '32mg/l',
               continue: false,
               speed: '32',
@@ -149,7 +150,7 @@ export default {
       handler: function (val) {
         if (this.editMode) {
           this.resize()
-          // this.setStyle()
+          this.setStyle()
         }
       }
     },
@@ -162,6 +163,7 @@ export default {
     }
   },
   created () {
+    this.setStyle()
     this.resize = debounce(this.domResizeListener, 20)
   },
   mounted () {
@@ -178,17 +180,17 @@ export default {
     removeListener(this.$refs.anaesDrug, this.resize)
   },
   methods: {
-    // setStyle () {
-    //   const { border } = this.configuration
-    //   let styleObj = {}
-    //   const borderObj = border.position.reduce((obj, item) => {
-    //     obj['border-' + item] = border.width + 'px solid ' + border.color
-    //     return obj
-    //   }, {})
+    setStyle () {
+      const { border } = this.configuration
+      let styleObj = {}
+      const borderObj = border.position.reduce((obj, item) => {
+        obj['border-' + item] = border.width + 'px solid ' + border.color
+        return obj
+      }, {})
 
-    //   styleObj = { ...styleObj, ...borderObj }
-    //   this.widgetStyle = styleObj
-    // },
+      styleObj = { ...styleObj, ...borderObj }
+      this.widgetStyle = styleObj
+    },
     domResizeListener () {
       this.scene.resize()
       this.setLayout()
@@ -446,23 +448,6 @@ export default {
         drugList.append(line)
       }
       this.setDrug()
-      // for (let i = 0; i < this.configuration.drugNumber; i++) {
-      //   if (this.drugList[i]) {
-      //     const text = new Label(this.drugList[i].name)
-      //     text.attr({
-      //       pos: [0, lineHeight * i],
-      //       anchor: [0, 0],
-      //       fontSize: 12,
-      //       fontFamily: '宋体',
-      //       textAlign: 'center',
-      //       fillColor: 'blue',
-      //       width: width,
-      //       height: lineHeight,
-      //       lineHeight: lineHeight
-      //     })
-      //     drugList.append(text)
-      //   }
-      // }
     },
     setDrug () {
       if (!this.editMode) {
@@ -648,11 +633,6 @@ export default {
           grid.append(line)
         }
       })
-      // const yAxislistMax =
-      // this.yAxis.list.reduce((max, item) => {
-      //   return Math.max(max, item.values.length)
-      // }, 0) - 1
-      // const yScale = height / yAxislistMax
       const yScale = height / this.configuration.drugNumber
       for (let index = 0; index < this.configuration.drugNumber; index++) {
         if (index) {
@@ -666,28 +646,11 @@ export default {
         }
         const row = new Group({
           pos: [0, Math.round(index * yScale) - 0.5],
-          // bgcolor: 'red',
           size: [width, yScale],
           index: index,
           className: 'row'
-          // pointerEvents: 'none'
         })
         grid.append(row)
-        // for (let i = 1; i < this.yAxis.lineInterval; i++) {
-        //   const line = new Polyline({
-        //     pos: [
-        //       0,
-        //       Math.round(
-        //         index * yScale + i * (yScale / this.yAxis.lineInterval)
-        //       ) - 0.5
-        //     ],
-        //     points: [0, 0, width, 0],
-        //     strokeColor: 'gray',
-        //     lineWidth: 1,
-        //     lineDash: [1, 2, 3]
-        //   })
-        //   grid.append(line)
-        // }
       }
       this.handleGridRightClick()
     },
@@ -907,7 +870,7 @@ export default {
 .anaesDrug {
   height: 100%;
   width: 100%;
-  border: 1px solid black;
+  // border: 1px solid black;
   box-sizing: border-box;
   margin: 0 auto;
   position: relative;

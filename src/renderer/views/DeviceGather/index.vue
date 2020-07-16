@@ -13,6 +13,7 @@
           size="mini"
           class="scroll"
           :data="custodyData"
+          :checkbox-config="{checkStrictly: true}"
         )
           vxe-table-column(field="name" title="监护仪")
           vxe-table-column(field="specs" title="开始时间")
@@ -20,7 +21,7 @@
           vxe-table-column(field="specs" title="实际记录时间")
           vxe-table-column(field="specs" title="采集次数/秒")
           vxe-table-column(field="specs" title="手术")
-          vxe-table-column(type="checkbox" width="60")
+          vxe-table-column(type="checkbox" width="60" title="选择")
       .middle
         vxe-table(
           border
@@ -33,6 +34,7 @@
           size="mini"
           class="scroll"
           :data="anaesData"
+          :checkbox-config="{checkStrictly: true}"
         )
           vxe-table-column(field="name" title="麻醉机")
           vxe-table-column(field="specs" title="开始时间")
@@ -40,7 +42,7 @@
           vxe-table-column(field="specs" title="实际记录时间")
           vxe-table-column(field="specs" title="采集次数/秒")
           vxe-table-column(field="specs" title="手术")
-          vxe-table-column(type="checkbox" width="60")
+          vxe-table-column(type="checkbox" width="60" title="选择")
     .option
       el-form(:inline="true")
         el-form-item(label="开始时间")

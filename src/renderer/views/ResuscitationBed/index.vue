@@ -1,6 +1,6 @@
 <template lang="pug">
   .bed
-    PatientList(:list="patientList")
+    PatientList(:list="patientList" :showRoom="true")
 </template>
 <script>
 import PatientList from '@/components/OperationOverview/index'

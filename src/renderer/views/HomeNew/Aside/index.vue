@@ -64,11 +64,11 @@ export default {
   name: 'Aside',
   data () {
     return {
-      dialogTitle: '术中列表',
+      dialogTitle: '我是一个神奇的弹框标题啊',
       activesNames: '1',
       isCollapse: false,
       showOverflow: false,
-      showDialog: false,
+      showDialog: true,
       componentName: '',
       navList: [
         {
@@ -121,10 +121,10 @@ export default {
           index: '5',
           subNav: [
             { name: '系统配置', index: '5-1', componentName: 'ConfigurationSystem' },
-            // { name: '模板设计器', index: '5-2', route: 'TemplateDesigner' },
             { name: '模板设计器', index: '5-2', componentName: 'TemplateDesigner' },
             { name: '模板展示', index: '5-3', componentName: 'TemplateDisplayer' },
-            { name: '修改密码', index: '5-4', componentName: 'ChangePass' }
+            { name: '修改密码', index: '5-4', componentName: 'ChangePass' },
+            { name: '关于', index: '5-5', componentName: 'About' }
           ],
           icon: 'el-icon-s-tools'
         }
@@ -200,6 +200,10 @@ export default {
       // 激活弹窗
       this.handleChangeButton(item)
     })
+    this.$eventHub.$on('close-dialog', () => {
+      // 关闭弹窗
+      this.handleDialogClose()
+    })
   }
 }
 </script>
@@ -215,7 +219,7 @@ export default {
     line-height: 30px;
     // background: #f8f9fa;
     text-indent: 10px;
-    font-size: 14px;
+    font-size: 12px;
     cursor: pointer;
   }
   .img {

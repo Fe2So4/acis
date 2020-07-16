@@ -11,7 +11,7 @@
         }"
       />
     </el-form-item>
-    <el-form-item label="开始时间">
+    <el-form-item label="结束时间">
       <el-time-select
         placeholder="结束时间"
         v-model="endTime"

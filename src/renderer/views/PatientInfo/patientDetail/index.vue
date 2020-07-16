@@ -50,14 +50,10 @@ export default {
       background:#181C27;
       box-shadow:0px 0px 12px 3px rgba(0, 0, 0, 0.4);
       border-radius:5px;
-        // height: 100%;
-        // flex: 1;
-        // background:#f8f9fa;
         .title{
             color:#15428b;
             font-size:14px;
             line-height:30px;
-            // line-height: 30px;
             padding-left:10px;
         }
         .content{

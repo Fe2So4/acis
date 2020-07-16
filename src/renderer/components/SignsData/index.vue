@@ -4,17 +4,22 @@
       体征数据
     </div>
     <ul>
-      <li
-        v-for="(item,index) in signsList"
-        :key="index"
+      <el-scrollbar
+        style="height: 100%"
+        :wrap-style="wrapStyle"
       >
-        <p :style="{color:item.color}">
-          {{ item.name }}
-        </p>
-        <p :style="{color:item.color}">
-          {{ item.value }}
-        </p>
-      </li>
+        <li
+          v-for="(item,index) in signsList"
+          :key="index"
+        >
+          <p :style="{color:item.color}">
+            {{ item.name }}
+          </p>
+          <p :style="{color:item.color}">
+            {{ item.value }}
+          </p>
+        </li>
+      </el-scrollbar>
     </ul>
   </div>
 </template>
@@ -23,7 +28,12 @@ import axios from 'axios'
 export default {
   data () {
     return {
-      signsList: []
+      signsList: [],
+      wrapStyle: [
+        {
+          'overflow-x': 'hidden'
+        }
+      ]
     }
   },
 

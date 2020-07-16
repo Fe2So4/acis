@@ -1,8 +1,9 @@
 <template lang="pug">
   .tab-nav
-    ul
-      li(v-for="item in navList" :key="item.index" @click="handleClick(item)")
-        div(:class="{'isActive': item.index === navIndex}") {{item.label}}
+    el-scrollbar(class="rowScrollbar")
+      ul
+        li(v-for="item in navList" :key="item.index" @click="handleClick(item)")
+          div(:class="{'isActive': item.index === navIndex}") {{item.label}}
 </template>
 <script>
 import request from '@/utils/requestForMock'
@@ -68,6 +69,7 @@ export default {
 </script>
 <style lang="stylus" scoped>
 .tab-nav {
+  width 100%
   margin-top: 18px;
   box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
   border-radius: 5px;
@@ -75,14 +77,15 @@ export default {
   color: #9BA3D5;
 
   ul {
+    // width 100%
     display: flex;
-
+    flex-wrap nowrap
     li {
       line-height: 40px;
       cursor: pointer;
       padding: 5px;
       font-size: 14px;
-
+      // float left
       &>div {
         line-height: 30px;
         height: 30px;
