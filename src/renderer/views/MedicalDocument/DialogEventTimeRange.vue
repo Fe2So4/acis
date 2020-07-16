@@ -100,8 +100,8 @@ export default {
             detailName,
             drawIcon,
             eventCode,
-            eventEndTime: this.startTime,
-            eventStartTime: this.endTime,
+            eventStartTime: this.startTime,
+            eventEndTime: this.endTime,
             eventType,
             iconColor,
             operationId: 'b0f9d8bda9244397a44cb8ff278937d9'

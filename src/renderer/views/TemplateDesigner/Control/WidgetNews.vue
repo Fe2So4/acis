@@ -22,8 +22,8 @@
           {{ news.order }}
         </div>
         <div>
-          {{ news.startTime }}
-          <span v-if="news.endTime">>{{ news.endTime }}</span>
+          {{ news.startTime | timeFilter }}
+          <span v-if="news.endTime">> {{ news.endTime | timeFilter }}</span>
           {{ news.name }}
         </div>
       </div>
@@ -31,9 +31,8 @@
   </div>
 </template>
 <script>
-import io from 'socket.io-client'
 import moment from 'moment'
-import { getSocketData, getEventData } from '@/api/medicalDocument'
+import { getEventData } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
 export default {
   name: 'WidgetNews',
@@ -101,6 +100,11 @@ export default {
       this.getData()
     })
   },
+  filters: {
+    timeFilter (time) {
+      return moment(time, 'YYYY-MM-DD HH:mm:ss').format('MM-DD HH:mm')
+    }
+  },
   methods: {
     setStyle () {
       const { font, border } = this.configuration
@@ -121,13 +125,16 @@ export default {
     },
     async getData () {
       await this.getEventData()
-      this.getDataFromSocketIO()
     },
     getEventData () {
       return request({
-        method: 'POST',
+        method: 'GET',
         url: getEventData,
-        data: {}
+        params: {
+          startTime: this.startTime,
+          endTime: this.endTime,
+          operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
+        }
       }).then(
         res => {
           this.newsList = this.convertEventData(res.data.data)
@@ -158,7 +165,7 @@ export default {
             eventArr.push({
               eventId: eventCode + '' + detailCode,
               order: ++order,
-              name,
+              name: name + (eventEndTime ? '开始' : ''),
               label,
               color: iconColor ? '#' + iconColor : 'black',
               time: eventStartTime,
@@ -173,7 +180,7 @@ export default {
             eventArr.push({
               eventId: eventCode + '' + detailCode,
               order: ++order,
-              name,
+              name: name + '结束',
               label,
               color: iconColor ? '#' + iconColor : 'black',
               time: eventEndTime,
@@ -185,27 +192,6 @@ export default {
         return arr.concat(eventArr)
       }, [])
       return list
-    },
-    getDataFromSocketIO () {
-      if (!this.endTime) {
-        return
-      }
-      // 与当前时间对比，如果结束时间为当前时间之前，则不需要建立连接
-      if (+moment(this.endTime) < new Date()) {
-        return
-      }
-      this.socket = io(getSocketData)
-      this.socket.on('connect', () => {
-        console.log('socket.io connected')
-      })
-      this.socket.on('disconnect', () => {
-        console.log('socket.io disconnect')
-      })
-
-      // 术中事件
-      this.socket.on('operation event', res => {
-        this.newsList.push(res)
-      })
     }
   }
 }

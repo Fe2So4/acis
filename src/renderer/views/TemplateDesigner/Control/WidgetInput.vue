@@ -149,7 +149,8 @@ export default {
       })
     },
     onSelectChange (val) {
-      console.log(val)
+      // 标志已被修改过
+      this.configuration.dirty = true
       if (this.configuration.multiSelect) {
         this.configuration.value = val.join(',')
       } else {
@@ -157,6 +158,8 @@ export default {
       }
     },
     onInput (e) {
+      // 标志已被修改过
+      this.configuration.dirty = true
       this.configuration.value = e.target.value
     }
   }
