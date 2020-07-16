@@ -12,47 +12,47 @@
         i(class="el-icon-back" @click="back")
         .room 07-1
     .step
-        //- el-scrollbar(class="rowScrollbar")
-        ul
-          li(class="left-arow" @click="handleChangeNav(1)")
-            i(class="el-icon-arrow-left arow")
-          li(v-for="(item,index) in opeStatusList" :key="index")
-            .img
-              img(:src="getImg(item.status)")
-              .line(v-if="item.status === 0 && index>0")
-              .gray(v-else-if="item.status === 2 && index>0")
-                ul
-                  li
-                  li
-                  li
-                  li
-                  li
-                  li
-                  li
-                  li
-              .loading(v-else-if="item.status===1 && index>0")
-                ul
-                  li
-                  li
-                  li
-                  li
-                  li
-                  li
-                  li
-                  li
-            .title 准备手术
-            .time
-              el-date-picker(
-                v-model="datetime"
-                size="mini"
-                type="datetime"
-                style="width:130px;"
-                placeholder=""
-                default-time="12:00:00"
-                format="MM-dd HH:mm"
-              )
-          li(class="right-arow" @click="handleChangeNav(2)")
-            i(class="el-icon-arrow-right arow")
+        el-scrollbar(class="rowScrollbar")
+          ul
+            li(class="left-arow" @click="handleChangeNav(1)")
+              i(class="el-icon-arrow-left arow")
+            li(v-for="(item,index) in opeStatusList" :key="index")
+              .img
+                img(:src="getImg(item.status)")
+                .line(v-if="item.status === 0 && index>0")
+                .gray(v-else-if="item.status === 2 && index>0")
+                  ul
+                    li
+                    li
+                    li
+                    li
+                    li
+                    li
+                    li
+                    li
+                .loading(v-else-if="item.status===1 && index>0")
+                  ul
+                    li
+                    li
+                    li
+                    li
+                    li
+                    li
+                    li
+                    li
+              .title 准备手术
+              .time
+                el-date-picker(
+                  v-model="datetime"
+                  size="mini"
+                  type="datetime"
+                  style="width:130px;"
+                  placeholder=""
+                  default-time="12:00:00"
+                  format="MM-dd HH:mm"
+                )
+            li(class="right-arow" @click="handleChangeNav(2)")
+              i(class="el-icon-arrow-right arow")
 </template>
 <script>
 import unstart from '@/assets/unstart.png'
@@ -99,6 +99,7 @@ export default {
 </script>
 <style lang="stylus" scoped>
   .operation-status
+    width 100%
     height 114px
     background #181C27
     box-shadow 0px 0px 12px 3px rgba(0, 0, 0, 0.4)
@@ -112,7 +113,7 @@ export default {
       background rgba(37,44,64,1)
       border 2px solid rgba(53,62,86,1)
       border-radius 6px
-      font-size 12px
+      font-size 14px
       padding 4px 9px 9px
       color #D0DAE5
       .top

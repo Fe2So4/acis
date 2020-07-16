@@ -1,8 +1,8 @@
 <template>
   <div
     class="header"
+    style="-webkit-app-region: drag;"
   >
-    <!-- style="-webkit-app-region: drag;" -->
     <i
       class="el-icon-minus"
       @click="miniWindow"
