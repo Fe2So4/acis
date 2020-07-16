@@ -82,8 +82,13 @@ export const getDictionaryData = mock
   ? '/api/getDictionaryData'
   : baseZhong + 'acis/common/template/showDictionaryData'
 
-// 文书保存 - 钟 - 2020-07-15
+// 文书保存一般控件 - 钟 - 2020-07-15
 export const saveDocumentData = mock
   ? '/api/saveDocumentData'
   : baseZhong + 'acis/common/template/saveCustomData'
+
+// 保存修改过的体征 - 谢 - 2020-07-16
+export const saveChangedSignData = mock
+  ? '/api/saveChangedSignData'
+  : baseXie + 'acis/intraoperative/info/editPatientMonitorDataExt'
 // 文书展示相关 --------------------------------end---------------------------------

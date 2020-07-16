@@ -10,7 +10,11 @@
       :start-time="startTime"
       :end-time="endTime"
       :paper-setting="paperSetting"
+      :is-rescue-mode="isRescueMode"
+      :operation-id="operationId"
+      :patient-id="patientId"
       @select-event-time-range="onSelectEventTimeRange"
+      @change-sign-data="onChangeSignData"
     />
     <bottom-buttons
       :is-intraoperative="isIntraoperative"
@@ -45,13 +49,16 @@ import {
   getTemplateInfo,
   getTemplateData,
   getValueData,
-  saveDocumentData
+  saveDocumentData,
+  saveChangedSignData
 } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
 import MainContent from './MainContent'
 import BottomButtons from './BottomButtons'
 import DialogEventTimeRange from './DialogEventTimeRange'
 import DialogDesigner from './DialogDesigner'
+import { createNamespacedHelpers } from 'vuex'
+const { mapState } = createNamespacedHelpers('Base')
 export default {
   name: 'MedicalDocument',
   components: {
@@ -74,8 +81,15 @@ export default {
       paperSetting: {},
       dialogDesignerVisible: false,
       templateId: '',
-      loadingVisible: false
+      loadingVisible: false,
+      changedSignDataList: []
     }
+  },
+  computed: {
+    ...mapState([
+      'operationId',
+      'patientId'
+    ])
   },
   watch: {
     $route: {
@@ -90,6 +104,7 @@ export default {
   },
   beforeRouteUpdate (to, from, next) {
     this.showLeaveMessage(() => {
+      this.changedSignDataList = []
       this.templateId = to.params.templateId
       this.getData(0)
       next()
@@ -116,8 +131,8 @@ export default {
           method: 'POST',
           params: {
             templateCode: this.templateId,
-            operationId: 'qwe16',
-            patientId: 'a54sd'
+            operationId: this.operationId,
+            patientId: this.patientId
           }
         })
       ]).then(res => {
@@ -168,7 +183,7 @@ export default {
         method: 'POST',
         url: getTemplateInfo,
         data: {
-          operationId: 'b0f9d8bda9244397a44cb8ff278937d9',
+          operationId: this.operationId,
           intervalTime,
           pageIndex,
           pageTimeInterval
@@ -223,25 +238,52 @@ export default {
     },
     onPrintAll () {},
     onRefresh () {
+      // 重置修改过的体征
+      this.changedSignDataList = []
       this.getData(this.pageIndex)
       this.$eventHub.$emit('document-refresh')
     },
     onSave () {
-      const list = this.widgetList
-        .filter(widget => widget.value || widget.required)
-      let flag = true
-      list.forEach(widget => {
-        if (widget.required && !widget.value) {
-          flag = false
-        }
-      })
-      if (!flag) {
+      const modified = this.validateModified()
+      const filledRequiredItem = this.validateFilledRequiredItem()
+      if (!modified) {
         this.$message({
-          message: '当前有必填项未填写信息，请重新确认',
+          message: '没有已修改的数据',
+          type: 'info'
+        })
+        return
+      }
+      if (!filledRequiredItem) {
+        this.$message({
+          message: '当前有必填项未填写信息，请检查',
           type: 'warning'
         })
         return
       }
+      this.saveNormalData()
+      this.saveChangedSignData()
+    },
+    validateModified () {
+      const list = this.widgetList.filter(
+        widget => widget.dirty
+      )
+      return list.length !== 0
+    },
+    validateFilledRequiredItem () {
+      let flag = true
+      this.widgetList.filter(
+        widget => widget.required
+      ).forEach(widget => {
+        if (!widget.value) {
+          flag = false
+        }
+      })
+      return flag
+    },
+    saveNormalData () {
+      const list = this.widgetList.filter(
+        widget => widget.value
+      )
       const customDataList = list
         .filter(
           widget =>
@@ -261,28 +303,26 @@ export default {
           data: customDataList,
           params: {
             templateCode: this.templateId,
-            operationId: 'qwe16',
-            patientId: 'a54sd',
+            operationId: this.operationId,
+            patientId: this.patientId,
             tableName: 'acis_patient_writ_data'
           }
-        }).then(
-          res => {
-            if (res.data.success) {
-              this.$message({
-                message: '保存成功',
-                type: 'success'
-              })
-            } else {
-              this.$message({
-                message: '保存失败',
-                type: 'warning'
-              })
-            }
+        }).then(res => {
+          if (res.data.success) {
+            this.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+          } else {
+            this.$message({
+              message: '保存失败',
+              type: 'warning'
+            })
           }
-        )
+        })
       } else {
         this.$message({
-          message: '无需要保存的数据',
+          message: '当前无可保存到自定义表数据',
           type: 'info'
         })
       }
@@ -295,6 +335,11 @@ export default {
       this.$eventHub.$emit('document-refresh')
     },
     showLeaveMessage (nextFn, rejectFn = () => {}) {
+      const modified = this.validateModified()
+      if (!modified) {
+        nextFn()
+        return
+      }
       this.$confirm('此操作将不会保存修改, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -306,6 +351,64 @@ export default {
         .catch(() => {
           rejectFn()
         })
+    },
+    onChangeSignData ({ itemCode, itemName, itemValue, timePoint }) {
+      if (!itemCode) {
+        return
+      }
+      const group = this.changedSignDataList.find(
+        group => group.itemCode === itemCode && group.itemName === itemName
+      )
+      if (group) {
+        const item = group.list.find(item => item.timePoint === timePoint)
+        if (item) {
+          item.itemValue = itemValue
+        } else {
+          group.list.push({
+            timePoint,
+            itemValue
+          })
+        }
+      } else {
+        this.changedSignDataList.push({
+          itemCode,
+          itemName,
+          list: [
+            {
+              itemValue,
+              timePoint
+            }
+          ]
+        })
+      }
+    },
+    saveChangedSignData () {
+      const { length } = this.changedSignDataList
+      if (length === 0) return
+      return request({
+        url: saveChangedSignData,
+        method: 'POST',
+        data: {
+          list: this.changedSignDataList,
+          dataMode: this.isRescueMode ? 1 : 5,
+          operationId: this.operationId
+        }
+      }).then(
+        res => {
+          if (res.data.success) {
+            this.changedSignDataList = []
+            this.$message({
+              type: 'success',
+              message: '已保存修改后的体征数据'
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: res.data.msg
+            })
+          }
+        }
+      )
     }
   }
 }

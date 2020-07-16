@@ -11,7 +11,7 @@
         }"
       />
     </el-form-item>
-    <el-form-item label="开始时间">
+    <el-form-item label="结束时间">
       <el-time-select
         placeholder="结束时间"
         v-model="endTime"
@@ -68,7 +68,8 @@ export default {
       },
       set: function (currentValue) {
         const configuration = Object.assign({}, this.value, {
-          startTime: '2018-01-01 ' + currentValue
+          startTime: '2018-01-01 ' + currentValue,
+          endTime: '2018-01-01 ' + this.endTime
         })
         this.$emit('change', {
           xAxis: configuration
@@ -81,6 +82,7 @@ export default {
       },
       set: function (currentValue) {
         const configuration = Object.assign({}, this.value, {
+          startTime: '2018-01-01 ' + this.startTime,
           endTime: '2018-01-01 ' + currentValue
         })
         this.$emit('change', {

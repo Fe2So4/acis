@@ -78,6 +78,7 @@ export default {
       this.fontStyle = {
         fontSize: font.size + 'pt',
         fontWeight: font.weight,
+        textIndent: font.textIndent + 'pt',
         color: font.color
       }
       this.checkboxStyle = {

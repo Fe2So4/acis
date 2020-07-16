@@ -1,7 +1,18 @@
 import { Polyline, Label } from 'spritejs'
 import moment from 'moment'
 export class PhysicalSignLine {
-  constructor ({ signId, name, label, color, group, layer, startTime, endTime, min, max }) {
+  constructor ({
+    signId,
+    name,
+    label,
+    color,
+    group,
+    layer,
+    startTime,
+    endTime,
+    min,
+    max
+  }) {
     this._signId = signId
     this._name = name
     this._label = label
@@ -13,26 +24,25 @@ export class PhysicalSignLine {
     this._min = min
     this._max = max
     this._labels = new Map()
-    this._line = new Polyline(
-      {
-        pos: [0, 0],
-        points: [],
-        strokeColor: this._color,
-        lineWidth: 1,
-        className: 'signLine'
-      }
-    )
+    this._line = new Polyline({
+      pos: [0, 0],
+      points: [],
+      strokeColor: this._color,
+      lineWidth: 1,
+      className: 'signLine'
+    })
     this._group.append(this._line)
   }
 
   addPoint ({ time, value }) {
     const { x, y } = this._coordinateAdaptor({ time, value })
     const thisMoment = +moment(time, 'YYYY-MM-DD HH:mm:ss')
-    const text = thisMoment % (5 * 60 * 1000) === 0 ? this._label : ''
+    const hasLabel = thisMoment % (5 * 60 * 1000) === 0
+    const text = hasLabel ? this._label : ''
     const label = new Label(text)
     const position = [x, y]
-    const width = 12
-    const height = 14
+    const width = hasLabel ? 12 : 4
+    const height = hasLabel ? 14 : 4
     label.attr({
       anchor: [0, 0],
       width,
@@ -45,21 +55,26 @@ export class PhysicalSignLine {
       zIndex: 1,
       className: 'signLabel',
       signId: this._signId,
-      pointValue: { time, value }
+      signName: this._name,
+      timePoint: time,
+      pointValue: value
     })
     this._labels.set(label, position)
 
     let offsetPosition = [0, 0]
-    const mousedownHandler = e => {
+    const mousedownHandler = (e) => {
       const { x, y } = e
       offsetPosition = label.getOffsetPosition(x - width / 2, y - height / 2)
       this._layer.addEventListener('mousemove', mousemoveHandler)
       this._layer.addEventListener('mouseup', mouseupHandler)
     }
-    const mousemoveHandler = e => {
+    const mousemoveHandler = (e) => {
       const { x, y } = e
       const groupOffsetPosition = this._group.getOffsetPosition(x, y)
-      let newPosY = Math.min(groupOffsetPosition[1] - offsetPosition[1], this._group.attr('height'))
+      let newPosY = Math.min(
+        groupOffsetPosition[1] - offsetPosition[1],
+        this._group.attr('height')
+      )
       newPosY = Math.max(0, newPosY)
       const newPos = [position[0], newPosY]
       label.setAttribute('pos', [
@@ -71,7 +86,7 @@ export class PhysicalSignLine {
       this._drawLine()
       label.attr('pointValue', this.getPoint(label))
     }
-    const mouseupHandler = e => {
+    const mouseupHandler = (e) => {
       this._layer.removeEventListener('mousemove', mousemoveHandler)
       this._layer.removeEventListener('mouseup', mouseupHandler)
     }
@@ -80,12 +95,13 @@ export class PhysicalSignLine {
     this._drawLine()
   }
 
+  // 获取某个点的value
   getPoint (label) {
     const position = this._labels.get(label)
     if (position) {
       return this._valueAdaptor(position)
     } else {
-      return null
+      return 0
     }
   }
 
@@ -103,16 +119,23 @@ export class PhysicalSignLine {
   }
 
   _drawLine () {
-    const points = Array.from(this._labels.values()).reduce((arr, item) => arr.concat(item))
+    const points = Array.from(this._labels.values()).reduce((arr, item) =>
+      arr.concat(item)
+    )
     this._line.setAttribute('points', points)
   }
 
   // 时间和值转化为坐标
   _coordinateAdaptor ({ time, value }) {
     const thisMoment = +moment(time)
-    let x = (thisMoment - this._startMoment) / (this._endMoment - this._startMoment) * this._group.attr('width')
+    let x =
+      ((thisMoment - this._startMoment) /
+        (this._endMoment - this._startMoment)) *
+      this._group.attr('width')
     x = Math.round(x)
-    let y = (this._max - value) / (this._max - this._min) * this._group.attr('height')
+    let y =
+      ((this._max - value) / (this._max - this._min)) *
+      this._group.attr('height')
     y = Math.round(y)
     return {
       x,
@@ -122,14 +145,10 @@ export class PhysicalSignLine {
 
   // 坐标转化为时间和值
   _valueAdaptor ([x, y]) {
-    let time = x / this._group.attr('width') * (this._endMoment - this._startMoment) + this._startMoment
-    time = moment(time).format('YYYY-MM-DD HH:mm')
-    let value = this._max - y / this._group.attr('height') * (this._max - this._min)
+    let value =
+      this._max - (y / this._group.attr('height')) * (this._max - this._min)
     value = Math.round(value)
-    return {
-      time,
-      value
-    }
+    return value
   }
 }
 
@@ -182,7 +201,10 @@ export class PhysicalSignEventTags {
     })
 
     const thisMoment = +moment(time, 'YYYY-MM-DD HH:mm:ss')
-    let x = (thisMoment - this._startMoment) / (this._endMoment - this._startMoment) * this._group.attr('width')
+    let x =
+      ((thisMoment - this._startMoment) /
+        (this._endMoment - this._startMoment)) *
+      this._group.attr('width')
     x = Math.round(x)
     let y = this._group.attr('height') / 2 - 7
     y = Math.round(y)
@@ -193,6 +215,6 @@ export class PhysicalSignEventTags {
 
   clear () {
     const tags = this._group.querySelectorAll('.eventTag')
-    tags.forEach(el => this._group.removeChild(el))
+    tags.forEach((el) => this._group.removeChild(el))
   }
 }

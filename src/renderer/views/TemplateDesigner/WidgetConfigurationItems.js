@@ -9,8 +9,9 @@ export default function getConfigurationItems (widgetName) {
   const font = {
     size: 9,
     weight: 'normal',
-    lineHeight: 30,
+    lineHeight: 15,
     textAlign: 'left',
+    textIndent: 0,
     color: '#000000'
   }
   // 源数据
@@ -30,10 +31,12 @@ export default function getConfigurationItems (widgetName) {
   switch (widgetName) {
     case 'widget-checkbox-group':
       return {
-        border,
+        border: Object.assign({}, border, {
+          position: []
+        }),
         font,
         singleSelect: '1',
-        labelMargin: 30,
+        labelMargin: 10,
         collections: [
           {
             label: '项目1',
@@ -64,8 +67,8 @@ export default function getConfigurationItems (widgetName) {
           text: '总量'
         },
         xAxis: {
-          startTime: '2020-07-01 09:00',
-          endTime: '2020-07-01 13:00',
+          startTime: '2018-01-01 08:00',
+          endTime: '2018-01-01 12:00',
           timeInterval: 15,
           lineInterval: 3
         },
@@ -89,8 +92,8 @@ export default function getConfigurationItems (widgetName) {
           text: '总量'
         },
         xAxis: {
-          startTime: '2018-02-01 08:00',
-          endTime: '2018-02-01 12:00',
+          startTime: '2018-01-01 08:00',
+          endTime: '2018-01-01 12:00',
           timeInterval: 15,
           lineInterval: 3
         },
@@ -193,7 +196,9 @@ export default function getConfigurationItems (widgetName) {
     case 'widget-input':
       return {
         font,
-        border,
+        border: Object.assign({}, border, {
+          position: ['bottom']
+        }),
         placeholder: '',
         readonly: false,
         required,
@@ -213,7 +218,9 @@ export default function getConfigurationItems (widgetName) {
     case 'widget-text':
       return {
         font,
-        border,
+        border: Object.assign({}, border, {
+          position: []
+        }),
         text: '文本内容'
       }
     case 'widget-line':
@@ -241,6 +248,28 @@ for (parent in configurationItems) {
   })
 }
 
+const getWidgetDefaultSize = function (widgetName) {
+  switch (widgetName) {
+    case 'widget-text':
+      return {
+        width: 60,
+        height: 15
+      }
+    case 'widget-input':
+    case 'widget-line':
+      return {
+        width: 50,
+        height: 15
+      }
+    default:
+      return {
+        width: 100,
+        height: 30
+      }
+  }
+}
+
 export {
-  configurationMap
+  configurationMap,
+  getWidgetDefaultSize
 }

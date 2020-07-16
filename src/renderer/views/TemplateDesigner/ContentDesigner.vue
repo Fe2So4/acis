@@ -42,13 +42,9 @@
 </template>
 <script>
 import { createNamespacedHelpers } from 'vuex'
-
-// import getConfigurationItems from './WidgetConfigurationItems.js'
-// import { v4 as uuidv4 } from 'uuid'
-// import Mock from 'mockjs'
 import WidgetMovable from './WidgetMovable'
 import { controls } from './getAllConfigurationPage'
-// const Random = Mock.Random
+import { getWidgetDefaultSize } from './WidgetConfigurationItems'
 const { mapState, mapGetters, mapActions } = createNamespacedHelpers(
   'PageTemplateDesigner'
 )
@@ -98,9 +94,15 @@ export default {
     },
     onDrop (e) {
       try {
-        const { offsetX, offsetY, id, name, width, height, type } = JSON.parse(
-          e.dataTransfer.getData('text/plain')
-        )
+        const {
+          // offsetX,
+          // offsetY,
+          id,
+          name,
+          // width: elWidth,
+          // height: elHeight,
+          type
+        } = JSON.parse(e.dataTransfer.getData('text/plain'))
         if (type === 'copy') {
           let left = e.offsetX
           let top = e.offsetY
@@ -113,8 +115,10 @@ export default {
               top += +closestWidgetMovable.style.top.replace(/px/g, '')
             }
           }
-          left = left - offsetX
-          top = top - offsetY
+          // 获取默认设置的宽高
+          const { width, height } = getWidgetDefaultSize(name)
+          left = left - width / 2
+          top = top - height / 2
 
           const { positionX, positionY } = this.correctPositon({
             positionX: left,

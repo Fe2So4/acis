@@ -1,8 +1,9 @@
 <template lang="pug">
   .tab-nav
-    ul
-      li(v-for="item in navList" :key="item.index" @click="handleClick(item)")
-        div(:class="{'isActive': item.index === navIndex}") {{item.label}}
+    el-scrollbar(:wrapStyle="wrapStyle")
+      ul
+        li(v-for="item in navList" :key="item.index" @click="handleClick(item)")
+          div(:class="{'isActive': item.index === navIndex}") {{item.label}}
 </template>
 <script>
 import request from '@/utils/requestForMock'
@@ -10,7 +11,12 @@ import { getDocumentsList } from '@/api/medicalDocument'
 export default {
   data () {
     return {
-      documentsList: []
+      documentsList: [],
+      wrapStyle: [
+        {
+
+        }
+      ]
     }
   },
   computed: {
@@ -73,6 +79,7 @@ export default {
   border-radius: 5px;
   background: #181C27;
   color: #9BA3D5;
+  width: 100%;
 
   ul {
     display: flex;
@@ -86,6 +93,7 @@ export default {
       &>div {
         line-height: 30px;
         height: 30px;
+        white-space: nowrap;
 
         &.isActive {
         color: #0094ff;

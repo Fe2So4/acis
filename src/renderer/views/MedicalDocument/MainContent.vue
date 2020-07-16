@@ -7,8 +7,11 @@
       <div
         class="documentContent"
         :style="sizeStyle"
+        @click.right="showCtxMenu($event)"
       >
-        <div class="widgetContent">
+        <div
+          class="widgetContent"
+        >
           <widget-wrapper
             v-for="(item,index) of widgetList"
             :key="index"
@@ -20,8 +23,12 @@
               :edit-mode="editMode"
               :start-time="startTime"
               :end-time="endTime"
+              :is-rescue-mode="isRescueMode"
+              :operation-id="operationId"
+              :patient-id="patientId"
               @select-event-time-range="onSelectEventTimeRange"
               @change="onChange($event, item)"
+              @change-sign-data="onChangeSignData"
             />
           </widget-wrapper>
         </div>
@@ -61,6 +68,18 @@ export default {
     paperSetting: {
       type: Object,
       required: true
+    },
+    isRescueMode: {
+      type: Boolean,
+      default: false
+    },
+    operationId: {
+      type: String,
+      required: true
+    },
+    patientId: {
+      type: String,
+      required: true
     }
   },
   data () {
@@ -87,6 +106,34 @@ export default {
     },
     onChange (e, widget) {
       widget.value = e
+    },
+    // 体征数据修改
+    onChangeSignData (data) {
+      this.$emit('change-sign-data', data)
+    },
+    showCtxMenu (e) {
+      console.log(e)
+      this.$ctxMenu({
+        list: [
+          {
+            label: 'his',
+            value: 1
+          },
+          {
+            label: '检验',
+            value: 1
+          }
+        ],
+        posX: e.pageX,
+        posY: e.pageY,
+        onSelectMenuItem (e) {
+          console.log(e)
+          // e = that.eventDictList.find(item => e.label === item.detailName)
+          // if (e) {
+          // that.$emit('select-event-time-range', e)
+          // }
+        }
+      })
     }
   }
 }
