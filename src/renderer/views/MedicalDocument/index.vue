@@ -86,10 +86,7 @@ export default {
     }
   },
   computed: {
-    ...mapState([
-      'operationId',
-      'patientId'
-    ])
+    ...mapState(['operationId', 'patientId'])
   },
   watch: {
     $route: {
@@ -233,7 +230,7 @@ export default {
     },
     onPrint () {
       this.$electron.ipcRenderer.send('print-document', {
-        path: `/printDocument/${this.$route.params.templateId}/${this.pageIndex}`
+        path: `/printDocument/${this.templateId}/${this.operationId}/${this.patientId}/${this.pageIndex}/${this.isRescueMode}`
       })
     },
     onPrintAll () {},
@@ -264,26 +261,22 @@ export default {
       this.saveChangedSignData()
     },
     validateModified () {
-      const list = this.widgetList.filter(
-        widget => widget.dirty
-      )
+      const list = this.widgetList.filter(widget => widget.dirty)
       return list.length !== 0
     },
     validateFilledRequiredItem () {
       let flag = true
-      this.widgetList.filter(
-        widget => widget.required
-      ).forEach(widget => {
-        if (!widget.value) {
-          flag = false
-        }
-      })
+      this.widgetList
+        .filter(widget => widget.required)
+        .forEach(widget => {
+          if (!widget.value) {
+            flag = false
+          }
+        })
       return flag
     },
     saveNormalData () {
-      const list = this.widgetList.filter(
-        widget => widget.value
-      )
+      const list = this.widgetList.filter(widget => widget.value)
       const customDataList = list
         .filter(
           widget =>
@@ -393,22 +386,20 @@ export default {
           dataMode: this.isRescueMode ? 1 : 5,
           operationId: this.operationId
         }
-      }).then(
-        res => {
-          if (res.data.success) {
-            this.changedSignDataList = []
-            this.$message({
-              type: 'success',
-              message: '已保存修改后的体征数据'
-            })
-          } else {
-            this.$message({
-              type: 'error',
-              message: res.data.msg
-            })
-          }
+      }).then(res => {
+        if (res.data.success) {
+          this.changedSignDataList = []
+          this.$message({
+            type: 'success',
+            message: '已保存修改后的体征数据'
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: res.data.msg
+          })
         }
-      )
+      })
     }
   }
 }

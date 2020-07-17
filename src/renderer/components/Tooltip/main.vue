@@ -4,6 +4,7 @@
   >
     <div
       class="tooltip"
+      ref="tooltip"
       :style="positionStyle"
     >
       <slot>

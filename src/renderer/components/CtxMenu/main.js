@@ -17,6 +17,21 @@ const ContextMenu = function (options = {}) {
   options.onSelectMenuItem = function (item) {
     ContextMenu.onSelectMenuItem(userOnSelectMenuItem, item)
   }
+  // 位置调整
+  const expectedWidth = 180
+  let expectedHeight = 0
+  if (options.list && Array.isArray(options.list)) {
+    expectedHeight = options.list.length * 24 + 4
+    expectedHeight = Math.min(expectedHeight, 135)
+  }
+  options.posX = Math.min(
+    options.posX,
+    document.body.clientWidth - expectedWidth
+  )
+  options.posY = Math.min(
+    options.posY,
+    document.body.clientHeight - expectedHeight
+  )
   if (instance) {
     instance = Object.assign(instance, options)
   } else {
@@ -28,6 +43,7 @@ const ContextMenu = function (options = {}) {
     // 设置z-index
     instance.$el.style.zIndex = PopupManager.nextZIndex()
   }
+
   Vue.nextTick(() => {
     instance.visible = true
   })

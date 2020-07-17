@@ -81,7 +81,7 @@ if (process.env.BUILD_TARGET === 'schedule') {
         }]
       },
       {
-        path: '/printDocument/:templateId/:pageIndex',
+        path: '/printDocument/:templateId/:operationId/:patientId/:pageIndex/:isRescueMode',
         name: 'PrintDocument',
         component: () => import('@/views/PrintDocument/index')
       },

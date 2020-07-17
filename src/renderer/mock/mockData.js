@@ -6,6 +6,7 @@ import eventData from './event_data'
 import eventDictData from './event_dict_data'
 import addData from './add_data'
 import documentsList from './documents_list'
+import tagNamesList from './tag_names_list'
 const Mock = require('mockjs')
 Mock.setup({
   timeout: '200-600'
@@ -69,3 +70,5 @@ Mock.mock(/^\/api\/updateDocument/, 'post', addData)
 Mock.mock(/^\/api\/saveDocumentData/, 'post', addData)
 // 体征数据保存
 Mock.mock(/^\/api\/saveChangedSignData/, 'post', addData)
+// 获取tag name列表
+Mock.mock(/^\/api\/getTagNamesList/, tagNamesList)

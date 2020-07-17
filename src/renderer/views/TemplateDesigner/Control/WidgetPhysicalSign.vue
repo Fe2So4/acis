@@ -421,7 +421,7 @@ export default {
       const titleTextGroup = new Group()
       titleTextGroup.attr({
         size: [Math.round(width - 1), Math.round(textArr.length * lineHeight)],
-        pos: [width / 2, height / 2],
+        pos: [Math.round(width / 2), Math.round(height / 2)],
         anchor: [0.5, 0.5]
       })
       textArr.forEach((item, i, arr) => {
@@ -763,11 +763,12 @@ export default {
     getChangedPoint () {
       const label = this.selectedPoint
       if (label) {
-        const line = this.lines[label.attr('signId')]
+        // const line = this.lines[label.attr('signId')]
         const pointData = {
           itemCode: label.attr('signId'),
           itemName: label.attr('signName'),
-          itemValue: line.getPoint(label),
+          // itemValue: line.getPoint(label),
+          itemValue: label.attr('pointValue'),
           timePoint: label.attr('timePoint')
         }
         this.$emit('change-sign-data', pointData)
@@ -866,6 +867,7 @@ export default {
       })
       return list
     },
+    // 事件标识
     drawEventTags () {
       if (Array.isArray(this.eventList)) {
         this.eventList.forEach(event => {
@@ -873,6 +875,7 @@ export default {
         })
       }
     },
+    // 事件图例
     drawEventLegends () {
       if (Array.isArray(this.eventList)) {
         this.eventList.forEach(event => {
@@ -895,7 +898,8 @@ export default {
         }
         return
       }
-      const loginUserNum = 'b0f9d8bda9244397a44cb8ff278937d9'
+      // const loginUserNum = 'as6d54f6a5sd4f6a54df6a5sd4f'
+      const loginUserNum = this.operationId
       this.socket = io(getSocketData, {
         query: {
           loginUserNum
@@ -921,10 +925,12 @@ export default {
           })
           res.forEach(item => {
             const { itemCode: signId, ...value } = item
-            that.lines[signId].addPoint({
-              time: value.timePoint,
-              value: value.itemValue
-            })
+            if (that.lines[signId]) {
+              that.lines[signId].addPoint({
+                time: value.timePoint,
+                value: value.itemValue
+              })
+            }
           })
         }
       })

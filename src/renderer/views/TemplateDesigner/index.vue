@@ -23,7 +23,7 @@ export default {
   props: {
     templateId: {
       required: false,
-      type: String || Number,
+      type: [String, Number],
       default: null
     }
   },

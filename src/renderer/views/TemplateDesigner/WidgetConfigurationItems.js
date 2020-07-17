@@ -28,6 +28,8 @@ export default function getConfigurationItems (widgetName) {
   }
   // 必填
   const required = false
+  // 标签名
+  const tagName = ''
   switch (widgetName) {
     case 'widget-checkbox-group':
       return {
@@ -206,6 +208,7 @@ export default function getConfigurationItems (widgetName) {
         readonly: false,
         required,
         dataSource,
+        tagName,
         multiSelect: false,
         dictionarySource
       }
@@ -216,7 +219,8 @@ export default function getConfigurationItems (widgetName) {
         placeholder: '占位内容',
         readonly: false,
         required,
-        dataSource
+        dataSource,
+        tagName
       }
     case 'widget-text':
       return {
