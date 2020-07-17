@@ -21,9 +21,9 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 563,
+    height: 560,
     // useContentSize: true,
-    width: 1000,
+    width: 880,
     frame: false,
     // fullscreen: true, // 是否全屏
     webPreferences: {

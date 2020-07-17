@@ -1,72 +1,78 @@
 <template>
-  <div class="icu-login-container">
-    <div class="left-logo-detail">
-      <div>
+  <div class="login">
+    <div class="content clearfix">
+      <div class="left">
+        <p>
+          Dandelion
+        </p>
+        <p>
+          line
+        </p>
+        <p>
+          手术中心麻醉临床信息系统
+          <span>v1.0.0</span>
+        </p>
         <img
-          src="../../assets/login-logo.png"
+          src="../../assets/welcome.png"
           alt=""
         >
       </div>
-      <div
-        class="sub-title"
-        style="text-align:left;"
-      >
-        Dandelion
+      <div class="right">
+        <div class="title">
+          账户密码登录
+        </div>
+        <div class="line" />
+        <el-form
+          :rules="rules"
+          ref="form"
+          :model="form"
+          hide-required-asterisk
+        >
+          <el-form-item prop="username">
+            <el-input
+              prefix-icon="el-icon-s-custom"
+              v-model="form.username"
+              placeholder="请输入用户名"
+            />
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input
+              prefix-icon="el-icon-lock"
+              placeholder="请输入密码"
+              v-model="form.password"
+              show-password
+            />
+          </el-form-item>
+        </el-form>
+        <div class="option clearfix">
+          <div
+            class="button"
+            @click="jumpHome"
+          >
+            确定
+          </div>
+          <div
+            class="button"
+            @click="close"
+          >
+            取消
+          </div>
+        </div>
       </div>
-      <div class="sub-title">
-        手麻临床信息系统
+      <div class="copyright">
+        Copyright©2020仝佥信息版权所有
       </div>
-    </div>
+      <div class="close">
+        <i
+          class="el-icon-minus"
 
-    <el-form
-      ref="form"
-      :model="form"
-      :rules="rules"
-    >
-      <div class="title">
-        用户登录
-      </div>
-      <el-form-item
-        label="用户名"
-        prop="username"
-      >
-        <el-input v-model="form.username" />
-      </el-form-item>
-
-      <el-form-item
-        label="密码"
-        style="margin-top: 38px"
-        prop="password"
-      >
-        <el-input
-          v-model="form.password"
-          @keydown.native="enter"
-          type="password"
+          @click="mini"
         />
-      </el-form-item>
-
-      <el-form-item style="text-align: center;">
-        <el-button
-          class="login-btn"
-          @click="login"
-        >
-          登录
-        </el-button>
-      </el-form-item>
-
-      <div
-        class="img"
-        @click="close"
-      >
-        <img
-          src="../../assets/close.png"
-          alt=""
-        >
+        <i
+          class="el-icon-close"
+          @click="close"
+        />
       </div>
-    </el-form>
-
-    <div class="version">
-      v1.0.0
     </div>
   </div>
 </template>
@@ -79,6 +85,7 @@ const win = BrowserWindow.getAllWindows()[0]
 // import { setUserToken, setCurrentAccount } from '../../utils/storage'
 
 export default {
+  name: 'Login',
   data () {
     return {
       form: {
@@ -101,6 +108,9 @@ export default {
     win.unmaximize()
   },
   methods: {
+    jumpHome () {
+      this.$router.push('/home')
+    },
     login () {
       this.$refs.form.validate((valid) => {
         if (valid) {
@@ -127,86 +137,129 @@ export default {
     },
     close () {
       win.close()
+    },
+    mini () {
+      win.minimize()
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.icu-login-container {
-  width: 100%;
-  height: 100%;
-  background: url('../../assets/desk.png') no-repeat;
-  position: relative;
-
-  .left-logo-detail {
-    position: absolute;
-    top: 220px;
-    left: 320px;
-    color: #fff;
-    text-align: center;
-
-    img {
-      width: 164px;
+  .login{
+    height: 560px;
+    width: 880px;
+    position: relative;
+    // height: 100%;
+    // width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url('~@/assets/login_bg.png') center no-repeat;
+    .content{
+      width:640px;
+      z-index: 1;
+      height: 350px;
+      .left{
+        float:left;
+        width:50%;
+        height: 100%;
+        p{
+          margin:0;
+          font-weight:bold;
+          font-size: 18px;
+          color:rgba(255,255,255,1);
+          // text-shadow:2px 3px 1px rgba(0, 0, 0, 0.8);
+          background:linear-gradient(0deg,rgba(0,94,210,1) 0%, rgba(178,218,255,1) 100%);
+          -webkit-text-fill-color:transparent;
+          -webkit-background-clip:text;
+          span{
+            font-size: 12px;
+          }
+          &:nth-child(2){
+            width:20px;
+            height:2px;
+            background:rgba(19,118,230,1);
+            // box-shadow:0px 3px 4px 0px rgba(0, 0, 0, 0.6);
+          }
+        }
+      }
+      .right{
+        float:right;
+        width: 50%;
+        height: 100%;
+        background:rgba(255,255,255,1);
+        box-shadow:14px 14px 19px 1px rgba(0, 0, 0, 0.5);
+        border-radius:10px;
+        .title{
+          color:#0094FF;
+          margin-top: 40px;
+          text-align: center;
+          line-height: 30px;
+          font-weight: bold;
+        }
+        .line{
+          width:60px;
+          height:2px;
+          background:rgba(0,148,255,1);
+          border-radius:1px;
+          margin: 0 auto;
+          margin-bottom: 40px;
+        }
+        .el-form{
+          padding:0 20px;
+          .el-form-item{
+            margin:0 0 20px 0;
+            &:last-child{
+              margin:0;
+            }
+          }
+        }
+        .option{
+          margin-top:40px;
+          .button{
+            width:130px;
+            margin-left:20px;
+            height:30px;
+            line-height: 30px;
+            display: block;
+            float: left;
+            text-align: center;
+            background: #0094FF;
+            color:#fff;
+            border-radius:5px;
+            font-size: 16px;
+            cursor: pointer;
+          }
+        }
+      }
+      .copyright{
+        position: absolute;
+        bottom:10px;
+        left: 0;
+        right: 0;
+        font-size: 12px;
+        margin:auto;
+        color:#E9E9E9;
+        opacity: 0.75;
+        text-align: center;
+      }
+      .close{
+        position: absolute;
+        top:10px;
+        right:10px;
+        i{
+          font-size: 14px;
+          display: inline-block;
+          color:#0094FF;
+          cursor: pointer;
+        }
+      }
     }
-
-    .sub-title {
-      margin-top: 34px;
-      font-size: 30px;
-      font-weight: bold;
+    /deep/ .el-input .el-input__inner{
+      background-color: #fff;
+      border:1px solid #AEBDD6;
+      color:#9DA6B0;
     }
   }
-
-  .el-form {
-    width: 320px;
-    height: 510px;
-    position: absolute;
-    left: 730px;
-    top: 200px;
-
-    .title {
-      font-size: 28px;
-      color: #348BFF;
-      margin-bottom: 50px;
-    }
-
-    /deep/.el-form-item__label {
-      font-size: 24px;
-      color: #7E8FA5;
-    }
-
-    /deep/.el-input__inner {
-      font-size: 20px;
-      border: none;
-      border-bottom: 1px solid #D5DCE7;
-      border-radius: 0;
-    }
-
-    .login-btn {
-      width: 200px;
-      font-size: 24px;
-      color: #fff;
-      background:rgba(52,139,255,1);
-      box-shadow: 3px 6px 23px -2px rgba(51, 138, 255, 0.7);
-      border-radius:20px;
-      border: none;
-      padding: 9px 16px;
-      margin-top: 40px;
-    }
-
-    .img {
-      position: absolute;
-      top: -45px;
-      right: -40px;
-      cursor: pointer;
-    }
-  }
-  .version{
-    position:absolute;
-    left:450px;
-    bottom:200px;
-    color:#fff;
-    font-size:18px;
-  }
-}
 </style>

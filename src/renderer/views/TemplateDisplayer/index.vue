@@ -38,6 +38,7 @@ export default {
           num: 2,
           text: '输血'
         },
+        border: true,
         drugNumber: 10,
         height: 203,
         id: '578761b8-c1e1-4a55-aeb7-859f06793aa4',

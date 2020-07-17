@@ -1,9 +1,9 @@
 <template>
-  <div class="event">
+  <div class="event clearfix">
     <div class="left">
       <div class="top">
         <div class="title">
-          检索
+          拼音快速检索
         </div>
         <el-input
           v-model="searchName"
@@ -42,27 +42,27 @@
               10
             </el-button>
             <el-button size="mini">
-              9
+              20
             </el-button>
             <el-button size="mini">
-              8
+              20
             </el-button>
             <el-button size="mini">
-              7
+              20
             </el-button>
           </li>
           <li>
             <el-button size="mini">
-              6
+              10
             </el-button>
             <el-button size="mini">
-              5
+              20
             </el-button>
             <el-button size="mini">
-              4
+              40
             </el-button>
             <el-button size="mini">
-              3
+              30
             </el-button>
           </li>
         </ul>
@@ -80,232 +80,8 @@
         麻醉事件
       </div>
       <div class="content">
-        <el-table
-          size="mini"
-          border
-          :data="tableData"
-          class="table"
-          :cell-style="cellStyle"
-          highlight-current-row
-          @current-change="handleCurrentChange"
-          @cell-click="onCellDblClick"
-        >
-          <el-table-column
-            label="类型"
-            prop="type"
-          />
-          <el-table-column
-            label="事件名称"
-            prop="event"
-          >
-            <template slot-scope="scope">
-              <input
-                class="cellInput"
-                type="text"
-                v-if="scope.row === activeRow && scope.column.id === activeColumnId"
-                v-model="scope.row.event"
-                @blur="onCellBlur"
-              >
-              <span v-else>{{ scope.row.event }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="途径"
-            prop="from"
-          >
-            <template slot-scope="scope">
-              <el-select
-                v-model="scope.row.from"
-                v-if="scope.row === activeRow && scope.column.id === activeColumnId"
-                placeholder=""
-                filterable
-                allow-create
-                size="mini"
-                @blur="onCellBlur"
-              >
-                <el-option
-                  v-for="item in fromList"
-                  :key="item.event"
-                  :label="item.label"
-                  :value="item.event"
-                />
-              </el-select>
-              <span v-else>{{ scope.row.from }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="浓度"
-            prop="concentration"
-          >
-            <template slot-scope="scope">
-              <input
-                class="cellInput"
-                type="text"
-                v-if="scope.row === activeRow && scope.column.id === activeColumnId"
-                v-model="scope.row.concentration"
-                @blur="onCellBlur"
-              >
-              <span v-else>{{ scope.row.concentration }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="单位"
-            prop="unit"
-          >
-            <template slot-scope="scope">
-              <el-select
-                v-model="scope.row.unit"
-                v-if="scope.row === activeRow && scope.column.id === activeColumnId"
-                placeholder=""
-                filterable
-                allow-create
-                size="mini"
-                @blur="onCellBlur"
-              >
-                <el-option
-                  v-for="item in fromList"
-                  :key="item.event"
-                  :label="item.label"
-                  :value="item.event"
-                />
-              </el-select>
-              <span v-else>{{ scope.row.unit }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="速度"
-            prop="speed"
-          >
-            <template slot-scope="scope">
-              <input
-                class="cellInput"
-                type="text"
-                v-if="scope.row === activeRow && scope.column.id === activeColumnId"
-                v-model="scope.row.speed"
-                @blur="onCellBlur"
-              >
-              <span v-else>{{ scope.row.speed }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="单位"
-            prop="unit"
-          >
-            <template slot-scope="scope">
-              <el-select
-                v-model="scope.row.unit"
-                v-if="scope.row === activeRow && scope.column.id === activeColumnId"
-                placeholder=""
-                filterable
-                allow-create
-                size="mini"
-                @blur="onCellBlur"
-              >
-                <el-option
-                  v-for="item in fromList"
-                  :key="item.event"
-                  :label="item.label"
-                  :value="item.event"
-                />
-              </el-select>
-              <span v-else>{{ scope.row.unit }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="剂量"
-            prop="dose"
-          >
-            <template slot-scope="scope">
-              <input
-                class="cellInput"
-                type="text"
-                v-if="scope.row === activeRow && scope.column.id === activeColumnId"
-                v-model="scope.row.dose"
-                @blur="onCellBlur"
-              >
-              <span v-else>{{ scope.row.dose }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="单位"
-            prop="unit"
-          >
-            <template slot-scope="scope">
-              <el-select
-                v-model="scope.row.unit"
-                v-if="scope.row === activeRow && scope.column.id === activeColumnId"
-                placeholder=""
-                filterable
-                allow-create
-                size="mini"
-                @blur="onCellBlur"
-              >
-                <el-option
-                  v-for="item in fromList"
-                  :key="item.event"
-                  :label="item.label"
-                  :value="item.event"
-                />
-              </el-select>
-              <span v-else>{{ scope.row.unit }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="发生时间"
-            prop="startTime"
-          >
-            <template slot-scope="scope">
-              <el-date-picker
-                type="datetime"
-                style="width:100%;position:absolute;left:0;top:4px;"
-                size="mini"
-                prefix-icon=""
-                v-model="scope.row.startTime"
-                placeholder=""
-                :clearable="false"
-                value-format="yyyy-MM-dd hh:mm"
-                v-if="scope.row === activeRow && scope.column.id === activeColumnId"
-                @change="onCellBlur"
-              />
-              <span v-else>{{ scope.row.startTime }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="持续"
-            prop="continue"
-          >
-            <template slot-scope="scope">
-              <input
-                class="cellInput"
-                type="text"
-                v-if="scope.row === activeRow && scope.column.id === activeColumnId"
-                v-model="scope.row.continue"
-                @blur="onCellBlur"
-              >
-              <span v-else>{{ scope.row.continue }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="结束时间"
-            prop="endTime"
-          >
-            <template slot-scope="scope">
-              <el-date-picker
-                type="datetime"
-                style="width:100%;position:absolute;left:0;top:4px;"
-                size="mini"
-                prefix-icon=""
-                v-model="scope.row.endTime"
-                placeholder=""
-                :clearable="false"
-                value-format="yyyy-MM-dd hh:mm:ss"
-                v-if="scope.row === activeRow && scope.column.id === activeColumnId"
-                @change="onCellBlur"
-              />
-              <span v-else>{{ scope.row.endTime }}</span>
-            </template>
-          </el-table-column>
-        </el-table>
+        <anaes-table :table-data="tableData" />
+        <!-- <other-event /> -->
       </div>
       <div class="option">
         <el-row>
@@ -348,13 +124,29 @@
   </div>
 </template>
 <script>
+import AnaesTable from '@/components/AnaesTable/index'
+// import OtherEvent from './components/otherEvent'
 export default {
   name: 'Event',
   data () {
     return {
       select: '',
       searchName: '',
-      tableData: [{ type: '麻药', event: 'UI', from: 'UI', unit: 'UI', speed: 'UI', dose: 'UI', startTime: '', endTime: '', continue: 'UI' }],
+      tableData: [{
+        type: '输液',
+        eventName: '0.9%氯化钠',
+        method: '吸入',
+        concentration: '浓度',
+        concentrationUnit: '1',
+        speed: '20',
+        speedUnit: '2',
+        dose: '20',
+        doseUnit: '2',
+        startTime: '04-21 11:20',
+        endTime: '05-22 11:20',
+        continue: true,
+        continueTime: '持续时间'
+      }],
       cellStyle: {
         position: 'relative',
         height: '36px',
@@ -366,6 +158,10 @@ export default {
       time: '',
       currentRow: null
     }
+  },
+  components: {
+    AnaesTable
+    // OtherEvent
   },
   methods: {
     // 选中当前行
@@ -389,7 +185,6 @@ export default {
     }
   },
   mounted () {
-    this.$electron.ipcRenderer.send('show-window')
   }
 }
 </script>
@@ -402,101 +197,94 @@ export default {
 
 <style lang="scss" scoped>
     .event{
-        display: flex;
-        height: 100%;
-        font-size: 14px;
-        position: relative;
-        .title{
-            line-height: 30px;
-            padding-left: 5px;
-        }
-        .left{
-            width: 40%;
-            border-right: 1px solid #f8f9fa;
-            // border-right: 1px solid #e6e6e6;
-            display: flex;
-            flex-direction: column;
-            .pagination{
-                padding:10px 0;
-                .el-pagination{
-                    text-align: right;
-                }
-            }
-            .top{
-                display: flex;
-                justify-content: space-between;
-            }
-            .content{
-                flex: 1;
-                border: 1px solid #f8f9fa;
-                border-right: unset;
-                display: flex;
-                ul{
-                    padding:5px;
-                    flex: 1;
-                    li{
-                        margin-bottom: 5px;
-                        .el-button{
-                            width: 100%;
-                        }
-                    }
-                    &:last-child{
-                      width: 100%;
-                      li{
-                        justify-content: space-around;
-                        display: flex;
-                        .el-button{
-                          margin:0 5px 0 0;
-                        &:last-child{
-                            margin:unset
-                        }
-                        }
+      width: 80vw;
+      height: 60vh;
+      font-size: 14px;
+      position: relative;
+      .title{
+          line-height: 30px;
+          padding-left: 5px;
+          color:#9BA3D5;
+      }
+      .left{
+          height: 100%;
+          padding:20px;
+          margin-right:20px;
+          width: 354px;
+          float: left;
+          display: flex;
+          background: #1E222E;
+          border-radius:10px;
+          flex-direction: column;
+          .pagination{
+              padding:10px 0;
+              .el-pagination{
+                  text-align: right;
+              }
+          }
+          .top{
+              display: flex;
+              justify-content: space-between;
+          }
+          .content{
+              flex: 1;
+              display: flex;
+              ul{
+                  padding:5px;
+                  flex: 1;
+                  li{
+                      margin-bottom: 5px;
+                      .el-button{
+                          width: 100%;
                       }
                   }
+                  &:last-child{
+                    width: 100%;
+                    li{
+                      justify-content: space-around;
+                      display: flex;
+                      .el-button{
+                        margin:0 5px 0 0;
+                      &:last-child{
+                          margin:unset
+                      }
+                      }
+                    }
                 }
-            }
-            .el-input{
-                max-width: 217px;
-            }
-        }
-        .right{
+              }
+          }
+          .el-input{
+              max-width: 217px;
+          }
+      }
+      .right{
+        height: 100%;
+        width:calc(100% - 374px);
+        float: right;
+        padding: 0 5px;
+        display: flex;
+        background: #1E222E;
+        border-radius:10px;
+        flex-direction: column;
+        .content{
+            height:calc(100% - 90px);
             flex: 1;
-            padding: 0 5px;
             display: flex;
-            flex-direction: column;
-            .content{
-                flex: 1;
-                display: flex;
+        }
+        .option{
+            text-align: right;
+            padding: 10px 0;
+            p{
+                text-align: left;
+                margin:10px 0;
+                text-indent: 20px;
+                color: #409eff;
             }
-            .table {
-                width: 100%;
-                text-align: center;
-                min-height: 400px;
-                flex: 1;
-            .cellInput {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                font-size: 12px;
-                line-height: 100%;
-                text-indent: 10px;
-                border: none;
-                outline: none;
-            }
-            }
-            .option{
-                text-align: right;
-                padding: 10px 0;
-                p{
-                    text-align: left;
-                    margin:10px 0;
-                    text-indent: 20px;
-                    color: #409eff;
-                }
+            span{
+              color:#9BA3D5;
             }
         }
+      }
     }
     .event /deep/ .el-table th>.cell{
         text-align: center;

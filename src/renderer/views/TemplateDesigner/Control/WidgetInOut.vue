@@ -63,8 +63,8 @@ export default {
           total: '30',
           data: [
             {
-              startTime: '2020-7-13 10:00',
-              endTime: '2020-7-13 10:30',
+              startTime: '2018-1-1 10:00',
+              endTime: '2018-1-1 10:30',
               dose: '32mg/l',
               continue: false,
               speed: '32',
@@ -73,8 +73,8 @@ export default {
               concentrationUnit: '%'
             },
             {
-              startTime: '2020-7-13 10:40',
-              endTime: '2020-7-13 11:00',
+              startTime: '2018-1-1 10:40',
+              endTime: '2018-1-1 11:00',
               dose: '32mg/l',
               continue: true,
               speed: '32',
@@ -90,8 +90,8 @@ export default {
           total: '50',
           data: [
             {
-              startTime: '2020-7-13 10:00',
-              endTime: '2020-7-13 10:30',
+              startTime: '2018-1-1 10:00',
+              endTime: '2018-1-1 10:30',
               dose: '32mg/l',
               continue: true,
               speed: '32',
@@ -100,8 +100,8 @@ export default {
               concentrationUnit: '%'
             },
             {
-              startTime: '2020-7-13 10:45',
-              endTime: '2020-7-13 11:00',
+              startTime: '2018-1-1 10:45',
+              endTime: '2018-1-1 11:00',
               dose: '32',
               continue: true,
               speed: '32',
@@ -110,8 +110,8 @@ export default {
               concentrationUnit: '%'
             },
             {
-              startTime: '2020-7-13 11:15',
-              endTime: '2020-7-13 11:45',
+              startTime: '2018-1-1 11:15',
+              endTime: '2018-1-1 11:45',
               dose: '32mg/l',
               continue: false,
               speed: '32',
@@ -129,8 +129,8 @@ export default {
           total: '30',
           data: [
             {
-              startTime: '2020-7-13 10:00',
-              endTime: '2020-7-13 10:30',
+              startTime: '2018-1-1 10:00',
+              endTime: '2018-1-1 10:30',
               dose: '32mg/l',
               continue: false,
               speed: '32',
@@ -139,8 +139,8 @@ export default {
               concentrationUnit: '%'
             },
             {
-              startTime: '2020-7-13 10:40',
-              endTime: '2020-7-13 11:00',
+              startTime: '2018-1-1 10:40',
+              endTime: '2018-1-1 11:00',
               dose: '32mg/l',
               continue: true,
               speed: '32',

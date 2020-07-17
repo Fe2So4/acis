@@ -10,7 +10,12 @@
         </el-header>
         <el-main>
           <!-- <router-view :key="key" /> -->
-          <router-view />
+          <transition
+            name="fade"
+            mode="out-in"
+          >
+            <router-view />
+          </transition>
         </el-main>
       </el-container>
     </el-container>
@@ -27,10 +32,10 @@ export default {
     }
   },
   computed: {
-    key () {
-      console.log(this.$route.path)
-      return this.$route.path
-    }
+    // key () {
+    //   console.log(this.$route.path)
+    //   return this.$route.path
+    // }
   },
   components: {
     Header,

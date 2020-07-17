@@ -3,8 +3,8 @@
     //- .dialog-mask
     .dialog-content
       .dialog-title
-       span {{title}}
-       i(class="el-icon-close" @click="handleClose")
+        span {{title}}
+        i(class="el-icon-close" @click="handleClose")
       .dialog-body
         InsertSignData(@close="handleClose")
 </template>
@@ -43,7 +43,7 @@ export default {
     justify-content center
     align-items center
     .dialog-content
-      padding 0px 20px 40px
+      padding 0px 20px 20px
       background #181C27
       box-shadow 0px 0px 12px 3px rgba(0, 0, 0, 0.4)
       border-radius 10px

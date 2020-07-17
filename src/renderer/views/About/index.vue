@@ -29,10 +29,13 @@ export default {
     text-align center
     color #D0DAE5
     width 430px
-    // .img
+    .img
+      img
+        display block
+        margin 0 auto
     .title
       line-height 28px
-      margin 23px 0 38px
+      margin 20px 0 30px
     // .option
     .copy-right
       font-size 12px

@@ -8,9 +8,11 @@
       .dialog-body
         component(:is="componentName")
         //- OperationOverview
+        //- Event
         //- <operation-handover/>
         //- Hemodynamics
         //- IntraoperativePatients
+        //- PostoperativeRegistration
         //- IntraoperativeRegistration
         //- PatientDetail
         //- DeviceGather
@@ -60,6 +62,7 @@ import OperationLevel from '@/views/OperationLevel/index'
 import OperationArrangement from '@/views/OperationArrangement/index'
 import About from '@/views/About/index'
 import OperationOverview from '@/views/OperationOverview/index'
+import PostoperativeRegistration from '@/views/PostoperativeRegistration/index'
 export default {
   name: 'DialogNav',
   data () {
@@ -106,7 +109,8 @@ export default {
     OperationLevel,
     OperationArrangement,
     About,
-    OperationOverview
+    OperationOverview,
+    PostoperativeRegistration
   },
   methods: {
     handleClose () {

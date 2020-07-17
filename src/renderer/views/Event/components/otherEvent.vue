@@ -1,16 +1,16 @@
 <template>
-  <div class="anaes-table">
+  <div class="other-event">
     <vxe-table
       show-overflow
       size="mini"
       ref="xTable"
       align="center"
       height="100%"
+      highlight-hover-row
       auto-resize
       class="anaesTable scroll"
       :loading="loading"
       :data="tableData"
-      highlight-hover-row
       :checkbox-config="{checkStrictly: true}"
       :edit-config="{trigger: 'click', mode: 'cell', showStatus: true}"
     >
@@ -22,13 +22,11 @@
       <vxe-table-column
         field="type"
         title="类型"
-        width="60"
       />
       <vxe-table-column
         field="eventName"
         title="事件名称"
         :edit-render="{}"
-        width="120"
       >
         <template v-slot:edit="{ row }">
           <el-input
@@ -38,36 +36,9 @@
         </template>
       </vxe-table-column>
       <vxe-table-column
-        field="method"
-        title="途径"
-        :edit-render="{}"
-        width="120"
-      >
-        <template v-slot:edit="{ row }">
-          <el-input
-            v-model="row.method"
-            size="mini"
-          />
-        </template>
-      </vxe-table-column>
-      <vxe-table-column
-        field="concentration"
-        title="浓度"
-        :edit-render="{}"
-        width="80"
-      >
-        <template v-slot:edit="{row}">
-          <el-input
-            v-model="row.concentration"
-            size="mini"
-          />
-        </template>
-      </vxe-table-column>
-      <vxe-table-column
         field="concentrationUnit"
         title="单位"
         :edit-render="{}"
-        width="120"
       >
         <template v-slot:edit="scope">
           <el-select
@@ -85,80 +56,6 @@
         </template>
         <template v-slot="{ row }">
           {{ getSelectLabel(row.concentrationUnit, unitList) }}
-        </template>
-      </vxe-table-column>
-      <vxe-table-column
-        field="speed"
-        title="速度"
-        :edit-render="{}"
-        width="80"
-      >
-        <template v-slot:edit="{ row }">
-          <el-input
-            v-model="row.speed"
-            size="mini"
-          />
-        </template>
-      </vxe-table-column>
-      <vxe-table-column
-        field="speedUnit"
-        title="单位"
-        :edit-render="{}"
-        width="120"
-      >
-        <template v-slot:edit="scope">
-          <el-select
-            v-model="scope.row.speedUnit"
-            size="mini"
-            @change="$refs.xTable.updateStatus(scope)"
-          >
-            <el-option
-              v-for="item in unitList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </template>
-        <template v-slot="{ row }">
-          {{ getSelectLabel(row.speedUnit, unitList) }}
-        </template>
-      </vxe-table-column>
-      <vxe-table-column
-        field="dose"
-        title="剂量"
-        :edit-render="{}"
-        width="80"
-      >
-        <template v-slot:edit="{ row }">
-          <el-input
-            v-model="row.dose"
-            size="mini"
-          />
-        </template>
-      </vxe-table-column>
-      <vxe-table-column
-        field="doseUnit"
-        title="单位"
-        :edit-render="{}"
-        width="120"
-      >
-        <template v-slot:edit="scope">
-          <el-select
-            v-model="scope.row.doseUnit"
-            size="mini"
-            @change="$refs.xTable.updateStatus(scope)"
-          >
-            <el-option
-              v-for="item in unitList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </template>
-        <template v-slot="{ row }">
-          {{ getSelectLabel(row.doseUnit, unitList) }}
         </template>
       </vxe-table-column>
       <vxe-table-column
@@ -183,7 +80,6 @@
       <vxe-table-column
         field="continue"
         title="是否持续"
-        width="80"
       >
         <template v-slot="{ row }">
           <el-switch v-model="row.continue" />
@@ -193,7 +89,6 @@
         field="continueTime"
         title="持续时间"
         :edit-render="{}"
-        width="100"
       >
         <template v-slot:edit="{ row }">
           <el-input
@@ -228,32 +123,26 @@
 import XEUtils from 'xe-utils'
 import moment from 'moment'
 export default {
-  name: 'AnaesTable',
+  name: 'OtherEvent',
   data () {
     return {
       loading: false,
-      // tableData: [{
-      //   type: '输液',
-      //   eventName: '0.9%氯化钠',
-      //   method: '吸入',
-      //   concentration: '浓度',
-      //   concentrationUnit: '1',
-      //   speed: '20',
-      //   speedUnit: '2',
-      //   dose: '20',
-      //   doseUnit: '2',
-      //   startTime: '04-21 11:20',
-      //   endTime: '05-22 11:20',
-      //   continue: true,
-      //   continueTime: '持续时间'
-      // }],
+      tableData: [{
+        type: '输液',
+        eventName: '0.9%氯化钠',
+        method: '吸入',
+        concentration: '浓度',
+        concentrationUnit: '1',
+        speed: '20',
+        speedUnit: '2',
+        dose: '20',
+        doseUnit: '2',
+        startTime: '04-21 11:20',
+        endTime: '05-22 11:20',
+        continue: true,
+        continueTime: '持续时间'
+      }],
       unitList: [{ label: 'mg/h', value: '1' }, { label: 'mg/m', value: '2' }]
-    }
-  },
-  props: {
-    tableData: {
-      type: Array,
-      required: true
     }
   },
   methods: {
@@ -268,7 +157,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .anaes-table{
+  .other-event{
     width:100%;
     height:100%;
   }

@@ -1,19 +1,48 @@
 <template>
-  <div class="registration">
-    <div class="top">
-      <h3>麻醉事件</h3>
-      <div class="top-content">
-        <div class="top-content-left">
-          <div class="anaes-table">
+  <div class="registration clearfix">
+    <div class="left">
+      <div class="anaesthesia content">
+        <h3>麻醉事件</h3>
+        <div class="table">
+          <div class="anaes">
             <AnaesTable />
           </div>
-          <div class="top-option">
+          <div
+            class="option"
+            style="display:flex;justify-content:space-between;"
+          >
             <span>
-              <el-button size="mini">保存模板</el-button>
+              <el-button
+                size="mini"
+                type="primary"
+              >保存模板</el-button>
               <el-button size="mini">套用模板</el-button>
+              <span>
+                类型筛选
+              </span>
+              <el-select
+                size="mini"
+                v-model="type"
+              >
+                <el-option
+                  value="1"
+                  label="麻药"
+                />
+                <el-option
+                  value="2"
+                  label="用药"
+                />
+                <el-option
+                  value="3"
+                  label="呼吸"
+                />
+              </el-select>
             </span>
             <span>
-              <el-button size="mini">保存(S)</el-button>
+              <el-button
+                size="mini"
+                type="primary"
+              >保存(S)</el-button>
               <el-button
                 :disabled="true"
                 size="mini"
@@ -22,124 +51,124 @@
             </span>
           </div>
         </div>
-        <div class="top-content-right">
-          <div>
-            <el-button
-              v-for="item in buttonList"
-              :key="item.value"
-              size="mini"
-              style="margin-left:10px;margin-bottom:10px;"
-            >
-              {{ item.label }}
-            </el-button>
-          </div>
-          <div class="event-table">
+      </div>
+      <div class="signsData content">
+        <h3>体征数据</h3>
+        <div class="table">
+          <div class="sign">
             <vxe-table
               border
               auto-resize
               show-header-overflow
               show-overflow
-              keep-source
-              highlight-hover-row
-              align="center"
               height="100%"
+              highlight-hover-row
+              align="left"
               size="mini"
               class="scroll"
-              :data="eventData"
+              :data="signData"
             >
               <vxe-table-column
                 field="name"
-                title="事件名称"
-              />
-              <vxe-table-column
-                field="specs"
-                title="规格"
+                title="名称"
               />
             </vxe-table>
+          </div>
+          <div class="option">
+            <el-button
+              size="mini"
+              :disabled="true"
+            >
+              保存(S)
+            </el-button>
+            <el-button
+              size="mini"
+              :disabled="true"
+            >
+              刷新(R)
+            </el-button>
+            <el-button
+              size="mini"
+              :disabled="true"
+            >
+              删除(S)
+            </el-button>
+            <el-button
+              size="mini"
+              v-popover:popover
+            >
+              增加项目
+            </el-button>
+            <el-button
+              size="mini"
+              @click="handleShowDialog"
+            >
+              插入数据
+            </el-button>
+            <el-button size="mini">
+              删除项目
+            </el-button>
+            <el-popover
+              placement="top-start"
+              width="400"
+              trigger="click"
+              ref="popover"
+            >
+              <vxe-table
+                height="400px"
+                auto-resize
+                keep-source
+                highlight-hover-row
+                align="left"
+                size="mini"
+                class="scroll"
+                :data="itemData"
+              >
+                <vxe-table-column
+                  field="name"
+                  title="项目名称"
+                />
+              </vxe-table>
+            </el-popover>
           </div>
         </div>
       </div>
     </div>
-    <el-divider />
-    <div class="bottom">
-      <h3>体征数据</h3>
-      <div class="bottom-content">
-        <vxe-table
-          border
-          auto-resize
-          show-header-overflow
-          show-overflow
-          height="100%"
-          keep-source
-          highlight-hover-row
-          align="left"
-          size="mini"
-          class="scroll"
-          :data="signData"
-        >
-          <vxe-table-column
-            field="name"
-            title="名称"
-          />
-        </vxe-table>
-      </div>
-      <div class="bottom-option">
-        <el-button
-          size="mini"
-          :disabled="true"
-        >
-          保存(S)
-        </el-button>
-        <el-button
-          size="mini"
-          :disabled="true"
-        >
-          刷新(R)
-        </el-button>
-        <el-button
-          size="mini"
-          :disabled="true"
-        >
-          删除(S)
-        </el-button>
-        <el-button
-          size="mini"
-          v-popover:popover
-        >
-          增加项目
-        </el-button>
-        <el-button
-          size="mini"
-          @click="handleShowDialog"
-        >
-          插入数据
-        </el-button>
-        <el-button size="mini">
-          删除项目
-        </el-button>
-        <el-popover
-          placement="top-start"
-          width="400"
-          trigger="click"
-          ref="popover"
-        >
+    <div class="right">
+      <div class="content">
+        <div class="buttons">
+          <el-button
+            v-for="item in buttonList"
+            :key="item.value"
+            size="mini"
+            style="margin-left:10px;margin-bottom:10px;"
+          >
+            {{ item.label }}
+          </el-button>
+        </div>
+        <div class="event-table">
           <vxe-table
-            border
-            height="400px"
             auto-resize
+            show-header-overflow
+            show-overflow
             keep-source
             highlight-hover-row
-            align="left"
+            align="center"
+            height="100%"
             size="mini"
             class="scroll"
-            :data="itemData"
+            :data="eventData"
           >
             <vxe-table-column
               field="name"
-              title="项目名称"
+              title="事件名称"
+            />
+            <vxe-table-column
+              field="specs"
+              title="规格"
             />
           </vxe-table>
-        </el-popover>
+        </div>
       </div>
     </div>
     <insert-dialog
@@ -187,7 +216,8 @@ export default {
         { name: '呼吸' },
         { name: 'SpO2' }
       ],
-      insertDialogVisible: false
+      insertDialogVisible: false,
+      type: ''
     }
   },
   components: {
@@ -215,73 +245,58 @@ export default {
     line-height: 28px;
     font-size: 14px;
   }
-  .top {
-    height: calc(60% - 20px);
-    .top-content {
-      display: flex;
+  .left {
+    float: left;
+    height: 100%;
+    width: calc(100% - 262px);
+    .table{
+      border:1px solid rgba(57, 66, 92, 1);
+      border-radius:5px;
+      background:#1E222E;
       height: calc(100% - 28px);
-      .top-content-left {
-        flex: 1;
-        height: 100%;
-        .anaes-table {
-          height: calc(100% - 46px);
-        }
-        .top-option {
-          display: flex;
-          justify-content: space-between;
-          padding: 10px 0;
-        }
+    }
+    .content{
+      height:50%;
+      .sign,.anaes{
+        height:calc(100% - 68px)
       }
-      .top-content-right {
-        height: 100%;
-        margin-left: 10px;
-        width: 300px;
-        .event-table {
-          height: calc(100% - 114px);
-        }
+    }
+    .option{
+      padding:20px;
+      span>span{
+        color:#9BA3D5;
+        margin:0 10px;
       }
     }
   }
-  .bottom {
-    height: 40%;
-    .bottom-content {
-      height: calc(100% - 76px);
-    }
-    .bottom-option {
-      padding: 10px 0;
+  .right {
+    float:right;
+    width:242px;
+    padding-top: 28px;
+    height: 100%;
+    .content{
+      background:#1E222E;
+      border:1px solid rgba(57, 66, 92, 1);
+      border-radius:5px;
+      height: 100%;
+      .buttons{
+        padding:10px 0 0 0;
+      }
+      .event-table{
+        height:calc(100% - 124px)
+      }
     }
   }
 }
 .registration /deep/ .el-divider--horizontal {
   margin: 10px 0;
 }
-</style>
-  <style>
-/*滚动条整体部分*/
-.scroll div::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+.registration /deep/ .vxe-table .vxe-table--border-line{
+  border-top:unset;
+  border-left:unset;
+  border-right:unset;
 }
-/*滚动条的轨道*/
-.scroll div::-webkit-scrollbar-track {
-  background-color: #ffffff;
-}
-/*滚动条里面的小方块，能向上向下移动*/
-.scroll div::-webkit-scrollbar-thumb {
-  background-color: #bfbfbf;
-  border-radius: 5px;
-  border: 1px solid #f1f1f1;
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-}
-.scroll div::-webkit-scrollbar-thumb:hover {
-  background-color: #a8a8a8;
-}
-.scroll div::-webkit-scrollbar-thumb:active {
-  /* background-color: #787878; */
-  background-color: rgba(144, 147, 153, 0.3)
-}
-/*边角，即两个滚动条的交汇处*/
-.scroll div::-webkit-scrollbar-corner {
-  background-color: #ffffff;
+.registration /deep/ .el-button--mini{
+  padding:7px 11px;
 }
 </style>

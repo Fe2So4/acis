@@ -5,7 +5,10 @@
     >
       Dandelion 麻醉临床信息系统
     </div>
-    <div class="img">
+    <div
+      class="img"
+      @click="jumpLogin"
+    >
       <img
         src="../../../assets/tq.png"
         alt=""
@@ -59,12 +62,13 @@
 </template>
 <script>
 import Dialog from '@/components/DialogNav/index'
+import { mapActions, mapGetters } from 'vuex'
 // import Overview from '../../../components/OperationOverview/index'
 export default {
   name: 'Aside',
   data () {
     return {
-      dialogTitle: '我是一个神奇的弹框标题啊',
+      dialogTitle: '标题',
       activesNames: '1',
       isCollapse: false,
       showOverflow: false,
@@ -76,7 +80,16 @@ export default {
           index: '1',
           subNav: [
             { name: '麻药', index: '1-1', componentName: 'Event' },
-            { name: '用药', index: '1-2', componentName: 'Event' }
+            { name: '用药', index: '1-2', componentName: 'Event' },
+            { name: '事件', index: '1-3', componentName: 'Event' },
+            { name: '输液', index: '1-4', componentName: 'Event' },
+            { name: '出量', index: '1-5', componentName: 'Event' },
+            { name: '插管', index: '1-6', componentName: 'Event' },
+            { name: '拔管', index: '1-7', componentName: 'Event' },
+            { name: '输血', index: '1-8', componentName: 'Event' },
+            { name: '输氧', index: '1-9', componentName: 'Event' },
+            { name: '呼吸', index: '1-10', componentName: 'Event' },
+            { name: '其他', index: '1-11', componentName: 'Event' }
           ],
           icon: 'el-icon-star-on'
         },
@@ -99,7 +112,8 @@ export default {
             { name: '检查结果', index: '3-12', componentName: 'InspectionResult' },
             { name: '病历病程', index: '3-13', componentName: 'MedicalRecordCourse' },
             { name: '状态维护', index: '3-14', componentName: 'StateMaintain' },
-            { name: '手术等级', index: '3-15', componentName: 'OperationLevel' }
+            { name: '手术等级', index: '3-15', componentName: 'OperationLevel' },
+            { name: '术后登记', index: '3-16', componentName: 'PostoperativeRegistration' }
           ],
           icon: 'el-icon-s-data'
         },
@@ -141,6 +155,7 @@ export default {
     // Hemodynamics
   },
   computed: {
+    ...mapGetters(['eventType']),
     oddEven (index) {
       return function (index) {
         if ((index + 1) % 2 === 0) {
@@ -152,6 +167,10 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['setEventType']),
+    jumpLogin () {
+      this.$router.push('/login')
+    },
     handleDialogClose () {
       this.showDialog = false
       this.activeIndex = false
@@ -161,6 +180,9 @@ export default {
     },
     handleChangeButton (item, index) {
       this.activeIndex = index || null
+      if (item.componentName === 'Event') {
+        this.setEventType(item.index)
+      }
       this.showDialog = true
       this.dialogTitle = item.name
       this.componentName = item.componentName
@@ -223,12 +245,14 @@ export default {
     cursor: pointer;
   }
   .img {
-    height:34px;
-    margin-bottom:14px;
+    // height:34px;
+    margin:14px 0;
     // background:#fff;
     img{
+      display: block;
       // width:100%;
-      margin-left:20px;
+      // margin-left:20px;
+      margin:0 auto;
       height:100%;
     }
   }

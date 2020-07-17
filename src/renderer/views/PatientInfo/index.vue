@@ -3,7 +3,12 @@
     <div class="left">
       <operation-status />
       <tab-nav />
-      <router-view />
+      <transition
+        name="fade"
+        mode="out-in"
+      >
+        <router-view />
+      </transition>
     </div>
     <div class="right">
       <signs-data />

@@ -44,13 +44,15 @@
               .title 准备手术
               .time
                 el-date-picker(
-                  v-model="datetime"
+                  :value="item.date"
+                  :disabled="item.date!==''"
                   size="mini"
                   type="datetime"
                   style="width:130px;"
                   placeholder=""
                   default-time="12:00:00"
                   format="MM-dd HH:mm"
+                  value-format="MM-dd HH:mm"
                 )
       .right-arow(@click="handleChangeNav(2)")
         i(class="el-icon-arrow-right arow")
@@ -63,9 +65,9 @@ export default {
   data () {
     return {
       datetime: '',
-      opeStatusList: [{ status: 0, title: '准备手术', date: '' },
-        { status: 0, title: '准备手术', date: '' }, { status: 0, title: '准备手术', date: '' },
-        { status: 0, title: '准备手术', date: '' },
+      opeStatusList: [{ status: 0, title: '准备手术', date: '7-17 9:05' },
+        { status: 0, title: '准备手术', date: '7-17 9:30' }, { status: 0, title: '准备手术', date: '7-17 9:40' },
+        { status: 0, title: '准备手术', date: '7-17 10:10' },
         { status: 1, title: '准备手术', date: '' }, { status: 2, title: '准备手术', date: '' },
         { status: 2, title: '准备手术', date: '' }]
     }
