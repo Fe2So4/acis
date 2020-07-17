@@ -7,6 +7,7 @@
     >
       <div
         class="contextMenu"
+        ref="contextMenu"
         :style="positionStyle"
       >
         <el-scrollbar

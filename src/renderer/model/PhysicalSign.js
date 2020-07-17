@@ -48,6 +48,7 @@ export class PhysicalSignLine {
       width,
       height,
       fontSize: 12,
+      fontFamily: '宋体',
       textAlign: 'center',
       verticalAlign: 'middle',
       fillColor: this._color,
@@ -109,6 +110,7 @@ export class PhysicalSignLine {
     const legend = new Label(this._label + this._name)
     legend.attr({
       anchor: [0, 0],
+      fontFamily: '宋体',
       fontSize: 12,
       height: 20,
       textAlign: 'center',
@@ -147,7 +149,7 @@ export class PhysicalSignLine {
   _valueAdaptor ([x, y]) {
     let value =
       this._max - (y / this._group.attr('height')) * (this._max - this._min)
-    value = Math.round(value)
+    value = Math.round(value * 100) / 100
     return value
   }
 }
@@ -163,6 +165,7 @@ export class PhysicalSignLegends {
     legend.attr({
       anchor: [0, 0],
       fontSize: 12,
+      fontFamily: '宋体',
       height: 20,
       textAlign: 'center',
       verticalAlign: 'middle',
@@ -190,8 +193,9 @@ export class PhysicalSignEventTags {
     const text = label || order + ''
     const tag = new Label(text)
     tag.attr({
-      anchor: [0, 0],
+      anchor: [0.5, 0.5],
       fontSize: 12,
+      fontFamily: '宋体',
       width: 12,
       height: 14,
       textAlign: 'center',
@@ -206,10 +210,10 @@ export class PhysicalSignEventTags {
         (this._endMoment - this._startMoment)) *
       this._group.attr('width')
     x = Math.round(x)
-    let y = this._group.attr('height') / 2 - 7
+    let y = this._group.attr('height') / 2
     y = Math.round(y)
 
-    tag.attr('pos', [x - 6, y])
+    tag.attr('pos', [x, y])
     this._group.append(tag)
   }
 

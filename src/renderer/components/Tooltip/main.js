@@ -43,8 +43,14 @@ const Tooltip = function (options) {
   }
 
   // 样式修改
-  instance.positionX = options.positionX + 15
-  instance.positionY = options.positionY + 20
+  instance.positionX = Math.min(
+    options.positionX + 15,
+    document.body.clientWidth - instance.$el.clientWidth
+  )
+  instance.positionY = Math.min(
+    options.positionY + 20,
+    document.body.clientHeight - instance.$el.clientHeight
+  )
 
   // 返回实例
   return instance

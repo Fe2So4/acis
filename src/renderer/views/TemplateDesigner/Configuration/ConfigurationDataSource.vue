@@ -6,9 +6,11 @@
         placeholder="请选择"
         @change="onChangeTableName"
         clearable
+        filterable
+        :filter-method="(val) => filterMethod(val,'tableFilterText')"
       >
         <el-option
-          v-for="item in tables"
+          v-for="item in filteredTables"
           :key="item.id"
           :label="item.name"
           :value="item.name"
@@ -26,9 +28,11 @@
         placeholder="请选择"
         @change="onChangeClassName"
         clearable
+        filterable
+        :filter-method="(val) => filterMethod(val,'classFilterText')"
       >
         <el-option
-          v-for="item in classes"
+          v-for="item in filteredClasses"
           :key="item.id"
           :label="item.name"
           :value="item.name"
@@ -61,7 +65,21 @@ export default {
   data () {
     return {
       tables: [],
-      classes: []
+      classes: [],
+      tableFilterText: '',
+      classFilterText: ''
+    }
+  },
+  computed: {
+    filteredTables () {
+      return this.tables.filter(
+        item => item.chinaName.indexOf(this.tableFilterText) !== -1
+      )
+    },
+    filteredClasses () {
+      return this.classes.filter(
+        item => item.chinaName.indexOf(this.classFilterText) !== -1
+      )
     }
   },
   async created () {
@@ -77,9 +95,8 @@ export default {
   },
   methods: {
     onChangeTableName (currentValue, oldValue) {
-      const table = this.tables.find(
-        item => item.name === currentValue
-      )
+      this.tableFilterText = ''
+      const table = this.tables.find(item => item.name === currentValue)
       if (table) {
         this.classes = table.children
       } else {
@@ -94,6 +111,7 @@ export default {
       })
     },
     onChangeClassName (currentValue, oldValue) {
+      this.classFilterText = ''
       const configuration = Object.assign({}, this.value, {
         className: currentValue
       })
@@ -109,6 +127,9 @@ export default {
         .catch(err => {
           console.error(err)
         })
+    },
+    filterMethod (val, fieldName) {
+      this[fieldName] = val
     }
   }
 }

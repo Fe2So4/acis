@@ -6,9 +6,11 @@
         placeholder="请选择"
         @change="onChangeTableName"
         clearable
+        filterable
+        :filter-method="(val) => filterMethod(val,'tableFilterText')"
       >
         <el-option
-          v-for="item in tables"
+          v-for="item in filteredTables"
           :key="item.tableName"
           :label="item.tableName"
           :value="item.tableName"
@@ -26,9 +28,11 @@
         placeholder="请选择"
         @change="onChangeClassName"
         clearable
+        filterable
+        :filter-method="(val) => filterMethod(val,'classFilterText')"
       >
         <el-option
-          v-for="item in classes"
+          v-for="item in filteredClasses"
           :key="item.showClassName"
           :label="item.showClassName"
           :value="item.showClassName"
@@ -40,15 +44,17 @@
         </el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="字典关系名">
+    <el-form-item label="字典筛选条件">
       <el-select
         :value="value.dictRelationName"
         placeholder="请选择"
         @change="onChangeRelationName"
         clearable
+        filterable
+        :filter-method="(val) => filterMethod(val,'relationFilterText')"
       >
         <el-option
-          v-for="item in relations"
+          v-for="item in filteredRelations"
           :key="item.dictId"
           :label="item.dictId"
           :value="item.dictId"
@@ -82,7 +88,27 @@ export default {
     return {
       tables: [],
       classes: [],
-      relations: []
+      relations: [],
+      tableFilterText: '',
+      classFilterText: '',
+      relationFilterText: ''
+    }
+  },
+  computed: {
+    filteredTables () {
+      return this.tables.filter(
+        item => item.tableExplain.indexOf(this.tableFilterText) !== -1
+      )
+    },
+    filteredClasses () {
+      return this.classes.filter(
+        item => item.showClassNameExplain.indexOf(this.classFilterText) !== -1
+      )
+    },
+    filteredRelations () {
+      return this.relations.filter(
+        item => item.dictName.indexOf(this.relationFilterText) !== -1
+      )
     }
   },
   async created () {
@@ -106,6 +132,7 @@ export default {
   },
   methods: {
     onChangeTableName (currentValue, oldValue) {
+      this.tableFilterText = ''
       const table = this.tables.find(item => item.tableName === currentValue)
       if (table) {
         this.classes = table.tableInfos
@@ -124,6 +151,7 @@ export default {
       })
     },
     onChangeClassName (currentValue, oldValue) {
+      this.classFilterText = ''
       const dictClass = this.classes.find(
         item => item.showClassName === currentValue
       )
@@ -141,6 +169,7 @@ export default {
       })
     },
     onChangeRelationName (currentValue, oldValue) {
+      this.relationFilterText = ''
       const configuration = Object.assign({}, this.value, {
         dictRelationName: currentValue
       })
@@ -156,6 +185,9 @@ export default {
         .catch(err => {
           console.error(err)
         })
+    },
+    filterMethod (val, fieldName) {
+      this[fieldName] = val
     }
   }
 }

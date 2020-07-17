@@ -16,6 +16,9 @@
             :edit-mode="editMode"
             :start-time="startTime"
             :end-time="endTime"
+            :is-rescue-mode="isRescueMode"
+            :operation-id="operationId"
+            :patient-id="patientId"
             @finish="onFinish(item.name)"
           />
         </widget-wrapper>
@@ -54,6 +57,18 @@ export default {
     paperSetting: {
       type: Object,
       required: true
+    },
+    isRescueMode: {
+      type: Boolean,
+      default: false
+    },
+    operationId: {
+      type: String,
+      required: true
+    },
+    patientId: {
+      type: String,
+      required: true
     }
   },
   data () {
@@ -64,8 +79,6 @@ export default {
   computed: {
     sizeStyle () {
       return {
-        // width: `calc(${this.paperSetting.width}mm - 100px)`,
-        // height: `calc(${this.paperSetting.height}mm - 100px)`
         width: `${this.paperSetting.width}mm`,
         height: `${this.paperSetting.height}mm`
       }

@@ -5,7 +5,7 @@ const mock =
 
 const base = 'http://localhost:8090/'
 // 李
-// const baseLi = process.env.NODE_ENV === 'development' ? 'http://192.168.1.149:8090/' : base
+const baseLi = process.env.NODE_ENV === 'development' ? 'http://192.168.1.149:8090/' : base
 // 谢
 const baseXie =
   process.env.NODE_ENV === 'development' ? 'http://192.168.1.196:8090/' : base
@@ -39,6 +39,11 @@ export const getDictionaryTableData = mock
 export const updateDocument = mock
   ? '/api/updateDocument'
   : baseXie + 'acis/templatewrit/templete/acisTempleteUpdateTemplate'
+
+// 文书模板保存 - 李 - 2020-07-17
+export const getTagNamesList = mock
+  ? '/api/getTagNamesList'
+  : baseLi + 'acis/generalConfig/getHisSignList'
 // 文书设计器相关 ------------------------------end-------------------------------
 
 // 文书展示相关 --------------------------------start---------------------------------

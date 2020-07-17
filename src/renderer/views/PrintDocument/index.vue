@@ -6,6 +6,9 @@
       :widget-list="widgetList"
       :start-time="startTime"
       :end-time="endTime"
+      :is-rescue-mode="isRescueMode"
+      :operation-id="operationId"
+      :patient-id="patientId"
       @widget-finish="onWidgetFinish"
       :paper-setting="paperSetting"
     />
@@ -15,8 +18,8 @@
 <script>
 import {
   getTemplateInfo,
-  getTemplateData
-  // getValueData
+  getTemplateData,
+  getValueData
 } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
 import MainContent from './MainContent'
@@ -36,11 +39,19 @@ export default {
       isIntraoperative: false,
       isRescueMode: false,
       paperSetting: {},
-      canvasWidgetList: []
+      canvasWidgetList: [],
+      templateId: '',
+      operationId: '',
+      patientId: ''
     }
   },
   created () {
-    this.getData(this.$route.params.pageIndex)
+    this.templateId = this.$route.params.templateId
+    this.operationId = this.$route.params.operationId
+    this.patientId = this.$route.params.patientId
+    this.pageIndex = this.$route.params.pageIndex
+    this.isRescueMode = this.$route.params.isRescueMode === 'true'
+    this.getData(this.pageIndex)
   },
   methods: {
     // 通用接口 - 获取模板和源数据表中查出的信息
@@ -50,21 +61,18 @@ export default {
           url: getTemplateData,
           method: 'POST',
           params: {
-            templateCode: this.$route.params.templateId
+            templateCode: this.templateId
           }
         }),
-        Promise.resolve({
-          data: {
-            data: {}
+        request({
+          url: getValueData,
+          method: 'POST',
+          params: {
+            templateCode: this.templateId,
+            operationId: this.operationId,
+            patientId: this.patientId
           }
         })
-        // request({
-        //   url: getValueData,
-        //   method: 'POST',
-        //   params: {
-        //     templateCode: this.$route.params.templateId
-        //   }
-        // })
       ]).then(res => {
         const [widgetList, valueMap] = [
           res[0].data.data.list,
@@ -74,7 +82,7 @@ export default {
           // 源数据赋值
           if (widget.dataSource) {
             const { tableName, className } = widget.dataSource
-            let value
+            let value = ''
             if (valueMap[tableName] && valueMap[tableName][className]) {
               value = valueMap[tableName][className]
             }
@@ -112,16 +120,16 @@ export default {
         method: 'POST',
         url: getTemplateInfo,
         data: {
-          operationId: 'b0f9d8bda9244397a44cb8ff278937d9',
+          operationId: this.operationId,
           intervalTime,
           pageIndex,
           pageTimeInterval
         }
       }).then(res => {
-        const { startTime, endTime, pageTotal, pageIndex } = res.data.data
+        const { startTime, endTime, totalPage, pageIndex } = res.data.data
         this.startTime = startTime
         this.endTime = endTime
-        this.totalPage = pageTotal
+        this.totalPage = totalPage
         this.pageIndex = pageIndex
         this.tempList.forEach(widget => {
           // x轴起止时间更改
@@ -154,6 +162,9 @@ export default {
       }, [])
     },
     onWidgetFinish (widgetName) {
+      if (this.timer) {
+        clearTimeout(this.timer)
+      }
       console.log('WidgetFinish', widgetName)
       for (let i = 0; i < this.canvasWidgetList.length; i++) {
         if (this.canvasWidgetList[i] === widgetName) {
@@ -163,9 +174,9 @@ export default {
       }
       console.log(this.canvasWidgetList.length)
       if (this.canvasWidgetList.length === 0) {
-        setTimeout(() => {
+        this.timer = setTimeout(() => {
           this.$electron.ipcRenderer.send('ready-to-print')
-        }, 300)
+        }, 1000)
       }
     }
   }

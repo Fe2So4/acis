@@ -38,7 +38,7 @@ export default {
       required: true
     },
     templateId: {
-      type: String || Number,
+      type: [String, Number],
       required: true
     }
   },
@@ -50,6 +50,7 @@ export default {
   methods: {
     onCancel () {
       this.$emit('update:visible', false)
+      this.$destroy()
     },
     onShowTemplateData (templateData) {
       this.templateData = templateData
