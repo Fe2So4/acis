@@ -26,6 +26,8 @@
               :is-rescue-mode="isRescueMode"
               :operation-id="operationId"
               :patient-id="patientId"
+              :total-page="totalPage"
+              :page-index="pageIndex"
               @select-event-time-range="onSelectEventTimeRange"
               @change="onChange($event, item)"
               @change-sign-data="onChangeSignData"
@@ -80,6 +82,16 @@ export default {
     patientId: {
       type: String,
       required: true
+    },
+    totalPage: {
+      required: false,
+      type: [Number, String],
+      default: ''
+    },
+    pageIndex: {
+      required: false,
+      type: [Number, String],
+      default: ''
     }
   },
   data () {
@@ -112,26 +124,22 @@ export default {
       this.$emit('change-sign-data', data)
     },
     showCtxMenu (e) {
-      console.log(e)
+      const that = this
       this.$ctxMenu({
         list: [
           {
-            label: 'his',
-            value: 1
+            label: '同步his体征数据',
+            value: 'his'
           },
           {
-            label: '检验',
-            value: 1
+            label: '同步检验数据',
+            value: 'check'
           }
         ],
         posX: e.pageX,
         posY: e.pageY,
         onSelectMenuItem (e) {
-          console.log(e)
-          // e = that.eventDictList.find(item => e.label === item.detailName)
-          // if (e) {
-          // that.$emit('select-event-time-range', e)
-          // }
+          that.$emit('get-info', e.value)
         }
       })
     }

@@ -1,28 +1,28 @@
 <template>
   <div
-    class="widgetTextArea"
+    class="widgetPagination"
+    :style="widgetStyle"
   >
-    <textarea
-      class="textarea"
-      :style="widgetStyle"
-      :value="configuration.value"
-      :placeholder="configuration.placeholder"
-      :readonly="configuration.readonly"
-      @input="onInut"
-    />
+    {{ text }}
   </div>
 </template>
 <script>
 export default {
-  name: 'WidgetTextarea',
+  name: 'WidgetPagination',
   props: {
     configuration: {
       type: Object,
       required: true
     },
-    editMode: {
-      type: Boolean,
-      default: true
+    totalPage: {
+      required: false,
+      type: [Number, String],
+      default: ''
+    },
+    pageIndex: {
+      required: false,
+      type: [Number, String],
+      default: ''
     }
   },
   watch: {
@@ -31,11 +31,24 @@ export default {
       handler: function (val) {
         this.setStyle()
       }
+    },
+    editMode: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
     return {
       widgetStyle: {}
+    }
+  },
+  computed: {
+    text () {
+      if (this.editMode || this.totalPage === '' || this.pageIndex === '') {
+        return '分页信息'
+      } else {
+        return `第${this.pageIndex + 1}页/共${this.totalPage}页`
+      }
     }
   },
   created () {
@@ -59,24 +72,15 @@ export default {
 
       styleObj = { ...styleObj, ...borderObj }
       this.widgetStyle = styleObj
-    },
-    onInut (e) {
-      this.configuration.dirty = true
-      this.configuration.value = e.target.value
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.widgetTextArea {
+.widgetPagination {
   width: 100%;
   height: 100%;
-  .textarea {
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    outline: none;
-    border: none;
-  }
+  word-break: break-all;
+  overflow: hidden;
 }
 </style>

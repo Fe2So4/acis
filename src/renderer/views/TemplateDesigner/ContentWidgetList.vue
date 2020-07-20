@@ -85,6 +85,14 @@ export default {
         {
           label: '图片',
           name: 'widget-image'
+        },
+        {
+          label: '分页信息',
+          name: 'widget-pagination'
+        },
+        {
+          label: '日期时间选择',
+          name: 'widget-date-picker'
         }
       ],
       wrapStyle: [

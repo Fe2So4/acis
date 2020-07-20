@@ -1,20 +1,16 @@
-import sourceData from './source_data'
-import dictionaryTableData from './dictionary_table_data'
-import templateData from './template_data'
-import signData from './sign_data'
-import eventData from './event_data'
-import eventDictData from './event_dict_data'
-import addData from './add_data'
-import documentsList from './documents_list'
-import tagNamesList from './tag_names_list'
+import medicalDocument from './medicalDocument'
 const Mock = require('mockjs')
 Mock.setup({
   timeout: '200-600'
 })
 // 源数据表名和字段名
-Mock.mock('/api/dataSource', 'get', sourceData)
+Mock.mock('/api/dataSource', 'get', medicalDocument.sourceData)
 // 字典表名、字段名、关系名
-Mock.mock('/api/getDictionaryTableData', 'get', dictionaryTableData)
+Mock.mock(
+  '/api/getDictionaryTableData',
+  'get',
+  medicalDocument.dictionaryTableData
+)
 // 模板信息
 Mock.mock('/api/getTemplateInfo', 'post', {
   code: 200,
@@ -29,46 +25,36 @@ Mock.mock('/api/getTemplateInfo', 'post', {
 })
 
 // 模板数据
-Mock.mock(/^\/api\/getTemplateData/, templateData)
+Mock.mock(/^\/api\/getTemplateData/, medicalDocument.templateData)
 
 // 获取源数据表中查出的结果
-Mock.mock('/api/getValueData', {
-  code: 200,
-  success: true,
-  data: {
-    acis_ope_apply_info: {
-      patient_id: '123211',
-      visit_id: '01101',
-      inpatient_ward: '二病区'
-    }
-  }
-})
+Mock.mock(/^\/api\/getValueData/, medicalDocument.valueData)
 
 // 字典数据
 Mock.mock(/^\/api\/getDictionaryData/, 'post', {
   code: 200,
   success: true,
-  data: [
-    '一病区',
-    '二病区',
-    '三病区'
-  ]
+  data: ['一病区', '二病区', '三病区']
 })
 // 体征数据
-Mock.mock('/api/getSignData', 'post', signData)
+Mock.mock(/^\/api\/getSignData/, 'post', medicalDocument.signData)
 // 事件数据
-Mock.mock('/api/getEventData', 'post', eventData)
+Mock.mock(/^\/api\/getEventData/, medicalDocument.eventData)
 // 事件字典数据
-Mock.mock('/api/getEventDictData', eventDictData)
+Mock.mock('/api/getEventDictData', medicalDocument.eventDictData)
 // 新增事件
-Mock.mock('/api/addNewEvent', 'post', addData)
+Mock.mock('/api/addNewEvent', 'post', medicalDocument.addData)
 // 获取文书列表
-Mock.mock('/api/getDocumentsList', 'post', documentsList)
+Mock.mock('/api/getDocumentsList', 'post', medicalDocument.documentsList)
 // 文书保存
-Mock.mock(/^\/api\/updateDocument/, 'post', addData)
+Mock.mock(/^\/api\/updateDocument/, 'post', medicalDocument.addData)
 // 文书数据保存
-Mock.mock(/^\/api\/saveDocumentData/, 'post', addData)
+Mock.mock(/^\/api\/saveDocumentData/, 'post', medicalDocument.addData)
 // 体征数据保存
-Mock.mock(/^\/api\/saveChangedSignData/, 'post', addData)
+Mock.mock(/^\/api\/saveChangedSignData/, 'post', medicalDocument.addData)
 // 获取tag name列表
-Mock.mock(/^\/api\/getTagNamesList/, tagNamesList)
+Mock.mock(/^\/api\/getTagNamesList/, medicalDocument.tagNamesList)
+// 获取his体征数据
+Mock.mock(/^\/api\/getSignInfo/, medicalDocument.signInfo)
+// 获取检验数据
+Mock.mock(/^\/api\/getTestInfo/, medicalDocument.signInfo)

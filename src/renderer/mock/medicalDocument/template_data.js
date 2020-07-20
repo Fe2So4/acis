@@ -11,6 +11,7 @@ export default {
         readonly: false,
         required: true,
         dataSource: { className: '', tableName: '' },
+        tagName: '',
         multiSelect: false,
         dictionarySource: {
           conditionClassNameId: '',
@@ -35,6 +36,7 @@ export default {
           className: 'inpatient_ward',
           tableName: 'acis_ope_apply_info'
         },
+        tagName: '',
         multiSelect: true,
         dictionarySource: {
           conditionClassNameId: 'deatil_name',
@@ -187,6 +189,7 @@ export default {
           className: 'patient_id',
           tableName: 'acis_ope_apply_info'
         },
+        tagName: '',
         multiSelect: false,
         dictionarySource: {
           conditionClassNameId: 'deatil_name',
@@ -239,6 +242,7 @@ export default {
         },
         font: { lineHeight: 30, size: 9, textAlign: 'left', weight: 'normal' },
         singleSelect: '1',
+        labelMargin: 10,
         collections: [
           { label: '项目1', value: '1' },
           { label: '项目2', value: '2' }
@@ -259,6 +263,7 @@ export default {
         },
         font: { lineHeight: 30, size: 9, textAlign: 'left', weight: 'normal' },
         singleSelect: '2',
+        labelMargin: 10,
         collections: [
           { label: '项目1', value: '1' },
           { label: '项目2', value: '2' }
@@ -282,220 +287,54 @@ export default {
         readonly: false,
         required: false,
         dataSource: { className: '', tableName: '' },
+        tagName: '',
         height: 152,
         id: 'd5abbe8e-86dd-4efa-b130-0a082f0cc102',
         name: 'widget-textarea',
         positionX: 0,
         positionY: 307,
         width: 331
+      },
+      {
+        font: {
+          color: '#000000',
+          lineHeight: 30,
+          size: 9,
+          textAlign: 'center',
+          textIndent: 0,
+          weight: 'normal'
+        },
+        border: { position: [], color: '#000000', width: 1 },
+        height: 30,
+        id: 'e970bc4b-e5c5-498d-81d0-7e3f3d95877a',
+        name: 'widget-pagination',
+        positionX: 231,
+        positionY: 459,
+        width: 100
+      },
+      {
+        font: {
+          size: 9,
+          weight: 'normal',
+          lineHeight: 15,
+          textAlign: 'left',
+          textIndent: 0,
+          color: '#000000'
+        },
+        border: { position: ['bottom'], color: '#000000', width: 1 },
+        placeholder: '',
+        readonly: false,
+        required: false,
+        dataSource: { tableName: '', className: '' },
+        tagName: '',
+        datePickerType: 'datetime',
+        height: 30,
+        id: '852be10d-e6e6-41db-be05-275dbb4b83d4',
+        name: 'widget-date-picker',
+        positionX: 0,
+        positionY: 459,
+        width: 231
       }
-      // {
-      //   bloodTransfusion: {
-      //     num: 2,
-      //     text: '输血'
-      //   },
-      //   drugNumber: 10,
-      //   height: 203,
-      //   id: '578761b8-c1e1-4a55-aeb7-859f06793aa4',
-      //   infusion: {
-      //     num: 3,
-      //     text: '输液'
-      //   },
-      //   leftPartWidthRate: 0.18,
-      //   leftTitle: {
-      //     lineHeight: 30,
-      //     text: '输液输血',
-      //     width: 40
-      //   },
-      //   name: 'widget-in-out',
-      //   outPut: {
-      //     num: 0,
-      //     text: '用量'
-      //   },
-      //   positionX: 0,
-      //   positionY: 622,
-      //   rightPartWidthRate: 0.1,
-      //   timeTitle: {
-      //     height: 0,
-      //     lineHeight: 30,
-      //     text: '时间'
-      //   },
-      //   totalTitle: {
-      //     text: '总量'
-      //   },
-      //   width: 792,
-      //   xAxis: {
-      //     endTime: '2018-02-01 12:00',
-      //     lineInterval: 3,
-      //     startTime: '2018-02-01 08:00',
-      //     timeInterval: 900000,
-      //     list: [
-      //       {
-      //         label: '08:00'
-      //       },
-      //       {
-      //         label: '08:15'
-      //       },
-      //       {
-      //         label: '08:30'
-      //       },
-      //       {
-      //         label: '08:45'
-      //       },
-      //       {
-      //         label: '09:00'
-      //       },
-      //       {
-      //         label: '09:15'
-      //       },
-      //       {
-      //         label: '09:30'
-      //       },
-      //       {
-      //         label: '09:45'
-      //       },
-      //       {
-      //         label: '10:00'
-      //       },
-      //       {
-      //         label: '10:15'
-      //       },
-      //       {
-      //         label: '10:30'
-      //       },
-      //       {
-      //         label: '10:45'
-      //       },
-      //       {
-      //         label: '11:00'
-      //       },
-      //       {
-      //         label: '11:15'
-      //       },
-      //       {
-      //         label: '11:30'
-      //       },
-      //       {
-      //         label: '11:45'
-      //       }
-      //     ]
-      //   }
-      // },
-      // {
-      //   anaesColumn: {
-      //     num: 8
-      //   },
-      //   height: 139,
-      //   id: 'a86659fd-ebf0-47c8-a93a-b9717038c419',
-      //   leftTitle: {
-      //     lineHeight: 30,
-      //     text: '监测',
-      //     width: 40
-      //   },
-      //   name: 'widget-anaes-table',
-      //   positionX: 0,
-      //   positionY: 331,
-      //   rowList: [
-      //     {
-      //       colNum: 2,
-      //       label: '第1行',
-      //       signCode: 212,
-      //       signItem: 'VTE',
-      //       text: '心电图'
-      //     },
-      //     {
-      //       colNum: 1,
-      //       label: '第2行',
-      //       signCode: 212,
-      //       signItem: 'VTE',
-      //       text: '氧饱和度'
-      //     },
-      //     {
-      //       colNum: 2,
-      //       label: '第3行',
-      //       signCode: 212,
-      //       signItem: 'VTE',
-      //       text: '潮气量'
-      //     },
-      //     {
-      //       colNum: 1,
-      //       label: '第4行',
-      //       signCode: 212,
-      //       signItem: 'VTE',
-      //       text: 'f'
-      //     },
-      //     {
-      //       colNum: 2,
-      //       label: '第5行',
-      //       signCode: 212,
-      //       signItem: 'VTE',
-      //       text: 'PEAK'
-      //     },
-      //     {
-      //       colNum: 2,
-      //       label: '第6行',
-      //       signCode: 212,
-      //       signItem: 'VTE',
-      //       text: 'PEEP'
-      //     },
-      //     {
-      //       colNum: 2,
-      //       label: '第7行',
-      //       signCode: 212,
-      //       signItem: 'VTE',
-      //       text: '中心静脉压'
-      //     },
-      //     {
-      //       colNum: 1,
-      //       label: '第8行',
-      //       signCode: 212,
-      //       signItem: 'VTE',
-      //       text: '尿量'
-      //     },
-      //     {
-      //       colNum: 2,
-      //       label: '第9行',
-      //       signCode: 212,
-      //       signItem: 'VTE',
-      //       text: '累计失血量'
-      //     }
-      //   ],
-      //   rowTitle: {
-      //     width: 128
-      //   },
-      //   width: 792
-      // }
-
-      // {
-      //   drugNumber: 10,
-      //   height: 154,
-      //   id: '979362f8-3d5a-4d2d-9911-503cad5437fc',
-      //   leftPartWidthRate: 0.18,
-      //   leftTitle: {
-      //     lineHeight: 30,
-      //     text: '麻醉用药',
-      //     width: 50
-      //   },
-      //   name: 'widget-anaes-drug',
-      //   positionX: 0,
-      //   positionY: 469,
-      //   rightPartWidthRate: 0.1,
-      //   timeTitle: {
-      //     height: 30,
-      //     lineHeight: 30,
-      //     text: '时间'
-      //   },
-      //   totalTitle: {
-      //     text: '总量'
-      //   },
-      //   width: 792,
-      //   xAxis: {
-      //     endTime: '2020-07-01 13:00',
-      //     lineInterval: 3,
-      //     startTime: '2020-07-01 09:00',
-      //     timeInterval: 15
-      //   }
-      // }
     ],
     isIntraoperative: true
   }

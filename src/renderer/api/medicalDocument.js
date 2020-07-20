@@ -3,19 +3,29 @@ const mock =
     ? !(process.env.MOCK === 'none')
     : false
 
-const base = 'http://localhost:8090/'
+const URL_BASE = 'localhost'
+const URL_LI = '192.168.1.177'
+const URL_XIE = '192.168.1.198'
+const URL_ZHONG = '192.168.1.190'
+const PORT_BASE = '8090'
+const PORT_SOCKET = '9099'
+
+const base = `http://${URL_BASE}:${PORT_BASE}/`
 // 李
-const baseLi = process.env.NODE_ENV === 'development' ? 'http://192.168.1.149:8090/' : base
+const baseLi =
+  process.env.NODE_ENV === 'development'
+    ? `http://${URL_LI}:${PORT_BASE}/`
+    : base
 // 谢
 const baseXie =
-  process.env.NODE_ENV === 'development' ? 'http://192.168.1.196:8090/' : base
+  process.env.NODE_ENV === 'development'
+    ? `http://${URL_XIE}:${PORT_BASE}/`
+    : base
 // 钟
 const baseZhong =
-  process.env.NODE_ENV === 'development' ? 'http://192.168.1.190:8090/' : base
-
-// socket.io 地址 - 李 - 2020-07-14
-export const getSocketData = 'http://192.168.1.149:9099'
-// export const getSocketData = 'http://192.168.1.154:9099/'
+  process.env.NODE_ENV === 'development'
+    ? `http://${URL_ZHONG}:${PORT_BASE}/`
+    : base
 
 // 文书设计器和展示公共 ------------------------------start-----------------------------
 // 获取模板数据json - 钟 - 2020-07-13
@@ -92,8 +102,28 @@ export const saveDocumentData = mock
   ? '/api/saveDocumentData'
   : baseZhong + 'acis/common/template/saveCustomData'
 
+// socket.io 地址 - 李 - 2020-07-14
+export const getSocketData = mock
+  ? `http://${URL_LI}:${PORT_SOCKET}/`
+  : `http://${URL_BASE}:${PORT_SOCKET}/`
+
 // 保存修改过的体征 - 谢 - 2020-07-16
 export const saveChangedSignData = mock
   ? '/api/saveChangedSignData'
   : baseXie + 'acis/intraoperative/info/editPatientMonitorDataExt'
+
+// 获取his体征数据 - 李 - 2020-07-20
+export const getSignInfo = mock
+  ? '/api/getSignInfo'
+  : baseLi + 'acis/sysIntegration/getSignInfo'
+
+// 获取检验数据 - 李 - 2020-07-20
+export const getTestInfo = mock
+  ? '/api/getTestInfo'
+  : baseLi + 'acis/sysIntegration/getTestInfo'
+
+// 修改抢救模式 - 李 - 2020-07-20
+export const changeDisplayMode = mock
+  ? '/api/changeDisplayMode'
+  : baseLi + 'acis/signDataCollect/changeOpeMode'
 // 文书展示相关 --------------------------------end---------------------------------

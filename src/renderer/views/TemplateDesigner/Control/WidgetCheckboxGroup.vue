@@ -86,6 +86,7 @@ export default {
       }
     },
     onChange (val) {
+      this.configuration.dirty = true
       if (this.configuration.singleSelect === '1' && val.length > 1) {
         this.checkedOptions.shift()
       }
