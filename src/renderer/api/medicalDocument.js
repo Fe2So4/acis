@@ -1,31 +1,10 @@
-const mock =
-  process.env.NODE_ENV === 'development'
-    ? !(process.env.MOCK === 'none')
-    : false
-
-const URL_BASE = 'localhost'
-const URL_LI = '192.168.1.177'
-const URL_XIE = '192.168.1.198'
-const URL_ZHONG = '192.168.1.190'
-const PORT_BASE = '8090'
-const PORT_SOCKET = '9099'
-
-const base = `http://${URL_BASE}:${PORT_BASE}/`
-// 李
-const baseLi =
-  process.env.NODE_ENV === 'development'
-    ? `http://${URL_LI}:${PORT_BASE}/`
-    : base
-// 谢
-const baseXie =
-  process.env.NODE_ENV === 'development'
-    ? `http://${URL_XIE}:${PORT_BASE}/`
-    : base
-// 钟
-const baseZhong =
-  process.env.NODE_ENV === 'development'
-    ? `http://${URL_ZHONG}:${PORT_BASE}/`
-    : base
+import {
+  mock,
+  baseZhong,
+  baseLi,
+  socketLi,
+  baseXie
+} from './urlAndPortConfig'
 
 // 文书设计器和展示公共 ------------------------------start-----------------------------
 // 获取模板数据json - 钟 - 2020-07-13
@@ -87,10 +66,10 @@ export const addNewEvent = mock
   ? '/api/addNewEvent'
   : baseXie + 'acis/intraoperative/info/addAcisIntraoEvents'
 
-// 获取文书列表 - 钟 - 2020-07-13
+// 获取文书列表 - 钟 - 2020-07-21
 export const getDocumentsList = mock
   ? '/api/getDocumentsList'
-  : baseZhong + 'acis/templatewrit/templete/queryTemplateListTest'
+  : baseZhong + 'acis/superConfig/getWritMenu'
 
 // 获取字典源数据 - 钟 - 2020-07-14
 export const getDictionaryData = mock
@@ -103,9 +82,7 @@ export const saveDocumentData = mock
   : baseZhong + 'acis/common/template/saveCustomData'
 
 // socket.io 地址 - 李 - 2020-07-14
-export const getSocketData = mock
-  ? `http://${URL_LI}:${PORT_SOCKET}/`
-  : `http://${URL_BASE}:${PORT_SOCKET}/`
+export const getSocketData = socketLi
 
 // 保存修改过的体征 - 谢 - 2020-07-16
 export const saveChangedSignData = mock
