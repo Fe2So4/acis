@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === 'production') {
 } else {
   // 本地测试用这个
   api = {
-    baseURL: 'http://localhost:3334/mock'
+    baseURL: 'http://192.168.1.177:8090'
   }
 }
 

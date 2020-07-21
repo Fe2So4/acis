@@ -5,10 +5,10 @@ const mock =
 
 const base = 'http://localhost:8090/'
 // 李
-const baseLi = process.env.NODE_ENV === 'development' ? 'http://192.168.1.149:8090/' : base
+const baseLi = process.env.NODE_ENV === 'development' ? 'http://192.168.1.177:8090/' : base
 // 谢
 const baseXie =
-  process.env.NODE_ENV === 'development' ? 'http://192.168.1.196:8090/' : base
+  process.env.NODE_ENV === 'development' ? 'http://192.168.1.198:8090/' : base
 // 钟
 const baseZhong =
   process.env.NODE_ENV === 'development' ? 'http://192.168.1.190:8090/' : base
@@ -96,4 +96,28 @@ export const saveDocumentData = mock
 export const saveChangedSignData = mock
   ? '/api/saveChangedSignData'
   : baseXie + 'acis/intraoperative/info/editPatientMonitorDataExt'
-// 文书展示相关 --------------------------------end---------------------------------
+
+// 获取用药字典 - 谢 - 2020-07-16
+export const getAnaesDrugList = mock
+  ? '/api/saveChangedSignData'
+  : baseXie + 'acis/intraoperative/dict/getAcisIntraoPharmacyMedicineDictList'
+
+// 获取用药展示数据
+export const getDrugListRecords = mock
+  ? '/api/saveChangedSignData'
+  : baseXie + 'acis/intraoperative/info/getAcisIntraoPharmacyDataInfo'
+
+// 新增用药数据
+export const addDrug = mock
+  ? '/api/saveChangedSignData'
+  : baseXie + 'acis/intraoperative/info/storageAnesthesiaMedicineBloodEvents'
+
+// 获取输血输液列表数据
+export const getInfusionBloodList = mock
+  ? '/api/saveChangedSignData'
+  : baseXie + 'acis/intraoperative/dict/getAcisIntraoPharmacyBloodDictList'
+// 获取输血输液列表数据
+export const getBloodInfusionData = mock
+  ? '/api/saveChangedSignData'
+  : baseXie + 'acis/intraoperative/info/getAcisIntraoBloodDataInfo'
+  // 文书展示相关 --------------------------------end---------------------------------

@@ -13,6 +13,7 @@
     />
     <drug-detail
       v-if="drugDetailVisible"
+      :drug-name="drugName"
       :start-time="drugStartTime"
       :drug-detail-visible="drugDetailVisible"
       @handleClose="handleCloseDrugDetail"
@@ -29,6 +30,12 @@ import debounce from 'lodash/debounce'
 import moment from 'moment'
 import DrugList from '@/components/ContextMenu/index'
 import DrugDetail from '@/components/DrugDetail/index'
+import {
+  getInfusionBloodList,
+  getBloodInfusionData,
+  addDrug
+} from '@/api/medicalDocument'
+import request from '@/utils/requestForMock'
 const { Scene, Group, Label, Polyline } = spritejs
 export default {
   name: 'WidgetInOut',
@@ -42,115 +49,17 @@ export default {
       widgetStyle: {},
       list: [],
       groupNo: null,
-      infusionList: [
-        { menuName: '生理盐水', value: '1' },
-        { menuName: '氰化钾', value: '2' },
-        { menuName: '百草枯', value: '3' }
-      ],
-      bloodTransfusionList: [
-        { menuName: '血红蛋白', value: '1' },
-        { menuName: '血小板', value: '2' }
-      ],
+      infusionList: [],
+      bloodTransfusionList: [],
       outPutList: [{ menuName: '尿量', value: '1' }],
       drugStartTime: null,
       position: { positionX: 0, positionY: 0 },
       currentState: null,
       outPutDataList: [],
-      infusionDataList: [
-        {
-          name: '药品名称',
-          code: '0',
-          total: '30',
-          data: [
-            {
-              startTime: '2018-1-1 10:00',
-              endTime: '2018-1-1 10:30',
-              dose: '32mg/l',
-              continue: false,
-              speed: '32',
-              speedUnit: 'mg/l',
-              doseUnit: 'mg',
-              concentrationUnit: '%'
-            },
-            {
-              startTime: '2018-1-1 10:40',
-              endTime: '2018-1-1 11:00',
-              dose: '32mg/l',
-              continue: true,
-              speed: '32',
-              speedUnit: 'mg/l',
-              doseUnit: 'mg',
-              concentrationUnit: '%'
-            }
-          ]
-        },
-        {
-          name: '百草枯',
-          code: '1',
-          total: '50',
-          data: [
-            {
-              startTime: '2018-1-1 10:00',
-              endTime: '2018-1-1 10:30',
-              dose: '32mg/l',
-              continue: true,
-              speed: '32',
-              speedUnit: 'mg/l',
-              doseUnit: 'mg',
-              concentrationUnit: '%'
-            },
-            {
-              startTime: '2018-1-1 10:45',
-              endTime: '2018-1-1 11:00',
-              dose: '32',
-              continue: true,
-              speed: '32',
-              speedUnit: 'mg/l',
-              doseUnit: 'mg',
-              concentrationUnit: '%'
-            },
-            {
-              startTime: '2018-1-1 11:15',
-              endTime: '2018-1-1 11:45',
-              dose: '32mg/l',
-              continue: false,
-              speed: '32',
-              speedUnit: 'mg/l',
-              doseUnit: 'mg',
-              concentrationUnit: '%'
-            }
-          ]
-        }
-      ],
-      bloodTransfusionDataList: [
-        {
-          name: '药品名称',
-          code: '0',
-          total: '30',
-          data: [
-            {
-              startTime: '2018-1-1 10:00',
-              endTime: '2018-1-1 10:30',
-              dose: '32mg/l',
-              continue: false,
-              speed: '32',
-              speedUnit: 'mg/l',
-              doseUnit: 'mg',
-              concentrationUnit: '%'
-            },
-            {
-              startTime: '2018-1-1 10:40',
-              endTime: '2018-1-1 11:00',
-              dose: '32mg/l',
-              continue: true,
-              speed: '32',
-              speedUnit: 'mg/l',
-              doseUnit: 'mg',
-              concentrationUnit: '%'
-            }
-          ]
-        }
-      ]
+      infusionDataList: [],
+      bloodTransfusionDataList: [],
+      currentDrug: {},
+      drugName: ''
     }
   },
   props: {
@@ -176,8 +85,8 @@ export default {
       deep: true,
       handler: function (val) {
         if (this.editMode) {
+          // this.setStyle()
           this.resize()
-          this.setStyle()
         }
       }
     }
@@ -187,10 +96,10 @@ export default {
     DrugDetail
   },
   created () {
-    this.setStyle()
+    // this.setStyle()
     this.resize = debounce(this.domResizeListener, 20)
   },
-  mounted () {
+  async mounted () {
     this.renderScene()
     this.createGroups()
     this.setLayout()
@@ -198,6 +107,10 @@ export default {
     this.setTotalLine()
     this.setInfusionLine()
     this.setTransfusionLine()
+    if (!this.editMode) {
+      await this.getDrawLineList()
+      await this.getInfusionBloodList()
+    }
     this.setDrug()
     addListener(this.$refs.inOut, this.resize)
   },
@@ -206,6 +119,70 @@ export default {
     removeListener(this.$refs.inOut, this.resize)
   },
   methods: {
+    // 获取输血输液列表数据
+    getInfusionBloodList () {
+      request({
+        method: 'GET',
+        url: getInfusionBloodList
+      }).then(res => {
+        const data = res.data.data
+        const infusionList = []
+        const bloodTransfusionList = []
+        data.forEach((value, index) => {
+          value.menuName = value.detailName
+          value.value = value.detailCode
+          if (value.eventCode === 'E004') {
+            bloodTransfusionList.push(value)
+          } else {
+            infusionList.push(value)
+          }
+        })
+        this.bloodTransfusionList = bloodTransfusionList
+        this.infusionList = infusionList
+      })
+    },
+    getDrawLineList () {
+      request({
+        method: 'GET',
+        url: getBloodInfusionData,
+        params: {
+          // startTime: this.startTime,
+          startTime: '2020-07-21 09:00:00',
+          endTime: '2020-07-21 13:00:00',
+          // operationId: this.operationId
+          operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
+        }
+      }).then(res => {
+        const data = res.data.data
+        const infusionDataList = []
+        const bloodTransfusionDataList = []
+        data.forEach((item, index) => {
+          item.total = item.gross
+          item.data.forEach(_item => {
+            _item.startTime = _item.eventStartTime
+            _item.endTime = _item.eventEndTime
+            _item.dose = _item.dosage
+            if (_item.isHolding === '1') {
+              _item.continue = true
+            } else {
+              _item.continue = false
+            }
+          })
+          if (item.eventId === 'E004') {
+            bloodTransfusionDataList.push(item)
+          } else {
+            infusionDataList.push(item)
+          }
+        })
+        this.infusionDataList = infusionDataList
+        this.bloodTransfusionDataList = bloodTransfusionDataList
+        this.setDrug()
+        this.setInfusionLine()
+        this.setTransfusionLine()
+        // this.setDrugLine()
+        this.setDrugTotal()
+      })
+    },
     setStyle () {
       const { border } = this.configuration
       let styleObj = {}
@@ -589,21 +566,21 @@ export default {
         pos: [this.configuration.leftTitle.width / 2, height / 2],
         anchor: [0.5, 0.5]
       })
-      textArr.forEach((item, i, arr) => {
-        const title = new Label(item)
-        title.attr({
-          pos: [0, lineHeight * i - (lineHeight * arr.length) / 2],
-          anchor: [0.5, 0],
-          fontSize: 12,
-          fontFamily: '宋体',
-          textAlign: 'center',
-          fillColor: 'black',
-          width: width,
-          height: lineHeight,
-          lineHeight: lineHeight
-        })
-        titleTextGroup.append(title)
-      })
+      // textArr.forEach((item, i, arr) => {
+      //   const title = new Label(item)
+      //   title.attr({
+      //     pos: [0, lineHeight * i - (lineHeight * arr.length) / 2],
+      //     anchor: [0.5, 0],
+      //     fontSize: 12,
+      //     fontFamily: '宋体',
+      //     textAlign: 'center',
+      //     fillColor: 'black',
+      //     width: width - 0.5,
+      //     height: lineHeight,
+      //     lineHeight: lineHeight
+      //   })
+      //   titleTextGroup.append(title)
+      // })
       textArr.forEach((item, i, arr) => {
         const title = new Label(item)
         title.attr({
@@ -807,36 +784,43 @@ export default {
       )
       grid.addEventListener('mousedown', evt => {
         if (evt.originalEvent.button === 2) {
-          this.groupNo = evt.target.attr('index')
-          this.drugStartTime = evt.x * interval
-          console.log(this.drugStartTime, '时间')
-          if (evt.target.attr('className').indexOf('infusion') !== -1) {
-            this.list = this.infusionList
-            this.currentState = 'infusion'
-            if (this.infusionDataList[this.groupNo]) {
-              this.drugListVisible = false
-              this.drugDetailVisible = true
+          if (evt.target.attr('className').indexOf('row') !== -1) {
+            this.groupNo = evt.target.attr('index')
+            console.log(this.groupNo, 'ddddyyyywwwww')
+            this.drugStartTime = evt.x * interval
+            if (evt.target.attr('className').indexOf('infusion') !== -1) {
+              this.list = this.infusionList
+              this.currentState = 'infusion'
+              if (this.infusionDataList[this.groupNo]) {
+                this.drugListVisible = false
+                this.currentDrug = this.infusionDataList[this.groupNo]
+                this.currentDrug.eventType = this.infusionDataList[this.groupNo].eventId
+                this.drugName = this.infusionDataList[this.groupNo].eventName
+                this.drugDetailVisible = true
+              } else {
+                this.drugListVisible = true
+              }
+            } else if (
+              evt.target.attr('className').indexOf('bloodTransfusion') !== -1
+            ) {
+              this.list = this.bloodTransfusionList
+              this.currentState = 'bloodTransfusion'
+              if (this.bloodTransfusionDataList[this.groupNo]) {
+                this.drugListVisible = false
+                this.currentDrug = this.bloodTransfusionDataList[this.groupNo]
+                this.currentDrug.eventType = this.bloodTransfusionDataList[this.groupNo].eventId
+                this.drugName = this.bloodTransfusionDataList[this.groupNo].eventName
+                this.drugDetailVisible = true
+              } else {
+                this.drugListVisible = true
+              }
             } else {
-              this.drugListVisible = true
+              this.list = this.outPutList
+              this.currentState = 'output'
             }
-          } else if (
-            evt.target.attr('className').indexOf('bloodTransfusion') !== -1
-          ) {
-            this.list = this.bloodTransfusionList
-            this.currentState = 'bloodTransfusion'
-            if (this.bloodTransfusionDataList[this.groupNo]) {
-              this.drugListVisible = false
-              this.drugDetailVisible = true
-            } else {
-              this.drugListVisible = true
-            }
-          } else {
-            this.list = this.outPutList
-            this.currentState = 'output'
-            console.log('出量')
+            this.position.positionX = evt.x
+            this.position.positionY = evt.y
           }
-          this.position.positionX = evt.x
-          this.position.positionY = evt.y
         }
       })
     },
@@ -857,9 +841,11 @@ export default {
           this.drugDetailVisible = true
         } else {
           const obj = {}
-          obj.name = param.menuName
-          obj.code = param.value
-          list.push(obj)
+          obj.detailId = param.detailCode
+          obj.eventId = param.eventCode
+          obj.eventName = param.detailName
+          obj.eventType = param.eventType
+          this.currentDrug = obj
           this.drugListVisible = false
           this.drugDetailVisible = true
         }
@@ -881,38 +867,47 @@ export default {
     handleSubmit (param) {
       // let data = []
       if (!this.editMode) {
-        let list = []
-        switch (this.currentState) {
-          case 'infusion':
-            list = this.infusionDataList
-            break
-          case 'bloodTransfusion':
-            list = this.bloodTransfusionDataList
-            break
-        }
-        if (list[this.groupNo].data) {
-          list[this.groupNo].data.push(param)
+        const list = []
+        const obj = {}
+        obj.eventType = ''
+        obj.detailId = this.currentDrug.detailId
+        obj.eventId = this.currentDrug.eventId
+        obj.eventName = this.currentDrug.eventName
+        obj.eventType = this.currentDrug.eventType
+        obj.intervalTime = ''
+        obj.approach = param.channel
+        if (param.continue) {
+          obj.holdingTime = moment(param.endTime).diff(moment(param.startTime), 'minute')
         } else {
-          const data = []
-          data.push(param)
-          list[this.groupNo].data = data
-          list[this.groupNo].total = param.dose
+          obj.holdingTime = ''
         }
-        this.drugDetailVisible = false
-        this.setDrug()
-        // this.setDrugLine()
-        switch (this.currentState) {
-          case 'infusion':
-            this.setInfusionLine()
-            break
-          case 'bloodTransfusion':
-            this.setTransfusionLine()
-            break
+        obj.eventStartTime = param.startTime + ':00'
+        obj.speedUnit = param.speedUnit
+        obj.speed = param.speed
+        obj.dosage = param.dose
+        obj.concentration = param.concentration
+        obj.concentrationUnit = param.concentrationUnit
+        obj.dosageUnit = param.doseUnit
+        obj.operationId = 'b0f9d8bda9244397a44cb8ff278937d9'
+        if (param.continue) {
+          obj.isHolding = 1
+          obj.eventEndTime = param.endTime + ':00'
+        } else {
+          obj.eventEndTime = ''
+          obj.isHolding = 0
         }
-        // this.setDrugTotal()
+        list.push(obj)
+        request({
+          url: addDrug,
+          method: 'POST',
+          data: list
+        }).then(() => {
+          this.drugDetailVisible = false
+          this.getDrawLineList()
+        })
       }
     },
-    // 绘制输血线段
+    // 绘制输液线段
     setInfusionLine () {
       // 清空子元素
       if (!this.editMode) {
@@ -939,16 +934,21 @@ export default {
               width /
               (moment(this.configuration.xAxis.endTime) -
                 moment(this.configuration.xAxis.startTime))
+            // const startTime = Math.round(
+            //   (moment(item.startTime) -
+            //     moment(this.configuration.xAxis.startTime)) *
+            //     interval
+            // )
             const startTime = Math.round(
               (moment(item.startTime) -
-                moment(this.configuration.xAxis.startTime)) *
+                moment('2020-7-21 09:00')) *
                 interval
             )
             let endTime = null
             if (item.endTime !== '') {
               endTime = Math.round(
                 (moment(item.endTime) -
-                  moment(this.configuration.xAxis.startTime)) *
+                  moment('2020-7-21 09:00')) *
                   interval
               )
             }
@@ -956,8 +956,8 @@ export default {
               group = new Group({
                 className: 'infusion_col',
                 colIndex: i,
-                size: [endTime - startTime, Math.round(yScale / 2)],
-                pos: [startTime, Math.round(yScale / 2 - yScale / 4)]
+                size: [endTime - startTime, yScale],
+                pos: [startTime, 0]
               })
               dose.attr({
                 pos: [group.attr('width') / 2 - text / 2, 0],
@@ -971,13 +971,13 @@ export default {
               })
               const leftLine = new Polyline({
                 pos: [-0.5, 0],
-                points: [0, 0, 0, group.attr('height')],
+                points: [0, group.attr('height') / 4, 0, group.attr('height') * 3 / 4],
                 lineWidth: 1,
                 strokeColor: 'blue'
               })
               const rightLine = new Polyline({
                 pos: [group.attr('width') - 0.5, 0],
-                points: [0, 0, 0, group.attr('height')],
+                points: [0, group.attr('height') / 4, 0, group.attr('height') * 3 / 4],
                 lineWidth: 1,
                 strokeColor: 'blue'
               })
@@ -1015,8 +1015,8 @@ export default {
               group = new Group({
                 className: 'infusion_col',
                 colIndex: i,
-                size: [text, Math.round(yScale / 2)],
-                pos: [startTime, Math.round(yScale / 2 - yScale / 4)]
+                size: [text, yScale],
+                pos: [startTime, 0]
               })
               dose.attr({
                 pos: [0, 0],
@@ -1062,16 +1062,21 @@ export default {
               width /
               (moment(this.configuration.xAxis.endTime) -
                 moment(this.configuration.xAxis.startTime))
+            // const startTime = Math.round(
+            //   (moment(item.startTime) -
+            //     moment(this.configuration.xAxis.startTime)) *
+            //     interval
+            // )
             const startTime = Math.round(
               (moment(item.startTime) -
-                moment(this.configuration.xAxis.startTime)) *
+                moment('2020-7-21 09:00')) *
                 interval
             )
             let endTime = null
             if (item.endTime !== '') {
               endTime = Math.round(
                 (moment(item.endTime) -
-                  moment(this.configuration.xAxis.startTime)) *
+                  moment('2020-7-21 09:00')) *
                   interval
               )
             }
@@ -1079,8 +1084,8 @@ export default {
               group = new Group({
                 className: 'blood_col',
                 colIndex: i,
-                size: [endTime - startTime, Math.round(yScale / 2)],
-                pos: [startTime, Math.round(yScale / 2 - yScale / 4)]
+                size: [endTime - startTime, yScale],
+                pos: [startTime, yScale]
               })
               dose.attr({
                 pos: [group.attr('width') / 2 - text / 2, 0],
@@ -1094,13 +1099,13 @@ export default {
               })
               const leftLine = new Polyline({
                 pos: [-0.5, 0],
-                points: [0, 0, 0, group.attr('height')],
+                points: [0, group.attr('height') / 4, 0, group.attr('height') * 3 / 4],
                 lineWidth: 1,
                 strokeColor: 'blue'
               })
               const rightLine = new Polyline({
                 pos: [group.attr('width') - 0.5, 0],
-                points: [0, 0, 0, group.attr('height')],
+                points: [0, group.attr('height') / 4, 0, group.attr('height') * 3 / 4],
                 lineWidth: 1,
                 strokeColor: 'blue'
               })
@@ -1138,8 +1143,8 @@ export default {
               group = new Group({
                 className: 'blood_col',
                 colIndex: i,
-                size: [text, Math.round(yScale / 2)],
-                pos: [startTime, Math.round(yScale / 2 - yScale / 4)]
+                size: [text, yScale],
+                pos: [startTime, 0]
               })
               dose.attr({
                 pos: [0, 0],
@@ -1289,25 +1294,51 @@ export default {
           ref.removeAllChildren()
         })
         const legend = this.layer.getElementsByClassName('legend')[0]
-        const height = legend.attr('height')
-        const width = legend.attr('width')
-        const yScale = height / this.configuration.drugNumber
-        this.drugList.forEach((value, index, array) => {
-          const label = new Label(value.total)
-          label.attr({
-            pos: [0, yScale * index],
-            anchor: [0, 0],
-            textAlign: 'center',
-            width: width,
-            lineHeight: yScale,
-            fontSize: 12,
-            fillColor: 'blue',
-            fontFamily: '宋体',
-            strokeWidth: 1,
-            className: 'total'
-          })
-          legend.append(label)
-        })
+        // const infusion = drugList.getElementsByClassName('infusion')[0]
+        // const bloodTransfusion = drugList.getElementsByClassName(
+        //   'bloodTransfusion'
+        // )[0]
+        // const outPut = drugList.getElementsByClassName('outPut')[0]
+        const width = Math.round(legend.attr('width'))
+        const lineNumber =
+          this.configuration.infusion.num +
+          this.configuration.bloodTransfusion.num +
+          this.configuration.outPut.num
+        const lineHeight = Math.round(legend.attr('height') / lineNumber)
+        for (let i = 0; i < this.infusionDataList.length; i++) {
+          if (this.infusionDataList[i]) {
+            const text = new Label(this.infusionDataList[i].gross)
+            text.attr({
+              pos: [0, lineHeight * i],
+              anchor: [0, 0],
+              fontSize: 12,
+              fontFamily: '宋体',
+              textAlign: 'center',
+              fillColor: 'blue',
+              width: width - 1,
+              height: lineHeight,
+              lineHeight: lineHeight
+            })
+            legend.append(text)
+          }
+        }
+        for (let i = 0; i < this.bloodTransfusionDataList.length; i++) {
+          if (this.infusionDataList[i]) {
+            const text = new Label(this.bloodTransfusionDataList[i].gross)
+            text.attr({
+              pos: [0, lineHeight * i + lineHeight * this.configuration.infusion.num],
+              anchor: [0, 0],
+              fontSize: 12,
+              fontFamily: '宋体',
+              textAlign: 'center',
+              fillColor: 'blue',
+              width: width - 1,
+              height: lineHeight,
+              lineHeight: lineHeight
+            })
+            legend.append(text)
+          }
+        }
       }
     },
     setDrug () {
@@ -1328,7 +1359,7 @@ export default {
         const lineHeight = Math.round(drugList.attr('height') / lineNumber)
         for (let i = 0; i < this.infusionDataList.length; i++) {
           if (this.infusionDataList[i]) {
-            const text = new Label(this.infusionDataList[i].name)
+            const text = new Label(this.infusionDataList[i].eventName)
             text.attr({
               pos: [30, lineHeight * i],
               anchor: [0, 0],
@@ -1336,7 +1367,7 @@ export default {
               fontFamily: '宋体',
               textAlign: 'center',
               fillColor: 'blue',
-              width: width - 30,
+              width: width - 30 - 1,
               height: lineHeight,
               lineHeight: lineHeight
             })
@@ -1345,7 +1376,7 @@ export default {
         }
         for (let i = 0; i < this.bloodTransfusionDataList.length; i++) {
           if (this.infusionDataList[i]) {
-            const text = new Label(this.bloodTransfusionDataList[i].name)
+            const text = new Label(this.bloodTransfusionDataList[i].eventName)
             text.attr({
               pos: [30, lineHeight * i],
               anchor: [0, 0],
@@ -1353,7 +1384,7 @@ export default {
               fontFamily: '宋体',
               textAlign: 'center',
               fillColor: 'blue',
-              width: width - 30,
+              width: width - 30 - 1,
               height: lineHeight,
               lineHeight: lineHeight
             })
@@ -1372,6 +1403,7 @@ export default {
   // border: 1px solid black;
   box-sizing: border-box;
   margin: 0 auto;
-  // background: #fff;
+  overflow: unset !important;
+  background: #fff;
 }
 </style>

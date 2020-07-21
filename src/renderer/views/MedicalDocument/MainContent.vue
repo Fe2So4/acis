@@ -7,8 +7,8 @@
       <div
         class="documentContent"
         :style="sizeStyle"
-        @click.right="showCtxMenu($event)"
       >
+        <!-- @click.right="showCtxMenu($event)" -->
         <div
           class="widgetContent"
         >

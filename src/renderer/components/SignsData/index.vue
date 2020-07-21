@@ -13,7 +13,8 @@
           :key="index"
         >
           <p :style="{color:item.color}">
-            {{ item.name }}
+            <span>{{ item.itemName }}</span>
+            <span>{{ item.unit }}</span>
           </p>
           <p :style="{color:item.color}">
             {{ item.value }}
@@ -24,11 +25,19 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
 export default {
   data () {
     return {
-      signsList: [],
+      signsList: [{ itemName: '心率', unit: 'bpm', value: '87', color: '#18B24E' },
+        { itemName: 'PULSE', unit: 'bpm', value: '70', color: '#18B24E' },
+        { itemName: '动脉平均压', unit: 'bpm', value: '70', color: '#18B24E' },
+        { itemName: '呼吸', unit: '次/分', value: '18', color: '#5BB9F5' },
+        { itemName: '动脉压', unit: 'mmHg', value: '114/56', color: '#F0E34E' },
+        { itemName: '无创压', unit: 'mmHg', value: '90/63', color: '#F0E34E' },
+        { itemName: '体温', unit: '℃', value: '36.3', color: '#5BB9F5' },
+        { itemName: 'ETCO2', unit: '次/分', value: '33', color: '#F0E34E' },
+        { itemName: 'FiO2', unit: 'L/min', value: '26', color: '#F73D3D' }
+      ],
       wrapStyle: [
         {
           'overflow-x': 'hidden'
@@ -41,13 +50,6 @@ export default {
 
   },
   mounted () {
-    axios({
-      url: 'http://localhost:3334/mock/signs'
-    }).then(res => {
-      const data = res.data
-      this.signsList = data.data
-    //   console.log(res.data.data)
-    })
   }
 }
 </script>
@@ -67,17 +69,24 @@ export default {
             height: calc(100% - 26px);
             padding-top: 10px;
             li{
+                margin-bottom:5px;
                 p{
                     font-size: 16px;
                     font-weight: 600;
                     margin:0;
                     line-height: 26px;
+                    display: flex;
+                    justify-content: space-between;
                     padding:0 10px;
+                    line-height:28px;
                     &:first-child{
-                        text-align: left;
+                      text-align: left;
                     }
                     &:last-child{
-                        text-align: right;
+                      justify-content: end;
+                      text-align: right;
+                      font-size: 40px;
+                      line-height:50px;
                     }
                 }
             }
