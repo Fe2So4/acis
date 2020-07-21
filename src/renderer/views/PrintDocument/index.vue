@@ -11,6 +11,8 @@
       :patient-id="patientId"
       @widget-finish="onWidgetFinish"
       :paper-setting="paperSetting"
+      :total-page="totalPage"
+      :page-index="pageIndex"
     />
   </div>
 </template>
@@ -83,8 +85,18 @@ export default {
           if (widget.dataSource) {
             const { tableName, className } = widget.dataSource
             let value = ''
-            if (valueMap[tableName] && valueMap[tableName][className]) {
-              value = valueMap[tableName][className]
+            if (valueMap[tableName]) {
+              const valueArr = valueMap[tableName].filter(
+                item => item.className === className
+              )
+              valueArr.forEach(valueItem => {
+                const { widgetId, value: widgetValue } = valueItem
+                if (widgetId && widgetId === widget.id) {
+                  value = widgetValue
+                } else if (widgetId === '') {
+                  value = widgetValue
+                }
+              })
             }
             widget.value = value
           }

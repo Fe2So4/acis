@@ -212,6 +212,19 @@ export default function getConfigurationItems (widgetName) {
         multiSelect: false,
         dictionarySource
       }
+    case 'widget-date-picker':
+      return {
+        font,
+        border: Object.assign({}, border, {
+          position: ['bottom']
+        }),
+        placeholder: '',
+        readonly: false,
+        required,
+        dataSource,
+        tagName,
+        datePickerType: 'datetime'
+      }
     case 'widget-textarea':
       return {
         font,
@@ -229,6 +242,13 @@ export default function getConfigurationItems (widgetName) {
           position: []
         }),
         text: '文本内容'
+      }
+    case 'widget-pagination':
+      return {
+        font,
+        border: Object.assign({}, border, {
+          position: []
+        })
       }
     case 'widget-line':
       return {

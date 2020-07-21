@@ -44,6 +44,8 @@ npm run lint
 #  -Dictiona 字典
 #  -TemplateDesigner 文书设计
 #  -TemplateDisplayer 文书展示
+#  -medicalDocument 医疗文书
+#  -printDocument 文书打印
 #  -TemplateManagement 模板管理
 #  -MedicalRecordCourse 病历病程 
 #  -EmergencyTreatment 急诊登记 

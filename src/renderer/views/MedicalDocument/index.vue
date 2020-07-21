@@ -13,8 +13,11 @@
       :is-rescue-mode="isRescueMode"
       :operation-id="operationId"
       :patient-id="patientId"
+      :total-page="totalPage"
+      :page-index="pageIndex"
       @select-event-time-range="onSelectEventTimeRange"
       @change-sign-data="onChangeSignData"
+      @get-info="onGetInfo"
     />
     <bottom-buttons
       :is-intraoperative="isIntraoperative"
@@ -50,7 +53,10 @@ import {
   getTemplateData,
   getValueData,
   saveDocumentData,
-  saveChangedSignData
+  saveChangedSignData,
+  getSignInfo,
+  getTestInfo,
+  changeDisplayMode
 } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
 import MainContent from './MainContent'
@@ -142,8 +148,18 @@ export default {
           if (widget.dataSource) {
             const { tableName, className } = widget.dataSource
             let value = ''
-            if (valueMap[tableName] && valueMap[tableName][className]) {
-              value = valueMap[tableName][className]
+            if (valueMap[tableName]) {
+              const valueArr = valueMap[tableName].filter(
+                item => item.className === className
+              )
+              valueArr.forEach(valueItem => {
+                const { widgetId, value: widgetValue } = valueItem
+                if (widgetId && widgetId === widget.id) {
+                  value = widgetValue
+                } else if (widgetId === '') {
+                  value = widgetValue
+                }
+              })
             }
             widget.dirty = false
             widget.value = value
@@ -220,9 +236,12 @@ export default {
       this.$eventHub.$emit('document-redraw')
     },
     async onChangeRescueMode (rescueMode) {
-      this.isRescueMode = rescueMode
-      await this.getIntraoperativeData(0)
-      this.$eventHub.$emit('document-redraw')
+      const result = await this.changeDisplayMode()
+      if (result.data.success) {
+        this.isRescueMode = rescueMode
+        await this.getIntraoperativeData(0)
+        this.$eventHub.$emit('document-redraw')
+      }
     },
     onEventAddedSuccuessfully () {
       this.getData(this.pageIndex)
@@ -280,13 +299,16 @@ export default {
       const customDataList = list
         .filter(
           widget =>
+            widget.dirty &&
             widget.dataSource &&
             widget.dataSource.tableName === 'acis_patient_writ_data'
         )
         .map(widget => {
-          const obj = {}
-          obj[widget.id] = widget.value
-          return obj
+          return {
+            widgetId: widget.id,
+            tagName: widget.tagName || '',
+            value: widget.value
+          }
         })
       const { length } = customDataList
       if (length) {
@@ -305,6 +327,11 @@ export default {
             this.$message({
               message: '保存成功',
               type: 'success'
+            })
+            this.widgetList.forEach(widget => {
+              if (widget.dirty) {
+                widget.dirty = false
+              }
             })
           } else {
             this.$message({
@@ -399,6 +426,61 @@ export default {
             message: res.data.msg
           })
         }
+      })
+    },
+    onGetInfo (value) {
+      switch (value) {
+        case 'his':
+          this.getSignInfo()
+          break
+        case 'check':
+          this.getTestInfo()
+          break
+        default:
+      }
+    },
+    // 获取his体征数据
+    getSignInfo () {
+      return request({
+        method: 'GET',
+        url: `${getSignInfo}/${this.patientId}/${this.operationId}`
+      }).then(res => {
+        const infoList = res.data.data
+        if (Array.isArray(infoList)) {
+          const hasTagWidgetList = this.widgetList.filter(item => item.tagName)
+          hasTagWidgetList.forEach(widget => {
+            const info = infoList.find(item => item.tagName === widget.tagName)
+            if (info) {
+              widget.dirty = true
+              widget.value = info.signValue
+            }
+          })
+        }
+      })
+    },
+    // 获取检验数据
+    getTestInfo () {
+      return request({
+        method: 'GET',
+        url: `${getTestInfo}/${this.patientId}`
+      }).then(res => {
+        const infoList = res.data.data
+        if (Array.isArray(infoList)) {
+          const hasTagWidgetList = this.widgetList.filter(item => item.tagName)
+          hasTagWidgetList.forEach(widget => {
+            const info = infoList.find(item => item.tagName === widget.tagName)
+            if (info) {
+              widget.dirty = true
+              widget.value = info.itemValue
+            }
+          })
+        }
+      })
+    },
+    changeDisplayMode () {
+      return request({
+        method: 'put',
+        url: `${changeDisplayMode}/${!this.isRescueMode}/${this.operationId}`
       })
     }
   }

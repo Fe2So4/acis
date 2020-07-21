@@ -19,6 +19,8 @@
             :is-rescue-mode="isRescueMode"
             :operation-id="operationId"
             :patient-id="patientId"
+            :total-page="totalPage"
+            :page-index="pageIndex"
             @finish="onFinish(item.name)"
           />
         </widget-wrapper>
@@ -69,6 +71,16 @@ export default {
     patientId: {
       type: String,
       required: true
+    },
+    totalPage: {
+      required: false,
+      type: [Number, String],
+      default: ''
+    },
+    pageIndex: {
+      required: false,
+      type: [Number, String],
+      default: ''
     }
   },
   data () {

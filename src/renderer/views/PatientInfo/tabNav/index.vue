@@ -11,12 +11,7 @@ import { getDocumentsList } from '@/api/medicalDocument'
 export default {
   data () {
     return {
-      documentsList: [],
-      wrapStyle: [
-        {
-
-        }
-      ]
+      documentsList: []
     }
   },
   computed: {
@@ -60,12 +55,14 @@ export default {
         url: getDocumentsList
       }).then(
         res => {
-          this.documentsList = res.data.data.map(item => {
-            return {
-              label: item.templateName,
-              templateId: item.templateCode
-            }
-          })
+          if (res.data.data) {
+            this.documentsList = res.data.data.map(item => {
+              return {
+                label: item.templateName,
+                templateId: item.templateCode
+              }
+            })
+          }
         }
       )
     }

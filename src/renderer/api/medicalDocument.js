@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const mock =
   process.env.NODE_ENV === 'development'
     ? !(process.env.MOCK === 'none')
@@ -16,6 +17,15 @@ const baseZhong =
 // socket.io 地址 - 李 - 2020-07-14
 export const getSocketData = 'http://192.168.1.149:9099'
 // export const getSocketData = 'http://192.168.1.154:9099/'
+=======
+import {
+  mock,
+  baseZhong,
+  baseLi,
+  socketLi,
+  baseXie
+} from './urlAndPortConfig'
+>>>>>>> 8f103ec83eaac1c3a1fc7c05af8b42f8d4517ced
 
 // 文书设计器和展示公共 ------------------------------start-----------------------------
 // 获取模板数据json - 钟 - 2020-07-13
@@ -77,10 +87,10 @@ export const addNewEvent = mock
   ? '/api/addNewEvent'
   : baseXie + 'acis/intraoperative/info/addAcisIntraoEvents'
 
-// 获取文书列表 - 钟 - 2020-07-13
+// 获取文书列表 - 钟 - 2020-07-21
 export const getDocumentsList = mock
   ? '/api/getDocumentsList'
-  : baseZhong + 'acis/templatewrit/templete/queryTemplateListTest'
+  : baseZhong + 'acis/superConfig/getWritMenu'
 
 // 获取字典源数据 - 钟 - 2020-07-14
 export const getDictionaryData = mock
@@ -92,11 +102,15 @@ export const saveDocumentData = mock
   ? '/api/saveDocumentData'
   : baseZhong + 'acis/common/template/saveCustomData'
 
+// socket.io 地址 - 李 - 2020-07-14
+export const getSocketData = socketLi
+
 // 保存修改过的体征 - 谢 - 2020-07-16
 export const saveChangedSignData = mock
   ? '/api/saveChangedSignData'
   : baseXie + 'acis/intraoperative/info/editPatientMonitorDataExt'
 
+<<<<<<< HEAD
 // 获取用药字典 - 谢 - 2020-07-16
 export const getAnaesDrugList = mock
   ? '/api/saveChangedSignData'
@@ -121,3 +135,20 @@ export const getBloodInfusionData = mock
   ? '/api/saveChangedSignData'
   : baseXie + 'acis/intraoperative/info/getAcisIntraoBloodDataInfo'
   // 文书展示相关 --------------------------------end---------------------------------
+=======
+// 获取his体征数据 - 李 - 2020-07-20
+export const getSignInfo = mock
+  ? '/api/getSignInfo'
+  : baseLi + 'acis/sysIntegration/getSignInfo'
+
+// 获取检验数据 - 李 - 2020-07-20
+export const getTestInfo = mock
+  ? '/api/getTestInfo'
+  : baseLi + 'acis/sysIntegration/getTestInfo'
+
+// 修改抢救模式 - 李 - 2020-07-20
+export const changeDisplayMode = mock
+  ? '/api/changeDisplayMode'
+  : baseLi + 'acis/signDataCollect/changeOpeMode'
+// 文书展示相关 --------------------------------end---------------------------------
+>>>>>>> 8f103ec83eaac1c3a1fc7c05af8b42f8d4517ced
