@@ -110,7 +110,6 @@ export const saveChangedSignData = mock
   ? '/api/saveChangedSignData'
   : baseXie + 'acis/intraoperative/info/editPatientMonitorDataExt'
 
-<<<<<<< HEAD
 // 获取用药字典 - 谢 - 2020-07-16
 export const getAnaesDrugList = mock
   ? '/api/saveChangedSignData'
@@ -135,7 +134,6 @@ export const getBloodInfusionData = mock
   ? '/api/saveChangedSignData'
   : baseXie + 'acis/intraoperative/info/getAcisIntraoBloodDataInfo'
   // 文书展示相关 --------------------------------end---------------------------------
-=======
 // 获取his体征数据 - 李 - 2020-07-20
 export const getSignInfo = mock
   ? '/api/getSignInfo'
@@ -151,4 +149,3 @@ export const changeDisplayMode = mock
   ? '/api/changeDisplayMode'
   : baseLi + 'acis/signDataCollect/changeOpeMode'
 // 文书展示相关 --------------------------------end---------------------------------
->>>>>>> 8f103ec83eaac1c3a1fc7c05af8b42f8d4517ced
