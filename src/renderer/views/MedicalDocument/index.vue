@@ -87,6 +87,9 @@ export default {
       paperSetting: {},
       dialogDesignerVisible: false,
       templateId: '',
+      procedureState: '',
+      pageInfo: '',
+      syncHis: '',
       loadingVisible: false,
       changedSignDataList: []
     }
@@ -98,11 +101,17 @@ export default {
     $route: {
       handler (to, from) {
         this.templateId = to.params.templateId
+        this.procedureState = to.params.procedureState
+        this.pageInfo = to.params.pageInfo
+        this.syncHis = to.params.syncHis
       }
     }
   },
   created () {
     this.templateId = this.$route.params.templateId
+    this.procedureState = this.$route.params.procedureState
+    this.pageInfo = this.$route.params.pageInfo
+    this.syncHis = this.$route.params.syncHis
     this.getData(0)
   },
   beforeRouteUpdate (to, from, next) {
@@ -199,7 +208,8 @@ export default {
           operationId: this.operationId,
           intervalTime,
           pageIndex,
-          pageTimeInterval
+          pageTimeInterval,
+          operState: '4'
         }
       }).then(res => {
         const { startTime, endTime, totalPage, pageIndex } = res.data.data
@@ -220,7 +230,7 @@ export default {
     async getData (pageIndex) {
       this.loadingVisible = true
       const isIntraoperative = await this.getTemplateAndValueData()
-      if (isIntraoperative) {
+      if (this.pageInfo) {
         await this.getIntraoperativeData(pageIndex)
       }
       this.widgetList = this.tempList

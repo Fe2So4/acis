@@ -26,7 +26,10 @@ export default {
           path: {
             name: 'MedicalDocument',
             params: {
-              templateId: item.templateId
+              templateId: item.templateId,
+              procedureState: item.procedureState,
+              pageInfo: item.pageInfo,
+              syncHis: item.syncHis
             }
           }
         }
@@ -51,15 +54,18 @@ export default {
     },
     getDocumentsList () {
       return request({
-        method: 'POST',
-        url: getDocumentsList
+        method: 'get',
+        url: `${getDocumentsList}/9`
       }).then(
         res => {
-          if (res.data.data) {
-            this.documentsList = res.data.data.map(item => {
+          if (res.data.success) {
+            this.documentsList = res.data.data.isUse.map(item => {
               return {
                 label: item.templateName,
-                templateId: item.templateCode
+                templateId: item.templateCode,
+                procedureState: item.procedureState,
+                pageInfo: item.pageInfo,
+                syncHis: item.syncHis
               }
             })
           }

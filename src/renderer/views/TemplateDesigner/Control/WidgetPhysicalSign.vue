@@ -660,7 +660,8 @@ export default {
             startTime: this.startTime,
             endTime: this.endTime,
             dataMode: this.isRescueMode ? 1 : 5, // 5-正常模式 1-抢救模式
-            operationId: this.operationId
+            operationId: this.operationId,
+            modeCode: 'N034'
           }
         })
           .then(res => {
