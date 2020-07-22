@@ -40,7 +40,7 @@ if (process.env.BUILD_TARGET === 'schedule') {
     routes: [
       {
         path: '/',
-        redirect: '/login'
+        redirect: '/home'
       },
       {
         path: '/login',

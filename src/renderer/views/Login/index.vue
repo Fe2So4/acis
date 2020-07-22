@@ -3,7 +3,7 @@
     <div class="content clearfix">
       <div class="left">
         <p>
-          Dandelion
+          Dandelion智慧手术中心
         </p>
         <p>
           line
@@ -18,6 +18,12 @@
         >
       </div>
       <div class="right">
+        <div class="form-icon">
+          <img
+            src="../../assets/dandelion.png"
+            alt=""
+          >
+        </div>
         <div class="title">
           账户密码登录
         </div>
@@ -157,12 +163,12 @@ export default {
     align-items: center;
     background: url('~@/assets/login_bg.png') center no-repeat;
     .content{
-      width:640px;
+      width:610px;
       z-index: 1;
       height: 350px;
       .left{
         float:left;
-        width:50%;
+        width:290px;
         height: 100%;
         p{
           margin:0;
@@ -186,11 +192,17 @@ export default {
       }
       .right{
         float:right;
-        width: 50%;
+        width: 320px;
         height: 100%;
         background:rgba(255,255,255,1);
         box-shadow:14px 14px 19px 1px rgba(0, 0, 0, 0.5);
         border-radius:10px;
+        position: relative;
+        .form-icon{
+          position: absolute;
+          left:70px;
+          top:35px;
+        }
         .title{
           color:#0094FF;
           margin-top: 40px;

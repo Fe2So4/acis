@@ -1,3 +1,6 @@
+// socket.io 地址 - 李 - 2020-07-14
+// export const getSocketData = 'http://192.168.1.149:9099'
+// export const getSocketData = 'http://192.168.1.154:9099/'
 import {
   mock,
   baseZhong,
@@ -5,6 +8,21 @@ import {
   socketLi,
   baseXie
 } from './urlAndPortConfig'
+
+// const mock =
+//   process.env.NODE_ENV === 'development'
+//     ? !(process.env.MOCK === 'none')
+//     : false
+
+// const base = 'http://localhost:8090/'
+// // 李
+// const baseLi = process.env.NODE_ENV === 'development' ? 'http://192.168.1.177:8090/' : base
+// // 谢
+// const baseXie =
+//   process.env.NODE_ENV === 'development' ? 'http://192.168.1.198:8090/' : base
+// // 钟
+// const baseZhong =
+//   process.env.NODE_ENV === 'development' ? 'http://192.168.1.190:8090/' : base
 
 // 文书设计器和展示公共 ------------------------------start-----------------------------
 // 获取模板数据json - 钟 - 2020-07-13
@@ -89,6 +107,30 @@ export const saveChangedSignData = mock
   ? '/api/saveChangedSignData'
   : baseXie + 'acis/intraoperative/info/editPatientMonitorDataExt'
 
+// 获取用药字典 - 谢 - 2020-07-16
+export const getAnaesDrugList = mock
+  ? '/api/saveChangedSignData'
+  : baseXie + 'acis/intraoperative/dict/getAcisIntraoPharmacyMedicineDictList'
+
+// 获取用药展示数据
+export const getDrugListRecords = mock
+  ? '/api/saveChangedSignData'
+  : baseXie + 'acis/intraoperative/info/getAcisIntraoPharmacyDataInfo'
+
+// 新增用药数据
+export const addDrug = mock
+  ? '/api/saveChangedSignData'
+  : baseXie + 'acis/intraoperative/info/storageAnesthesiaMedicineBloodEvents'
+
+// 获取输血输液列表数据
+export const getInfusionBloodList = mock
+  ? '/api/saveChangedSignData'
+  : baseXie + 'acis/intraoperative/dict/getAcisIntraoPharmacyBloodDictList'
+// 获取输血输液列表数据
+export const getBloodInfusionData = mock
+  ? '/api/saveChangedSignData'
+  : baseXie + 'acis/intraoperative/info/getAcisIntraoBloodDataInfo'
+  // 文书展示相关 --------------------------------end---------------------------------
 // 获取his体征数据 - 李 - 2020-07-20
 export const getSignInfo = mock
   ? '/api/getSignInfo'

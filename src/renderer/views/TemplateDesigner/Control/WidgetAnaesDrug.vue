@@ -14,6 +14,7 @@
     <drug-detail
       v-if="drugDetailVisible"
       :start-time="drugStartTime"
+      :drug-name="drugName"
       :drug-detail-visible="drugDetailVisible"
       @handleClose="handleCloseDrugDetail"
       @handleSubmit="handleSubmit"
@@ -29,6 +30,12 @@ import debounce from 'lodash/debounce'
 import moment from 'moment'
 import DrugList from '@/components/ContextMenu/index'
 import DrugDetail from '@/components/DrugDetail/index'
+import {
+  getAnaesDrugList,
+  getDrugListRecords,
+  addDrug
+} from '@/api/medicalDocument'
+import request from '@/utils/requestForMock'
 const { Scene, Group, Label, Polyline } = spritejs
 export default {
   name: 'WidgetAnaesDrug',
@@ -38,88 +45,15 @@ export default {
       drugListVisible: false,
       position: { positionX: 0, positionY: 0 },
       layout: {},
-      drugList: [
-        {
-          name: '药品名称',
-          code: '0',
-          total: '30',
-          data: [
-            {
-              startTime: '2018-1-1 10:00',
-              endTime: '2018-1-1 10:30',
-              dose: '32mg/l',
-              continue: false,
-              speed: '32',
-              speedUnit: 'mg/l',
-              doseUnit: 'mg',
-              concentrationUnit: '%'
-            },
-            {
-              startTime: '2018-1-1 10:40',
-              endTime: '2018-1-1 11:00',
-              dose: '32mg/l',
-              continue: true,
-              speed: '32',
-              speedUnit: 'mg/l',
-              doseUnit: 'mg',
-              concentrationUnit: '%'
-            },
-            {
-              startTime: '2018-1-1 11:10',
-              endTime: '2018-1-1 12:00',
-              dose: '32mg/l',
-              continue: true,
-              speed: '32',
-              speedUnit: 'mg/l',
-              doseUnit: 'mg',
-              concentrationUnit: '%'
-            }
-          ]
-        },
-        {
-          name: '百草枯',
-          code: '1',
-          total: '50',
-          data: [
-            {
-              startTime: '2018-1-1 10:00',
-              endTime: '2018-1-1 10:30',
-              dose: '32mg/l',
-              continue: true,
-              speed: '32',
-              speedUnit: 'mg/l',
-              doseUnit: 'mg',
-              concentrationUnit: '%'
-            },
-            {
-              startTime: '2018-1-1 10:45',
-              endTime: '2018-1-1 11:00',
-              dose: '32',
-              continue: true,
-              speed: '32',
-              speedUnit: 'mg/l',
-              doseUnit: 'mg',
-              concentrationUnit: '%'
-            },
-            {
-              startTime: '2018-1-1 11:15',
-              endTime: '2018-1-1 11:45',
-              dose: '32mg/l',
-              continue: false,
-              speed: '32',
-              speedUnit: 'mg/l',
-              doseUnit: 'mg',
-              concentrationUnit: '%'
-            }
-          ]
-        }
-      ],
+      drugList: [],
       // 药品列表
-      list: [{ menuName: '百草枯', value: '1' }, { menuName: '百草枯', value: '2' }, { menuName: '百草枯', value: '3' }],
+      list: [],
       groupNo: null,
       drugStartTime: null,
       drugDetailVisible: false,
-      widgetStyle: {}
+      widgetStyle: {},
+      drugName: '',
+      currentDrug: {}
     }
   },
   props: {
@@ -138,6 +72,11 @@ export default {
     endTime: {
       type: String,
       default: ''
+    },
+    operationId: {
+      type: String,
+      required: false,
+      default: ''
     }
   },
   components: {
@@ -153,25 +92,22 @@ export default {
           this.setStyle()
         }
       }
-    },
-    drugList: {
-      handler (newVal, old) {
-        return newVal
-      },
-      deep: true,
-      immediate: true
     }
   },
   created () {
     this.setStyle()
     this.resize = debounce(this.domResizeListener, 20)
   },
-  mounted () {
+  async mounted () {
     this.renderScene()
     this.createGroups()
     this.setLayout()
     this.setContent()
-    this.setDrugLine()
+    if (!this.editMode) {
+      await this.getDrawLineList()
+      await this.getDrugList()
+    }
+    // this.setDrug()
     this.setDrugTotal()
     addListener(this.$refs.anaesDrug, this.resize)
   },
@@ -180,6 +116,52 @@ export default {
     removeListener(this.$refs.anaesDrug, this.resize)
   },
   methods: {
+    // 获取用药列表数据
+    getDrugList () {
+      request({
+        method: 'GET',
+        url: getAnaesDrugList
+      }).then(res => {
+        const data = res.data.data
+        data.forEach((value, index) => {
+          value.menuName = value.detailName
+          value.value = value.detailCode
+        })
+        this.list = data
+      })
+    },
+    getDrawLineList () {
+      request({
+        method: 'GET',
+        url: getDrugListRecords,
+        params: {
+          // startTime: this.startTime,
+          startTime: '2020-07-21 09:00:00',
+          endTime: '2020-07-21 13:00:00',
+          // operationId: this.operationId
+          operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
+        }
+      }).then(res => {
+        const data = res.data.data
+        data.forEach((item, index) => {
+          item.total = item.gross
+          item.data.forEach(_item => {
+            _item.startTime = _item.eventStartTime
+            _item.endTime = _item.eventEndTime
+            _item.dose = _item.dosage
+            if (_item.isHolding === '1') {
+              _item.continue = true
+            } else {
+              _item.continue = false
+            }
+          })
+        })
+        this.drugList = data
+        this.setDrug()
+        this.setDrugLine()
+        this.setDrugTotal()
+      })
+    },
     setStyle () {
       const { border } = this.configuration
       let styleObj = {}
@@ -447,31 +429,32 @@ export default {
         })
         drugList.append(line)
       }
-      this.setDrug()
     },
+    // 绘制用药列表
     setDrug () {
-      if (!this.editMode) {
-        const leftPart = this.layer.getElementsByClassName('leftPart')[0]
-        const drugList = leftPart.getElementsByClassName('drugList')[0]
-        const width = Math.round(drugList.attr('width'))
-        const lineHeight =
-          Math.round(drugList.attr('height') / this.configuration.drugNumber)
-        for (let i = 0; i < this.configuration.drugNumber; i++) {
-          if (this.drugList[i]) {
-            const text = new Label(this.drugList[i].name)
-            text.attr({
-              pos: [0, lineHeight * i],
-              anchor: [0, 0],
-              fontSize: 12,
-              fontFamily: '宋体',
-              textAlign: 'center',
-              fillColor: 'blue',
-              width: width,
-              height: lineHeight,
-              lineHeight: lineHeight
-            })
-            drugList.append(text)
-          }
+      // 清空子元素
+      const leftPart = this.layer.getElementsByClassName('leftPart')[0]
+      const drugList = leftPart.getElementsByClassName('drugList')[0]
+      const labels = drugList.querySelectorAll('.drug')
+      labels.forEach(el => drugList.removeChild(el))
+      const width = Math.round(drugList.attr('width'))
+      const lineHeight = Math.round(drugList.attr('height') / this.configuration.drugNumber)
+      for (let i = 0; i < this.configuration.drugNumber; i++) {
+        if (this.drugList[i]) {
+          const text = new Label(this.drugList[i].eventName)
+          text.attr({
+            pos: [0, lineHeight * i],
+            anchor: [0, 0],
+            fontSize: 12,
+            fontFamily: '宋体',
+            textAlign: 'center',
+            fillColor: 'blue',
+            width: width - 1,
+            height: lineHeight,
+            lineHeight: lineHeight,
+            className: 'drug'
+          })
+          drugList.append(text)
         }
       }
     },
@@ -487,21 +470,6 @@ export default {
         size: [this.configuration.leftTitle.width - 1, textArr.length * lineHeight],
         pos: [this.configuration.leftTitle.width / 2, height / 2],
         anchor: [0.5, 0.5]
-      })
-      textArr.forEach((item, i, arr) => {
-        const title = new Label(item)
-        title.attr({
-          pos: [0, lineHeight * i - (lineHeight * arr.length) / 2],
-          anchor: [0.5, 0],
-          fontSize: 12,
-          fontFamily: '宋体',
-          textAlign: 'center',
-          fillColor: 'black',
-          width: width,
-          height: lineHeight,
-          lineHeight: lineHeight
-        })
-        titleTextGroup.append(title)
       })
       textArr.forEach((item, i, arr) => {
         const title = new Label(item)
@@ -671,10 +639,14 @@ export default {
               this.drugStartTime = evt.x * interval
               if (this.drugList[this.groupNo]) {
                 this.drugListVisible = false
+                this.currentDrug = this.drugList[this.groupNo]
+                this.currentDrug.eventType = this.drugList[this.groupNo].eventId
+                this.drugName = this.drugList[this.groupNo].eventName
                 this.drugDetailVisible = true
               } else {
                 this.drugListVisible = true
               }
+              // this.drugListVisible = true
               this.position.positionX = evt.x
               this.position.positionY = evt.y
             }
@@ -682,15 +654,18 @@ export default {
         })
       }
     },
+    // 下拉列表添加药品
     handleAddDrug (param) {
       if (!this.editMode) {
         if (this.drugList[this.groupNo]) {
           this.drugDetailVisible = true
         } else {
           const obj = {}
-          obj.name = param.menuName
-          obj.code = param.value
-          this.drugList.push(obj)
+          obj.detailId = param.detailCode
+          obj.eventId = param.eventCode
+          obj.eventName = param.detailName
+          obj.eventType = param.eventType
+          this.currentDrug = obj
           this.drugListVisible = false
           this.drugDetailVisible = true
         }
@@ -712,119 +687,121 @@ export default {
     // 绘制用药线段
     setDrugLine () {
       // 清空子元素
-      if (!this.editMode) {
-        this.layer.getElementsByClassName('col').forEach(ref => {
-          ref.removeAllChildren()
+      this.layer.getElementsByClassName('col').forEach(ref => {
+        ref.removeAllChildren()
+      })
+      const grid = this.layer.getElementsByClassName('grid')[0]
+      const height = grid.attr('height')
+      const yScale = height / this.configuration.drugNumber
+      var canvas = document.getElementById('canvas')
+      var ctx = canvas.getContext('2d')
+      const row = grid.getElementsByClassName('row')
+      this.drugList.forEach((value, index, array) => {
+        value.data.forEach((item, i) => {
+          const dose = new Label(item.dose)
+          const text = Math.ceil(ctx.measureText(item.dose).width)
+          let group = null
+          const width = grid.attr('width')
+          const interval = width / (moment(this.configuration.xAxis.endTime) - moment(this.configuration.xAxis.startTime))
+          // const startTime = Math.round((moment(item.startTime) - moment(this.configuration.xAxis.startTime)) * interval)
+          const startTime = Math.round((moment(item.startTime) - moment('2020-7-21 09:00')) * interval)
+          let endTime = null
+          if (item.endTime !== '') {
+            // endTime = Math.round((moment(item.endTime) - moment(this.configuration.xAxis.startTime)) * interval)
+            endTime = Math.round((moment(item.endTime) - moment('2020-7-21 09:00')) * interval)
+          }
+          if (item.continue) {
+            group = new Group({
+              className: 'col',
+              colIndex: i,
+              size: [endTime - startTime, yScale],
+              pos: [startTime, 0]
+            })
+            dose.attr({
+              pos: [group.attr('width') / 2 - text / 2, 0],
+              lineHeight: group.attr('height'),
+              height: group.attr('height'),
+              fontSize: 12,
+              fillColor: 'blue',
+              fontFamily: '宋体',
+              textAlign: 'center',
+              strokeWidth: 1
+            })
+            const leftLine = new Polyline({
+              pos: [-0.5, 0],
+              points: [0, group.attr('height') / 4, 0, group.attr('height') * 3 / 4],
+              lineWidth: 1,
+              strokeColor: 'blue'
+            })
+            const rightLine = new Polyline({
+              pos: [group.attr('width') - 0.5, 0],
+              points: [0, group.attr('height') / 4, 0, group.attr('height') * 3 / 4],
+              lineWidth: 1,
+              strokeColor: 'blue'
+            })
+            const center = group.attr('width') / 2
+            const leftCenterLine = new Polyline({
+              pos: [0, 0],
+              points: [
+                0,
+                group.attr('height') / 2 - 0.5,
+                center - text / 2 - 4,
+                group.attr('height') / 2 - 0.5
+              ],
+              lineWidth: 1,
+              strokeColor: 'blue'
+            })
+            const rightCenterLine = new Polyline({
+              pos: [0, 0],
+              points: [
+                center + text / 2 + 4,
+                group.attr('height') / 2 - 0.5,
+                group.attr('width'),
+                group.attr('height') / 2 - 0.5
+              ],
+              lineWidth: 1,
+              strokeColor: 'blue'
+            })
+            group.append(
+              leftLine,
+              rightLine,
+              leftCenterLine,
+              rightCenterLine,
+              dose
+            )
+          } else {
+            group = new Group({
+              className: 'col',
+              colIndex: i,
+              size: [text, yScale],
+              pos: [startTime, 0]
+            })
+            dose.attr({
+              pos: [0, 0],
+              lineHeight: group.attr('height'),
+              height: group.attr('height'),
+              fontSize: 12,
+              fillColor: 'blue',
+              fontFamily: '宋体',
+              textAlign: 'center',
+              strokeWidth: 1
+            })
+            group.append(dose)
+          }
+          row[index].append(group)
         })
-        const grid = this.layer.getElementsByClassName('grid')[0]
-        const height = grid.attr('height')
-        const yScale = height / this.configuration.drugNumber
-        var canvas = document.getElementById('canvas')
-        var ctx = canvas.getContext('2d')
-        const row = grid.getElementsByClassName('row')
-        this.drugList.forEach((value, index, array) => {
-          value.data.forEach((item, i) => {
-            const dose = new Label(item.dose)
-            const text = Math.ceil(ctx.measureText(item.dose).width)
-            let group = null
-            const width = grid.attr('width')
-            const interval = width / (moment(this.configuration.xAxis.endTime) - moment(this.configuration.xAxis.startTime))
-            const startTime = Math.round((moment(item.startTime) - moment(this.configuration.xAxis.startTime)) * interval)
-            let endTime = null
-            if (item.endTime !== '') {
-              endTime = Math.round((moment(item.endTime) - moment(this.configuration.xAxis.startTime)) * interval)
-            }
-            if (item.continue) {
-              group = new Group({
-                className: 'col',
-                colIndex: i,
-                size: [endTime - startTime, Math.round(yScale / 2)],
-                pos: [startTime, Math.round(yScale / 2 - yScale / 4)]
-              })
-              dose.attr({
-                pos: [group.attr('width') / 2 - text / 2, 0],
-                lineHeight: group.attr('height'),
-                height: group.attr('height'),
-                fontSize: 12,
-                fillColor: 'blue',
-                fontFamily: '宋体',
-                textAlign: 'center',
-                strokeWidth: 1
-              })
-              const leftLine = new Polyline({
-                pos: [-0.5, 0],
-                points: [0, 0, 0, group.attr('height')],
-                lineWidth: 1,
-                strokeColor: 'blue'
-              })
-              const rightLine = new Polyline({
-                pos: [group.attr('width') - 0.5, 0],
-                points: [0, 0, 0, group.attr('height')],
-                lineWidth: 1,
-                strokeColor: 'blue'
-              })
-              const center = group.attr('width') / 2
-              const leftCenterLine = new Polyline({
-                pos: [0, 0],
-                points: [
-                  0,
-                  group.attr('height') / 2 - 0.5,
-                  center - text / 2 - 4,
-                  group.attr('height') / 2 - 0.5
-                ],
-                lineWidth: 1,
-                strokeColor: 'blue'
-              })
-              const rightCenterLine = new Polyline({
-                pos: [0, 0],
-                points: [
-                  center + text / 2 + 4,
-                  group.attr('height') / 2 - 0.5,
-                  group.attr('width'),
-                  group.attr('height') / 2 - 0.5
-                ],
-                lineWidth: 1,
-                strokeColor: 'blue'
-              })
-              group.append(
-                leftLine,
-                rightLine,
-                leftCenterLine,
-                rightCenterLine,
-                dose
-              )
-            } else {
-              group = new Group({
-                className: 'col',
-                colIndex: i,
-                size: [text, Math.round(yScale / 2)],
-                pos: [startTime, Math.round(yScale / 2 - yScale / 4)]
-              })
-              dose.attr({
-                pos: [0, 0],
-                lineHeight: group.attr('height'),
-                height: group.attr('height'),
-                fontSize: 12,
-                fillColor: 'blue',
-                fontFamily: '宋体',
-                textAlign: 'center',
-                strokeWidth: 1
-              })
-              group.append(dose)
-            }
-            row[index].append(group)
-          })
-        })
-      }
+      })
     },
     // 绘制用药总量
     setDrugTotal () {
       if (!this.editMode) {
         // 清空子元素
-        this.layer.getElementsByClassName('total').forEach(ref => {
-          ref.removeAllChildren()
-        })
+        // this.layer.getElementsByClassName('total').forEach(ref => {
+        //   ref.removeAllChildren()
+        // })
         const legend = this.layer.getElementsByClassName('legend')[0]
+        const labels = legend.querySelectorAll('.total')
+        labels.forEach(el => legend.removeChild(el))
         const height = legend.attr('height')
         const width = legend.attr('width')
         const yScale = height / this.configuration.drugNumber
@@ -847,20 +824,45 @@ export default {
       }
     },
     handleSubmit (param) {
-      // let data = []
       if (!this.editMode) {
-        if (this.drugList[this.groupNo].data) {
-          this.drugList[this.groupNo].data.push(param)
+        const list = []
+        const obj = {}
+        obj.eventType = ''
+        obj.detailId = this.currentDrug.detailId
+        obj.eventId = this.currentDrug.eventId
+        obj.eventName = this.currentDrug.eventName
+        obj.eventType = this.currentDrug.eventType
+        obj.intervalTime = ''
+        obj.approach = param.channel
+        if (param.continue) {
+          obj.holdingTime = moment(param.endTime).diff(moment(param.startTime), 'minute')
         } else {
-          const data = []
-          data.push(param)
-          this.drugList[this.groupNo].data = data
-          this.drugList[this.groupNo].total = param.dose
+          obj.holdingTime = ''
         }
-        this.drugDetailVisible = false
-        this.setDrug()
-        this.setDrugLine()
-        this.setDrugTotal()
+        obj.eventStartTime = param.startTime + ':00'
+        obj.speedUnit = param.speedUnit
+        obj.speed = param.speed
+        obj.dosage = param.dose
+        obj.concentration = param.concentration
+        obj.concentrationUnit = param.concentrationUnit
+        obj.dosageUnit = param.doseUnit
+        obj.operationId = 'b0f9d8bda9244397a44cb8ff278937d9'
+        if (param.continue) {
+          obj.isHolding = 1
+          obj.eventEndTime = param.endTime + ':00'
+        } else {
+          obj.eventEndTime = ''
+          obj.isHolding = 0
+        }
+        list.push(obj)
+        request({
+          url: addDrug,
+          method: 'POST',
+          data: list
+        }).then(() => {
+          this.drugDetailVisible = false
+          this.getDrawLineList()
+        })
       }
     }
   }
@@ -875,5 +877,6 @@ export default {
   margin: 0 auto;
   position: relative;
   overflow: unset !important;
+  background: #fff;
 }
 </style>

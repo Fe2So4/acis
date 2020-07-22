@@ -9,13 +9,11 @@ const mutations = {
     state.eventType = payload
   }
 }
-
 const actions = {
   setEventType ({ commit }, payload) {
     commit('SET_EVENT_TYPE', payload)
   }
 }
-
 export default {
   namespaced: true,
   state,

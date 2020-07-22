@@ -9,7 +9,8 @@
 import { BrowserWindow } from 'electron';
 import path from 'path';
 // Install `electron-debug` with `devtron`
-require('electron-debug')({ showDevTools: true })
+// require('electron-debug')({ showDevTools: true })
+require('electron-debug')()
 
 // Install `vue-devtools`
 require('electron').app.on('ready', () => {

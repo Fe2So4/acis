@@ -38,9 +38,8 @@ export default {
           num: 2,
           text: '输血'
         },
-        border: true,
         drugNumber: 10,
-        height: 203,
+        height: 259,
         id: '578761b8-c1e1-4a55-aeb7-859f06793aa4',
         infusion: {
           num: 3,
@@ -58,7 +57,7 @@ export default {
           text: '用量'
         },
         positionX: 0,
-        positionY: 622,
+        positionY: 10,
         rightPartWidthRate: 0.1,
         timeTitle: {
           height: 0,
@@ -70,12 +69,41 @@ export default {
         },
         width: 792,
         xAxis: {
-          endTime: '2020-07-13 13:00',
+          endTime: '2018-02-01 12:00',
           lineInterval: 3,
-          startTime: '2020-07-13 09:00',
+          startTime: '2018-02-01 08:00',
           timeInterval: 15
         }
       }],
+      //   drugNumber: 10,
+      //   height: 256,
+      //   id: '979362f8-3d5a-4d2d-9911-503cad5437fc',
+      //   leftPartWidthRate: 0.18,
+      //   leftTitle: {
+      //     lineHeight: 30,
+      //     text: '麻醉用药',
+      //     width: 50
+      //   },
+      //   name: 'widget-anaes-drug',
+      //   positionX: 0,
+      //   positionY: 10,
+      //   rightPartWidthRate: 0.1,
+      //   timeTitle: {
+      //     height: 30,
+      //     lineHeight: 30,
+      //     text: '时间'
+      //   },
+      //   totalTitle: {
+      //     text: '总量'
+      //   },
+      //   width: 792,
+      //   xAxis: {
+      //     endTime: '2018-01-01 13:00',
+      //     lineInterval: 3,
+      //     startTime: '2018-01-01 09:00',
+      //     timeInterval: 15
+      //   }
+      // }],
       startTime: '',
       endTime: ''
     }

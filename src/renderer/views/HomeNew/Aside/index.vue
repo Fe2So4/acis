@@ -72,7 +72,7 @@ export default {
       activesNames: '1',
       isCollapse: false,
       showOverflow: false,
-      showDialog: true,
+      showDialog: false,
       componentName: '',
       navList: [
         {
@@ -155,7 +155,7 @@ export default {
     // Hemodynamics
   },
   computed: {
-    ...mapGetters(['eventType']),
+    ...mapGetters('anaes', ['eventType']),
     oddEven (index) {
       return function (index) {
         if ((index + 1) % 2 === 0) {
@@ -181,6 +181,7 @@ export default {
     handleChangeButton (item, index) {
       this.activeIndex = index || null
       if (item.componentName === 'Event') {
+        console.log('触发')
         this.setEventType(item.index)
       }
       this.showDialog = true

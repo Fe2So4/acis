@@ -13,7 +13,7 @@
           >
             <el-form-item>
               <el-radio-group
-                v-model="tabPosition"
+                v-model="opeState"
                 style="margin-bottom: 30px;"
                 size="mini"
               >
@@ -33,6 +33,7 @@
                 <el-checkbox
                   v-for="status in statusList"
                   :label="status.label"
+                  :value="status.value"
                   :key="status.value"
                 >
                   {{ status.label }}
@@ -165,41 +166,72 @@
       >
         <ul>
           <li
-            v-for="(item,index) in 10"
+            v-for="(item,index) in cardList"
             :key="index"
             @click="handleJump(item)"
           >
             <div class="title">
-              <span>手术室 07</span>
-              <span>出手术室</span>
+              <span>手术室 {{ item.roomNo }}</span>
+              <span>{{ item.stateName }}</span>
             </div>
-            <div class="content">
+            <div class="content clearfix">
               <div class="room">
-                <span>07 - 1</span>
+                <span>{{ item.sequence }}</span>
               </div>
               <div class="info">
-                <p>患者 <span>钱书明</span> <span>1000189889</span></p>
-                <p>住院号 <span>000213</span></p>
-                <p>手术 <span>内镜下斜坡病损切除术</span></p>
-                <p>时间 <span>2020-04-26 08:00</span></p>
-                <p>术者 <span>doctor</span> 麻醉 <span>麻醉</span></p>
+                <p><span class="label">患者</span><span>{{ item.patientName }}</span><span class="overflow">{{ item.operationId }}</span></p>
+                <p><span class="label">住院号</span><span>{{ item.visitId }}</span></p>
+                <p>
+                  <span class="label">手术</span><span
+                    class="overflow"
+                    style="width:150px;margin-left:0;margin-right:0;"
+                  >{{ item.opeName }}</span>
+                </p>
+                <p><span class="label">时间</span><span>{{ item.opeTime }}</span></p>
+                <p>
+                  <span class="label">术者</span><span style="min-width:40px;">{{ item.surgeon }}</span><span
+                    class="label"
+                    style="margin-left:10px;"
+                  >麻醉</span><span>{{ item.anesDoc }}</span>
+                </p>
               </div>
               <div
                 class="status"
               >
-                <div
-                  v-for="_item in iconList "
-                  :key="_item.icon"
-                >
+                <div v-if="item.isEmergency === 1">
                   <div style="display:flex;justify-content:center;">
                     <img
                       style="height:26px;width:26px;"
-                      :src="_item.icon"
+                      src="@/assets/emergency.png"
                       alt=""
                     >
                   </div>
-                  <div :style="{color:_item.color,fontSize:'14px',textAlign:'center'}">
-                    {{ _item.title }}
+                  <div :style="{color:'red',fontSize:'14px',textAlign:'center'}">
+                    急诊
+                  </div>
+                </div>
+                <div v-if="item.quarantine">
+                  <div style="display:flex;justify-content:center;">
+                    <img
+                      style="height:26px;width:26px;"
+                      src="@/assets/quarantine.png"
+                      alt=""
+                    >
+                  </div>
+                  <div :style="{color:'orange',fontSize:'14px',textAlign:'center'}">
+                    隔离
+                  </div>
+                </div>
+                <div v-if="item.radiation">
+                  <div style="display:flex;justify-content:center;">
+                    <img
+                      style="height:26px;width:26px;"
+                      src="@/assets/radiation.png"
+                      alt=""
+                    >
+                  </div>
+                  <div :style="{color:'yellow',fontSize:'14px',textAlign:'center'}">
+                    放射
                   </div>
                 </div>
               </div>
@@ -211,9 +243,9 @@
   </div>
 </template>
 <script>
-import icon1 from '@/assets/emergency.png'
-import icon2 from '@/assets/quarantine.png'
-import icon3 from '@/assets/radiation.png'
+import moment from 'moment'
+import request from '../../utils/requestForMock'
+import { opeList } from '@/api/patientList'
 export default {
   name: 'PatientInfo',
   data () {
@@ -246,17 +278,20 @@ export default {
         value: '选项5',
         label: '北京烤鸭'
       }],
-      iconList: [{ title: '急诊', icon: icon1, color: 'red' },
-        { title: '隔离', icon: icon2, color: 'orange' },
-        { title: '放射', icon: icon3, color: 'yellow' }],
-      filterList: [{ label: '全部', value: '1' }, { label: '术前', value: '2' }, { label: '术中', value: '3' }, { label: '术后', value: '4' }],
-      tabPosition: '1',
-      operationStatus: '',
+      filterList: [{ label: '全部', value: 0 }, { label: '术前', value: 1 }, { label: '术中', value: 2 }, { label: '术后', value: 3 }],
+      opeState: 0,
+      operationStatus: [],
       statusList: [{ label: '急诊', value: '1' }, { label: '本人的', value: '2' }, { label: '隔离', value: '3' }, { label: '放射', value: '4' }],
-      showMore: false
+      showMore: false,
+      currentPage: 1,
+      pageSize: 12,
+      cardList: []
     }
   },
   components: {
+  },
+  mounted () {
+    this.getPatientList()
   },
   methods: {
     handleJump (item) {
@@ -271,6 +306,32 @@ export default {
     },
     hanldeSearchMore () {
       this.showMore = !this.showMore
+    },
+    getPatientList () {
+      const obj = {}
+      const search = {}
+      obj.start = this.currentPage
+      obj.pageSize = this.pageSize
+      obj.opeState = this.opeState
+      search.patientId = this.searchForm.id
+      search.name = this.searchForm.name
+      search.date = this.searchForm.date
+      Object.assign(obj, search)
+      request({
+        method: 'GET',
+        url: opeList,
+        params: obj
+      }).then(res => {
+        const data = res.data.data.list || []
+        data.forEach(value => {
+          if (value.opeScheduleTime) {
+            value.opeTime = moment(value.opeScheduleTime).format('yyyy-MM-DD HH:mm')
+          } else {
+            value.opeTime = ''
+          }
+        })
+        this.cardList = data
+      })
     }
   }
 }
@@ -346,10 +407,12 @@ export default {
         }
         .content{
           flex: 1;
-          display: flex;
+          // display: flex;
           overflow: hidden;
           .room{
             width:100px;
+            float: left;
+            height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -370,23 +433,54 @@ export default {
             }
           }
           .info{
-            margin:0 30px 0 20px;
+            height: 100%;
+            float: left;
+            width: calc(100% - 174px);
+            padding:0 0 0 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
             p{
               padding:0;
               margin:0;
+              width:100%;
+              height:28px;
+              overflow: hidden;
               color:#9BA3D5;
+              display: flex;
               span{
                 color:#D0DAE5;
                 line-height: 28px;
+                display: block;
+              &:first-child{
+                span{
+                  &:last-child{
+                    background:yellow;
+                    // width: 80px;
+                    max-width: 140px;
+                  }
+                }
+              }
+              }
+              .overflow{
+                // max-width: 140px;
+                width: 80px;
+                margin:0 10px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              }
+              .label{
+                color:#9BA3D5;
+                margin-right:10px;
               }
             }
           }
           .status{
             // background: pink;
+            height: 100%;
             width:74px;
+            float: right;
             display:flex;
             flex-direction:column;
             justify-content:space-around;
