@@ -36,13 +36,12 @@ export default {
 <style lang='scss' scoped>
 .scoreTextarea {
   display: flex;
+  line-height: 28px;
   .label {
     color: #9ba3d5;
-    flex: 0 0 200px;
+    flex: 0 0 130px;
     padding-right: 10px;
-    box-sizing: border-box;
     text-align: right;
-    line-height: 28px;
   }
 }
 </style>

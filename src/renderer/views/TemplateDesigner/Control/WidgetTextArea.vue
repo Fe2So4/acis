@@ -1,6 +1,7 @@
 <template>
   <div
     class="widgetTextArea"
+    :class="{'alert':editMode && dataSourceAlert}"
   >
     <textarea
       class="textarea"
@@ -36,6 +37,18 @@ export default {
   data () {
     return {
       widgetStyle: {}
+    }
+  },
+  computed: {
+    dataSourceAlert () {
+      const { tableName, className } = this.configuration.dataSource
+      if (!tableName && !className) {
+        return false
+      } else if (tableName && className) {
+        return false
+      } else {
+        return true
+      }
     }
   },
   created () {
@@ -77,6 +90,11 @@ export default {
     background: transparent;
     outline: none;
     border: none;
+    resize: none;
   }
+}
+.alert {
+  outline: 4px solid red;
+  outline-offset: 2px;
 }
 </style>

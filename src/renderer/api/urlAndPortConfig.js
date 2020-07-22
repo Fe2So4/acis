@@ -6,8 +6,8 @@ const mock =
 const URL_BASE = 'localhost'
 const URL_LI = '192.168.1.177'
 const URL_XIE = '192.168.1.198'
-// const URL_ZHONG = '192.168.1.190'
-const URL_ZHONG = '192.168.1.154'
+const URL_ZHONG = '192.168.1.190'
+// const URL_ZHONG = '192.168.1.154'
 const PORT_BASE = '8090'
 const PORT_SOCKET = '9099'
 

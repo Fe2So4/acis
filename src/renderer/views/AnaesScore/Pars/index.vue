@@ -10,127 +10,275 @@
           //- span 危重程度
           el-input(size="mini" style="width:90px")
           //- el-input(size="mini" style="width:90px")
-        el-row(:gutter="20" type="flex" justif="space-between")
-          el-col(:span="24")
-            span(class="label") 活动
-            el-radio-group(v-model="form.radio")
-              el-radio(:label="3") A级(!!!!!!!!!)
-              el-radio(:label="6") B级()
-              el-radio(:label="7") C级
-              el-radio(:label="8") D级
-              el-radio(:label="9") E级
         el-row(:gutter="20")
-          el-col(:span="24")
-            span(class="label") 呼吸
-            el-radio-group(v-model="form.radio")
-              el-radio(:label="3") 无坏死
-              el-radio(:label="6") 坏死&lt;1/2
-              el-radio(:label="9") 坏死&lt;1/3
-              el-radio(:label="10") 坏死&gt;1/2
+          el-col(:span="24" v-for="item in group[1]" :key="item.id")
+            component(:is="'score-'+item.type" v-bind="item" v-model="item.value")
         el-row(:gutter="20")
-          el-col(:span="24")
-            span(class="label") 循环
-            el-radio-group(v-model="form.radio")
-              el-radio(:label="3") 无坏死
-              el-radio(:label="6") 坏死&lt;1/2
-              el-radio(:label="9") 坏死&lt;1/3
-              el-radio(:label="10") 坏死&gt;1/2
-        el-row(:gutter="20")
-          el-col(:span="24")
-            span(class="label") 意识
-            el-radio-group(v-model="form.radio")
-              el-radio(:label="3") 无坏死
-              el-radio(:label="6") 坏死&lt;1/2
-              el-radio(:label="9") 坏死&lt;1/3
-              el-radio(:label="10") 坏死&gt;1/2
-        el-row(:gutter="20")
-          el-col(:span="24")
-            span(class="label") 皮肤
-            el-radio-group(v-model="form.radio")
-              el-radio(:label="3") 无坏死
-              el-radio(:label="6") 坏死&lt;1/2
-              el-radio(:label="9") 坏死&lt;1/3
-              el-radio(:label="10") 坏死&gt;1/2
-        el-row(:gutter="20")
-          el-col(:span="24")
-            span(class="label") 病情描述
-            el-input(type="textarea" rows="3")
+          el-col(:span="24" v-for="item in group[2]" :key="item.id")
+            component(:is="'score-'+item.type" v-bind="item" v-model="item.value")
         .option
-          el-button(size="mini") 清空(C)
-          el-button(size="mini") 保存(A)
-          el-button(size="mini") 评分(G)
+          el-button(size="mini" @click="clear") 清空
+          el-button(size="mini" @click="save") 保存
+          el-button(size="mini" @click="calculate") 评分
 </template>
 <script>
 import ScoreChart from '../components/charts'
+import request from '@/utils/requestForMock'
+import {
+  getAnesthesiaGradeItem,
+  showAnesthesiaGradeItem,
+  saveAnesthesiaGrade,
+  calculateAnesthesiaGrade
+} from '@/api/anaesScore'
+import ScoringComponents from '../components/ScoringItem'
+import { createNamespacedHelpers } from 'vuex'
+const { mapState } = createNamespacedHelpers('Base')
 export default {
   name: 'Balthazar',
+  components: {
+    ScoreChart,
+    ...ScoringComponents
+  },
   data () {
     return {
       form: {
         opeType: '1',
         radio: ''
       },
-      wrapStyle: [{
-        'overflow-x': 'hidden'
-      }]
+      wrapStyle: [
+        {
+          'overflow-x': 'hidden',
+          padding: '0 20px'
+        }
+      ],
+      group: {
+        1: [],
+        2: []
+      },
+      anesthesiaScoreId: 5
     }
   },
-  components: {
-    ScoreChart
-  },
-  mounted () {
 
+  computed: {
+    ...mapState(['operationId', 'patientId'])
+  },
+  created () {
+    this.getGradeItemAndValue()
   },
   methods: {
+    getGradeItemAndValue () {
+      return Promise.all([
+        this.getAnesthesiaGradeItem(),
+        this.showAnesthesiaGradeItem()
+      ]).then(res => {
+        const [responseItem, responseValue] = res
+        if (
+          responseItem.data.success &&
+          Array.isArray(responseItem.data.data) &&
+          responseValue.data.success &&
+          Array.isArray(responseValue.data.data)
+        ) {
+          const itemList = responseItem.data.data
+          const valueList = responseValue.data.data
+          this.initGroups(itemList, valueList)
+        }
+      })
+    },
+    getAnesthesiaGradeItem () {
+      return request({
+        url: getAnesthesiaGradeItem,
+        method: 'post',
+        params: {
+          gradingTypeId: this.anesthesiaScoreId
+        }
+      })
+    },
+    // 回显选项
+    showAnesthesiaGradeItem () {
+      return request({
+        method: 'post',
+        url: showAnesthesiaGradeItem,
+        params: {
+          anesthesiaScoreId: this.anesthesiaScoreId,
+          operationId: this.operationId,
+          patientId: this.patientId
+        }
+      })
+    },
+    // 保存
+    saveAnesthesiaGrade (list) {
+      return request({
+        method: 'post',
+        url: saveAnesthesiaGrade,
+        params: {
+          anesthesiaScoreId: this.anesthesiaScoreId,
+          operationId: this.operationId,
+          patientId: this.patientId
+        },
+        data: list
+      })
+    },
+    // 获取已填写过的评分项
+    getDirtyList () {
+      return [...Object.values(this.group)].reduce((acc, group) => {
+        let values = group.filter(item => item.value)
+        const { length } = values
+        if (!length) {
+          return acc
+        }
+        values = values.map(item => {
+          const obj = {};
+          ({
+            id: obj.id,
+            group: obj.group,
+            label: obj.label,
+            value: obj.value,
+            score: obj.score
+          } = item)
+          const { options } = item
+          if (options) {
+            const option = item.options.find(
+              option => option.label === obj.value
+            )
+            if (option) {
+              obj.score = option.score
+            }
+          }
+          return obj
+        })
+        return [...acc, ...values]
+      }, [])
+    },
+    calculateAnesthesiaGrade () {
+      return request({
+        method: 'post',
+        url: calculateAnesthesiaGrade,
+        params: {
+          anesthesiaScoreId: this.anesthesiaScoreId,
+          operationId: this.operationId,
+          patientId: this.patientId
+        }
+      }).then(res => {
+        console.log(res)
+      })
+    },
+    initGroups (itemList, valueList) {
+      Object.keys(this.group).forEach(key => {
+        this.group[key] = this.initGroup(itemList, valueList, key)
+      })
+    },
+    initGroup (itemList, valueList, id) {
+      const listItem = itemList.find(item => item.group - id === 0)
+      if (listItem) {
+        const { children } = listItem
+        if (children) {
+          children.forEach(item => {
+            let value
+            const valueItem = valueList.find(
+              valueItem => valueItem.id === item.id
+            )
+            if (valueItem) {
+              switch (item.type) {
+                case 'checkbox':
+                  value = valueItem.value === 'true'
+                  break
+                default:
+                  value = valueItem.value
+              }
+            } else {
+              switch (item.type) {
+                case 'checkbox':
+                  value = false
+                  break
+                default:
+                  value = ''
+              }
+            }
+
+            item.value = value
+            item.group = id
+          })
+        }
+        return children || []
+      }
+      return []
+    },
+    // 清空
+    clear () {
+      Object.values(this.group).forEach(group => {
+        group.forEach(item => {
+          let value = ''
+          switch (item.type) {
+            case 'checkbox':
+              value = false
+              break
+            default:
+          }
+          item.value = value
+        })
+      })
+    },
+    async save () {
+      const list = this.getDirtyList()
+      if (list.length === 0) {
+        return this.$message({
+          message: '未填写任何评分项',
+          type: 'info'
+        })
+      }
+      const res = await this.saveAnesthesiaGrade(list)
+      if (res.data.success) {
+        this.$message({
+          message: '保存成功',
+          type: 'success'
+        })
+      } else {
+        this.$message({
+          message: '保存失败',
+          type: 'warning'
+        })
+      }
+    },
+    calculate () {
+      this.calculateAnesthesiaGrade()
+    }
   }
 }
 </script>
-<style lang="stylus" scoped>
-.pars
-  padding 0 200px
-  height 100%
-  .option
-    margin 20px 0
-    text-align right
-  .form
-    // margin-top 40px
-    .score
-      text-align right
-      margin-bottom 20px
-      span
-        color #FD4B4B
-        font-size 14px
-      .el-input
-          margin-left 20px
-    span.label
-      color #9BA3D5
-      display inline-block
-      width 80px
-      padding-right 10px
-      box-sizing border-box
-      text-align right
-      line-height 38px
-    .el-row
-      margin 20px 0 0 !important
-      .el-col
-        margin 0
-        padding 0 !important
-        display flex
-        .cirrhosis
-          flex 1
-          .el-row
-            &:first-child
-              margin-top unset !important
-        .el-radio-group
-          flex 1
-        .el-input
-          flex 1
-        .el-select
-          flex 1
-        // #1E222E
-        .el-radio-group
-          background #1E222E
-          border-radius 5px
-          padding 10px
-          height 38px
+<style lang="scss" scoped>
+.pars {
+  padding: 0;
+  height: 100%;
+  .option {
+    margin: 20px 0;
+    text-align: right;
+  }
+  .form {
+    .score {
+      text-align: right;
+      margin-bottom: 20px;
+
+      span {
+        color: #fd4b4b;
+        font-size: 14px;
+      }
+
+      .el-input {
+        margin-left: 20px;
+      }
+    }
+
+    .el-row {
+      .el-col {
+        margin: 0 0 20px 0;
+      }
+      .radioBlock ::v-deep .el-radio {
+        display: block;
+        background: #1e222e;
+        border-radius: 5px;
+        margin: 0 0 20px 0;
+      }
+    }
+  }
+}
 </style>

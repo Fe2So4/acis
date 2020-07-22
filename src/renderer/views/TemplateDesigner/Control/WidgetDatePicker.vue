@@ -1,5 +1,8 @@
 <template>
-  <div class="widgetDatePicker">
+  <div
+    class="widgetDatePicker"
+    :class="{'alert':editMode && dataSourceAlert}"
+  >
     <input
       class="input"
       type="text"
@@ -58,10 +61,20 @@ export default {
           return 'yyyy'
         case 'month':
           return 'yyyy-MM'
-        case 'day':
+        case 'date':
           return 'yyyy-MM-dd'
         default:
           return 'yyyy-MM-dd HH:mm:ss'
+      }
+    },
+    dataSourceAlert () {
+      const { tableName, className } = this.configuration.dataSource
+      if (!tableName && !className) {
+        return false
+      } else if (tableName && className) {
+        return false
+      } else {
+        return true
       }
     }
   },
@@ -102,7 +115,6 @@ export default {
       }
     },
     onChange (val) {
-      console.log(val)
       // 标志已被修改过
       this.configuration.dirty = true
       this.configuration.value = val
@@ -147,6 +159,9 @@ export default {
   .picker ::v-deep .el-input__prefix {
     display: none;
   }
-
+}
+.alert{
+  outline: 4px solid red;
+  outline-offset: 2px;
 }
 </style>

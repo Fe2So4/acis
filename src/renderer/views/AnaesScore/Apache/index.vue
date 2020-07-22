@@ -13,7 +13,7 @@
           span 得分
           el-input(size="mini" style="width:90px")
         el-row(:gutter="20")
-          el-col(:span="6" v-for="item in group[1]" :key="item.id")
+          el-col(:span="item.span" v-for="item in group[1]" :key="item.id")
             component(:is="'score-'+item.type" v-bind="item" v-model="item.value")
         el-row(:gutter="20")
           el-col(:span="24")
@@ -25,9 +25,9 @@
           el-col(:span="24" v-for="item in group[3]" :key="item.id")
             component(:is="'score-'+item.type" v-bind="item" v-model="item.value")
         .option
-          el-button(size="mini" @click="clearValues") 清空
+          el-button(size="mini" @click="clear") 清空
           el-button(size="mini" @click="save") 保存
-          el-button(size="mini") 评分
+          el-button(size="mini" @click="calculate") 评分
 </template>
 <script>
 import ScoreChart from '../components/charts'
@@ -35,7 +35,8 @@ import request from '@/utils/requestForMock'
 import {
   getAnesthesiaGradeItem,
   showAnesthesiaGradeItem,
-  saveAnesthesiaGrade
+  saveAnesthesiaGrade,
+  calculateAnesthesiaGrade
 } from '@/api/anaesScore'
 import ScoringComponents from '../components/ScoringItem'
 import { createNamespacedHelpers } from 'vuex'
@@ -58,7 +59,8 @@ export default {
         1: [],
         2: [],
         3: []
-      }
+      },
+      anesthesiaScoreId: 6
     }
   },
   computed: {
@@ -91,7 +93,7 @@ export default {
         url: getAnesthesiaGradeItem,
         method: 'post',
         params: {
-          gradingTypeId: 6
+          gradingTypeId: this.anesthesiaScoreId
         }
       })
     },
@@ -101,7 +103,7 @@ export default {
         method: 'post',
         url: showAnesthesiaGradeItem,
         params: {
-          anesthesiaScoreId: 6,
+          anesthesiaScoreId: this.anesthesiaScoreId,
           operationId: this.operationId,
           patientId: this.patientId
         }
@@ -113,7 +115,7 @@ export default {
         method: 'post',
         url: saveAnesthesiaGrade,
         params: {
-          anesthesiaScoreId: 6,
+          anesthesiaScoreId: this.anesthesiaScoreId,
           operationId: this.operationId,
           patientId: this.patientId
         },
@@ -151,6 +153,19 @@ export default {
         return [...acc, ...values]
       }, [])
     },
+    calculateAnesthesiaGrade () {
+      return request({
+        method: 'post',
+        url: calculateAnesthesiaGrade,
+        params: {
+          anesthesiaScoreId: this.anesthesiaScoreId,
+          operationId: this.operationId,
+          patientId: this.patientId
+        }
+      }).then(res => {
+        console.log(res)
+      })
+    },
     initGroups (itemList, valueList) {
       Object.keys(this.group).forEach(key => {
         this.group[key] = this.initGroup(itemList, valueList, key)
@@ -163,7 +178,9 @@ export default {
         if (children) {
           children.forEach(item => {
             let value
-            const valueItem = valueList.find(valueItem => valueItem.id === item.id)
+            const valueItem = valueList.find(
+              valueItem => valueItem.id === item.id
+            )
             if (valueItem) {
               switch (item.type) {
                 case 'checkbox':
@@ -191,7 +208,7 @@ export default {
       return []
     },
     // 清空
-    clearValues () {
+    clear () {
       Object.values(this.group).forEach(group => {
         group.forEach(item => {
           let value = ''
@@ -225,6 +242,9 @@ export default {
           type: 'warning'
         })
       }
+    },
+    calculate () {
+      this.calculateAnesthesiaGrade()
     }
   }
 }
@@ -233,7 +253,6 @@ export default {
 .apache {
   padding: 0;
   height: 100%;
-
   .option {
     margin: 20px 0;
     text-align: right;

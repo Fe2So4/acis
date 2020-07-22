@@ -11,12 +11,7 @@
           :key="item.value"
           :label="item.label"
           :value="item.value"
-        >
-          <!-- <span>
-            {{ item.tagName }}
-            <strong>（{{ item.name }}）</strong>
-          </span> -->
-        </el-option>
+        />
       </el-select>
     </el-form-item>
   </div>
@@ -47,9 +42,6 @@ export default {
         }, {
           label: '日期',
           value: 'date'
-        }, {
-          label: '星期',
-          value: 'week'
         }, {
           label: '日期时间',
           value: 'datetime'

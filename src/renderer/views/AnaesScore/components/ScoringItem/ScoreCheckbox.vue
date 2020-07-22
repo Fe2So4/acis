@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="scoreCheckbox">
     <el-checkbox
       size="mini"
       :value="value"
@@ -32,4 +32,7 @@ export default {
 
 </script>
 <style lang='scss' scoped>
+.scoreCheckbox {
+  line-height: 28px;
+}
 </style>

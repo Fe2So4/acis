@@ -53,6 +53,10 @@ export default {
       type: String,
       required: false,
       default: ''
+    },
+    operationPhase: {
+      type: [String, Number],
+      default: '1'
     }
   },
   data () {
@@ -65,6 +69,16 @@ export default {
       legends: null,
       eventTags: null,
       socket: null
+    }
+  },
+  computed: {
+    modeCode () {
+      switch (+this.operationPhase) {
+        case 4:
+          return 'N034'
+        default:
+          return 'N033'
+      }
     }
   },
   watch: {
@@ -661,7 +675,7 @@ export default {
             endTime: this.endTime,
             dataMode: this.isRescueMode ? 1 : 5, // 5-正常模式 1-抢救模式
             operationId: this.operationId,
-            modeCode: 'N034'
+            modeCode: this.modeCode
           }
         })
           .then(res => {

@@ -10,141 +10,283 @@
           span 危重程度
           el-input(size="mini" style="width:90px")
           el-input(size="mini" style="width:90px")
-        el-row(:gutter="20" type="flex" justif="space-between")
-          el-col(:span="24")
-            span(class="label") 肝性病脑
-            el-radio-group(v-model="form.radio")
-              el-radio(:label="3") 男
-              el-radio(:label="6") 1~2期
-              el-radio(:label="9") 3~4期
         el-row(:gutter="20")
-          el-col(:span="24")
-            span(class="label") 腹水
-            el-radio-group(v-model="form.radio")
-              el-radio(:label="3") 无
-              el-radio(:label="6") 轻
-              el-radio(:label="9") 中
-            </el-radio-group>
+          el-col(:span="18" :offset="offset" v-for="item in group[1]" :key="item.id")
+            component(:is="'score-'+item.type" v-bind="item" v-model="item.value")
         el-row(:gutter="20")
-          el-col(:span="24")
-            span(class="label" style="line-height:93px;") 胆红素(mg/100ml)
-            .cirrhosis
-              el-row(:gutter="20")
-                el-col(:span="24")
-                  span(class="label") 原发性胆汁性肝硬化
-                  el-radio-group(v-model="form.radio")
-                    el-radio(:label="3") 1~4
-                    el-radio(:label="6") 4~10
-                    el-radio(:label="9") &gt;10
-              el-row(:gutter="20")
-                el-col(:span="24")
-                  span(class="label") 非原发性胆汁性肝硬化
-                  el-radio-group(v-model="form.radio")
-                    el-radio(:label="3") 1~2
-                    el-radio(:label="6") 2~3
-                    el-radio(:label="9") &gt;10
-              //- .primary
-              //- .non-primary
+          el-col(:span="18" :offset="offset" v-for="item in group[2]" :key="item.id")
+            component(:is="'score-'+item.type" v-bind="item" v-model="item.value")
         el-row(:gutter="20")
-          el-col(:span="24")
-            span(class="label") 白蛋白(g/100ml)
-            el-radio-group(v-model="form.radio")
-              el-radio(:label="3") 3.5
-              el-radio(:label="6") 2.8~3.5
-              el-radio(:label="9") &lt;2.8
-            </el-radio-group>
+          el-col(:span="18" :offset="offset" v-for="item in group[3]" :key="item.id")
+            component(:is="'score-'+item.type" v-bind="item" v-model="item.value")
         el-row(:gutter="20")
-          el-col(:span="24")
-            span(class="label") 凝血酶原时间(延长秒数)
-            el-radio-group(v-model="form.radio")
-              el-radio(:label="3") 1~4
-              el-radio(:label="6") 4~6
-              el-radio(:label="9") &gt;6
-            </el-radio-group>
+          el-col(:span="18" :offset="offset" v-for="item in group[4]" :key="item.id")
+            component(:is="'score-'+item.type" v-bind="item" v-model="item.value")
         el-row(:gutter="20")
-          el-col(:span="24")
-            span(class="label") 营养不良状况
-            el-radio-group(v-model="form.radio")
-              el-radio(:label="3") 轻度
-              el-radio(:label="6") 中度
-              el-radio(:label="9") 重度
-            </el-radio-group>
+          el-col(:span="18" :offset="offset" v-for="item in group[5]" :key="item.id")
+            component(:is="'score-'+item.type" v-bind="item" v-model="item.value")
         .option
-          el-button(size="mini") 清空(C)
-          el-button(size="mini") 保存(A)
-          el-button(size="mini") 评分(G)
+          el-button(size="mini" @click="clear") 清空
+          el-button(size="mini" @click="save") 保存
+          el-button(size="mini" @click="calculate") 评分
 </template>
 <script>
 import ScoreChart from '../components/charts'
+import request from '@/utils/requestForMock'
+import {
+  getAnesthesiaGradeItem,
+  showAnesthesiaGradeItem,
+  saveAnesthesiaGrade,
+  calculateAnesthesiaGrade
+} from '@/api/anaesScore'
+import ScoringComponents from '../components/ScoringItem'
+import { createNamespacedHelpers } from 'vuex'
+const { mapState } = createNamespacedHelpers('Base')
 export default {
   name: 'ChildPugh',
+  components: {
+    ScoreChart,
+    ...ScoringComponents
+  },
   data () {
     return {
-      form: {
-        opeType: '1',
-        radio: ''
+      wrapStyle: [
+        {
+          'overflow-x': 'hidden',
+          padding: '0 20px'
+        }
+      ],
+      group: {
+        1: [],
+        2: [],
+        3: [],
+        4: [],
+        5: [],
+        6: []
       },
-      wrapStyle: [{
-        'overflow-x': 'hidden'
-      }]
+      anesthesiaScoreId: 2,
+      offset: 3
     }
   },
-  components: {
-    ScoreChart
+  computed: {
+    ...mapState(['operationId', 'patientId'])
   },
-  mounted () {
-
+  created () {
+    this.getGradeItemAndValue()
   },
   methods: {
+    getGradeItemAndValue () {
+      return Promise.all([
+        this.getAnesthesiaGradeItem(),
+        this.showAnesthesiaGradeItem()
+      ]).then(res => {
+        console.log(res)
+
+        const [responseItem, responseValue] = res
+        if (
+          responseItem.data.success &&
+          Array.isArray(responseItem.data.data) &&
+          responseValue.data.success &&
+          Array.isArray(responseValue.data.data)
+        ) {
+          const itemList = responseItem.data.data
+          const valueList = responseValue.data.data
+          this.initGroups(itemList, valueList)
+        }
+      })
+    },
+    getAnesthesiaGradeItem () {
+      return request({
+        url: getAnesthesiaGradeItem,
+        method: 'post',
+        params: {
+          gradingTypeId: this.anesthesiaScoreId
+        }
+      })
+    },
+    // 回显选项
+    showAnesthesiaGradeItem () {
+      return request({
+        method: 'post',
+        url: showAnesthesiaGradeItem,
+        params: {
+          anesthesiaScoreId: this.anesthesiaScoreId,
+          operationId: this.operationId,
+          patientId: this.patientId
+        }
+      })
+    },
+    // 保存
+    saveAnesthesiaGrade (list) {
+      return request({
+        method: 'post',
+        url: saveAnesthesiaGrade,
+        params: {
+          anesthesiaScoreId: this.anesthesiaScoreId,
+          operationId: this.operationId,
+          patientId: this.patientId
+        },
+        data: list
+      })
+    },
+    // 获取已填写过的评分项
+    getDirtyList () {
+      return [...Object.values(this.group)].reduce((acc, group) => {
+        let values = group.filter(item => item.value)
+        const { length } = values
+        if (!length) {
+          return acc
+        }
+        values = values.map(item => {
+          const obj = {};
+          ({
+            id: obj.id,
+            group: obj.group,
+            label: obj.label,
+            value: obj.value,
+            score: obj.score
+          } = item)
+          const { options } = item
+          if (options) {
+            const option = item.options.find(
+              option => option.label === obj.value
+            )
+            if (option) {
+              obj.score = option.score
+            }
+          }
+          return obj
+        })
+        return [...acc, ...values]
+      }, [])
+    },
+    calculateAnesthesiaGrade () {
+      return request({
+        method: 'post',
+        url: calculateAnesthesiaGrade,
+        params: {
+          anesthesiaScoreId: this.anesthesiaScoreId,
+          operationId: this.operationId,
+          patientId: this.patientId
+        }
+      }).then(res => {
+        console.log(res)
+      })
+    },
+    initGroups (itemList, valueList) {
+      Object.keys(this.group).forEach(key => {
+        this.group[key] = this.initGroup(itemList, valueList, key)
+      })
+    },
+    initGroup (itemList, valueList, id) {
+      const listItem = itemList.find(item => item.group - id === 0)
+      if (listItem) {
+        const { children } = listItem
+        if (children) {
+          children.forEach(item => {
+            let value
+            const valueItem = valueList.find(
+              valueItem => valueItem.id === item.id
+            )
+            if (valueItem) {
+              switch (item.type) {
+                case 'checkbox':
+                  value = valueItem.value === 'true'
+                  break
+                default:
+                  value = valueItem.value
+              }
+            } else {
+              switch (item.type) {
+                case 'checkbox':
+                  value = false
+                  break
+                default:
+                  value = ''
+              }
+            }
+
+            item.value = value
+            item.group = id
+          })
+        }
+        return children || []
+      }
+      return []
+    },
+    // 清空
+    clear () {
+      Object.values(this.group).forEach(group => {
+        group.forEach(item => {
+          let value = ''
+          switch (item.type) {
+            case 'checkbox':
+              value = false
+              break
+            default:
+          }
+          item.value = value
+        })
+      })
+    },
+    async save () {
+      const list = this.getDirtyList()
+      if (list.length === 0) {
+        return this.$message({
+          message: '未填写任何评分项',
+          type: 'info'
+        })
+      }
+      const res = await this.saveAnesthesiaGrade(list)
+      if (res.data.success) {
+        this.$message({
+          message: '保存成功',
+          type: 'success'
+        })
+      } else {
+        this.$message({
+          message: '保存失败',
+          type: 'warning'
+        })
+      }
+    },
+    calculate () {
+      this.calculateAnesthesiaGrade()
+    }
   }
 }
 </script>
-<style lang="stylus" scoped>
-.child-pugh
-  padding 0 200px
-  height 100%
-  .option
-    margin 20px 0
-    text-align right
-  .form
-    // margin-top 40px
-    .score
-      text-align right
-      margin-bottom 20px
-      span
-        color #FD4B4B
-        font-size 14px
-      .el-input
-          margin-left 20px
-    span.label
-      color #9BA3D5
-      display inline-block
-      width 160px
-      padding-right 10px
-      box-sizing border-box
-      text-align right
-      line-height 38px
-    .el-row
-      margin 20px 0 0 !important
-      .el-col
-        margin 0
-        padding 0 !important
-        display flex
-        .cirrhosis
-          flex 1
-          .el-row
-            &:first-child
-              margin-top unset !important
-        .el-radio-group
-          flex 1
-        .el-input
-          flex 1
-        .el-select
-          flex 1
-        // #1E222E
-        .el-radio-group
-          background #1E222E
-          border-radius 5px
-          padding 10px
-          height 38px
+<style lang="scss" scoped>
+.child-pugh {
+  padding: 0;
+  height: 100%;
+  .option {
+    margin: 20px 0;
+    text-align: right;
+  }
+  .form {
+    .score {
+      text-align: right;
+      margin-bottom: 20px;
+
+      span {
+        color: #fd4b4b;
+        font-size: 14px;
+      }
+
+      .el-input {
+        margin-left: 20px;
+      }
+    }
+
+    .el-row {
+      .el-col {
+        margin-bottom: 20px;
+        & ::v-deep .label {
+          flex: 200px 0 0;
+        }
+      }
+    }
+  }
+}
 </style>
