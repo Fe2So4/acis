@@ -1,7 +1,11 @@
 <template>
   <div
     class="widgetInput"
-    :class="{'alert':editMode && (dataSourceAlert || dictionarySourceAlert)}"
+    :style="[
+      noTableNameStyle,
+      dataSourceAlertStyle,
+      dictionarySourceAlertStyle
+    ]"
   >
     <input
       class="input"
@@ -38,8 +42,16 @@
 <script>
 import { getDictionaryData } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
+import {
+  validateDataSourceMixin,
+  validateDictionarySourceMixin
+} from './mixin'
 export default {
   name: 'WidgetInput',
+  mixins: [
+    validateDataSourceMixin,
+    validateDictionarySourceMixin
+  ],
   props: {
     configuration: {
       type: Object,
@@ -75,30 +87,6 @@ export default {
         return this.configuration.value.split(',')
       } else {
         return this.configuration.value
-      }
-    },
-    dataSourceAlert () {
-      const { tableName, className } = this.configuration.dataSource
-      if (!tableName && !className) {
-        return false
-      } else if (tableName && className) {
-        return false
-      } else {
-        return true
-      }
-    },
-    dictionarySourceAlert () {
-      const {
-        dictTableName,
-        dictClassName,
-        dictRelationName
-      } = this.configuration.dictionarySource
-      if (!dictTableName && !dictClassName && !dictRelationName) {
-        return false
-      } else if (dictTableName && dictClassName && dictRelationName) {
-        return false
-      } else {
-        return true
       }
     }
   },
@@ -223,9 +211,5 @@ export default {
   .select ::v-deep .el-input__suffix {
     display: none;
   }
-}
-.alert{
-  outline: 4px solid red;
-  outline-offset: 2px;
 }
 </style>

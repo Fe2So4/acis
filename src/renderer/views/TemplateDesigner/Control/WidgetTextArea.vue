@@ -1,7 +1,7 @@
 <template>
   <div
     class="widgetTextArea"
-    :class="{'alert':editMode && dataSourceAlert}"
+    :style="[noTableNameStyle, dataSourceAlertStyle]"
   >
     <textarea
       class="textarea"
@@ -14,8 +14,10 @@
   </div>
 </template>
 <script>
+import { validateDataSourceMixin } from './mixin'
 export default {
   name: 'WidgetTextarea',
+  mixins: [validateDataSourceMixin],
   props: {
     configuration: {
       type: Object,
@@ -37,18 +39,6 @@ export default {
   data () {
     return {
       widgetStyle: {}
-    }
-  },
-  computed: {
-    dataSourceAlert () {
-      const { tableName, className } = this.configuration.dataSource
-      if (!tableName && !className) {
-        return false
-      } else if (tableName && className) {
-        return false
-      } else {
-        return true
-      }
     }
   },
   created () {
@@ -92,9 +82,5 @@ export default {
     border: none;
     resize: none;
   }
-}
-.alert {
-  outline: 4px solid red;
-  outline-offset: 2px;
 }
 </style>

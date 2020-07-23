@@ -1,7 +1,7 @@
 <template>
   <div
     class="widgetDatePicker"
-    :class="{'alert':editMode && dataSourceAlert}"
+    :style="[noTableNameStyle, dataSourceAlertStyle]"
   >
     <input
       class="input"
@@ -26,8 +26,10 @@
   </div>
 </template>
 <script>
+import { validateDataSourceMixin } from './mixin'
 export default {
   name: 'WidgetDatePicker',
+  mixins: [validateDataSourceMixin],
   props: {
     configuration: {
       type: Object,
@@ -159,9 +161,5 @@ export default {
   .picker ::v-deep .el-input__prefix {
     display: none;
   }
-}
-.alert{
-  outline: 4px solid red;
-  outline-offset: 2px;
 }
 </style>

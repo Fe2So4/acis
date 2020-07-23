@@ -1,8 +1,7 @@
 <template>
   <div
     class="checkbox-group"
-    :class="{'alert':editMode && dataSourceAlert}"
-    :style="widgetStyle"
+    :style="[noTableNameStyle, dataSourceAlertStyle]"
   >
     <el-checkbox-group
       v-model="checkedOptions"
@@ -20,8 +19,10 @@
   </div>
 </template>
 <script>
+import { validateDataSourceMixin } from './mixin'
 export default {
   name: 'WidgetCheckboxGroup',
+  mixins: [validateDataSourceMixin],
   props: {
     configuration: {
       type: Object,
@@ -46,18 +47,6 @@ export default {
       fontStyle: {},
       checkboxStyle: {},
       checkedOptions: []
-    }
-  },
-  computed: {
-    dataSourceAlert () {
-      const { tableName, className } = this.configuration.dataSource
-      if (!tableName && !className) {
-        return false
-      } else if (tableName && className) {
-        return false
-      } else {
-        return true
-      }
     }
   },
   created () {
@@ -113,10 +102,6 @@ export default {
   height: 100%;
   width: 100%;
   overflow: hidden;
-}
-.alert{
-  outline: 4px solid red;
-  outline-offset: 2px;
 }
 .checkbox-group /deep/ .el-checkbox {
   color: #000;
