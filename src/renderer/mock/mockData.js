@@ -1,4 +1,5 @@
 import medicalDocument from './medicalDocument'
+import resuscitation from './resuscitation'
 const Mock = require('mockjs')
 Mock.setup({
   timeout: '200-600'
@@ -58,3 +59,5 @@ Mock.mock(/^\/api\/getTagNamesList/, medicalDocument.tagNamesList)
 Mock.mock(/^\/api\/getSignInfo/, medicalDocument.signInfo)
 // 获取检验数据
 Mock.mock(/^\/api\/getTestInfo/, medicalDocument.signInfo)
+// 获取复苏床位列表
+Mock.mock(/^\/api\/getResuscitationBedList/, resuscitation.bedList)

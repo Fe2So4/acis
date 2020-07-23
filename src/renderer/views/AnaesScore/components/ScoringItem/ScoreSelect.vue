@@ -10,7 +10,7 @@
     >
       <el-option
         v-for="item in options"
-        :key="item.score"
+        :key="item.label"
         :label="item.label"
         :value="item.label"
       />

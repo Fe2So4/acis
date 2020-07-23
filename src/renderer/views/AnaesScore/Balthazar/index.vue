@@ -7,8 +7,7 @@
         el-button(size="mini") 删除(D)
       .form
         .score
-          //- span 危重程度
-          el-input(size="mini" style="width:90px")
+          el-input(size="mini" style="width:90px" readonly v-model="grossScore")
         el-row(:gutter="20")
           el-col(:span="24" v-for="item in group[1]" :key="item.id" class="radioBlock")
             component(:is="'score-'+item.type" v-bind="item" v-model="item.value")
@@ -20,7 +19,6 @@
             component(:is="'score-'+item.type" v-bind="item" v-model="item.value")
         .option
           el-button(size="mini" @click="clear") 清空
-          el-button(size="mini" @click="save") 保存
           el-button(size="mini" @click="calculate") 评分
 </template>
 <script>
@@ -36,17 +34,6 @@ export default {
   },
   data () {
     return {
-      wrapStyle: [
-        {
-          'overflow-x': 'hidden',
-          padding: '0 20px'
-        }
-      ],
-      group: {
-        1: [],
-        2: [],
-        3: []
-      },
       anesthesiaScoreId: 1
     }
   }

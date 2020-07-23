@@ -9,11 +9,11 @@ export const getAnesthesiaGradeItem = mock
   : baseZhong + 'acis/posIS/posAnesthesiaGrade/access'
 
 // 保存麻醉评分 - 钟 - 2020-07-21
-export const saveAnesthesiaGrade = mock
-  ? '/api/saveAnesthesiaGrade'
-  : baseZhong + 'acis/posIS/posAnesthesiaGrade/saveInfo'
+// export const saveAnesthesiaGrade = mock
+//   ? '/api/saveAnesthesiaGrade'
+//   : baseZhong + 'acis/posIS/posAnesthesiaGrade/saveInfo'
 
-// 计算麻醉评分 - 钟 - 2020-07-21
+// 计算麻醉评分 - 钟 - 2020-07-23
 export const calculateAnesthesiaGrade = mock
   ? '/api/calculateAnesthesiaGrade'
   : baseZhong + 'acis/posIS/posAnesthesiaGrade/scoreCalculation'

@@ -2,12 +2,34 @@ import request from '@/utils/requestForMock'
 import {
   getAnesthesiaGradeItem,
   showAnesthesiaGradeItem,
-  saveAnesthesiaGrade,
+  // saveAnesthesiaGrade,
   calculateAnesthesiaGrade
 } from '@/api/anaesScore'
 import { createNamespacedHelpers } from 'vuex'
 const { mapState } = createNamespacedHelpers('Base')
 export default {
+  data () {
+    return {
+      wrapStyle: [
+        {
+          'overflow-x': 'hidden',
+          padding: '0 20px'
+        }
+      ],
+      group: {
+        1: [],
+        2: [],
+        3: [],
+        4: [],
+        5: [],
+        6: []
+      },
+      scoreCriticalDegree: '', // 危重程度
+      scoreMortality: '', // 死亡率
+      grossScore: '', // 总分
+      scoreClass: '' // 等级
+    }
+  },
   computed: {
     ...mapState(['operationId', 'patientId'])
   },
@@ -55,18 +77,18 @@ export default {
       })
     },
     // 保存
-    saveAnesthesiaGrade (list) {
-      return request({
-        method: 'post',
-        url: saveAnesthesiaGrade,
-        params: {
-          anesthesiaScoreId: this.anesthesiaScoreId,
-          operationId: this.operationId,
-          patientId: this.patientId
-        },
-        data: list
-      })
-    },
+    // saveAnesthesiaGrade (list) {
+    //   return request({
+    //     method: 'post',
+    //     url: saveAnesthesiaGrade,
+    //     params: {
+    //       anesthesiaScoreId: this.anesthesiaScoreId,
+    //       operationId: this.operationId,
+    //       patientId: this.patientId
+    //     },
+    //     data: list
+    //   })
+    // },
     // 获取已填写过的评分项
     getDirtyList () {
       return [...Object.values(this.group)].reduce((acc, group) => {
@@ -98,7 +120,7 @@ export default {
         return [...acc, ...values]
       }, [])
     },
-    calculateAnesthesiaGrade () {
+    calculateAnesthesiaGrade (list) {
       return request({
         method: 'post',
         url: calculateAnesthesiaGrade,
@@ -106,9 +128,17 @@ export default {
           anesthesiaScoreId: this.anesthesiaScoreId,
           operationId: this.operationId,
           patientId: this.patientId
-        }
+        },
+        data: list
       }).then(res => {
-        console.log(res)
+        if (res.data.success) {
+          ({
+            ScoreCriticalDegree: this.scoreCriticalDegree,
+            ScoreMortality: this.scoreMortality,
+            GrossScore: this.grossScore,
+            ScoreClass: this.scoreClass
+          } = res.data.data)
+        }
       })
     },
     initGroups (itemList, valueList) {
@@ -168,6 +198,27 @@ export default {
       })
     },
     async save () {
+      // const list = this.getDirtyList()
+      // if (list.length === 0) {
+      //   return this.$message({
+      //     message: '未填写任何评分项',
+      //     type: 'info'
+      //   })
+      // }
+      // const res = await this.saveAnesthesiaGrade(list)
+      // if (res.data.success) {
+      //   this.$message({
+      //     message: '保存成功',
+      //     type: 'success'
+      //   })
+      // } else {
+      //   this.$message({
+      //     message: '保存失败',
+      //     type: 'warning'
+      //   })
+      // }
+    },
+    async calculate () {
       const list = this.getDirtyList()
       if (list.length === 0) {
         return this.$message({
@@ -175,21 +226,7 @@ export default {
           type: 'info'
         })
       }
-      const res = await this.saveAnesthesiaGrade(list)
-      if (res.data.success) {
-        this.$message({
-          message: '保存成功',
-          type: 'success'
-        })
-      } else {
-        this.$message({
-          message: '保存失败',
-          type: 'warning'
-        })
-      }
-    },
-    calculate () {
-      this.calculateAnesthesiaGrade()
+      await this.calculateAnesthesiaGrade(list)
     }
   }
 }

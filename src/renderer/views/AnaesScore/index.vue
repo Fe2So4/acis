@@ -30,7 +30,7 @@ export default {
   name: 'AnaesScore',
   data () {
     return {
-      activeName: '4'
+      activeName: '1'
     }
   },
   components: {
