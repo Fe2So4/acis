@@ -135,7 +135,7 @@ export default {
   .other
     height 100%
     .content
-      height calc(100% - 28px)
+      height calc(100% - 38px)
       .left
         float left
         width 20%
@@ -146,4 +146,5 @@ export default {
         width 80%
     .option
       text-align right
+      margin-top 10px
 </style>

@@ -29,10 +29,11 @@
                 v-model="operationStatus"
                 style="display:inline-block;margin-left:14px;"
                 size="mini"
+                @change="handleFilter"
               >
                 <el-checkbox
                   v-for="status in statusList"
-                  :label="status.label"
+                  :label="status.value"
                   :value="status.value"
                   :key="status.value"
                 >
@@ -45,19 +46,21 @@
                 v-model="opeRoom"
                 size="mini"
                 placeholder=""
+                clearable
                 style="width:160px;"
               >
                 <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  v-for="item in roomList"
+                  :key="item"
+                  :label="item"
+                  :value="item"
                 />
               </el-select>
             </el-form-item>
             <el-form-item>
               <el-button
                 size="mini"
+                @click="getPatientList('')"
               >
                 搜索
               </el-button>
@@ -96,16 +99,18 @@
                 v-model="searchForm.date"
                 type="date"
                 placeholder=""
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
               />
             </el-form-item>
             <el-form-item>
               <el-button @click="handleRegister(1)">
                 急诊登记
               </el-button>
-              <el-button>
+              <el-button @click="handleChangeList(1)">
                 今天列表
               </el-button>
-              <el-button>
+              <el-button @click="handleChangeList(2)">
                 明天列表
               </el-button>
               <el-button @click="handleRegister(2)">
@@ -134,8 +139,8 @@
             <el-form-item label="终止日期">
               <el-date-picker
                 v-model="searchForm.endDate"
-                format="MM-dd HH:mm"
-                value-format="MM-dd HH:mm"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
               />
             </el-form-item>
             <el-form-item label="状态">
@@ -159,12 +164,19 @@
         </el-row>
       </div>
     </div>
-    <div class="patient-card">
+    <div
+      class="patient-card"
+    >
       <el-scrollbar
         style="height:100%;"
         class="scrollbar"
       >
-        <ul>
+        <ul
+          v-infinite-scroll="loadMore"
+          :infinite-scroll-disabled="disabled"
+          :infinite-scroll-immediate="false"
+          infinite-scroll-distance="5"
+        >
           <li
             v-for="(item,index) in cardList"
             :key="index"
@@ -179,7 +191,7 @@
                 <span>{{ item.sequence }}</span>
               </div>
               <div class="info">
-                <p><span class="label">患者</span><span>{{ item.patientName }}</span><span class="overflow">{{ item.operationId }}</span></p>
+                <p><span class="label">患者</span><span>{{ item.patientName }}</span><span class="overflow">{{ item.patientId }}</span></p>
                 <p><span class="label">住院号</span><span>{{ item.visitId }}</span></p>
                 <p>
                   <span class="label">手术</span><span
@@ -189,16 +201,16 @@
                 </p>
                 <p><span class="label">时间</span><span>{{ item.opeTime }}</span></p>
                 <p>
-                  <span class="label">术者</span><span style="min-width:40px;">{{ item.surgeon }}</span><span
+                  <span class="label">术者</span><span style="min-width:40px;">{{ item.surgeonName }}</span><span
                     class="label"
                     style="margin-left:10px;"
-                  >麻醉</span><span>{{ item.anesDoc }}</span>
+                  >麻醉</span><span>{{ item.anesDocName }}</span>
                 </p>
               </div>
               <div
                 class="status"
               >
-                <div v-if="item.isEmergency === 1">
+                <div v-if="item.emergency">
                   <div style="display:flex;justify-content:center;">
                     <img
                       style="height:26px;width:26px;"
@@ -222,7 +234,7 @@
                     隔离
                   </div>
                 </div>
-                <div v-if="item.radiation">
+                <div v-if="item.radiate">
                   <div style="display:flex;justify-content:center;">
                     <img
                       style="height:26px;width:26px;"
@@ -238,6 +250,18 @@
             </div>
           </li>
         </ul>
+        <p
+          v-if="loading"
+          class="loading"
+        >
+          加载中...
+        </p>
+        <p
+          v-if="noMore&&cardList.length>0"
+          class="loading"
+        >
+          没有更多了
+        </p>
       </el-scrollbar>
     </div>
   </div>
@@ -245,15 +269,17 @@
 <script>
 import moment from 'moment'
 import request from '../../utils/requestForMock'
-import { opeList } from '@/api/patientList'
+import { opeList, roomList } from '@/api/patientList'
+import { mapActions } from 'vuex'
 export default {
   name: 'PatientInfo',
   data () {
     return {
+      loading: false,
       searchForm: {
         id: '',
         name: '',
-        date: '',
+        date: moment(new Date()).format('yyyy-MM-DD'),
         endDate: '',
         anaesDoc: '',
         anaesMethod: '',
@@ -281,20 +307,69 @@ export default {
       filterList: [{ label: '全部', value: 0 }, { label: '术前', value: 1 }, { label: '术中', value: 2 }, { label: '术后', value: 3 }],
       opeState: 0,
       operationStatus: [],
-      statusList: [{ label: '急诊', value: '1' }, { label: '本人的', value: '2' }, { label: '隔离', value: '3' }, { label: '放射', value: '4' }],
+      statusList: [{ label: '急诊', value: 'emergency' }, { label: '本人的', value: 'self' }, { label: '隔离', value: 'quarantine' }, { label: '放射', value: 'radiate' }],
       showMore: false,
       currentPage: 1,
-      pageSize: 12,
-      cardList: []
+      pageSize: 16,
+      cardList: [],
+      dataList: [],
+      roomList: [],
+      totalPages: 1
     }
   },
   components: {
+  },
+  computed: {
+    noMore () {
+      return this.currentPage >= this.totalPages
+    },
+    disabled () {
+      return this.loading || this.noMore
+    }
+  },
+  created () {
+    this.getRoomList()
   },
   mounted () {
     this.getPatientList()
   },
   methods: {
+    ...mapActions('Base', ['setPatientId', 'setOperationId', 'setPatientCardInfo']),
+    handleChangeList (param) {
+      const d = new Date()
+      if (param === 1) {
+        this.searchForm.date = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
+      } else {
+        d.setTime(d.getTime() + 24 * 60 * 60 * 1000)
+        this.searchForm.date = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
+      }
+      this.getPatientList('')
+    },
+    handleFilter (val) {
+      const list = this.dataList
+      let rest = null
+      if (val.length > 0) {
+        rest = list.filter(item => {
+          if (val.indexOf('emergency') !== -1) {
+            return item.emergency === true
+          }
+          if (val.indexOf('quatantine' !== -1)) {
+            return item.quatantine === true
+          }
+          if (val.indexOf('radiate' !== -1)) {
+            return item.radiate === true
+          }
+        })
+        // console.log(rest)
+        this.cardList = rest
+      } else {
+        this.cardList = this.dataList
+      }
+    },
     handleJump (item) {
+      this.setPatientId(item.patientId)
+      this.setOperationId(item.operationId)
+      this.setPatientCardInfo({ roomNo: item.sequence, ptName: item.patientName, gender: item.gender, ptId: item.patientId })
       this.$router.push('/home/patientInfo')
     },
     handleRegister (param) {
@@ -307,15 +382,36 @@ export default {
     hanldeSearchMore () {
       this.showMore = !this.showMore
     },
-    getPatientList () {
+    // 获取房间号
+    getRoomList () {
+      console.log('123')
+      request({
+        method: 'GET',
+        url: roomList
+      }).then(res => {
+        const data = res.data.data
+        this.roomList = data.roomList
+        this.opeRoom = data.defaultRoom
+      })
+    },
+    getPatientList (param) {
+      if (param === '') {
+        this.currentPage = 1
+      }
       const obj = {}
       const search = {}
       obj.start = this.currentPage
       obj.pageSize = this.pageSize
       obj.opeState = this.opeState
+      obj.roomNo = this.opeRoom
       search.patientId = this.searchForm.id
       search.name = this.searchForm.name
       search.date = this.searchForm.date
+      search.anesMethod = this.searchForm.anaesMethod
+      search.anesDoc = this.searchForm.anaesDoc
+      search.dept = this.searchForm.dept
+      search.opeName = this.searchForm.opeName
+      search.deadLine = this.searchForm.endDate
       Object.assign(obj, search)
       request({
         method: 'GET',
@@ -323,15 +419,37 @@ export default {
         params: obj
       }).then(res => {
         const data = res.data.data.list || []
+        this.totalPages = res.data.data.pages
+        // this.loading = false
         data.forEach(value => {
           if (value.opeScheduleTime) {
-            value.opeTime = moment(value.opeScheduleTime).format('yyyy-MM-DD HH:mm')
+            // value.opeTime = moment(value.opeScheduleTime).format('yyyy-MM-DD HH:mm')
+            value.opeTime = value.opeScheduleTime
           } else {
             value.opeTime = ''
           }
+          if (value.isEmergency === 0) {
+            value.emergency = true
+          } else {
+            value.emergency = false
+          }
         })
-        this.cardList = data
+        if (param === 'scroll') {
+          this.cardList = this.cardList.concat(data)
+          this.dataList = this.dataList.concat(data)
+        } else {
+          this.cardList = data
+          this.dataList = data
+        }
       })
+    },
+    loadMore () {
+      this.loading = true
+      setTimeout(() => {
+        this.currentPage += 1
+        this.getPatientList('scroll')
+        this.loading = false
+      }, 2000)
     }
   }
 }
@@ -373,8 +491,13 @@ export default {
     height:calc(100% - 121px);
     box-sizing: border-box;
     padding-top:20px;
+    .loading{
+      text-align:center;
+      color:#fff;
+    }
     ul{
       display: grid;
+      // height:100%;
       // overflow-y:auto;
       grid-template-columns: repeat(auto-fill, 392px);
       grid-column-gap: 20px;
@@ -502,6 +625,9 @@ export default {
   }
   .scrollbar .el-scrollbar__wrap {
     overflow-x: hidden;
+  }
+  .scrollbar .el-scrollbar__wrap .el-scrollbar__view{
+    /* height:100%; */
   }
   .rowScrollbar .el-scrollbar__wrap .el-scrollbar__view{
    white-space: nowrap;

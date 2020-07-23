@@ -6,7 +6,7 @@
        span {{title}}
        i(class="el-icon-close" @click="handleClose")
       .dialog-body
-        component(:is="componentName")
+        //- component(:is="componentName")
         //- OperationOverview
         //- Event
         //- <operation-handover/>
@@ -29,8 +29,9 @@
         //- EmergencyTreatment
         //- OperationLevel
         //- OperationArrangement
-        //- About
+        //- //- About
         //- TemplateDisplayer
+        Dictionary
     //- .dialog-footer
 </template>
 <script>

@@ -88,7 +88,9 @@ input[type=time] {
   height: 50px;
 }
 
-
+#app /deep/ .el-tree{
+  background-color: unset;
+}
 .vxe-checkbox.is--indeterminate > input:not(:checked) + .vxe-checkbox--icon:before {
   left: 0;
 }

@@ -9,13 +9,21 @@
          .row-title(:style="{'width':centerWidth + 'px'}") {{item.name}}
          .column-content
           .column(v-for="(col,i) of item.data" :key="i" @contextmenu.prevent="handleActiveColumn(index,i)")
-            select(v-if="item.dict && rowActive===index && colActive===i" @blur="handleBlur" class="contextmenu" @change="handleSelectFn($event)")
+            select(v-if="item.name==='心电图' && rowActive===index && colActive===i" @blur="handleBlur" class="contextmenu" @change="handleSelectFn($event)")
               option(style="display:none;" value="")
               option(v-for="option in optionList" :value="option.value") {{option.label}}
             input(v-else-if="rowActive===index && colActive===i" @blur="handleBlur" type="text" :value="col.value" class="contextmenu")
             span(v-else) {{col.value}}
 </template>
 <script>
+// import request from '@/utils/'
+import {
+  getMonitorData,
+  getSocketData
+} from '@/api/medicalDocument'
+import request from '@/utils/requestForMock'
+// import moment from 'moment'
+import io from 'socket.io-client'
 export default {
   data () {
     return {
@@ -30,39 +38,39 @@ export default {
         { name: 'PEEP', data: [], colNum: 1, dict: false, code: '6' }
       ],
       rowHeight: null,
-      startTime: '',
-      endTime: '',
+      // startTime: '',
+      // endTime: '',
       dataList: [
-        {
-          name: '心电图',
-          code: '1',
-          data: [
-            { time: '2020-8-8 8:8', value: '窦性心律' },
-            { time: '2020-8-8 8:8', value: '窦性心律' },
-            { time: '2020-8-8 8:8', value: '窦性心律' }
-          ]
-        },
-        {
-          name: '氧饱和度',
-          code: '2',
-          data: [{ time: '2020-8-8 8:8', value: '20' }]
-        },
-        {
-          name: '潮气里',
-          code: '3',
-          data: [{ time: '2020-8-8 8:8', value: '20' }]
-        },
-        { name: 'f', code: '4', data: [{ time: '2020-8-8 8:8', value: '20' }] },
-        {
-          name: 'PEAK',
-          code: '5',
-          data: [{ time: '2020-8-8 8:8', value: '20' }]
-        },
-        {
-          name: 'PEEP',
-          code: '6',
-          data: [{ time: '2020-8-8 8:8', value: '20' }]
-        }
+        // {
+        //   name: '心电图',
+        //   code: '1',
+        //   data: [
+        //     { time: '2020-8-8 8:8', value: '窦性心律' },
+        //     { time: '2020-8-8 8:8', value: '窦性心律' },
+        //     { time: '2020-8-8 8:8', value: '窦性心律' }
+        //   ]
+        // },
+        // {
+        //   name: '氧饱和度',
+        //   code: '2',
+        //   data: [{ time: '2020-8-8 8:8', value: '20' }]
+        // },
+        // {
+        //   name: '潮气里',
+        //   code: '3',
+        //   data: [{ time: '2020-8-8 8:8', value: '20' }]
+        // },
+        // { name: 'f', code: '4', data: [{ time: '2020-8-8 8:8', value: '20' }] },
+        // {
+        //   name: 'PEAK',
+        //   code: '5',
+        //   data: [{ time: '2020-8-8 8:8', value: '20' }]
+        // },
+        // {
+        //   name: 'PEEP',
+        //   code: '6',
+        //   data: [{ time: '2020-8-8 8:8', value: '20' }]
+        // }
       ],
       optionList: [
         { label: '正常', value: '0' },
@@ -79,8 +87,9 @@ export default {
         width: 128
       },
       anaesColumn: {
-        num: 8
-      }
+        num: 16
+      },
+      socket: null
     }
   },
   props: {
@@ -170,6 +179,23 @@ export default {
           num: 8
         }
       })
+    },
+    editMode: {
+      type: Boolean,
+      default: true
+    },
+    startTime: {
+      type: String,
+      default: ''
+    },
+    endTime: {
+      type: String,
+      default: ''
+    },
+    operationId: {
+      type: String,
+      required: false,
+      default: ''
     }
   },
   computed: {
@@ -179,7 +205,7 @@ export default {
         for (let i = 0; i < length; i++) {
           if (value.data[i]) {
           } else {
-            value.data.push('')
+            value.data.push({ time: '', value: '' })
           }
         }
       })
@@ -192,12 +218,52 @@ export default {
       return this.configuration.rowTitle.width
     }
   },
-  created () {},
+  created () {
+    // this.getMonitorData()
+  },
+  beforeCreate () {
+    if (this.socket) {
+      this.socket.close()
+      this.socket = null
+    }
+  },
   methods: {
     // 获取数据
     getDataList () {
       this.dataList.forEach((value, index, array) => {
         this.list[index].data = JSON.parse(JSON.stringify(value.data))
+      })
+    },
+    // 获取检测表格数据
+    getMonitorData () {
+      request({
+        method: 'POST',
+        data: {
+          // startTime: this.startTime,
+          startTime: '2020-07-06 04:00:00',
+          endTime: '2020-07-06 20:00:00',
+          // operationId: this.operationId
+          operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
+        },
+        url: getMonitorData
+      }).then(res => {
+        const data = res.data.data
+        data.forEach(item => {
+          item.name = item.itemName
+          item.list.forEach(_item => {
+            _item.time = _item.itemPoint
+            _item.value = _item.itemValue
+          })
+        })
+        this.dataList = data
+        this.dataList.forEach((value, index, array) => {
+          const list = JSON.parse(JSON.stringify(value.list))
+          const empty = []
+          list.forEach(item => {
+            // if()
+          })
+          this.list[index].data = empty
+        })
       })
     },
     // 反转函数
@@ -235,7 +301,9 @@ export default {
     },
     // 计算行高
     getRowHeight () {
-      const height = 286 / this.list.length
+      const oMonitor = document.querySelector('.right')
+      // console.log(oMonitor.offsetHeight)
+      const height = oMonitor.offsetHeight / this.list.length
       const oli = document.querySelectorAll('.rowHeight')
       for (let i = 0; i < oli.length; i++) {
         oli[i].style.height = height + 'px'
@@ -260,7 +328,7 @@ export default {
         if (index === this.rowActive) {
           value.data.forEach((item, i) => {
             if (this.colActive === i) {
-              this.list[index].data[i] = oinput.value
+              this.list[index].data[i].value = oinput.value
             }
           })
         }
@@ -273,7 +341,7 @@ export default {
         if (index === this.rowActive) {
           value.data.forEach((item, i) => {
             if (this.colActive === i) {
-              this.list[index].data[i] = this.optionList[
+              this.list[index].data[i].value = this.optionList[
                 e.target.selectedIndex - 1
               ].label
             }
@@ -285,23 +353,79 @@ export default {
     },
     handleSelect () {
       this.handleBlur()
+    },
+    getDataBySocketIO () {
+      // 如果没有传入的时间
+      // if (!this.startTime || !this.endTime) {
+      //   return
+      // }
+      // // 与当前时间对比，如果结束时间为当前时间之前，则不需要建立连接
+      // const now = new Date()
+      // if (+moment(this.endTime) < now) {
+      //   if (this.socket) {
+      //     this.socket.close()
+      //   }
+      //   return
+      // }
+      // const loginUserNum = 'as6d54f6a5sd4f6a54df6a5sd4f'
+      // const loginUserNum = this.operationId
+      const loginUserNum = 'b0f9d8bda9244397a44cb8ff278937d9'
+      this.socket = io(getSocketData, {
+        query: {
+          loginUserNum
+        }
+      })
+      this.socket.on('connect', () => {
+        console.log('socket.io connected')
+      })
+      this.socket.on('reconnect_error', e => {
+        console.error(e)
+      })
+      this.socket.on('disconnect', () => {
+        console.log('socket.io disconnect')
+      })
+      // 体征曲线
+      const that = this
+      this.socket.on('push_monitor_event', res => {
+        console.log(res)
+        if (Array.isArray(res)) {
+          // 回应socket.io
+          that.socket.emit('push_monitor_event', {
+            loginUserNum,
+            content: res
+          })
+          // res.forEach(item => {
+          //   const { itemCode: signId, ...value } = item
+          //   if (that.lines[signId]) {
+          //     that.lines[signId].addPoint({
+          //       time: value.timePoint,
+          //       value: value.itemValue
+          //     })
+          //   }
+          // })
+        }
+      })
     }
   },
   mounted () {
     this.getRowHeight()
-    this.getDataList()
+    // if (!this.editMode) {
+    // this.getMonitorData()
+    this.getDataBySocketIO()
+    // }
+    // this.getDataList()
   }
 }
 </script>
 <style lang="stylus" scoped>
 .monitor {
-  height: 288px;
+  height: 100%;
   width: 100%;
   display: flex;
-  border: 1px solid #000;
+  border: 1px solid red;
   box-sizing: border-box;
   font-size: 12px;
-
+  background:#fff;
   .left {
     // flex 1
     height: 100%;

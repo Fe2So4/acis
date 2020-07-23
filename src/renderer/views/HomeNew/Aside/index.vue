@@ -72,7 +72,7 @@ export default {
       activesNames: '1',
       isCollapse: false,
       showOverflow: false,
-      showDialog: false,
+      showDialog: true, // 开启弹窗
       componentName: '',
       navList: [
         {
@@ -155,7 +155,7 @@ export default {
     // Hemodynamics
   },
   computed: {
-    ...mapGetters('anaes', ['eventType']),
+    ...mapGetters('Anaes', ['eventType']),
     oddEven (index) {
       return function (index) {
         if ((index + 1) % 2 === 0) {
@@ -167,7 +167,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setEventType']),
+    ...mapActions('Anaes', ['setEventType']),
     jumpLogin () {
       this.$router.push('/login')
     },
@@ -207,18 +207,9 @@ export default {
     },
     openConfiguration (route, name) {
       this.$electron.ipcRenderer.send('open-new-window', route, name)
-    },
-    getOverviewList () {
-      this.$http({
-        url: 'http://localhost:3334/mock/overview'
-      }).then(res => {
-        const data = res.data
-        this.overviewList = data.data
-      })
     }
   },
   mounted () {
-    this.getOverviewList()
     this.$eventHub.$on('show-dialog', (item) => {
       // 激活弹窗
       this.handleChangeButton(item)

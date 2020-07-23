@@ -1,25 +1,18 @@
-
 <template lang="pug">
   .anaes-event
     .content(class="clearfix")
       .left
         el-scrollbar(style="height:100%;" :wrap-style="wrapStyle")
           el-tree(:data="data"
-            node-key="id"
+            node-key="eventCode"
             default-expand-all
-            @node-drag-start="handleDragStart"
-            @node-drag-enter="handleDragEnter"
-            @node-drag-leave="handleDragLeave"
-            @node-drag-over="handleDragOver"
-            @node-drag-end="handleDragEnd"
-            @node-drop="handleDrop"
-            draggable
-            :allow-drop="allowDrop"
-            :allow-drag="allowDrag")
+            :props="defaultProps"
+            @node-click="handleChange"
+          )
       .right
         vxe-table(
           border
-           auto-resize
+          auto-resize
           show-header-overflow
           show-overflow
           keep-source
@@ -32,9 +25,9 @@
           :checkbox-config="{checkStrictly: true}"
           :edit-config="{trigger: 'click', mode: 'cell', showStatus: true}"
         )
-          vxe-table-column(field="no" title="序号" width='60')
-          vxe-table-column(field="bedNo" title="事件分类" width="120")
-          vxe-table-column(field="name" title="事件名称" :edit-render="{}" width="200")
+          vxe-table-column(field="detailCode" title="序号" width='60')
+          vxe-table-column(field="detailCode" title="事件分类" width="120")
+          vxe-table-column(field="detailName" title="事件名称" :edit-render="{}" width="200")
             template(v-slot:edit="{ row }")
               el-input(v-model="row.name" size="mini")
           vxe-table-column(field="sex" title="药品规格" :edit-render="{}" width="200")
@@ -43,12 +36,12 @@
           vxe-table-column(field="sex" title="收费分类" :edit-render="{}" width="200")
             template(v-slot:edit="{ row }")
               el-input(v-model="row.sex" size="mini")
-          vxe-table-column(field="sex" title="剂量" :edit-render="{}" width="200")
+          vxe-table-column(field="dose" title="剂量" :edit-render="{}" width="200")
             template(v-slot:edit="{ row }")
-              el-input(v-model="row.sex" size="mini")
-          vxe-table-column(field="sex" title="单位" :edit-render="{}" width="200")
+              el-input(v-model="row.dose" size="mini")
+          vxe-table-column(field="doseUnit" title="单位" :edit-render="{}" width="200")
             template(v-slot:edit="{ row }")
-              el-input(v-model="row.sex" size="mini")
+              el-input(v-model="row.doseUnit" size="mini")
           vxe-table-column(field="sex" title="浓度" :edit-render="{}" width="200")
             template(v-slot:edit="{ row }")
               el-input(v-model="row.sex" size="mini")
@@ -84,87 +77,73 @@
       el-button(size="mini") 刷新(R)
 </template>
 <script>
+import { anaesEventList, anaesEventDetail } from '@/api/dictionary'
+import request from '@/utils/requestForMock'
 export default {
   data () {
     return {
-      wrapStyle: [{
-        'overflow-x': 'hidden'
-      }],
+      wrapStyle: [
+        {
+          'overflow-x': 'hidden'
+        }
+      ],
       tableData: [],
-      data: [{
-        id: 1,
-        label: '一级 1',
-        children: []
-      }, {
-        id: 2,
-        label: '一级 2',
-        children: []
-      },
-      {
-        id: 3,
-        label: '一级 3',
-        children: []
-      }, {
-        id: 4,
-        label: '一级 4',
-        children: []
-      }],
+      data: [],
       defaultProps: {
-        children: 'children',
-        label: 'label'
-      }
+        children: 'eventDetailVoList',
+        label: 'eventName'
+      },
+      currentMenu: {}
     }
   },
   created () {
-    for (let i = 5; i < 120; i++) {
-      this.data.push({ id: i, label: '123', children: [] })
-    }
+    // for (let i = 5; i < 120; i++) {
+    //   this.data.push({ id: i, label: '123', children: [] })
+    // }
+  },
+  mounted () {
+    this.getList()
   },
   methods: {
-    handleDragStart (node, ev) {
-      console.log('drag start', node)
+    getList () {
+      request({
+        method: 'GET',
+        url: anaesEventList
+      }).then(res => {
+        const data = res.data.data
+        this.data = data
+      })
     },
-    handleDragEnter (draggingNode, dropNode, ev) {
-      console.log('tree drag enter: ', dropNode.label)
+    handleChange (val) {
+      this.currentMenu = val
+      this.getDetail()
     },
-    handleDragLeave (draggingNode, dropNode, ev) {
-      console.log('tree drag leave: ', dropNode.label)
-    },
-    handleDragOver (draggingNode, dropNode, ev) {
-      console.log('tree drag over: ', dropNode.label)
-    },
-    handleDragEnd (draggingNode, dropNode, dropType, ev) {
-      console.log('tree drag end: ', dropNode && dropNode.label, dropType)
-    },
-    handleDrop (draggingNode, dropNode, dropType, ev) {
-      console.log('tree drop: ', dropNode.label, dropType)
-    },
-    allowDrop (draggingNode, dropNode, type) {
-      if (dropNode.data.label === '二级 3-1') {
-        return type !== 'inner'
-      } else {
-        return true
-      }
-    },
-    allowDrag (draggingNode) {
-      return draggingNode.data.label.indexOf('三级 3-2-2') === -1
+    getDetail () {
+      request({
+        method: 'GET',
+        url: anaesEventDetail + '/' + this.currentMenu.eventCode
+      }).then(res => {
+        const data = res.data.data
+        this.tableData = data
+      })
     }
   }
 }
 </script>
 <style lang="stylus" scoped>
-  .anaes-event
-    height 100%
-    .content
-      height calc(100% - 28px)
-      .left
-        float left
-        width 20%
-        height 100%
-      .right
-        height 100%
-        float right
-        width 80%
-    .option
-      text-align right
+.anaes-event
+  height 100%
+  .content
+    height calc(100% - 38px)
+    .left
+      float left
+      width 20%
+      height 100%
+    .right
+      height 100%
+      float right
+      width 80%
+  .option
+    margin-top 10px
+    text-align right
 </style>

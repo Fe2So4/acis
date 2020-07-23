@@ -6,26 +6,26 @@
     <div class="content">
       <el-row :gutter="22">
         <el-col :span="6">
-          <span>麻醉医师：</span>{{ 1 }}
+          <span>麻醉医师：</span>{{ docInfo.anesDoc }}
         </el-col>
         <el-col :span="6">
-          <span>灌注医师：</span>{{ 1 }}
-        </el-col>
-      </el-row>
-      <el-row :gutter="22">
-        <el-col :span="6">
-          <span>手术医师：</span>{{ 1 }}
-        </el-col>
-        <el-col :span="6">
-          <span>手术助手：</span>{{ 1 }}
+          <span>灌注医师：</span>{{ docInfo.infuseDoc }}
         </el-col>
       </el-row>
       <el-row :gutter="22">
         <el-col :span="6">
-          <span>洗手护士：</span>{{ 1 }}
+          <span>手术医师：</span>{{ docInfo.surgeon }}
         </el-col>
         <el-col :span="6">
-          <span>巡回护士：</span>{{ 1 }}
+          <span>手术助手：</span>{{ docInfo.assist }}
+        </el-col>
+      </el-row>
+      <el-row :gutter="22">
+        <el-col :span="6">
+          <span>洗手护士：</span>{{ docInfo.opeNurse }}
+        </el-col>
+        <el-col :span="6">
+          <span>巡回护士：</span>{{ docInfo.supplyNurse }}
         </el-col>
       </el-row>
     </div>
@@ -36,6 +36,12 @@ export default {
   name: 'OperationPersonnel',
   data () {
     return {
+    }
+  },
+  props: {
+    docInfo: {
+      type: Object,
+      default: () => {}
     }
   }
 }

@@ -3,14 +3,14 @@
     .card
       .top
         span 姓名
-          span  钱书明
+          span  {{ptCardInfo.ptName}}
         span 性别
-          span  男
+          span  {{ptCardInfo.gender}}
       .center ID
-          span 1000213960
+          span {{ptCardInfo.ptId}}
       .bottom
         i(class="el-icon-back" @click="back")
-        .room 07-1
+        .room {{ptCardInfo.roomNo}}
     .step
       .left-arow(@click="handleChangeNav(1)")
         i(class="el-icon-arrow-left arow")
@@ -31,7 +31,7 @@
                     li
                     li
                     li
-                .loading(v-else-if="item.status===1 && index>0")
+                .loading(v-else-if="item.status === 1 && index>0")
                   ol
                     li
                     li
@@ -41,16 +41,16 @@
                     li
                     li
                     li
-              .title 准备手术
+              .title {{item.conName}}
               .time
                 el-date-picker(
-                  :value="item.date"
-                  :disabled="item.date!==''"
+                  v-model="item.date"
+                  :disabled="item.state!==1"
                   size="mini"
                   type="datetime"
                   style="width:130px;"
                   placeholder=""
-                  default-time="12:00:00"
+                  @change="handleAddOpeStatusTime(item)"
                   format="MM-dd HH:mm"
                   value-format="MM-dd HH:mm"
                 )
@@ -61,6 +61,9 @@
 import unstart from '@/assets/unstart.png'
 import ongoing from '@/assets/ongoing.png'
 import finished from '@/assets/finished.png'
+import request from '@/utils/requestForMock'
+import { patientStatus, addStatus } from '@/api/patientList'
+import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
@@ -73,6 +76,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('Base', ['ptCardInfo', 'operationId']),
     getImg (status) {
       return function (status) {
         switch (status) {
@@ -86,7 +90,30 @@ export default {
       }
     }
   },
+  mounted () {
+    this.getStatusList()
+  },
   methods: {
+    getStatusList () {
+      request({
+        method: 'GET',
+        url: patientStatus + '/' + this.operationId
+      }).then(res => {
+        const data = res.data.data
+        const empty = []
+        data.forEach(item => {
+          item.date = item.time
+          item.status = item.state
+          empty.push(item.state)
+        })
+        if (empty.indexOf(1) === -1) {
+          data[0].state = 1
+          data[0].status = 1
+        }
+        this.opeStatusList = data
+        console.log(data)
+      })
+    },
     back () {
       this.$router.push('/home')
     },
@@ -98,6 +125,34 @@ export default {
       } else {
         scrollbarEl.scrollLeft += 130
       }
+    },
+    addStatusTimePoint (param) {
+      const formData = new FormData()
+      const d = new Date()
+      const time = d.getFullYear() + '-' + param.date + ':00'
+      formData.append('operationId', this.operationId)
+      formData.append('conCode', param.conCode)
+      formData.append('timePoint', time)
+      request(
+        {
+          method: 'POST',
+          url: addStatus,
+          data: formData
+          // data: {
+          //   operationId: this.operationId,
+          //   conCode: param.conCode,
+          //   timePoint: param.date
+          // }
+        }
+      ).then(
+        res => {
+          this.getStatusList()
+        }
+      )
+    },
+    handleAddOpeStatusTime (param) {
+      console.log(param)
+      this.addStatusTimePoint(param)
     }
   }
 }

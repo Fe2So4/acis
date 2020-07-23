@@ -130,7 +130,13 @@ export const getInfusionBloodList = mock
 export const getBloodInfusionData = mock
   ? '/api/saveChangedSignData'
   : baseXie + 'acis/intraoperative/info/getAcisIntraoBloodDataInfo'
-  // 文书展示相关 --------------------------------end---------------------------------
+
+// 获取监测表格数据
+export const getMonitorData = mock
+  ? '/api/saveChangedSignData'
+  : baseXie + 'acis/intraoperative/info/getAcisIntraoMonitorListenData'
+
+// 文书展示相关 --------------------------------end---------------------------------
 // 获取his体征数据 - 李 - 2020-07-20
 export const getSignInfo = mock
   ? '/api/getSignInfo'

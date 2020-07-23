@@ -6,49 +6,54 @@
         el-scrollbar(style="height: 100%"
         :wrap-style="wrapStyle")
           el-tree(:data="data"
-            node-key="id"
+            node-key="itemCode"
+            :props="defaultProps"
             default-expand-all
-            @node-drag-start="handleDragStart"
-            @node-drag-enter="handleDragEnter"
-            @node-drag-leave="handleDragLeave"
-            @node-drag-over="handleDragOver"
-            @node-drag-end="handleDragEnd"
-            @node-drop="handleDrop"
-            draggable
-            :allow-drop="allowDrop"
-            :allow-drag="allowDrag")
+            @node-click="handleChange"
+        )
       .right
         vxe-table(
           border
-           auto-resize
+          ref="xTable"
+          auto-resize
           show-header-overflow
           show-overflow
           keep-source
           highlight-hover-row
+          highlight-current-row
           align="center"
           height="100%"
           size="mini"
           class="scroll"
           :data="tableData"
           :checkbox-config="{checkStrictly: true}"
+          :radio-config="{highlight: true}"
+          @radio-change="currentChangeEvent"
+          @current-change="currentChangeEvent"
           :edit-config="{trigger: 'click', mode: 'cell', showStatus: true}"
         )
-          vxe-table-column(field="no" title="序号")
-          vxe-table-column(field="bedNo" title="分类")
-          vxe-table-column(field="name" title="名称" :edit-render="{}")
+          //- vxe-table-column(type="radio" width="60")
+          //-   //- template
+          //-   //-   span(class="drag-btn")
+          //-   //-     i(class="vxe-icon--menu")
+          vxe-table-column(field="detailId" title="序号")
+          vxe-table-column(field="itemName" title="分类")
+          vxe-table-column(field="detailName" title="名称" :edit-render="{}")
             template(v-slot:edit="{ row }")
-              el-input(v-model="row.name" size="mini")
-          vxe-table-column(field="sex" title="编码" :edit-render="{}")
+              el-input(v-model="row.detailName" size="mini")
+          vxe-table-column(field="detailCode" title="编码" :edit-render="{}")
             template(v-slot:edit="{ row }")
-              el-input(v-model="row.sex" size="mini")
+              el-input(v-model="row.detailCode" size="mini")
     .option
-      el-button(size="mini") 新增(N)
-      el-button(size="mini") 删除(D)
-      el-button(size="mini") 保存(S)
-      el-button(size="mini") 取消(C)
+      el-button(size="mini" :disabled="optionType!==1" @click="insertEvent(-1)") 新增(N)
+      el-button(size="mini" @click="$refs.xTable.removeCheckboxRow()") 删除(D)
+      el-button(size="mini" @click="saveEvent") 保存(S)
+      el-button(size="mini" @click="revertEvent") 取消(C)
       el-button(size="mini") 刷新(R)
 </template>
 <script>
+import { commonTermsList, commonTermsDetail, addCommonTermsDetail, updateCommonTermsDetail } from '@/api/dictionary'
+import request from '@/utils/requestForMock'
 export default {
   data () {
     return {
@@ -58,58 +63,122 @@ export default {
         }
       ],
       tableData: [],
-      data: [{
-        id: 1,
-        label: '一级 1',
-        children: []
-      }, {
-        id: 2,
-        label: '一级 2',
-        children: []
-      },
-      {
-        id: 3,
-        label: '一级 3',
-        children: []
-      }, {
-        id: 4,
-        label: '一级 4',
-        children: []
-      }],
+      data: [],
       defaultProps: {
         children: 'children',
-        label: 'label'
+        label: 'itemName'
+      },
+      currentMenu: {},
+      optionType: 1 // 新增状态
+    }
+  },
+  watch: {
+    data: {
+      handler (val) {
+        return val
       }
     }
   },
+  mounted () {
+    this.getCommonTerms()
+  },
   methods: {
-    handleDragStart (node, ev) {
-      console.log('drag start', node)
+    currentChangeEvent ({ row }) {
+      console.log(row)
     },
-    handleDragEnter (draggingNode, dropNode, ev) {
-      console.log('tree drag enter: ', dropNode.label)
+    handleChange (val) {
+      this.currentMenu = val
+      this.getCommonTermsDetail()
     },
-    handleDragLeave (draggingNode, dropNode, ev) {
-      console.log('tree drag leave: ', dropNode.label)
+    getCommonTerms () {
+      request({
+        method: 'GET',
+        url: commonTermsList
+      }).then(res => {
+        const data = res.data.data
+        this.data = data
+      })
     },
-    handleDragOver (draggingNode, dropNode, ev) {
-      console.log('tree drag over: ', dropNode.label)
+    getCommonTermsDetail () {
+      request({
+        method: 'GET',
+        url: commonTermsDetail + '/' + this.currentMenu.itemCode
+      }).then(res => {
+        const data = res.data.data
+        this.tableData = data
+      })
     },
-    handleDragEnd (draggingNode, dropNode, dropType, ev) {
-      console.log('tree drag end: ', dropNode && dropNode.label, dropType)
+    async insertEvent (row) {
+      this.optionType = 2
+      this.data.forEach((value) => {
+        value.disabled = true
+      })
+      const record = { detailId: this.tableData.length + 1, itemName: this.currentMenu.itemName, detailCode: '', detailName: '' }
+      const { row: newRow } = await this.$refs.xTable.insertAt(record, row)
+      console.log(newRow)
+      // await this.$refs.xTable.setActiveCell(newRow, 'sex')
     },
-    handleDrop (draggingNode, dropNode, dropType, ev) {
-      console.log('tree drop: ', dropNode.label, dropType)
+    // rowDrop () {
+    //   this.$nextTick(() => {
+    //     const xTable = this.$refs.xTable
+    //     this.sortable = Sortable.create(xTable.$el.querySelector('.body--wrapper>.vxe-table--body tbody'), {
+    //       handle: '.drag-btn',
+    //       onEnd: ({ newIndex, oldIndex }) => {
+    //         const currRow = this.tableData.splice(oldIndex, 1)[0]
+    //         this.tableData.splice(newIndex, 0, currRow)
+    //       }
+    //     })
+    //   })
+    // },
+    revertEvent () {
+      this.$refs.xTable.revertData()
     },
-    allowDrop (draggingNode, dropNode, type) {
-      if (dropNode.data.label === '二级 3-1') {
-        return type !== 'inner'
-      } else {
-        return true
+    addCommonTermsDetail (param) {
+      // "detailCode": "",
+      // "detailId": "",
+      // "detailName": "",
+      // "itemCode": "",
+      // "sort": 0,
+      // "state": true
+      const obj = {}
+      obj.detailId = param.detailId
+      obj.detailCode = param.detailCode
+      obj.detailName = param.detailName
+      obj.itemCode = this.currentMenu.itemCode
+      request({
+        method: 'POST',
+        url: addCommonTermsDetail,
+        data: obj
+      }).then(
+        res => this.getCommonTermsDetail()
+      )
+    },
+    updateCommonTermsDetail (param) {
+      const list = param
+      list.forEach(value => {
+        value.itemCode = this.currentMenu.itemCode
+        for (var k in value) {
+          if (k === 'itemName') { delete value[k] }
+        }
+      })
+      request({
+        method: 'PUT',
+        url: updateCommonTermsDetail,
+        data: list
+      }).then(
+        res => this.getCommonTermsDetail()
+      )
+    },
+    saveEvent () {
+      const { insertRecords, updateRecords } = this.$refs.xTable.getRecordset()
+      // this.$XModal.alert(`insertRecords=${insertRecords.length} removeRecords=${removeRecords.length} updateRecords=${updateRecords.length}`)
+      console.log(insertRecords, updateRecords)
+      if (insertRecords.length > 0) {
+        this.addCommonTermsDetail(insertRecords[0])
       }
-    },
-    allowDrag (draggingNode) {
-      return draggingNode.data.label.indexOf('三级 3-2-2') === -1
+      if (updateRecords.length > 0) {
+        this.updateCommonTermsDetail(updateRecords)
+      }
     }
   }
 }
@@ -118,7 +187,7 @@ export default {
   .common-terms
     height 100%
     .content
-      height calc(100% - 28px)
+      height calc(100% - 38px)
       .left
         float left
         width 20%
@@ -128,5 +197,6 @@ export default {
         float right
         width 80%
     .option
+      margin-top 10px
       text-align right
 </style>

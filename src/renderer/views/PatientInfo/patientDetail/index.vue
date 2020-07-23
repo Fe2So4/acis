@@ -5,9 +5,9 @@
         style="height:100%;"
         class="scrollbar"
       >
-        <basic-info />
-        <operation-info />
-        <operation-personnel />
+        <basic-info :basic-info="basicInfo" />
+        <operation-info :ope-info="opeInfo" />
+        <operation-personnel :doc-info="docInfo" />
       </el-scrollbar>
     </div>
   </div>
@@ -16,26 +16,42 @@
 import BasicInfo from './BasicInfo/index'
 import OperationInfo from './OperationInfo/index'
 import OperationPersonnel from './OperationPersonnel/index'
+import { patientDetail } from '@/api/patientList'
+import request from '@/utils/requestForMock'
+import { mapGetters } from 'vuex'
 export default {
   name: 'PatientDetail',
   data () {
     return {
-      tableData: []
+      basicInfo: {},
+      opeInfo: {},
+      docInfo: {}
     }
   },
   watch: {
-    tableData: {
-      handler (newVal, old) {
-        return newVal
-      },
-      immediate: true,
-      deep: true
-    }
+
   },
   components: {
     BasicInfo, OperationInfo, OperationPersonnel
   },
+  computed: {
+    ...mapGetters('Base', ['operationId'])
+  },
   mounted () {
+    this.getPatientInfo()
+  },
+  methods: {
+    getPatientInfo () {
+      request({
+        method: 'GET',
+        url: patientDetail + '/' + this.operationId
+      }).then(res => {
+        const data = res.data.data
+        this.basicInfo = data.basicInfo
+        this.opeInfo = data.opeInfo
+        this.docInfo = data.docInfo
+      })
+    }
   }
 }
 </script>

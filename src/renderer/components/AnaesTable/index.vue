@@ -7,6 +7,7 @@
       align="center"
       height="100%"
       auto-resize
+      keep-source
       class="anaesTable scroll"
       :loading="loading"
       :data="tableData"

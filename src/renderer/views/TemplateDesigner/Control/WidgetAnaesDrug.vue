@@ -104,11 +104,23 @@ export default {
     this.setLayout()
     this.setContent()
     if (!this.editMode) {
-      await this.getDrawLineList()
       await this.getDrugList()
+      await this.getDrawLineList()
+      // 注册刷新事件
+      this.$eventHub.$on('document-refresh', () => {
+        // 获取数据
+        this.getDrugList()
+      })
+      // 注册刷新事件
+      this.$eventHub.$on('document-redraw', () => {
+        // 重新绘制
+        this.setLayout()
+        this.setContent()
+        // 获取数据
+        this.getDrugList()
+      })
     }
     // this.setDrug()
-    this.setDrugTotal()
     addListener(this.$refs.anaesDrug, this.resize)
   },
   beforeDestroy () {
@@ -136,8 +148,8 @@ export default {
         url: getDrugListRecords,
         params: {
           // startTime: this.startTime,
-          startTime: '2020-07-21 09:00:00',
-          endTime: '2020-07-21 13:00:00',
+          startTime: '2020-07-21 17:00:00',
+          endTime: '2020-07-21 21:00:00',
           // operationId: this.operationId
           operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
         }
@@ -704,11 +716,11 @@ export default {
           const width = grid.attr('width')
           const interval = width / (moment(this.configuration.xAxis.endTime) - moment(this.configuration.xAxis.startTime))
           // const startTime = Math.round((moment(item.startTime) - moment(this.configuration.xAxis.startTime)) * interval)
-          const startTime = Math.round((moment(item.startTime) - moment('2020-7-21 09:00')) * interval)
+          const startTime = Math.round((moment(item.startTime) - moment('2020-7-21 17:00')) * interval)
           let endTime = null
           if (item.endTime !== '') {
             // endTime = Math.round((moment(item.endTime) - moment(this.configuration.xAxis.startTime)) * interval)
-            endTime = Math.round((moment(item.endTime) - moment('2020-7-21 09:00')) * interval)
+            endTime = Math.round((moment(item.endTime) - moment('2020-7-21 17:00')) * interval)
           }
           if (item.continue) {
             group = new Group({
@@ -733,12 +745,29 @@ export default {
               lineWidth: 1,
               strokeColor: 'blue'
             })
-            const rightLine = new Polyline({
-              pos: [group.attr('width') - 0.5, 0],
-              points: [0, group.attr('height') / 4, 0, group.attr('height') * 3 / 4],
-              lineWidth: 1,
-              strokeColor: 'blue'
-            })
+            if (item.isCross === '1') {
+              const topArow = new Polyline({
+                pos: [group.attr('width') - 0.5, group.attr('height') / 2 - 0.5],
+                points: [0, 0, -10, -group.attr('height') / 4],
+                lineWidth: 1,
+                strokeColor: 'blue'
+              })
+              const bottomArow = new Polyline({
+                pos: [group.attr('width') - 0.5, group.attr('height') / 2 - 0.5],
+                points: [0, 0, -10, group.attr('height') / 4],
+                lineWidth: 1,
+                strokeColor: 'blue'
+              })
+              group.append(topArow, bottomArow)
+            } else {
+              const rightLine = new Polyline({
+                pos: [group.attr('width') - 0.5, 0],
+                points: [0, group.attr('height') / 4, 0, group.attr('height') * 3 / 4],
+                lineWidth: 1,
+                strokeColor: 'blue'
+              })
+              group.append(rightLine)
+            }
             const center = group.attr('width') / 2
             const leftCenterLine = new Polyline({
               pos: [0, 0],
@@ -764,7 +793,6 @@ export default {
             })
             group.append(
               leftLine,
-              rightLine,
               leftCenterLine,
               rightCenterLine,
               dose
@@ -811,7 +839,7 @@ export default {
             pos: [0, yScale * index],
             anchor: [0, 0],
             textAlign: 'center',
-            width: width,
+            width: width - 1,
             lineHeight: yScale,
             fontSize: 12,
             fillColor: 'blue',
@@ -839,7 +867,7 @@ export default {
         } else {
           obj.holdingTime = ''
         }
-        obj.eventStartTime = param.startTime + ':00'
+        obj.eventStartTime = param.startTime
         obj.speedUnit = param.speedUnit
         obj.speed = param.speed
         obj.dosage = param.dose
@@ -849,7 +877,7 @@ export default {
         obj.operationId = 'b0f9d8bda9244397a44cb8ff278937d9'
         if (param.continue) {
           obj.isHolding = 1
-          obj.eventEndTime = param.endTime + ':00'
+          obj.eventEndTime = param.endTime
         } else {
           obj.eventEndTime = ''
           obj.isHolding = 0

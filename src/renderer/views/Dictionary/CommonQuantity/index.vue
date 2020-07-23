@@ -5,17 +5,11 @@
       .left
         el-scrollbar(style="height:100%;" :wrap-style="wrapStyle")
           el-tree(:data="data"
-            node-key="id"
+            node-key="eventCode"
             default-expand-all
-            @node-drag-start="handleDragStart"
-            @node-drag-enter="handleDragEnter"
-            @node-drag-leave="handleDragLeave"
-            @node-drag-over="handleDragOver"
-            @node-drag-end="handleDragEnd"
-            @node-drop="handleDrop"
-            draggable
-            :allow-drop="allowDrop"
-            :allow-drag="allowDrag")
+            :props="defaultProps"
+            @node-click="handleChange"
+           )
       .right
         vxe-table(
           border
@@ -32,32 +26,29 @@
           :checkbox-config="{checkStrictly: true}"
           :edit-config="{trigger: 'click', mode: 'cell', showStatus: true}"
         )
-          vxe-table-column(field="no" title="序号")
-          vxe-table-column(field="bedNo" title="事件分类")
-          vxe-table-column(field="name" title="名称" :edit-render="{}")
+          vxe-table-column(field="detailCode" title="序号")
+          vxe-table-column(field="eventName" title="事件分类")
+          vxe-table-column(field="detailName" title="事件名称" :edit-render="{}")
             template(v-slot:edit="{ row }")
-              el-input(v-model="row.name" size="mini")
-          vxe-table-column(field="sex" title="事件名称" :edit-render="{}")
+              el-input(v-model="row.detailName" size="mini")
+          vxe-table-column(field="drugSpec" title="药品规格" :edit-render="{}")
             template(v-slot:edit="{ row }")
-              el-input(v-model="row.sex" size="mini")
-          vxe-table-column(field="sex" title="药品规格" :edit-render="{}")
+              el-input(v-model="row.drugSpec" size="mini")
+          vxe-table-column(field="doseUnit" title="单位" :edit-render="{}")
             template(v-slot:edit="{ row }")
-              el-input(v-model="row.sex" size="mini")
-          vxe-table-column(field="sex" title="单位" :edit-render="{}")
+              el-input(v-model="row.doseUnit" size="mini")
+          vxe-table-column(field="usualDose1" title="常用量1" :edit-render="{}")
             template(v-slot:edit="{ row }")
-              el-input(v-model="row.sex" size="mini")
-          vxe-table-column(field="sex" title="常用量1" :edit-render="{}")
+              el-input(v-model="row.usualDose1" size="mini")
+          vxe-table-column(field="usualDose2" title="常用量2" :edit-render="{}")
             template(v-slot:edit="{ row }")
-              el-input(v-model="row.sex" size="mini")
-          vxe-table-column(field="sex" title="常用量2" :edit-render="{}")
+              el-input(v-model="row.usualDose2" size="mini")
+          vxe-table-column(field="usualDose3" title="常用量3" :edit-render="{}")
             template(v-slot:edit="{ row }")
-              el-input(v-model="row.sex" size="mini")
-          vxe-table-column(field="sex" title="常用量3" :edit-render="{}")
+              el-input(v-model="row.usualDose3" size="mini")
+          vxe-table-column(field="usualDose4" title="常用量4" :edit-render="{}")
             template(v-slot:edit="{ row }")
-              el-input(v-model="row.sex" size="mini")
-          vxe-table-column(field="sex" title="常用量4" :edit-render="{}")
-            template(v-slot:edit="{ row }")
-              el-input(v-model="row.sex" size="mini")
+              el-input(v-model="row.usualDose4" size="mini")
     .option
       el-button(size="mini") 新增(N)
       el-button(size="mini") 删除(D)
@@ -66,6 +57,8 @@
       el-button(size="mini") 刷新(R)
 </template>
 <script>
+import { anaesEventList, commonUseDetail } from '@/api/dictionary'
+import request from '@/utils/requestForMock'
 export default {
   data () {
     return {
@@ -75,58 +68,39 @@ export default {
         }
       ],
       tableData: [],
-      data: [{
-        id: 1,
-        label: '一级 1',
-        children: []
-      }, {
-        id: 2,
-        label: '一级 2',
-        children: []
-      },
-      {
-        id: 3,
-        label: '一级 3',
-        children: []
-      }, {
-        id: 4,
-        label: '一级 4',
-        children: []
-      }],
+      data: [],
       defaultProps: {
-        children: 'children',
-        label: 'label'
-      }
+        children: 'eventDetailVoList',
+        label: 'eventName'
+      },
+      currentMenu: {}
     }
   },
+  mounted () {
+    this.getList()
+  },
   methods: {
-    handleDragStart (node, ev) {
-      console.log('drag start', node)
+    getList () {
+      request({
+        method: 'GET',
+        url: anaesEventList
+      }).then(res => {
+        const data = res.data.data
+        this.data = data
+      })
     },
-    handleDragEnter (draggingNode, dropNode, ev) {
-      console.log('tree drag enter: ', dropNode.label)
+    handleChange (val) {
+      this.currentMenu = val
+      this.getDetail()
     },
-    handleDragLeave (draggingNode, dropNode, ev) {
-      console.log('tree drag leave: ', dropNode.label)
-    },
-    handleDragOver (draggingNode, dropNode, ev) {
-      console.log('tree drag over: ', dropNode.label)
-    },
-    handleDragEnd (draggingNode, dropNode, dropType, ev) {
-      console.log('tree drag end: ', dropNode && dropNode.label, dropType)
-    },
-    handleDrop (draggingNode, dropNode, dropType, ev) {
-      console.log('tree drop: ', dropNode.label, dropType)
-    },
-    allowDrop (draggingNode, dropNode, type) {
-      if (dropNode.data.label === '二级 3-1') {
-        return type !== 'inner'
-      } else {
-        return true
-      }
-    },
-    allowDrag (draggingNode) {
-      return draggingNode.data.label.indexOf('三级 3-2-2') === -1
+    getDetail () {
+      request({
+        method: 'GET',
+        url: commonUseDetail + '/' + this.currentMenu.eventCode
+      }).then(res => {
+        const data = res.data.data
+        this.tableData = data
+      })
     }
   }
 }
@@ -135,7 +109,7 @@ export default {
   .common-quantity
     height 100%
     .content
-      height calc(100% - 28px)
+      height calc(100% - 38px)
       .left
         float left
         width 20%
@@ -146,4 +120,5 @@ export default {
         width 80%
     .option
       text-align right
+      margin-top 10px
 </style>

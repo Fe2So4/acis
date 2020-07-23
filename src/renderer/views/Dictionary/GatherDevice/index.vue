@@ -92,7 +92,8 @@ export default {
   height 100%
   .content
     width 100%
-    height calc(100% - 28px)
+    height calc(100% - 38px)
   .option
     text-align right
+    margin-top 10px
 </style>

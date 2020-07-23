@@ -85,7 +85,7 @@ export default {
       deep: true,
       handler: function (val) {
         if (this.editMode) {
-          // this.setStyle()
+          this.setStyle()
           this.resize()
         }
       }
@@ -96,7 +96,7 @@ export default {
     DrugDetail
   },
   created () {
-    // this.setStyle()
+    this.setStyle()
     this.resize = debounce(this.domResizeListener, 20)
   },
   async mounted () {
@@ -110,8 +110,23 @@ export default {
     if (!this.editMode) {
       await this.getDrawLineList()
       await this.getInfusionBloodList()
+      // 注册刷新事件
+      this.$eventHub.$on('document-refresh', () => {
+        // 获取数据
+        this.getDrawLineList()
+        this.getInfusionBloodList()
+      })
+      // 注册刷新事件
+      this.$eventHub.$on('document-redraw', () => {
+        // 重新绘制
+        this.setLayout()
+        this.setContent()
+        // 获取数据
+        this.getDrawLineList()
+        this.getInfusionBloodList()
+      })
     }
-    this.setDrug()
+    // this.setDrug()
     addListener(this.$refs.inOut, this.resize)
   },
   beforeDestroy () {
@@ -975,12 +990,29 @@ export default {
                 lineWidth: 1,
                 strokeColor: 'blue'
               })
-              const rightLine = new Polyline({
-                pos: [group.attr('width') - 0.5, 0],
-                points: [0, group.attr('height') / 4, 0, group.attr('height') * 3 / 4],
-                lineWidth: 1,
-                strokeColor: 'blue'
-              })
+              if (item.isCross === '1') {
+                const topArow = new Polyline({
+                  pos: [group.attr('width') - 0.5, group.attr('height') / 2 - 0.5],
+                  points: [0, 0, -10, -group.attr('height') / 4],
+                  lineWidth: 1,
+                  strokeColor: 'blue'
+                })
+                const bottomArow = new Polyline({
+                  pos: [group.attr('width') - 0.5, group.attr('height') / 2 - 0.5],
+                  points: [0, 0, -10, group.attr('height') / 4],
+                  lineWidth: 1,
+                  strokeColor: 'blue'
+                })
+                group.append(topArow, bottomArow)
+              } else {
+                const rightLine = new Polyline({
+                  pos: [group.attr('width') - 0.5, 0],
+                  points: [0, group.attr('height') / 4, 0, group.attr('height') * 3 / 4],
+                  lineWidth: 1,
+                  strokeColor: 'blue'
+                })
+                group.append(rightLine)
+              }
               const center = group.attr('width') / 2
               const leftCenterLine = new Polyline({
                 pos: [0, 0],
@@ -1006,7 +1038,6 @@ export default {
               })
               group.append(
                 leftLine,
-                rightLine,
                 leftCenterLine,
                 rightCenterLine,
                 dose
@@ -1103,12 +1134,29 @@ export default {
                 lineWidth: 1,
                 strokeColor: 'blue'
               })
-              const rightLine = new Polyline({
-                pos: [group.attr('width') - 0.5, 0],
-                points: [0, group.attr('height') / 4, 0, group.attr('height') * 3 / 4],
-                lineWidth: 1,
-                strokeColor: 'blue'
-              })
+              if (item.isCross === '1') {
+                const topArow = new Polyline({
+                  pos: [group.attr('width') - 0.5, group.attr('height') / 2 - 0.5],
+                  points: [0, 0, -10, -group.attr('height') / 4],
+                  lineWidth: 1,
+                  strokeColor: 'blue'
+                })
+                const bottomArow = new Polyline({
+                  pos: [group.attr('width') - 0.5, group.attr('height') / 2 - 0.5],
+                  points: [0, 0, -10, group.attr('height') / 4],
+                  lineWidth: 1,
+                  strokeColor: 'blue'
+                })
+                group.append(topArow, bottomArow)
+              } else {
+                const rightLine = new Polyline({
+                  pos: [group.attr('width') - 0.5, 0],
+                  points: [0, group.attr('height') / 4, 0, group.attr('height') * 3 / 4],
+                  lineWidth: 1,
+                  strokeColor: 'blue'
+                })
+                group.append(rightLine)
+              }
               const center = group.attr('width') / 2
               const leftCenterLine = new Polyline({
                 pos: [0, 0],
@@ -1134,7 +1182,6 @@ export default {
               })
               group.append(
                 leftLine,
-                rightLine,
                 leftCenterLine,
                 rightCenterLine,
                 dose
@@ -1226,12 +1273,29 @@ export default {
                 lineWidth: 1,
                 strokeColor: 'blue'
               })
-              const rightLine = new Polyline({
-                pos: [group.attr('width') - 0.5, 0],
-                points: [0, 0, 0, group.attr('height')],
-                lineWidth: 1,
-                strokeColor: 'blue'
-              })
+              if (item.isCross === '1') {
+                const topArow = new Polyline({
+                  pos: [group.attr('width') - 0.5, group.attr('height') / 2 - 0.5],
+                  points: [0, 0, -10, -group.attr('height') / 4],
+                  lineWidth: 1,
+                  strokeColor: 'blue'
+                })
+                const bottomArow = new Polyline({
+                  pos: [group.attr('width') - 0.5, group.attr('height') / 2 - 0.5],
+                  points: [0, 0, -10, group.attr('height') / 4],
+                  lineWidth: 1,
+                  strokeColor: 'blue'
+                })
+                group.append(topArow, bottomArow)
+              } else {
+                const rightLine = new Polyline({
+                  pos: [group.attr('width') - 0.5, 0],
+                  points: [0, group.attr('height') / 4, 0, group.attr('height') * 3 / 4],
+                  lineWidth: 1,
+                  strokeColor: 'blue'
+                })
+                group.append(rightLine)
+              }
               const center = group.attr('width') / 2
               const leftCenterLine = new Polyline({
                 pos: [0, 0],
@@ -1257,7 +1321,6 @@ export default {
               })
               group.append(
                 leftLine,
-                rightLine,
                 leftCenterLine,
                 rightCenterLine,
                 dose
@@ -1404,6 +1467,6 @@ export default {
   box-sizing: border-box;
   margin: 0 auto;
   overflow: unset !important;
-  background: #fff;
+  // background: #fff;
 }
 </style>

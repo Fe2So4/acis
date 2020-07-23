@@ -8,6 +8,11 @@
     <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js">
     </script>
     <script src="https://unpkg.com/spritejs@3/dist/spritejs.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-table/lib/index.css">
+    <!-- 引入脚本 -->
+    <script src="https://cdn.jsdelivr.net/npm/xe-utils"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vxe-table"></script>
     <style>
         .resize {
             height: 400px;
@@ -173,11 +178,50 @@
     </div>
 </body>
 <script>
-    const { Scene, Sprite } = spritejs;
-    // console.log(Scene, Sprite)
-    const container = document.querySelector('.container');
-    const scene = new Scene({ container, width: 3080, height: 800, mode: 'stickyTop' });
-    const layer = scene.layer();
+    var a = new Date('2020-7-21 16:00')
+    var b = new Date('2020-7-21 18:00')
+    var space = 15
+    console.log(getDateArray(a,b,space))
+    function getDateArray(startDate,endDate,space) {
+            if (!endDate) {
+                endDate = new Date();
+            }
+            if (!startDate) {
+                startDate = new Date(new Date().getTime() - 1 * 60 * 60 * 1000);
+            }
+            if (!space) {
+                space = 30 * 60 * 1000;
+            } else {
+                space = space * 60 * 1000;
+            }
+            var endTime = endDate.getTime();
+            var startTime = startDate.getTime();
+            var mod = endTime - startTime;
+            if (mod <= space) {
+                alert("时间太短");
+                return;
+            }
+            var dateArray = [];
+            while (mod >= space) {
+                var d = new Date();
+                d.setTime(startTime + space);
+                dateArray.push(d);
+                mod = mod - space;
+                startTime = startTime + space;
+            }
+            var end = endDate.getTime();
+            var start = startDate.getTime();
+            dateArray.unshift(new Date(start)); // 插入开头时间
+            // 正序
+            return dateArray.sort(function (a, b) {
+                return Date.parse(b) - Date.parse(a);
+            });
+        }
+    // const { Scene, Sprite } = spritejs;
+    // // console.log(Scene, Sprite)
+    // const container = document.querySelector('.container');
+    // const scene = new Scene({ container, width: 3080, height: 800, mode: 'stickyTop' });
+    // const layer = scene.layer();
     // $(document).ready(function () {
     //     // 初始化一个对象 该对象的属性要和form 对应的值对应 （其实这里应该是ajax请求返回的对象）
     //     var obj = new Object();

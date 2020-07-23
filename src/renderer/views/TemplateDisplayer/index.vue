@@ -34,62 +34,33 @@ export default {
   data () {
     return {
       widgetList: [{
-        bloodTransfusion: {
-          num: 2,
-          text: '输血'
-        },
-        drugNumber: 10,
-        height: 259,
-        id: '578761b8-c1e1-4a55-aeb7-859f06793aa4',
-        infusion: {
-          num: 3,
-          text: '输液'
-        },
-        leftPartWidthRate: 0.18,
-        leftTitle: {
-          lineHeight: 30,
-          text: '输液输血',
-          width: 40
-        },
-        name: 'widget-in-out',
-        outPut: {
-          num: 0,
-          text: '用量'
-        },
-        positionX: 0,
-        positionY: 10,
-        rightPartWidthRate: 0.1,
-        timeTitle: {
-          height: 0,
-          lineHeight: 30,
-          text: '时间'
-        },
-        totalTitle: {
-          text: '总量'
-        },
-        width: 792,
-        xAxis: {
-          endTime: '2018-02-01 12:00',
-          lineInterval: 3,
-          startTime: '2018-02-01 08:00',
-          timeInterval: 15
-        }
-      }],
+      //   bloodTransfusion: {
+      //     num: 2,
+      //     text: '输血'
+      //   },
       //   drugNumber: 10,
-      //   height: 256,
-      //   id: '979362f8-3d5a-4d2d-9911-503cad5437fc',
+      //   height: 259,
+      //   id: '578761b8-c1e1-4a55-aeb7-859f06793aa4',
+      //   infusion: {
+      //     num: 3,
+      //     text: '输液'
+      //   },
       //   leftPartWidthRate: 0.18,
       //   leftTitle: {
       //     lineHeight: 30,
-      //     text: '麻醉用药',
-      //     width: 50
+      //     text: '输液输血',
+      //     width: 40
       //   },
-      //   name: 'widget-anaes-drug',
+      //   name: 'widget-in-out',
+      //   outPut: {
+      //     num: 0,
+      //     text: '用量'
+      //   },
       //   positionX: 0,
       //   positionY: 10,
       //   rightPartWidthRate: 0.1,
       //   timeTitle: {
-      //     height: 30,
+      //     height: 0,
       //     lineHeight: 30,
       //     text: '时间'
       //   },
@@ -98,12 +69,70 @@ export default {
       //   },
       //   width: 792,
       //   xAxis: {
-      //     endTime: '2018-01-01 13:00',
+      //     endTime: '2018-02-01 12:00',
       //     lineInterval: 3,
-      //     startTime: '2018-01-01 09:00',
+      //     startTime: '2018-02-01 08:00',
       //     timeInterval: 15
       //   }
       // }],
+        // drugNumber: 10,
+        // height: 300,
+        // id: '979362f8-3d5a-4d2d-9911-503cad5437fc',
+        // leftPartWidthRate: 0.18,
+        // leftTitle: {
+        //   lineHeight: 30,
+        //   text: '麻醉用药',
+        //   width: 50
+        // },
+        // name: 'widget-anaes-drug',
+        // positionX: 0,
+        // positionY: 10,
+        // rightPartWidthRate: 0.1,
+        // timeTitle: {
+        //   height: 30,
+        //   lineHeight: 30,
+        //   text: '时间'
+        // },
+        // totalTitle: {
+        //   text: '总量'
+        // },
+        // width: 792,
+        // xAxis: {
+        //   endTime: '2018-01-01 13:00',
+        //   lineInterval: 3,
+        //   startTime: '2018-01-01 09:00',
+        //   timeInterval: 15
+        // }
+        name: 'widget-monitor-table',
+        height: 400,
+        width: 792,
+        positionX: 0,
+        positionY: 10,
+        border: true,
+        leftTitle: {
+          text: '监测',
+          width: 40,
+          lineHeight: 30
+        },
+        // 行标题宽度
+        rowTitle: {
+          width: 128
+        },
+        rowList: [
+          { text: '心电图', colNum: 2, signCode: 212, signItem: 'VTE', label: '第1行' },
+          { text: '氧饱和度', colNum: 1, signCode: 212, signItem: 'VTE', label: '第2行' },
+          { text: '潮气量', colNum: 2, signCode: 212, signItem: 'VTE', label: '第3行' },
+          { text: 'f', colNum: 1, signCode: 212, signItem: 'VTE', label: '第4行' },
+          { text: 'PEAK', colNum: 2, signCode: 212, signItem: 'VTE', label: '第5行' },
+          { text: 'PEEP', colNum: 2, signCode: 212, signItem: 'VTE', label: '第6行' },
+          { text: '中心静脉压', colNum: 2, signCode: 212, signItem: 'VTE', label: '第7行' },
+          { text: '尿量', colNum: 1, signCode: 212, signItem: 'VTE', label: '第8行' },
+          { text: '累计失血量', colNum: 2, signCode: 212, signItem: 'VTE', label: '第9行' }
+        ],
+        anaesColumn: {
+          num: 8
+        }
+      }],
       startTime: '',
       endTime: ''
     }
