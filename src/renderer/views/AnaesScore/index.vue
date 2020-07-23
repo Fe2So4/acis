@@ -30,7 +30,7 @@ export default {
   name: 'AnaesScore',
   data () {
     return {
-      activeName: '6'
+      activeName: '1'
     }
   },
   components: {
@@ -52,7 +52,7 @@ export default {
 <style lang="stylus" scoped>
 .anaes-score {
   height: 80vh;
-  width: 80vw;
+  width: 62vw;
 
   .title {
     line-height: 28px;

@@ -1,7 +1,7 @@
 <template>
   <div
     class="checkbox-group"
-    :style="widgetStyle"
+    :style="[noTableNameStyle, dataSourceAlertStyle]"
   >
     <el-checkbox-group
       v-model="checkedOptions"
@@ -19,8 +19,10 @@
   </div>
 </template>
 <script>
+import { validateDataSourceMixin } from './mixin'
 export default {
   name: 'WidgetCheckboxGroup',
+  mixins: [validateDataSourceMixin],
   props: {
     configuration: {
       type: Object,

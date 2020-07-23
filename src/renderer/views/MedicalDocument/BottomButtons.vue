@@ -2,7 +2,7 @@
   <div class="bottomButtons">
     <div
       class="buttons leftButtons"
-      v-if="isIntraoperative"
+      v-if="hasPagination"
     >
       <div>第{{ +pageIndex + 1 }}页</div>
       <div>共{{ totalPage }}页</div>
@@ -34,14 +34,14 @@
     <div class="buttons rightButtons">
       <div
         class="button red"
-        v-if="isIntraoperative && !isRescueMode"
+        v-if="hasSwitchRescueModeButton && !isRescueMode"
         @click="$emit('changeRescueMode', true)"
       >
         抢救模式
       </div>
       <div
         class="button"
-        v-if="isIntraoperative && isRescueMode"
+        v-if="hasSwitchRescueModeButton && isRescueMode"
         @click="$emit('changeRescueMode', false)"
       >
         普通模式
@@ -84,9 +84,13 @@
 export default {
   name: 'BottomButtons',
   props: {
-    isIntraoperative: {
-      type: Boolean,
-      default: false
+    rescueMode: {
+      type: [String, Number],
+      default: ''
+    },
+    pageInfo: {
+      type: [String, Number],
+      default: ''
     },
     isRescueMode: {
       type: Boolean,
@@ -103,6 +107,15 @@ export default {
   },
   data () {
     return {}
+  },
+  computed: {
+    // 是否可以开启抢救模式
+    hasSwitchRescueModeButton () {
+      return !!+this.rescueMode
+    },
+    hasPagination () {
+      return !!+this.pageInfo
+    }
   },
   methods: {
     pageUp () {

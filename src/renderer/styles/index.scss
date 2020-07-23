@@ -1,10 +1,10 @@
-
 body {
   height: 100%;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
+    Microsoft YaHei, Arial, sans-serif;
   // -webkit-user-select: none; //一行css搞定文本选择 内核不同添加相应的前缀即可
 }
 
@@ -75,15 +75,15 @@ img {
 }
 
 // 清除input时间原生样式
-input[type=time]::-webkit-inner-spin-button {
+input[type="time"]::-webkit-inner-spin-button {
   visibility: hidden;
 }
 
 input[type="time"]::-webkit-clear-button {
-  display:none;
+  display: none;
 }
 
-input[type=time] {
+input[type="time"] {
   font-size: 40px;
   height: 50px;
 }
@@ -92,14 +92,21 @@ input[type=time] {
   background-color: unset;
 }
 .vxe-checkbox.is--indeterminate > input:not(:checked) + .vxe-checkbox--icon:before {
+.vxe-checkbox.is--indeterminate
+  > input:not(:checked)
+  + .vxe-checkbox--icon:before {
   left: 0;
 }
-#app /deep/ .vxe-table .vxe-cell--checkbox .vxe-checkbox--icon:before, .vxe-table--filter-option .vxe-checkbox--icon:before, .vxe-export--panel-column-option .vxe-checkbox--icon:before, .vxe-custom--option .vxe-checkbox--icon:before{
-  background-color: #2C354F;
+}
+#app /deep/ .vxe-table .vxe-cell--checkbox .vxe-checkbox--icon:before,
+.vxe-table--filter-option .vxe-checkbox--icon:before,
+.vxe-export--panel-column-option .vxe-checkbox--icon:before,
+.vxe-custom--option .vxe-checkbox--icon:before {
+  background-color: #2c354f;
   border-width: 1px;
 }
-#app /deep/ .vxe-table .vxe-table--body-wrapper .vxe-cell{
-  color:#fff;
+#app /deep/ .vxe-table .vxe-table--body-wrapper .vxe-cell {
+  color: #fff;
 }
 
 /*滚动条整体部分*/
@@ -123,9 +130,28 @@ input[type=time] {
 }
 .scroll div::-webkit-scrollbar-thumb:active {
   /* background-color: #787878; */
-  background-color: rgba(144, 147, 153, 0.3)
+  background-color: rgba(144, 147, 153, 0.3);
 }
 /*边角，即两个滚动条的交汇处*/
 .scroll div::-webkit-scrollbar-corner {
   background-color: #ffffff;
+}
+
+/*日期时间选择器*/
+.dateTimePicker {
+  .el-date-table th {
+    border-bottom: 1px solid #006ab6;
+  }
+  .el-date-picker__time-header,
+  .el-date-range-picker__time-header,
+  .el-date-range-picker__content.is-left {
+    border-color: #353e56;
+  }
+  .el-picker-panel__footer {
+    background-color: #252c40;
+    border-top: 1px solid #353e56;
+  }
+  .el-date-table td.in-range div{
+    background: #353e56;
+  }
 }

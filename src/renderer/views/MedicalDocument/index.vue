@@ -15,12 +15,15 @@
       :patient-id="patientId"
       :total-page="totalPage"
       :page-index="pageIndex"
+      :sync-his="syncHis"
+      :operation-phase="opePhase"
       @select-event-time-range="onSelectEventTimeRange"
       @change-sign-data="onChangeSignData"
       @get-info="onGetInfo"
     />
     <bottom-buttons
-      :is-intraoperative="isIntraoperative"
+      :rescue-mode="rescueMode"
+      :page-info="pageInfo"
       :is-rescue-mode="isRescueMode"
       :total-page="totalPage"
       :page-index="pageIndex"
@@ -80,13 +83,16 @@ export default {
       endTime: '',
       totalPage: 1,
       pageIndex: 0,
-      isIntraoperative: false,
       isRescueMode: false,
       dialogEventTimeRangeVisible: false,
       dialogEventData: null,
       paperSetting: {},
       dialogDesignerVisible: false,
       templateId: '',
+      rescueMode: '', // 是否有抢救模式
+      pageInfo: '', // 是否分页
+      syncHis: '', // 是否开启右击
+      opePhase: '', // 文书属于的手术阶段
       loadingVisible: false,
       changedSignDataList: []
     }
@@ -98,11 +104,15 @@ export default {
     $route: {
       handler (to, from) {
         this.templateId = to.params.templateId
-      }
+        this.rescueMode = to.params.rescueMode
+        this.pageInfo = to.params.pageInfo
+        this.syncHis = to.params.syncHis
+        this.opePhase = to.params.opePhase
+      },
+      immediate: true
     }
   },
   created () {
-    this.templateId = this.$route.params.templateId
     this.getData(0)
   },
   beforeRouteUpdate (to, from, next) {
@@ -179,7 +189,6 @@ export default {
         this.paperSetting = paperSetting
         widgetList.splice(paperSettingIndex, 1)
         this.tempList = widgetList
-        return res[0].data.data.isIntraoperative
       })
     },
     // 只有术中文书才有，获取术中文书相关信息
@@ -199,7 +208,8 @@ export default {
           operationId: this.operationId,
           intervalTime,
           pageIndex,
-          pageTimeInterval
+          pageTimeInterval,
+          operState: this.opePhase
         }
       }).then(res => {
         const { startTime, endTime, totalPage, pageIndex } = res.data.data
@@ -219,12 +229,11 @@ export default {
     },
     async getData (pageIndex) {
       this.loadingVisible = true
-      const isIntraoperative = await this.getTemplateAndValueData()
-      if (isIntraoperative) {
+      await this.getTemplateAndValueData()
+      if (+this.pageInfo) {
         await this.getIntraoperativeData(pageIndex)
       }
       this.widgetList = this.tempList
-      this.isIntraoperative = isIntraoperative
       this.loadingVisible = false
     },
     onSelectEventTimeRange (e) {
@@ -254,6 +263,7 @@ export default {
     },
     onPrintAll () {},
     onRefresh () {
+      this.widgetList = []
       // 重置修改过的体征
       this.changedSignDataList = []
       this.getData(this.pageIndex)

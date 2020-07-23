@@ -1,6 +1,3 @@
-// socket.io 地址 - 李 - 2020-07-14
-// export const getSocketData = 'http://192.168.1.149:9099'
-// export const getSocketData = 'http://192.168.1.154:9099/'
 import {
   mock,
   baseZhong,
@@ -8,21 +5,6 @@ import {
   socketLi,
   baseXie
 } from './urlAndPortConfig'
-
-// const mock =
-//   process.env.NODE_ENV === 'development'
-//     ? !(process.env.MOCK === 'none')
-//     : false
-
-// const base = 'http://localhost:8090/'
-// // 李
-// const baseLi = process.env.NODE_ENV === 'development' ? 'http://192.168.1.177:8090/' : base
-// // 谢
-// const baseXie =
-//   process.env.NODE_ENV === 'development' ? 'http://192.168.1.198:8090/' : base
-// // 钟
-// const baseZhong =
-//   process.env.NODE_ENV === 'development' ? 'http://192.168.1.190:8090/' : base
 
 // 文书设计器和展示公共 ------------------------------start-----------------------------
 // 获取模板数据json - 钟 - 2020-07-13
@@ -47,7 +29,7 @@ export const updateDocument = mock
   ? '/api/updateDocument'
   : baseXie + 'acis/templatewrit/templete/acisTempleteUpdateTemplate'
 
-// 文书模板保存 - 李 - 2020-07-17
+// 获取tagName列表 - 李 - 2020-07-17
 export const getTagNamesList = mock
   ? '/api/getTagNamesList'
   : baseLi + 'acis/generalConfig/getHisSignList'

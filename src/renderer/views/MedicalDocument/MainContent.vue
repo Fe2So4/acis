@@ -7,8 +7,8 @@
       <div
         class="documentContent"
         :style="sizeStyle"
+        @click.right="showCtxMenu($event)"
       >
-        <!-- @click.right="showCtxMenu($event)" -->
         <div
           class="widgetContent"
         >
@@ -28,6 +28,7 @@
               :patient-id="patientId"
               :total-page="totalPage"
               :page-index="pageIndex"
+              :operation-phase="operationPhase"
               @select-event-time-range="onSelectEventTimeRange"
               @change="onChange($event, item)"
               @change-sign-data="onChangeSignData"
@@ -92,6 +93,14 @@ export default {
       required: false,
       type: [Number, String],
       default: ''
+    },
+    syncHis: {
+      required: true,
+      type: [String, Number]
+    },
+    operationPhase: {
+      required: true,
+      type: [String, Number]
     }
   },
   data () {
@@ -124,6 +133,9 @@ export default {
       this.$emit('change-sign-data', data)
     },
     showCtxMenu (e) {
+      if (!+this.syncHis) {
+        return
+      }
       const that = this
       this.$ctxMenu({
         list: [

@@ -68,7 +68,7 @@ if (process.env.BUILD_TARGET === 'schedule') {
               component: () => import('@/views/PatientInfo/patientDetail/index')
             },
             {
-              path: 'medicalDocument/:templateId',
+              path: 'medicalDocument/:templateId/:rescueMode/:pageInfo/:syncHis/:opePhase',
               name: 'MedicalDocument',
               component: () => import('@/views/MedicalDocument/index')
             }

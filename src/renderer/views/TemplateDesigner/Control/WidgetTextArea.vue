@@ -1,6 +1,7 @@
 <template>
   <div
     class="widgetTextArea"
+    :style="[noTableNameStyle, dataSourceAlertStyle]"
   >
     <textarea
       class="textarea"
@@ -13,8 +14,10 @@
   </div>
 </template>
 <script>
+import { validateDataSourceMixin } from './mixin'
 export default {
   name: 'WidgetTextarea',
+  mixins: [validateDataSourceMixin],
   props: {
     configuration: {
       type: Object,
@@ -77,6 +80,7 @@ export default {
     background: transparent;
     outline: none;
     border: none;
+    resize: none;
   }
 }
 </style>

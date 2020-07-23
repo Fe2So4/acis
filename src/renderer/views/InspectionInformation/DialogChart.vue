@@ -8,11 +8,80 @@
         .chart(ref="chart")
 </template>
 <script>
+import request from '@/utils/requestForMock'
+import { getTestInfoLine } from '@/api/systemIntegration'
 import echarts from 'echarts'
 export default {
+  name: 'DialogChart',
+  props: {
+    title: {
+      type: String,
+      required: true
+    },
+    startTime: {
+      type: String,
+      required: true
+    },
+    endTime: {
+      type: String,
+      required: true
+    },
+    itemCode: {
+      type: String,
+      required: true
+    },
+    patientId: {
+      type: String,
+      required: true
+    }
+  },
   data () {
     return {
-      option: {
+      chart: null
+    }
+  },
+  created () {
+    this.getTestInfoLine()
+  },
+  mounted () {
+    this.createCharts()
+  },
+  beforeDestroy () {
+    this.chart.dispose()
+    this.chart = null
+  },
+  methods: {
+    createCharts () {
+      // 基于准备好的dom，初始化echarts实例
+      this.chart = echarts.init(this.$refs.chart)
+    },
+    handleClose () {
+      this.$emit('handleClose')
+    },
+    getTestInfoLine () {
+      return request({
+        url: getTestInfoLine,
+        method: 'get',
+        params: {
+          startTime: this.startTime,
+          endTime: this.endTime,
+          patientId: this.patientId,
+          itemCode: this.itemCode
+        }
+      }).then(res => {
+        if (res.data && res.data.success) {
+          const source = res.data.data.map(item => {
+            return {
+              time: item.resultTime,
+              value: item.value
+            }
+          })
+          this.setChartSource(source)
+        }
+      })
+    },
+    setChartSource (source) {
+      const option = {
         xAxis: {
           type: 'category',
           // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -50,11 +119,7 @@ export default {
           } // 去除网格线
         },
         dataset: {
-          source: [
-            { time: '2020-7-14', value: '10' },
-            { time: '2020-7-15', value: '12' },
-            { time: '2020-7-16', value: '18' }
-          ]
+          source: source
         },
         series: [{
           // data: [10, 20, 9, 10, 12, 13, 10],
@@ -70,27 +135,8 @@ export default {
           color: '#9BA3D5'
         }
       }
-    }
-  },
-  props: {
-    title: {
-      type: String,
-      required: true
-    }
-  },
-  mounted () {
-    this.createCharts()
-  },
-  methods: {
-    createCharts () {
-      // 基于准备好的dom，初始化echarts实例
-      var myChart = echarts.init(this.$refs.chart)
       // 绘制图表
-      const option = this.option
-      myChart.setOption(option)
-    },
-    handleClose () {
-      this.$emit('handleClose')
+      this.chart.setOption(option)
     }
   }
 }

@@ -8,6 +8,8 @@
 <script>
 import request from '@/utils/requestForMock'
 import { getDocumentsList } from '@/api/medicalDocument'
+import { createNamespacedHelpers } from 'vuex'
+const { mapState } = createNamespacedHelpers('Base')
 export default {
   data () {
     return {
@@ -15,6 +17,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['procedureState']),
     navIndex () {
       return this.$route.params.templateId || 0
     },
@@ -26,7 +29,11 @@ export default {
           path: {
             name: 'MedicalDocument',
             params: {
-              templateId: item.templateId
+              templateId: item.templateId,
+              rescueMode: item.rescueMode,
+              pageInfo: item.pageInfo,
+              syncHis: item.syncHis,
+              opePhase: item.opePhase
             }
           }
         }
@@ -51,15 +58,19 @@ export default {
     },
     getDocumentsList () {
       return request({
-        method: 'POST',
-        url: getDocumentsList
+        method: 'get',
+        url: `${getDocumentsList}/${this.procedureState}`
       }).then(
         res => {
-          if (res.data.data) {
-            this.documentsList = res.data.data.map(item => {
+          if (res.data.success) {
+            this.documentsList = res.data.data.isUse.map(item => {
               return {
                 label: item.templateName,
-                templateId: item.templateCode
+                templateId: item.templateCode,
+                rescueMode: item.rescueMode,
+                pageInfo: item.pageInfo,
+                syncHis: item.syncHis,
+                opePhase: item.opePhase
               }
             })
           }

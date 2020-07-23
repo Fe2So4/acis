@@ -1,5 +1,12 @@
 <template>
-  <div class="widgetInput">
+  <div
+    class="widgetInput"
+    :style="[
+      noTableNameStyle,
+      dataSourceAlertStyle,
+      dictionarySourceAlertStyle
+    ]"
+  >
     <input
       class="input"
       type="text"
@@ -35,8 +42,16 @@
 <script>
 import { getDictionaryData } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
+import {
+  validateDataSourceMixin,
+  validateDictionarySourceMixin
+} from './mixin'
 export default {
   name: 'WidgetInput',
+  mixins: [
+    validateDataSourceMixin,
+    validateDictionarySourceMixin
+  ],
   props: {
     configuration: {
       type: Object,
