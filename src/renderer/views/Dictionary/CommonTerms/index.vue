@@ -46,9 +46,9 @@
               el-input(v-model="row.detailCode" size="mini")
     .option
       el-button(size="mini" :disabled="optionType!==1" @click="insertEvent(-1)") 新增(N)
-      el-button(size="mini" @click="$refs.xTable.removeCheckboxRow()") 删除(D)
-      el-button(size="mini" @click="saveEvent") 保存(S)
-      el-button(size="mini" @click="revertEvent") 取消(C)
+      el-button(size="mini" @click="$refs.xTable.removeCheckboxRow()" :disabled="optionType===1") 删除(D)
+      el-button(size="mini" @click="saveEvent" :disabled="optionType===1") 保存(S)
+      el-button(size="mini" @click="revertEvent" :disabled="optionType===1") 取消(C)
       el-button(size="mini") 刷新(R)
 </template>
 <script>
@@ -69,7 +69,8 @@ export default {
         label: 'itemName'
       },
       currentMenu: {},
-      optionType: 1 // 新增状态
+      optionType: 1 // 新增状态,
+      // currentRow: {}
     }
   },
   watch: {
@@ -85,6 +86,7 @@ export default {
   methods: {
     currentChangeEvent ({ row }) {
       console.log(row)
+      // this.currentRow = row
     },
     handleChange (val) {
       this.currentMenu = val
@@ -134,12 +136,6 @@ export default {
       this.$refs.xTable.revertData()
     },
     addCommonTermsDetail (param) {
-      // "detailCode": "",
-      // "detailId": "",
-      // "detailName": "",
-      // "itemCode": "",
-      // "sort": 0,
-      // "state": true
       const obj = {}
       obj.detailId = param.detailId
       obj.detailCode = param.detailCode

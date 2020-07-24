@@ -16,6 +16,6 @@ export const anaesMethodDetail = `${config.default.api.baseURL}/acis/dict/getAne
 // 麻醉常用量详情查询
 export const commonUseDetail = `${config.default.api.baseURL}/acis/dict/getAnesUsualDose`
 // 采集仪器字典列表查询
-// export const updateCommonTermsDetail = `${config.default.api.baseURL}/acis/dict/updateCommonDictdetails`
+export const deviceDetail = `${config.default.api.baseURL}/acis/dict/getInstrumentList`
 // 手术间字典详情查询
 export const opeRoomDetail = `${config.default.api.baseURL}/acis/dict/getOpeRoomList`
