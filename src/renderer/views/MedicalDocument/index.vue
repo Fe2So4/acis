@@ -148,21 +148,21 @@ export default {
             patientId: this.patientId
           }
         })
-      ]).then(res => {
+      ]).then((res) => {
         const [widgetList, valueMap] = [
           res[0].data.data.list,
           res[1].data.data
         ]
-        widgetList.forEach(widget => {
+        widgetList.forEach((widget) => {
           // 源数据赋值
           if (widget.dataSource) {
             const { tableName, className } = widget.dataSource
             let value = ''
             if (valueMap[tableName]) {
               const valueArr = valueMap[tableName].filter(
-                item => item.className === className
+                (item) => item.className === className
               )
-              valueArr.forEach(valueItem => {
+              valueArr.forEach((valueItem) => {
                 const { widgetId, value: widgetValue } = valueItem
                 if (widgetId && widgetId === widget.id) {
                   value = widgetValue
@@ -211,13 +211,13 @@ export default {
           pageTimeInterval,
           operState: this.opePhase
         }
-      }).then(res => {
+      }).then((res) => {
         const { startTime, endTime, totalPage, pageIndex } = res.data.data
         this.startTime = startTime
         this.endTime = endTime
         this.totalPage = totalPage
         this.pageIndex = pageIndex
-        this.tempList.forEach(widget => {
+        this.tempList.forEach((widget) => {
           // x轴起止时间更改
           if (widget.xAxis) {
             widget.xAxis.startTime = startTime
@@ -290,14 +290,14 @@ export default {
       this.saveChangedSignData()
     },
     validateModified () {
-      const list = this.widgetList.filter(widget => widget.dirty)
+      const list = this.widgetList.filter((widget) => widget.dirty)
       return list.length !== 0
     },
     validateFilledRequiredItem () {
       let flag = true
       this.widgetList
-        .filter(widget => widget.required)
-        .forEach(widget => {
+        .filter((widget) => widget.required)
+        .forEach((widget) => {
           if (!widget.value) {
             flag = false
           }
@@ -305,15 +305,16 @@ export default {
       return flag
     },
     saveNormalData () {
-      const list = this.widgetList.filter(widget => widget.value)
+      const list = this.widgetList.filter((widget) => widget.value)
       const customDataList = list
         .filter(
-          widget =>
+          (widget) =>
             widget.dirty &&
             widget.dataSource &&
-            widget.dataSource.tableName === 'acis_patient_writ_data'
+            (widget.dataSource.tableName === 'acis_patient_writ_data' ||
+              widget.dataSource.tableName === 'acis_amount_record')
         )
-        .map(widget => {
+        .map((widget) => {
           return {
             widgetId: widget.id,
             tagName: widget.tagName || '',
@@ -332,13 +333,13 @@ export default {
             patientId: this.patientId,
             tableName: 'acis_patient_writ_data'
           }
-        }).then(res => {
+        }).then((res) => {
           if (res.data.success) {
             this.$message({
               message: '保存成功',
               type: 'success'
             })
-            this.widgetList.forEach(widget => {
+            this.widgetList.forEach((widget) => {
               if (widget.dirty) {
                 widget.dirty = false
               }
@@ -387,10 +388,10 @@ export default {
         return
       }
       const group = this.changedSignDataList.find(
-        group => group.itemCode === itemCode && group.itemName === itemName
+        (group) => group.itemCode === itemCode && group.itemName === itemName
       )
       if (group) {
-        const item = group.list.find(item => item.timePoint === timePoint)
+        const item = group.list.find((item) => item.timePoint === timePoint)
         if (item) {
           item.itemValue = itemValue
         } else {
@@ -423,7 +424,7 @@ export default {
           dataMode: this.isRescueMode ? 1 : 5,
           operationId: this.operationId
         }
-      }).then(res => {
+      }).then((res) => {
         if (res.data.success) {
           this.changedSignDataList = []
           this.$message({
@@ -454,12 +455,16 @@ export default {
       return request({
         method: 'GET',
         url: `${getSignInfo}/${this.patientId}/${this.operationId}`
-      }).then(res => {
+      }).then((res) => {
         const infoList = res.data.data
         if (Array.isArray(infoList)) {
-          const hasTagWidgetList = this.widgetList.filter(item => item.tagName)
-          hasTagWidgetList.forEach(widget => {
-            const info = infoList.find(item => item.tagName === widget.tagName)
+          const hasTagWidgetList = this.widgetList.filter(
+            (item) => item.tagName
+          )
+          hasTagWidgetList.forEach((widget) => {
+            const info = infoList.find(
+              (item) => item.tagName === widget.tagName
+            )
             if (info) {
               widget.dirty = true
               widget.value = info.signValue
@@ -473,12 +478,16 @@ export default {
       return request({
         method: 'GET',
         url: `${getTestInfo}/${this.patientId}`
-      }).then(res => {
+      }).then((res) => {
         const infoList = res.data.data
         if (Array.isArray(infoList)) {
-          const hasTagWidgetList = this.widgetList.filter(item => item.tagName)
-          hasTagWidgetList.forEach(widget => {
-            const info = infoList.find(item => item.tagName === widget.tagName)
+          const hasTagWidgetList = this.widgetList.filter(
+            (item) => item.tagName
+          )
+          hasTagWidgetList.forEach((widget) => {
+            const info = infoList.find(
+              (item) => item.tagName === widget.tagName
+            )
             if (info) {
               widget.dirty = true
               widget.value = info.itemValue

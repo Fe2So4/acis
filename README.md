@@ -41,6 +41,8 @@ npm run lint
 #  -ScheduleReport 手术排班表
 #  -AnaesScore 麻醉评分
 #  -InspectionInformation 检验信息
+#  -MedicalOrderInformation 医嘱信息
+#  -InspectionResult 检查结果
 #  -Dictiona 字典
 #  -TemplateDesigner 文书设计
 #  -TemplateDisplayer 文书展示

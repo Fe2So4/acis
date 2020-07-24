@@ -72,7 +72,7 @@ export default {
       activesNames: '1',
       isCollapse: false,
       showOverflow: false,
-      showDialog: true, // 开启弹窗
+      showDialog: false, // 开启弹窗
       componentName: '',
       navList: [
         {
