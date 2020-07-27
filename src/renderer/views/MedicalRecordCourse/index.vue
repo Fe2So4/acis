@@ -1,5 +1,5 @@
 <template lang="pug">
-  .inspection-information
+  .medical-record-course
     .title
       el-form(:inline="true" size="mini")
         el-form-item(label="起止时间")
@@ -9,11 +9,13 @@
             type="datetimerange"
             range-separator="至"
             start-placeholder="开始日期"
-            end-placeholder="结束日期")
+            end-placeholder="结束日期"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            @change="onSearch"
+            popper-class="dateTimePicker"
+          )
         el-form-item
-          el-button(type="primary") 搜索
-        el-form-item
-          el-button 同步病历病程
+          el-button(@click="onSync") 同步病历病程
     .content(class="clearfix")
       vxe-table(
         border
@@ -25,42 +27,113 @@
         auto-resize
         size="mini"
         class="scroll"
-        :data="tableData"
+        :data="emrList"
       )
-        vxe-table-column(field="testNo" title="病程修改时间")
-        vxe-table-column(field="testName" title="最后修改时间")
-        vxe-table-column(field="testNo" title="操作")
-          template
-            el-button(size="mini" type="primary") 查看影像
+        vxe-table-column(field="sectionName" title="病程标题")
+        vxe-table-column(field="reportTime" title="最后修改时间")
+        vxe-table-column(title="操作")
+          template(v-slot="{row}")
+            el-button(size="mini" type="primary" @click="onCheck(row)") 查看病历
 </template>
 <script>
+import request from '@/utils/requestForMock'
+import { getEmrInfo, syncEmrInfo } from '@/api/systemIntegration'
+import { createNamespacedHelpers } from 'vuex'
+import displayEMR from '@/utils/displayEMR'
+const { mapState } = createNamespacedHelpers('Base')
 export default {
-  name: 'InspectionInformation',
+  name: 'MedicalRecordCourse',
   data () {
     return {
-      tableData: [{ testNo: '123', testName: '123', testType: '12', testDate: '2020-7-14' }],
-      dialogVisible: false,
       title: '',
-      date: ''
+      date: [],
+      emrList: []
     }
   },
-  components: {
+  computed: {
+    ...mapState(['patientId']),
+    startTime () {
+      const { length } = this.date
+      if (length) {
+        return this.date[0]
+      }
+      return ''
+    },
+    endTime () {
+      const { length } = this.date
+      if (length) {
+        return this.date[1]
+      }
+      return ''
+    }
   },
   methods: {
-    handleClose () {
-      this.dialogVisible = false
+    onSearch () {
+      const { length } = this.date
+      if (length) {
+        this.getEmrInfo()
+      } else {
+        this.$message({
+          showClose: true,
+          message: '请输入开始时间和结束时间',
+          type: 'warning'
+        })
+      }
     },
-    cellDBLClickEvent ({ row }) {
-      this.dialogVisible = true
-      this.title = row.itemName
+    onSync () {
+      const { length } = this.date
+      if (length) {
+        this.syncEmrInfo()
+      } else {
+        this.$message({
+          showClose: true,
+          message: '请输入开始时间和结束时间',
+          type: 'warning'
+        })
+      }
+    },
+    onCheck (row) {
+      displayEMR(row.sectionName, row.sectionContent)
+    },
+    getEmrInfo () {
+      return request({
+        url: getEmrInfo,
+        method: 'get',
+        params: {
+          startTime: this.startTime,
+          endTime: this.endTime,
+          patientId: this.patientId
+        }
+      }).then((res) => {
+        if (res.data && res.data.success) {
+          this.emrList = res.data.data
+        }
+      })
+    },
+    syncEmrInfo () {
+      return request({
+        url: syncEmrInfo,
+        method: 'get',
+        params: {
+          startTime: this.startTime,
+          endTime: this.endTime,
+          patientId: this.patientId
+        }
+      }).then((res) => {
+        if (res.data && res.data.success) {
+          this.emrList = res.data.data
+        }
+      })
     }
   }
 }
 </script>
 <style lang="stylus" scoped>
-  .inspection-information
+  .medical-record-course
     height 520px
     font-size 14px
+    /deep/ .el-range-input
+        background: transparent
     .title
       color #9BA3D5
       // line-height 30px

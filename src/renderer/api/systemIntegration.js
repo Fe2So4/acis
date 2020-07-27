@@ -17,3 +17,33 @@ export const syncTestInfo = mock
 export const getTestInfoLine = mock
   ? ''
   : baseLi + 'acis/sysIntegration/getTestInfoLine'
+
+// 医嘱信息查询 - 李 - 2020-07-24
+export const getOrderInfo = mock
+  ? ''
+  : baseLi + 'acis/sysIntegration/getOrderInfo'
+
+// 医嘱信息同步 - 李 - 2020-07-24
+export const syncOrderInfo = mock
+  ? ''
+  : baseLi + 'acis/sysIntegration/syncOrderInfo'
+
+// 检查信息查询 - 李 - 2020-07-24
+export const getExamInfo = mock
+  ? ''
+  : baseLi + 'acis/sysIntegration/getExamInfo'
+
+// 同步检查信息 - 李 - 2020-07-24
+export const syncExamInfo = mock
+  ? ''
+  : baseLi + 'acis/sysIntegration/syncExamInfo'
+
+// 病历信息查询 - 李 - 2020-07-24
+export const getEmrInfo = mock
+  ? ''
+  : baseLi + 'acis/sysIntegration/getEmrInfo'
+
+// 同步检查信息 - 李 - 2020-07-24
+export const syncEmrInfo = mock
+  ? ''
+  : baseLi + 'acis/sysIntegration/syncEmrInfo'

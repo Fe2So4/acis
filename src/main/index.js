@@ -2,6 +2,7 @@
 
 import { app, BrowserWindow, Menu, ipcMain } from 'electron'
 import '../renderer/store'
+const fs = require('fs')
 
 /**
  * Set `__static` path to static files in production
@@ -171,3 +172,32 @@ ipcMain.on('ready-to-print', () => {
 })
 
 // ---------------------------------打印功能 end--------------
+
+// ---------------------------------显示病历功能 start--------------
+// 新建打印窗口
+const createEMRWindow = (name) => {
+  let newWindow = new BrowserWindow({
+    webPreferences: {
+      webSecurity: false
+    }
+  })
+  const filePath = `${__static}/EMR/${name}.html`
+  newWindow.loadURL(filePath)
+  newWindow.once('ready-to-show', () => {
+    newWindow.show()
+  })
+
+  newWindow.on('closed', () => {
+    newWindow = null
+    fs.unlink(filePath, (err) => {
+      if (err) throw err
+      console.log(`${filePath} was deleted`)
+    })
+  })
+  return newWindow
+}
+
+ipcMain.on('show-EMR', (e, name) => {
+  printWin = createEMRWindow(name)
+})
+// ---------------------------------显示病历功能 end--------------

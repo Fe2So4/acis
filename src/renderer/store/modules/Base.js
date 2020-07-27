@@ -1,18 +1,14 @@
 const state = {
+  // 当前登录用户id
+  userId: '666',
+  // 病人id
   patientId: '1000001',
   // patientId: 'a54sd',
+  // 手术id
   operationId: 'b0f9d8bda9244397a44cb8ff278937d9',
-  ptCardInfo: {
-    roomNo: '',
-    ptName: '',
-    gender: '',
-    ptId: ''
-  }
-}
-const getters = {
-  patientId: state => state.patientId,
-  operationId: state => state.operationId,
-  ptCardInfo: state => state.ptCardInfo
+  // 手术间
+  roomNo: '603',
+  // 手术状态
   // 3 准备手术
   // 4 入诱导室
   // 5 出诱导室
@@ -28,7 +24,18 @@ const getters = {
   // 15 转入病房
   // 16 转入ICU
   // 17 病案归档
-  // procedureState: '9'
+  procedureState: '9',
+  ptCardInfo: {
+    roomNo: '',
+    ptName: '',
+    gender: '',
+    ptId: ''
+  }
+}
+const getters = {
+  patientId: state => state.patientId,
+  operationId: state => state.operationId,
+  ptCardInfo: state => state.ptCardInfo
 }
 const mutations = {
   SET_PATIENT_CARDINFO (state, payload) {
@@ -36,6 +43,12 @@ const mutations = {
     state.ptCardInfo.ptName = payload.ptName
     state.ptCardInfo.gender = payload.gender
     state.ptCardInfo.ptId = payload.ptId
+  },
+  SET_USER_ID (state, id) {
+    state.userId = id
+  },
+  CLEAR_USER_ID (state) {
+    state.userId = ''
   },
   SET_PATIENT_ID (state, id) {
     state.patientId = id
@@ -49,6 +62,12 @@ const mutations = {
   CLEAR_OPERATION_ID (state) {
     state.operationId = ''
   },
+  SET_ROOM_NO (state, roomNo) {
+    state.roomNo = roomNo
+  },
+  CLEAR_ROOM_NO (state) {
+    state.roomNo = ''
+  },
   SET_PROCEDURE_STATE (state, procedureState) {
     state.procedureState = procedureState
   },
@@ -61,6 +80,12 @@ const actions = {
   setPatientCardInfo ({ commit }, payload) {
     commit('SET_PATIENT_CARDINFO', payload)
   },
+  setUserId ({ commit }, id) {
+    commit('SET_USER_ID', id)
+  },
+  clearUserId ({ commit }) {
+    commit('CLEAR_USER_ID')
+  },
   setPatientId ({ commit }, id) {
     commit('SET_PATIENT_ID', id)
   },
@@ -72,6 +97,12 @@ const actions = {
   },
   clearOperationId ({ commit }) {
     commit('CLEAR_OPERATION_ID')
+  },
+  setRoomNo ({ commit }, roomNo) {
+    commit('SET_ROOM_NO', roomNo)
+  },
+  clearRoomNo ({ commit }) {
+    commit('CLEAR_ROOM_NO')
   },
   setProcedureState ({ commit }, procedureState) {
     commit('SET_PROCEDURE_STATE', procedureState)
