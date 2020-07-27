@@ -1,48 +1,41 @@
 
 <template lang="pug">
-  .anaes-methods
+  .operation-room
     .content
-      vxe-table(
-        border
-        show-header-overflow
-        show-overflow
-        keep-source
-        highlight-hover-row
-        highlight-current-row
-        align="center"
-        ref="xTable"
-        height="100%"
-        size="mini"
-        auto-resize
-        class="scroll"
-        :data="tableData"
-        :checkbox-config="{checkStrictly: true}"
-        @current-change="currentChangeEvent"
-        :edit-config="{trigger: 'click', mode: 'cell', showStatus: true,activeMethod: activeRowMethod}"
-      )
-        vxe-table-column(field="sort" title="序号")
-        vxe-table-column(field="anesCode" title="编码" :edit-render="{}")
-          template(v-slot:edit="{ row }")
-            el-input(v-model="row.anesCode" size="mini" @blur="handleBlur")
-        vxe-table-column(field="anesName" title="名称" :edit-render="{}")
-          template(v-slot:edit="{ row }")
-            el-input(v-model="row.anesName" size="mini" @blur="handleBlur")
-        vxe-table-column(field="inputCode" title="输入码" :edit-render="{}")
-          template(v-slot:edit="{ row }")
-            el-input(v-model="row.inputCode" size="mini" @blur="handleBlur")
-        vxe-table-column(field="anesName" title="分类" :edit-render="{}")
-          template(v-slot:edit="{ row }")
-            el-input(v-model="row.anesName" size="mini" @blur="handleBlur")
+        vxe-table(
+          border
+          show-header-overflow
+          show-overflow
+          keep-source
+          highlight-hover-row
+          highlight-current-row
+          align="left"
+          height="100%"
+          size="mini"
+          ref="xTable"
+          auto-resize
+          class="scroll"
+          :data="tableData"
+          @current-change="currentChangeEvent"
+          :checkbox-config="{checkStrictly: true}"
+          :edit-config="{trigger: 'click', mode: 'cell',activeMethod: activeRowMethod, showStatus: true}"
+        )
+          vxe-table-column(field="opeName" title="名称" :edit-render="{}")
+            template(v-slot:edit="{ row }")
+              el-input(v-model="row.opeName" size="mini" @blur="handleBlur")
     .option
-      el-button(size="mini" :disabled="addDisabled" @click="insertEvent(-1)") 新增(N)
-      el-button(size="mini" :disabled="deleteDisabled" @click="deleteDetail") 删除(D)
-      el-button(size="mini" :disabled="saveDisabled" @click="saveEvent") 保存(S)
-      el-button(size="mini" :disabled="cancelDisabled" @click="revertEvent") 取消(C)
-      el-button(size="mini" :disabled="refreshDisabled" @click="getDetail") 刷新(R)
+        el-button(size="mini" :disabled="addDisabled" @click="insertEvent(-1)") 新增(N)
+        el-button(size="mini" :disabled="deleteDisabled" @click="deleteDetail") 删除(D)
+        el-button(size="mini" :disabled="saveDisabled" @click="saveEvent") 保存(S)
+        el-button(size="mini" :disabled="cancelDisabled" @click="revertEvent") 取消(C)
+        el-button(size="mini" :disabled="refreshDisabled" @click="getDetail") 刷新(R)
 </template>
 <script>
-import { anaesMethodDetail, addMethodDetail, updateMethodDetail, deleteMethodDetail } from '@/api/dictionary'
+// opeRoomDetail
+import { opeNameData, deleteOpeNameData, addOpeNameData, updateOpeNameData } from '@/api/dictionary'
+import { getDeptList } from '@/api/anaesDrug'
 import request from '@/utils/requestForMock'
+import XEUtils from 'xe-utils'
 export default {
   data () {
     return {
@@ -52,17 +45,32 @@ export default {
       saveDisabled: true,
       cancelDisabled: true,
       refreshDisabled: false,
-      currentRow: {}
+      currentRow: {},
+      defaultDept: '',
+      deptList: []
     }
   },
   mounted () {
+    this.getDeptList()
     this.getDetail()
   },
   methods: {
+    getSelectLabel (value, list, valueProp = 'deptCode', labelField = 'deptName') {
+      const item = XEUtils.find(list, item => item[valueProp] === value)
+      return item ? item[labelField] : null
+    },
+    getDeptList () {
+      request({
+        method: 'GET',
+        url: getDeptList
+      }).then(res => {
+        this.deptList = res.data.data
+      })
+    },
     getDetail () {
       request({
         method: 'GET',
-        url: anaesMethodDetail
+        url: opeNameData
       }).then(res => {
         const data = res.data.data
         this.tableData = data
@@ -83,9 +91,8 @@ export default {
       const { insertRecords, updateRecords } = this.$refs.xTable.getRecordset()
       if (insertRecords.length > 0) {
         if (
-          insertRecords[0].anesName !== '' ||
-            insertRecords[0].anesCode !== '' ||
-            insertRecords[0].inputCode !== '') {
+          insertRecords[0].opeName !== ''
+        ) {
           this.saveDisabled = false
           this.cancelDisabled = false
         } else {
@@ -114,20 +121,11 @@ export default {
         this.refreshDisabled = false
       }
     },
-    handleChange (val) {
-      this.currentMenu = val
-      this.addDisabled = false
-      this.deleteDisabled = true
-      this.saveDisabled = true
-      this.refreshDisabled = true
-      this.cancelDisabled = true
-      this.getDetail()
-    },
     deleteDetail () {
-      if (this.currentRow.anesCode && this.currentRow.anesCode !== '') {
+      if (this.currentRow.opeCode && this.currentRow.opeCode !== '') {
         request({
           method: 'DELETE',
-          url: deleteMethodDetail + `/${this.currentRow.anesCode}`
+          url: deleteOpeNameData + `/${this.currentRow.opeCode}`
         }).then(res => {
           this.currentRow = {}
           this.deleteDisabled = true
@@ -138,18 +136,16 @@ export default {
     async insertEvent (row) {
       this.addDisabled = true
       this.cancelDisabled = false
-      let sort = null
+      let detailCode = null
       if (this.tableData.length > 0) {
-        const length = this.tableData.length - 1
-        sort = parseInt(this.tableData[length].sort) + 1
+        const length = this.tableData.length
+        detailCode = length + 1
       } else {
-        sort = 1
+        detailCode = 1
       }
       const record = {
-        sort: sort,
-        anesCode: '',
-        anesName: '',
-        inputCode: ''
+        opeName: '',
+        detailCode
       }
       // this.insertData = record
       const { row: newRow } = await this.$refs.xTable.insertAt(record, row)
@@ -165,13 +161,10 @@ export default {
     },
     addDetail (param) {
       const obj = {}
-      obj.sort = param.sort
-      obj.anesCode = param.anesCode
-      obj.anesName = param.anesName
-      obj.inputCode = param.inputCode
+      obj.opeName = param.opeName
       request({
         method: 'POST',
-        url: addMethodDetail,
+        url: addOpeNameData,
         data: obj
       }).then(res => this.getDetail())
     },
@@ -179,7 +172,7 @@ export default {
       const list = param
       request({
         method: 'PUT',
-        url: updateMethodDetail,
+        url: updateOpeNameData,
         data: list
       }).then(res => this.getDetail())
     },
@@ -201,9 +194,10 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-.anaes-methods
+.operation-room
   height 100%
   .content
+    width 100%
     height calc(100% - 38px)
   .option
     text-align right

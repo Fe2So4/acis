@@ -30,7 +30,7 @@
           :radio-config="{highlight: true}"
           @radio-change="currentChangeEvent"
           @current-change="currentChangeEvent"
-          :edit-config="{trigger: 'click', mode: 'cell', showStatus: true}"
+          :edit-config="{trigger: 'click', mode: 'cell', showStatus: true,activeMethod: activeRowMethod}"
         )
           //- vxe-table-column(type="radio" width="60")
           //-   //- template
@@ -46,17 +46,18 @@
               el-input(v-model="row.detailCode" size="mini" @blur="handleBlur")
     .option
       el-button(size="mini" :disabled="addDisabled" @click="insertEvent(-1)") 新增(N)
-      el-button(size="mini" :disabled="deleteDisabled" @click="$refs.xTable.removeCheckboxRow()") 删除(D)
+      el-button(size="mini" :disabled="deleteDisabled" @click="deleteCommonTerms") 删除(D)
       el-button(size="mini" :disabled="saveDisabled" @click="saveEvent") 保存(S)
       el-button(size="mini" :disabled="cancelDisabled" @click="revertEvent") 取消(C)
-      el-button(size="mini" :disabled="refreshDisabled") 刷新(R)
+      el-button(size="mini" :disabled="refreshDisabled" @click="getCommonTermsDetail") 刷新(R)
 </template>
 <script>
 import {
   commonTermsList,
   commonTermsDetail,
   addCommonTermsDetail,
-  updateCommonTermsDetail
+  updateCommonTermsDetail,
+  deleteCommonTermsDetail
 } from '@/api/dictionary'
 import request from '@/utils/requestForMock'
 export default {
@@ -74,13 +75,12 @@ export default {
         label: 'itemName'
       },
       currentMenu: {},
-      optionType: 1, // 新增状态
       addDisabled: false,
       deleteDisabled: true,
       saveDisabled: true,
       cancelDisabled: true,
-      refreshDisabled: true,
-      insertData: {}
+      refreshDisabled: false,
+      currentRow: {}
     }
   },
   watch: {
@@ -89,28 +89,24 @@ export default {
         return val
       }
     }
-    // insertData: {
-    //   handler(val) {
-    //     if (
-    //       (val.detailCode && val.detailCode !== "") ||
-    //       (val.detailName && val.detailName !== "")
-    //     ) {
-    //       this.cancelDisabled = false;
-    //       this.saveDisabled = false;
-    //     } else {
-    //       this.cancelDisabled = false;
-    //     }
-    //   },
-    //   immediate: true,
-    //   deep: true
-    // }
   },
   mounted () {
     this.getCommonTerms()
   },
   methods: {
-    handleBlur () {
+    activeRowMethod ({ row, rowIndex }) {
       const { insertRecords } = this.$refs.xTable.getRecordset()
+      if (insertRecords.length > 0) {
+        if (insertRecords[0].detailId === row.detailId) {
+          return true
+        }
+        return false
+      } else {
+        return true
+      }
+    },
+    handleBlur () {
+      const { insertRecords, updateRecords } = this.$refs.xTable.getRecordset()
       if (insertRecords.length > 0) {
         if (
           insertRecords[0].detailCode !== '' ||
@@ -118,26 +114,39 @@ export default {
         ) {
           this.saveDisabled = false
           this.cancelDisabled = false
-          this.deleteDisabled = false
         } else {
           this.saveDisabled = true
           this.cancelDisabled = false
-          this.deleteDisabled = true
         }
+      }
+      if (updateRecords.length > 0) {
+        this.saveDisabled = false
+        this.addDisabled = true
+        this.cancelDisabled = false
+        this.deleteDisabled = true
+        this.refreshDisabled = true
       }
     },
     currentChangeEvent ({ row }) {
-      console.log(row)
-      this.insertData = row
-      if (row.detailCode === '' && row.detailName === '') {
+      const { insertRecords } = this.$refs.xTable.getRecordset()
+      if (insertRecords.length > 0) {
         this.deleteDisabled = true
         this.cancelDisabled = false
+        this.refreshDisabled = true
+        this.addDisabled = true
       } else {
+        this.currentRow = row
         this.deleteDisabled = false
+        this.refreshDisabled = false
       }
     },
     handleChange (val) {
       this.currentMenu = val
+      this.addDisabled = false
+      this.deleteDisabled = true
+      this.saveDisabled = true
+      this.refreshDisabled = true
+      this.cancelDisabled = true
       this.getCommonTermsDetail()
     },
     getCommonTerms () {
@@ -149,6 +158,18 @@ export default {
         this.data = data
       })
     },
+    deleteCommonTerms () {
+      if (this.currentRow.detailId && this.currentRow.detailId !== '') {
+        request({
+          method: 'DELETE',
+          url: deleteCommonTermsDetail + `/${this.currentRow.detailId}/${this.currentMenu.itemCode}`
+        }).then(res => {
+          this.currentRow = {}
+          this.deleteDisabled = true
+          this.getCommonTermsDetail()
+        })
+      }
+    },
     getCommonTermsDetail () {
       request({
         method: 'GET',
@@ -159,22 +180,23 @@ export default {
       })
     },
     async insertEvent (row) {
-      // this.optionType = 2;
-      this.addDisabled = true
-      this.cancelDisabled = false
-      this.data.forEach(value => {
-        value.disabled = true
-      })
-      const record = {
-        detailId: this.tableData.length + 1,
-        itemName: this.currentMenu.itemName,
-        detailCode: '',
-        detailName: ''
+      if (this.currentMenu.itemCode) {
+        this.addDisabled = true
+        this.cancelDisabled = false
+        this.data.forEach(value => {
+          value.disabled = true
+        })
+        const length = this.tableData.length - 1
+        const record = {
+          detailId: parseInt(this.tableData[length].detailId) + 1,
+          itemName: this.currentMenu.itemName,
+          detailCode: '',
+          detailName: ''
+        }
+        // this.insertData = record
+        const { row: newRow } = await this.$refs.xTable.insertAt(record, row)
+        console.log(newRow)
       }
-      this.insertData = record
-      const { row: newRow } = await this.$refs.xTable.insertAt(record, row)
-      console.log(newRow)
-      // await this.$refs.xTable.setActiveCell(newRow, 'sex')
     },
     // rowDrop () {
     //   this.$nextTick(() => {
@@ -192,14 +214,11 @@ export default {
       this.$refs.xTable.revertData()
       this.cancelDisabled = true
       this.addDisabled = false
+      this.deleteDisabled = true
+      this.refreshDisabled = false
+      this.saveDisabled = true
     },
     addCommonTermsDetail (param) {
-      // "detailCode": "",
-      // "detailId": "",
-      // "detailName": "",
-      // "itemCode": "",
-      // "sort": 0,
-      // "state": true
       const obj = {}
       obj.detailId = param.detailId
       obj.detailCode = param.detailCode
@@ -229,7 +248,6 @@ export default {
     },
     saveEvent () {
       const { insertRecords, updateRecords } = this.$refs.xTable.getRecordset()
-      // this.$XModal.alert(`insertRecords=${insertRecords.length} removeRecords=${removeRecords.length} updateRecords=${updateRecords.length}`)
       console.log(insertRecords, updateRecords)
       if (insertRecords.length > 0) {
         this.addCommonTermsDetail(insertRecords[0])

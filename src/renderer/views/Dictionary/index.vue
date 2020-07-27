@@ -15,8 +15,14 @@
           GatherDevice
         el-tab-pane(label="手术间字典" name="6")
           OperationRoom
-        el-tab-pane(label="其它" name="7")
-          Other
+        el-tab-pane(label="医生字典" name="7")
+          Doctor
+        el-tab-pane(label="护士字典" name="8")
+          Nurse
+        el-tab-pane(label="诊断字典" name="9")
+          Diagnose
+        el-tab-pane(label="手术名称" name="10")
+          OperationName
 </template>
 <script>
 import CommonTerms from './CommonTerms/index'
@@ -25,7 +31,10 @@ import OperationRoom from './OperationRoom/index'
 import GatherDevice from './GatherDevice/index'
 import AnaesEvent from './AnaesEvent/index'
 import CommonQuantity from './CommonQuantity/index'
-import Other from './Other/index'
+import Doctor from './Doctor/index'
+import Nurse from './Nurse/index'
+import OperationName from './OperationName/index'
+import Diagnose from './Diagnose/index'
 export default {
   name: 'Dictionary',
   data () {
@@ -40,7 +49,10 @@ export default {
     GatherDevice,
     AnaesEvent,
     CommonQuantity,
-    Other
+    Doctor,
+    Nurse,
+    OperationName,
+    Diagnose
   },
   methods: {
     handleClick (tab, event) {

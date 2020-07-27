@@ -20,30 +20,22 @@
           :checkbox-config="{checkStrictly: true}"
           :edit-config="{trigger: 'click', mode: 'cell',activeMethod: activeRowMethod, showStatus: true}"
         )
-          vxe-table-column(field="roomNo" title="手术间号" :edit-render="{}")
+          vxe-table-column(field="diagCode" title="诊断代码" :edit-render="{}")
             template(v-slot:edit="{ row }")
-              el-input(v-model="row.roomNo" size="mini" @blur="handleBlur")
-          vxe-table-column(field="deptCode" title="科室代码" :edit-render="{}")
+              el-input(v-model="row.diagCode" size="mini" @blur="handleBlur")
+          vxe-table-column(field="diagName" title="诊断名称" :edit-render="{}")
             template(v-slot:edit="{ row }")
-              el-input(v-model="row.deptCode" size="mini" @blur="handleBlur")
-          vxe-table-column(field="locations" title="位置" :edit-render="{}")
+              el-input(v-model="row.diagName" size="mini" @blur="handleBlur")
+          vxe-table-column(field="stdIndicator" title="正名标志" :edit-render="{}")
             template(v-slot:edit="{ row }")
-              el-input(v-model="row.locations" size="mini" @blur="handleBlur")
-          vxe-table-column(field="state" title="状态" :edit-render="{}")
+              el-input(v-model="row.stdIndicator" size="mini" @blur="handleBlur")
+          vxe-table-column(field="approvedIndicator" title="标准化标志" :edit-render="{}")
             template(v-slot:edit="{ row }")
-              el-input(v-model="row.state" size="mini" @blur="handleBlur")
-          vxe-table-column(field="bedNo" title="床号" :edit-render="{}")
+              el-input(v-model="row.approvedIndicator" size="mini" @blur="handleBlur")
+          vxe-table-column(field="createTime" title="创建日期")
+          vxe-table-column(field="inputCode" title="输入码" :edit-render="{}")
             template(v-slot:edit="{ row }")
-              el-input(v-model="row.bedNo" size="mini" @blur="handleBlur")
-          vxe-table-column(field="bedId" title="床位标号" :edit-render="{}")
-            template(v-slot:edit="{ row }")
-              el-input(v-model="row.bedId" size="mini" @blur="handleBlur")
-          vxe-table-column(field="monitorId" title="监护仪代码" :edit-render="{}")
-            template(v-slot:edit="{ row }")
-              el-input(v-model="row.monitorId" size="mini" @blur="handleBlur")
-          vxe-table-column(field="roomType" title="手术间类型" :edit-render="{}")
-            template(v-slot:edit="{ row }")
-              el-input(v-model="row.roomType" size="mini" @blur="handleBlur")
+              el-input(v-model="row.inputCode" size="mini" @blur="handleBlur")
     .option
         el-button(size="mini" :disabled="addDisabled" @click="insertEvent(-1)") 新增(N)
         el-button(size="mini" :disabled="deleteDisabled" @click="deleteDetail") 删除(D)
@@ -53,8 +45,9 @@
 </template>
 <script>
 // opeRoomDetail
-import { opeRoomDetail, addRoomDetail, updateRoomDetail, deleteRoomDetail } from '@/api/dictionary'
+import { diagnoseData, deleteDiagnoseData, addDiagnoseData, updateDiagnoseData } from '@/api/dictionary'
 import request from '@/utils/requestForMock'
+import XEUtils from 'xe-utils'
 export default {
   data () {
     return {
@@ -65,21 +58,25 @@ export default {
       cancelDisabled: true,
       refreshDisabled: false,
       currentRow: {},
-      defaultDept: ''
+      defaultDept: '',
+      deptList: []
     }
   },
   mounted () {
     this.getDetail()
   },
   methods: {
+    getSelectLabel (value, list, valueProp = 'deptCode', labelField = 'deptName') {
+      const item = XEUtils.find(list, item => item[valueProp] === value)
+      return item ? item[labelField] : null
+    },
     getDetail () {
       request({
         method: 'GET',
-        url: opeRoomDetail
+        url: diagnoseData
       }).then(res => {
         const data = res.data.data
-        this.tableData = data.roomList
-        this.defaultDept = data.roomCode
+        this.tableData = data
       })
     },
     activeRowMethod ({ row, rowIndex }) {
@@ -97,13 +94,11 @@ export default {
       const { insertRecords, updateRecords } = this.$refs.xTable.getRecordset()
       if (insertRecords.length > 0) {
         if (
-          insertRecords[0].roomNo !== '' ||
-          insertRecords[0].locations !== '' ||
-          insertRecords[0].bedId !== '' ||
-          insertRecords[0].bedNo !== '' ||
-          insertRecords[0].monitorId !== '' ||
-          insertRecords[0].roomType !== '' ||
-          insertRecords[0].state !== ''
+          insertRecords[0].diagCode !== '' ||
+          insertRecords[0].diagName !== '' ||
+          insertRecords[0].stdIndicator !== '' ||
+          insertRecords[0].approvedIndicator !== '' ||
+          insertRecords[0].inputCode !== ''
         ) {
           this.saveDisabled = false
           this.cancelDisabled = false
@@ -134,10 +129,10 @@ export default {
       }
     },
     deleteDetail () {
-      if (this.currentRow.roomNo && this.currentRow.roomNo !== '') {
+      if (this.currentRow.diagCode && this.currentRow.diagCode !== '') {
         request({
           method: 'DELETE',
-          url: deleteRoomDetail + `/${this.currentRow.roomNo}`
+          url: deleteDiagnoseData + `/${this.currentRow.diagCode}`
         }).then(res => {
           this.currentRow = {}
           this.deleteDisabled = true
@@ -156,15 +151,13 @@ export default {
         detailCode = 1
       }
       const record = {
-        detailCode: detailCode,
-        roomNo: '',
-        deptCode: this.defaultDept,
-        locations: '',
-        state: '',
-        bedNo: '',
-        bedId: '',
-        monitorId: '',
-        roomType: ''
+        detailCode,
+        diagCode: '',
+        createTime: '',
+        inputCode: '',
+        approvedIndicator: '',
+        stdIndicator: '',
+        diagName: ''
       }
       // this.insertData = record
       const { row: newRow } = await this.$refs.xTable.insertAt(record, row)
@@ -180,17 +173,14 @@ export default {
     },
     addDetail (param) {
       const obj = {}
-      obj.roomNo = param.roomNo
-      obj.locations = param.locations
-      obj.state = param.state
-      obj.bedNo = param.bedNo
-      obj.bedId = param.bedId
-      obj.monitorId = param.monitorId
-      obj.roomType = param.roomType
-      obj.deptCode = param.deptCode
+      obj.diagCode = param.diagCode
+      obj.diagName = param.diagName
+      obj.inputCode = param.inputCode
+      obj.approvedIndicator = param.approvedIndicator
+      obj.stdIndicator = param.stdIndicator
       request({
         method: 'POST',
-        url: addRoomDetail,
+        url: addDiagnoseData,
         data: obj
       }).then(res => this.getDetail())
     },
@@ -198,7 +188,7 @@ export default {
       const list = param
       request({
         method: 'PUT',
-        url: updateRoomDetail,
+        url: updateDiagnoseData,
         data: list
       }).then(res => this.getDetail())
     },
