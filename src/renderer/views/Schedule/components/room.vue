@@ -1,100 +1,107 @@
 <template>
-  <div class="room">
-    <div class="content">
-      <div
-        class="allRoom"
-        ref="Room"
-      >
+  <div class="ope-room">
+    <el-scrollbar
+      style="height:100%;"
+      class="scrollbar"
+    >
+      <div class="content">
         <div
-          v-for="(item,i) in roomList"
-          :key="item.roomNo"
-          :class="{'roomItem':true,'roomActive':roomIndex == i}"
-          @click="changeRoom(item,i)"
-          @contextmenu.stop="showMenu(i)"
+          class="allRoom"
+          ref="Room"
         >
-          <div class="li-left" />
-          <div :class="{'room-id':true,'roomIdActive':roomIndex == i}">
-            <div class="circle">
-              {{ item.roomNo }}
+          <div
+            v-for="(item,i) in roomList"
+            :key="i"
+            :class="{'roomItem':true,'roomActive':roomIndex == i}"
+            @click="changeRoom(item,i)"
+            @contextmenu.stop="showMenu(i)"
+          >
+            <div :class="{'room-id':true,'roomIdActive':roomIndex == i}">
+              <div class="circle">
+                {{ item.roomNo }}
+              </div>
             </div>
-          </div>
-          <div class="room-info">
-            <el-tooltip
-              :content="item.number"
-              placement="bottom"
-              effect="light"
-            >
-              <div class="room-info-item">
-                手术台数：{{ item.number }} 台
-              </div>
-            </el-tooltip>
-            <el-tooltip
-              :content="item.surgeon"
-              placement="bottom"
-              effect="light"
-              :open-delay="2000"
-            >
-              <div class="room-info-item">
-                {{ item.surgeon }}
-              </div>
-            </el-tooltip>
-            <el-tooltip
-              :content="item.anesthesiaDoctors"
-              placement="bottom"
-              effect="light"
-              :open-delay="2000"
-            >
-              <div class="room-info-item">
-                {{ item.anesthesiaDoctors }}
-              </div>
-            </el-tooltip>
-            <el-tooltip
-              :content="item.nurses"
-              placement="bottom"
-              effect="light"
-              :open-delay="2000"
-            >
-              <div class="room-info-item">
-                {{ item.nurses }}
-              </div>
-            </el-tooltip>
-            <div class="room-info-item">
+            <div class="room-info">
               <el-tooltip
-                :content="item.tip"
+                :content="item.number"
+                placement="bottom"
+                effect="light"
+              >
+                <div class="room-info-item">
+                  手术台数：{{ item.number }} 台
+                </div>
+              </el-tooltip>
+              <el-tooltip
+                :content="item.surgeon"
                 placement="bottom"
                 effect="light"
                 :open-delay="2000"
               >
-                <el-progress
-                  :percentage="item.percentage"
-                  :show-text="false"
-                  color="#87CEEB"
-                />
+                <div class="room-info-item">
+                  {{ item.surgeon }}
+                </div>
               </el-tooltip>
+              <el-tooltip
+                :content="item.anesthesiaDoctors"
+                placement="bottom"
+                effect="light"
+                :open-delay="2000"
+              >
+                <div class="room-info-item">
+                  {{ item.anesthesiaDoctors }}
+                </div>
+              </el-tooltip>
+              <el-tooltip
+                :content="item.nurses"
+                placement="bottom"
+                effect="light"
+                :open-delay="2000"
+              >
+                <div class="room-info-item">
+                  {{ item.nurses }}
+                </div>
+              </el-tooltip>
+              <div class="room-info-item">
+                <el-tooltip
+                  :content="item.number"
+                  placement="bottom"
+                  effect="light"
+                  :open-delay="2000"
+                >
+                  <el-progress
+                    :percentage="item.process"
+                    :show-text="false"
+                    color="#0094FF"
+                  />
+                </el-tooltip>
+              </div>
             </div>
+            <vue-context-menu
+              :context-menu-data="contextMenuData1"
+              :transfer-index="transferIndex"
+              @submitRoomAll="submitRoomAll"
+              @handleClear1="handleClear(1)"
+              @handleClear2="handleClear(2)"
+              @handleClear3="handleClear(3)"
+              @handleClear4="handleClear(4)"
+              @handleClear5="handleClear(5)"
+              @handleClear6="handleClear(6)"
+              @handleClear7="handleClear(7)"
+              @handleClear8="handleClear(8)"
+              @handleClear9="handleClear(9)"
+              @handleChangeRoom="handleChangeRoom(2)"
+              @roomConfig="roomConfig"
+            />
           </div>
-          <vue-context-menu
-            :context-menu-data="contextMenuData1"
-            :transfer-index="transferIndex"
-            @submitRoomAll="submitRoomAll"
-            @handleClear1="handleClear(1)"
-            @handleClear2="handleClear(2)"
-            @handleClear3="handleClear(3)"
-            @handleClear4="handleClear(4)"
-            @handleClear5="handleClear(5)"
-            @handleClear6="handleClear(6)"
-            @handleClear7="handleClear(7)"
-            @handleClear8="handleClear(8)"
-            @handleClear9="handleClear(9)"
-            @handleChangeRoom="handleChangeRoom(2)"
-            @roomConfig="roomConfig"
-          />
         </div>
       </div>
-    </div>
+    </el-scrollbar>
   </div>
 </template>
 <script>
+import request from '@/utils/requestForMock'
+import { getRoomList } from '@/api/schedule'
+import { mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -159,21 +166,50 @@ export default {
         }
         ]
       },
-      transferIndex: null
+      transferIndex: null,
+      roomList: []
     }
   },
   props: {
-    roomList: {
-      type: Array,
-      default: function () {
-        return []
-      }
+    time: {
+      type: String,
+      default: ''
     }
   },
+  computed: {
+    // ...mapGetters('Schedule', ['time'])
+  },
+  mounted () {
+    this.getData()
+    this.$eventHub.$on('get-room', () => {
+      this.getData()
+    })
+    // this.changeRoom(this.roomList[0])
+  },
   methods: {
+    ...mapActions('Schedule', ['setCurrentRoom']),
+    getData () {
+      request({
+        url: getRoomList + '/' + this.time
+      }).then(res => {
+        const data = res.data.data
+        data.forEach(item => {
+          if (item.number === '0') {
+            item.process = 0
+          } else {
+            item.process = (item.number / item.maxCount) * 100
+          }
+        })
+        this.roomList = data
+      })
+    },
     changeRoom (item, i) {
       this.roomIndex = i
-      this.$emit('changeRoom', item)
+      this.setCurrentRoom(item.roomNo)
+      // this.$emit('changeRoom', item)
+      setTimeout(() => {
+        this.$eventHub.$emit('get-allocated')
+      })
     },
     showMenu (index) {
       if (this.roomIndex === index) {
@@ -200,7 +236,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.room{
+.ope-room{
   height:100%;
   width:100%;
   .content {
@@ -228,39 +264,37 @@ export default {
           height: 100px;
           margin-top: 10px;
           display: flex;
-          border: 1px solid #f3f6f9;
           border-radius: 6px;
           box-sizing: border-box;
+          background:#252C40;
           overflow: hidden;
           position: relative;
-
-          .li-left {
-            height: 100%;
-            width: 6px;
-            background: #f3f6f9;
-          }
 
           .room-id {
             width: 80px;
             font-size: 30px;
-            color: skyblue;
+            color: #fff;
             text-align: center;
             display: flex;
             justify-content: center;
             align-items: center;
 
             .circle {
-              height: 60px;
-              width: 60px;
-              border-radius: 50%;
-              border: 1px solid #f3f6f9;
-              line-height: 60px;
+              width:80px;
+              height:30px;
+              background:linear-gradient(120deg,rgba(84,190,234,1),rgba(219,83,160,1));
+              border-radius:0px 15px 15px 0px;
+              line-height: 30px;
+              text-shadow:0px 1px 3px rgba(0, 0, 0, 0.2);
+              font-size: 18px;
+              font-weight: bold;
             }
           }
 
           .room-info {
             flex: 1;
             font-size: 12px;
+            margin-left:20px;
             display: flex;
             justify-content: center;
             flex-direction: column;
@@ -270,6 +304,7 @@ export default {
               text-overflow: ellipsis;
               white-space: nowrap;
               overflow: hidden;
+              color:#9BA3D5;
 
               &:last-child {
                 line-height: 18px;
@@ -296,10 +331,15 @@ export default {
         // }
 
         .roomActive {
-          background: #1DAEF4;
+          background: #2C3B66;
           color: #fff;
         }
       }
   }
 }
+</style>
+<style lang="scss">
+  .ope-room .scrollbar .el-scrollbar__wrap {
+      overflow-x: hidden;
+  }
 </style>

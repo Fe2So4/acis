@@ -1,7 +1,7 @@
 <template>
   <div class="common-layout-container">
     <el-container>
-      <el-header height="70px">
+      <el-header height="90px">
         <Header @lock="lock" />
       </el-header>
       <el-container>
@@ -182,9 +182,10 @@ export default {
 
 .el-main {
   padding: 0;
-  height: calc(100vh - 70px);
-  border: 16px solid #f3f4f9;
+  height: calc(100vh - 90px);
+  border: 10px solid #000;
   overflow: auto;
+  background: #000;
 
   &.no-border {
     border: none;

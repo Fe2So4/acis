@@ -8,7 +8,7 @@
         li(v-for="(item,index) of tableList" :key="item.name" class="rowHeight")
          .row-title(:style="{'width':centerWidth + 'px'}") {{item.name}}
          .column-content
-          .column(v-for="(col,i) of item.data" :key="i" @contextmenu.prevent="handleActiveColumn(index,i)")
+          .column(v-for="(col,i) of item.list" :key="i" @contextmenu.prevent="handleActiveColumn(index,i)")
             select(v-if="item.name==='心电图' && rowActive===index && colActive===i" @blur="handleBlur" class="contextmenu" @change="handleSelectFn($event)")
               option(style="display:none;" value="")
               option(v-for="option in optionList" :value="option.value") {{option.label}}
@@ -16,10 +16,10 @@
             span(v-else) {{col.value}}
 </template>
 <script>
-// import request from '@/utils/'
 import {
   getMonitorData,
-  getSocketData
+  getSocketData,
+  updateMonitorData
 } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
 // import moment from 'moment'
@@ -29,14 +29,15 @@ export default {
     return {
       rowActive: null,
       colActive: null,
-      list: [
-        { name: '心电图', data: [], colNum: 2, dict: true, code: '1' },
-        { name: '氧饱和度', data: [], colNum: 1, dict: false, code: '2' },
-        { name: '潮气里', data: [], colNum: 1, dict: false, code: '3' },
-        { name: 'f', data: [], colNum: 1, dict: false, code: '4' },
-        { name: 'PEAK', data: [], colNum: 1, dict: false, code: '5' },
-        { name: 'PEEP', data: [], colNum: 1, dict: false, code: '6' }
-      ],
+      // list: [
+      //   { name: '心电图', data: [], colNum: 2, dict: true, code: '1' },
+      //   { name: '氧饱和度', data: [], colNum: 1, dict: false, code: '2' },
+      //   { name: '潮气里', data: [], colNum: 1, dict: false, code: '3' },
+      //   { name: 'f', data: [], colNum: 1, dict: false, code: '4' },
+      //   { name: 'PEAK', data: [], colNum: 1, dict: false, code: '5' },
+      //   { name: 'PEEP', data: [], colNum: 1, dict: false, code: '6' }
+      // ],
+      list: [],
       rowHeight: null,
       // startTime: '',
       // endTime: '',
@@ -176,7 +177,7 @@ export default {
           }
         ],
         anaesColumn: {
-          num: 8
+          num: 16
         }
       })
     },
@@ -200,15 +201,16 @@ export default {
   },
   computed: {
     tableList () {
-      this.list.forEach((value, index, array) => {
-        const length = this.anaesColumn.num / value.colNum
+      this.list.forEach((value) => {
+        const length = this.configuration.anaesColumn.num / 1
         for (let i = 0; i < length; i++) {
-          if (value.data[i]) {
+          if (value.list[i]) {
           } else {
-            value.data.push({ time: '', value: '' })
+            value.list.push({ time: '', value: '' })
           }
         }
       })
+      // this.getRowHeight()
       return this.list
     },
     leftWidth () {
@@ -219,7 +221,7 @@ export default {
     }
   },
   created () {
-    // this.getMonitorData()
+    this.getMonitorData()
   },
   beforeCreate () {
     if (this.socket) {
@@ -240,8 +242,8 @@ export default {
         method: 'POST',
         data: {
           // startTime: this.startTime,
-          startTime: '2020-07-06 04:00:00',
-          endTime: '2020-07-06 20:00:00',
+          startTime: '2020-07-27 19:20:00',
+          endTime: '2020-07-27 19:30:00',
           // operationId: this.operationId
           operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
         },
@@ -251,64 +253,27 @@ export default {
         data.forEach(item => {
           item.name = item.itemName
           item.list.forEach(_item => {
-            _item.time = _item.itemPoint
+            _item.time = _item.timePoint
             _item.value = _item.itemValue
           })
         })
-        this.dataList = data
-        this.dataList.forEach((value, index, array) => {
-          const list = JSON.parse(JSON.stringify(value.list))
-          const empty = []
-          list.forEach(item => {
-            // if()
-          })
-          this.list[index].data = empty
-        })
+        // this.list = data
+        this.list = data
+        this.getRowHeight()
       })
-    },
-    // 反转函数
-    reverseTable () {
-      const tableData = this.tableData
-      this.tableData = this.tableColumn.map(column => {
-        const item = { 0: column.title }
-        tableData.forEach((row, rowIndex) => {
-          item[rowIndex + 1] = row[column.field]
-        })
-        return item
-      })
-      this.tableColumn = [
-        {
-          field: '0',
-          fixed: 'left',
-          width: 80
-        }
-      ].concat(
-        tableData.map((item, index) => {
-          console.log(item.name)
-          if (item.name === 'name') {
-            return {
-              field: `${index + 1}`,
-              width: 200
-            }
-          } else {
-            return {
-              field: `${index + 1}`,
-              width: 120
-            }
-          }
-        })
-      )
     },
     // 计算行高
     getRowHeight () {
-      const oMonitor = document.querySelector('.right')
-      // console.log(oMonitor.offsetHeight)
-      const height = oMonitor.offsetHeight / this.list.length
-      const oli = document.querySelectorAll('.rowHeight')
-      for (let i = 0; i < oli.length; i++) {
-        oli[i].style.height = height + 'px'
-        oli[i].style.lineHeight = height + 'px'
-      }
+      this.$nextTick(() => {
+        const oMonitor = document.querySelector('.right')
+        const height = oMonitor.offsetHeight / this.list.length
+        // console.log(oMonitor.offsetHeight)
+        const oli = document.querySelectorAll('.rowHeight')
+        for (let i = 0; i < oli.length; i++) {
+          oli[i].style.height = height + 'px'
+          oli[i].style.lineHeight = height + 'px'
+        }
+      })
     },
     handleActiveColumn (rowIndex, colIndex) {
       this.rowActive = rowIndex
@@ -326,9 +291,9 @@ export default {
       const oinput = document.querySelectorAll('.contextmenu')[0]
       this.list.forEach((value, index, array) => {
         if (index === this.rowActive) {
-          value.data.forEach((item, i) => {
+          value.list.forEach((item, i) => {
             if (this.colActive === i) {
-              this.list[index].data[i].value = oinput.value
+              this.list[index].list[i].value = oinput.value
             }
           })
         }
@@ -339,9 +304,9 @@ export default {
     handleSelectFn (e) {
       this.list.forEach((value, index, array) => {
         if (index === this.rowActive) {
-          value.data.forEach((item, i) => {
+          value.list.forEach((item, i) => {
             if (this.colActive === i) {
-              this.list[index].data[i].value = this.optionList[
+              this.list[index].list[i].value = this.optionList[
                 e.target.selectedIndex - 1
               ].label
             }
@@ -384,7 +349,7 @@ export default {
       this.socket.on('disconnect', () => {
         console.log('socket.io disconnect')
       })
-      // 体征曲线
+      // 监测数据
       const that = this
       this.socket.on('push_monitor_event', res => {
         console.log(res)
@@ -394,26 +359,41 @@ export default {
             loginUserNum,
             content: res
           })
-          // res.forEach(item => {
-          //   const { itemCode: signId, ...value } = item
-          //   if (that.lines[signId]) {
-          //     that.lines[signId].addPoint({
-          //       time: value.timePoint,
-          //       value: value.itemValue
-          //     })
-          //   }
-          // })
+          res.forEach(item => {
+            const { itemCode: code, ...value } = item
+            that.list.forEach(_item => {
+              if (code === _item.itemCode) {
+                _item.list.push({ time: value.timePoint, value: value.itemValue })
+              }
+            })
+            if (that.list[code]) {
+              that.list[code].push({
+                time: value.timePoint,
+                value: value.itemValue
+              })
+            }
+          })
         }
+      })
+    },
+    updateMonitorData () {
+      request({
+        url: updateMonitorData,
+        method: 'POST'
+      }).then(res => {
+
       })
     }
   },
   mounted () {
-    this.getRowHeight()
     // if (!this.editMode) {
     // this.getMonitorData()
     this.getDataBySocketIO()
     // }
     // this.getDataList()
+    this.$eventHub.$on('update-monitor', () => {
+      this.updateMonitorData()
+    })
   }
 }
 </script>

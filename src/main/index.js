@@ -24,7 +24,7 @@ function createWindow () {
     height: 560,
     // useContentSize: true,
     width: 880,
-    frame: false,
+    frame: true,
     // fullscreen: true, // 是否全屏
     webPreferences: {
       // webSecurity: false,

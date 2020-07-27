@@ -120,6 +120,7 @@ export default {
       // 注册刷新事件
       this.$eventHub.$on('document-refresh', () => {
         // 获取数据
+        console.log('体征曲线')
         this.getData()
       })
       // 注册刷新事件

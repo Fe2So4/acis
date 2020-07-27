@@ -110,6 +110,7 @@ export default {
       this.$eventHub.$on('document-refresh', () => {
         // 获取数据
         this.getDrugList()
+        console.log('麻醉用药')
       })
       // 注册刷新事件
       this.$eventHub.$on('document-redraw', () => {
@@ -147,11 +148,12 @@ export default {
         method: 'GET',
         url: getDrugListRecords,
         params: {
-          // startTime: this.startTime,
-          startTime: '2020-07-21 17:00:00',
-          endTime: '2020-07-21 21:00:00',
-          // operationId: this.operationId
-          operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
+          startTime: this.startTime,
+          end: this.endTime,
+          // startTime: '2020-07-21 17:00:00',
+          // endTime: '2020-07-21 21:00:00',
+          operationId: this.operationId
+          // operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
         }
       }).then(res => {
         const data = res.data.data
@@ -715,12 +717,12 @@ export default {
           let group = null
           const width = grid.attr('width')
           const interval = width / (moment(this.configuration.xAxis.endTime) - moment(this.configuration.xAxis.startTime))
-          // const startTime = Math.round((moment(item.startTime) - moment(this.configuration.xAxis.startTime)) * interval)
-          const startTime = Math.round((moment(item.startTime) - moment('2020-7-21 17:00')) * interval)
+          const startTime = Math.round((moment(item.startTime) - moment(this.configuration.xAxis.startTime)) * interval)
+          // const startTime = Math.round((moment(item.startTime) - moment('2020-7-21 17:00')) * interval)
           let endTime = null
           if (item.endTime !== '') {
-            // endTime = Math.round((moment(item.endTime) - moment(this.configuration.xAxis.startTime)) * interval)
-            endTime = Math.round((moment(item.endTime) - moment('2020-7-21 17:00')) * interval)
+            endTime = Math.round((moment(item.endTime) - moment(this.configuration.xAxis.startTime)) * interval)
+            // endTime = Math.round((moment(item.endTime) - moment('2020-7-21 17:00')) * interval)
           }
           if (item.continue) {
             group = new Group({
@@ -905,6 +907,6 @@ export default {
   margin: 0 auto;
   position: relative;
   overflow: unset !important;
-  background: #fff;
+  // background: #fff;
 }
 </style>

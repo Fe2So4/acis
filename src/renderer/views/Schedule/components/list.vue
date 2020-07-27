@@ -1,21 +1,26 @@
 <template>
   <div class="list">
-    <div
-      class="list-all"
-      @contextmenu="showMenu()"
+    <el-scrollbar
+      style="height:100%;"
+      class="scrollbar"
     >
       <div
-        class="list-item"
-        :class="{'active':activeIndex == index}"
-        v-for="(item,index) in dataList"
-        :key="index"
-        @click="handleCurrent(item,index)"
-        @dblclick="handledbClick(item,index)"
-        @contextmenu="handleCurrent(item,index)"
+        class="list-all"
+        @contextmenu="showMenu()"
       >
-        {{ item.result }}
+        <div
+          class="list-item"
+          :class="{'active':activeIndex == index}"
+          v-for="(item,index) in dataList"
+          :key="index"
+          @click="handleCurrent(item,index)"
+          @dblclick="handledbClick(item,index)"
+          @contextmenu="handleCurrent(item,index)"
+        >
+          {{ item.result }}
+        </div>
       </div>
-    </div>
+    </el-scrollbar>
     <vue-context-menu
       :context-menu-data="contextMenuData"
       @handleDocConfig="handleDocConfig"
@@ -81,11 +86,12 @@ export default {
 </script>
 <style lang="scss">
     .list{
-        height:100%;
+        // height:100%;
+        height:500px;
         .list-all {
             // position: relative;
             height:100%;
-            overflow-y:auto;
+            // overflow-y:auto;
             .list-item {
                 font:12px/30px "";
                 padding-left:10px;
@@ -96,4 +102,9 @@ export default {
             }
         }
     }
+</style>
+<style>
+  .list .scrollbar .el-scrollbar__wrap {
+      overflow-x: hidden;
+  }
 </style>

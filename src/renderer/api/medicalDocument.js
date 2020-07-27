@@ -117,6 +117,10 @@ export const getBloodInfusionData = mock
 export const getMonitorData = mock
   ? '/api/saveChangedSignData'
   : baseXie + 'acis/intraoperative/info/getAcisIntraoMonitorListenData'
+// 修改监测表格数据
+export const updateMonitorData = mock
+  ? '/api/saveChangedSignData'
+  : baseXie + 'acis/intraoperative/info/updateAcisIntraoListenDataInfo'
 
 // 文书展示相关 --------------------------------end---------------------------------
 // 获取his体征数据 - 李 - 2020-07-20

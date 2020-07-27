@@ -9,7 +9,7 @@
       align="center"
       highlight-current-row
       :data="data"
-      class="mytable-style"
+      class="mytable-style scroll"
       :row-style="rowStyle"
       @cell-dblclick="handleDetailVisible"
       @cell-click="handleSimpleApply"
@@ -96,12 +96,12 @@
       >
         <template v-slot="{ row }">
           <template>
-            <el-button
+            <!-- <el-button
               type="text"
               @click="distribute(row)"
             >
               分配医生
-            </el-button>
+            </el-button> -->
             <el-button
               type="text"
               @click="cancelSingle(row)"
@@ -116,23 +116,49 @@
 </template>
 
 <script>
+import request from '@/utils/requestForMock'
+import { getAllocatedList, cancelOpeApply } from '@/api/schedule'
+import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
-
+      data: []
     }
   },
   props: {
-    data: {
-      type: Array,
-      default: function () {
-        return []
-      }
+  },
+  computed: {
+    ...mapGetters('Schedule', ['currentRoom', 'time'])
+  },
+  watch: {
+    handler (val) {
+      this.getData()
     }
   },
   methods: {
+    getData () {
+      request({
+        url: getAllocatedList + `/${this.currentRoom}/${this.time}`
+      }).then(res => {
+        const data = res.data.data
+        this.data = data
+      })
+    },
     cancelSingle (row) {
-      this.$emit('cancelSingle', row)
+      if (row.state === 2) {
+        this.$message({ type: 'warning', message: '当前手术申请已提交' })
+      } else {
+        request({
+          method: 'PUT',
+          url: cancelOpeApply + `/${row.operationId}`
+        }).then(res => {
+          this.$eventHub.$emit('get-unallocated')
+          this.$eventHub.$emit('get-room')
+          // this.$eventHub.$emit('get-')
+          this.getData()
+        })
+      }
+      // this.$emit('cancelSingle', row)
     },
     distribute (row) {
       this.$emit('distribute', row)
@@ -159,7 +185,11 @@ export default {
     }
   },
   mounted () {
-
+    this.getData()
+    this.$eventHub.$on('get-allocated', () => {
+      // 获取数据
+      this.getData()
+    })
   }
 }
 </script>

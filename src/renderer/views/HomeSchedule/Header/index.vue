@@ -1,71 +1,43 @@
 <template>
   <div class="common-header-container">
     <div class="logo-container">
+      <div class="title">
+        <p>Dandelion智慧手术中心</p>
+        <p>麻醉临床信息系统v1.0.0</p>
+      </div>
       <div class="logo-img">
         <img
-          src="../../../assets/tq-logo.svg"
+          src="../../../assets/tq.png"
           alt=""
         >
-      </div>
-      <div class="title">
-        <span>Dandelion手术中心</span>
-        <span>手术麻醉排班系统</span>
-        <!-- Dandelion门诊手术信息系统 -->
       </div>
     </div>
 
     <div class="header-navs">
       <ul class="navs">
         <li
-          v-for="(item, i) in navs"
-          :key="i"
-          :class="{ 'active': activeIndex == i }"
-          @click="jumpstatistics(item,i)"
+          @click="handleChange(item)"
+          v-for="item in navs"
+          :key="item.index"
+          :class="{'active':activeIndex===item.index}"
         >
-          <div class="img">
-            <i
-              class="iconfont"
-              :class="item.icon"
-            />
+          <div class="icon">
+            <div class="IconF">
+              <div class="IconS">
+                <div
+                  class="IconT"
+                  style="background:#2E96F7;"
+                >
+                  1
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="i-title">
+          <div class="nav-title">
             {{ item.title }}
           </div>
         </li>
       </ul>
-    </div>
-
-    <div class="handle-container">
-      <div class="window-handle">
-        <i
-          class="iconfont iconyincang-"
-          @click="miniWindow"
-        />
-        <i
-          class="iconfont iconsuoxiao-"
-          v-show="isMax"
-          @click="maxWindow"
-        />
-        <i
-          class="iconfont iconfangdasuoxiao-"
-          v-show="!isMax"
-          @click="maxWindow"
-        />
-        <i
-          class="iconfont iconguanbi-"
-          @click="closeWindow"
-        />
-      </div>
-      <div class="user-info">
-        <i class="iconfont icon-yonghu" />
-        <span>用户：dyw </span>
-        <span
-          class="lock"
-          @click="$emit('lock')"
-        >
-          <i class="el-icon-lock" />
-        </span>
-      </div>
     </div>
   </div>
 </template>
@@ -97,67 +69,32 @@ export default {
           icon: 'el-icon-s-order',
           route: '/schedule-home/schedule',
           name: 'Schedule',
-          index: 0
+          index: 1
         },
         {
           title: '手术排班表',
           icon: 'el-icon-s-data',
           route: '/schedule-home/report',
           name: 'ScheduleReport',
-          index: 1
+          index: 2
         }
       ],
-      activeIndex: 0
+      activeIndex: 1
     }
   },
   props: ['lock'],
   watch: {
-    // $route: {
-    //   handler (route) {
-    //     console.log(route.meta.parent, 'parent')
-    //     const index = this.navs.findIndex(item => {
-    //       return route.meta.parent === item.name
-    //     })
-    //     this.active = index
-    //   },
-    //   immediate: true
-    // }
-    // menus: {
-    //   handler (menus) {
-    //     const title = this.navs[this.active].title
-    //     console.log(title, 'title')
-    //     const name = this.navs[this.active].name
-    //     this.parentInfo = this.$store.getters.menus.find(menu => menu.moduleName === title) || {}
-    //     const routes = this.$router.options.routes
-    //     const current = routes.find(item => {
-    //       return name === item.name
-    //     })
-    //     const navs = current.children.filter(nav => {
-    //       return this.parentInfo.secMenus && this.parentInfo.secMenus.find(child => child.perName === nav.meta
-    //         .title)
-    //     })
-    //     if (navs) {
-    //       this.$store.dispatch('navs/setNavsItems', navs)
-    //     }
-    //   },
-    //   immediate: true
-    // }
+
   },
   computed: {
-    // username () {
-    //   return this.$store.getters.userinfo.userName
-    // },
-    // menus () {
-    //   const _navs = this.navs.filter(item => {
-    //     return this.$store.getters.menus.find(nav => item.title === nav.moduleName)
-    //   })
-    //   return _navs
-    // }
+
   },
   created () {
-    // this.$store.dispatch('user/getCurrentUserInfo')
   },
   methods: {
+    handleChange (item) {
+      this.activeIndex = item.index
+    },
     miniWindow () {
       // 最小化窗口
       win.minimize()
@@ -176,34 +113,11 @@ export default {
     },
     jumpstatistics (item, i) {
       this.activeIndex = i
-      if (item.index === 0) {
+      if (item.index === 1) {
         this.$router.push('/schedule-home/schedule')
       }
-      if (item.index === 1) {
+      if (item.index === 2) {
         this.$router.push('/schedule-home/report')
-      }
-    },
-    jump (item, i) {
-      this.active = i
-      const parentInfo = this.$store.getters.menus.find(menu => menu.moduleName === item.title)
-      this.parentInfo = parentInfo
-      const routes = this.$router.options.routes
-      const current = routes.find(route => {
-        return item.name === route.name
-      })
-      const navs = current.children.filter(nav => {
-        return this.parentInfo.secMenus && this.parentInfo.secMenus.find(child => child.perName === nav.meta
-          .title)
-      })
-      if (navs) {
-        // console.log(navs, 'dyw')
-        this.$store.dispatch('navs/setNavsItems', navs)
-      }
-      if (this.$store.state.navs.items.length > 0) {
-        const name = this.$store.state.navs.items[0].name
-        this.$router.push({
-          name
-        })
       }
     }
   }
@@ -214,35 +128,31 @@ export default {
 
   .common-header-container {
     display: flex;
+    height: 100%;
     justify-content: space-between;
     align-items: center;
-    color: #fff;
-    background: #144177;
+    // background: #144177;
+    background:rgba(18,20,33,1);
+    box-shadow:4px 3px 5px 0px rgba(0, 0, 0, 0.4);
 
     .logo-container {
-      flex: 0 0 260px;
-      // width:260px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      padding-left:10px;
+      width:354px;
       .logo-img {
-        // flex: 1;
-        height:69px;
-        width:102px;
-        // text-align: center;
-        // padding: 10px 0 0 10px;
+        height:40px;
+        width:152px;
         img{
-          // width:100%;
-          padding:10px;
+          width:100%;
           height:100%;
         }
       }
 
       .title {
-        flex:1;
-        font-size: 14px;
-        display: flex;
-        flex-direction: column;
+        font-size: 12px;
+        color:#0094FF;
+        p{
+          margin:0;
+        }
       }
     }
 
@@ -257,39 +167,62 @@ export default {
       }
 
       li {
-        width: 98px;
-        height: 70px;
-        text-align: center;
-        margin-right: 6px;
-        position: relative;
+        margin-right:80px;
+        display: flex;
         cursor: pointer;
-        background:rgba(64,153,240,.7);
-        &.active {
-          &::after {
-            content: '';
-            position: absolute;
-            left: 41px;
-            border-top: 8px solid transparent;
-            border-bottom: 8px solid #fff;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
+        justify-content: space-between;
+        .icon{
+          // width: 30px;
+          // height: 34px;
+          .IconF,.IconS,.IconT{
+            width: 60px;
+            height: 30px;
+            overflow: hidden;
+            margin: 0 auto;
+          }
+          .IconF{
+            transform: rotate(120deg);
+            -ms-transform: rotate(120deg);
+            -moz-transform: rotate(120deg);
+            -webkit-transform: rotate(120deg);
+            // border:1px solid #fff;
+          }
+          .IconS{
+            // border:1px solid #fff;
+            transform: rotate(-60deg);
+            -ms-transform: rotate(-60deg);
+            -moz-transform: rotate(-60deg);
+            -webkit-transform: rotate(-60deg);
+          }
+          .IconT{
+            // border:1px solid #fff;
+            transform: rotate(-60deg);
+            -ms-transform: rotate(-60deg);
+            -moz-transform: rotate(-60deg);
+            -webkit-transform: rotate(-60deg);
+            color:#fff;
+            font-size: 18px;
+            line-height:30px;
+            text-align: center;
           }
         }
-
-        .img {
-          padding-top: 14px;
-        }
-
-        i {
-          font-size: 24px;
-        }
-
-        .i-title {
-          margin-top: 12px;
+        .nav-title{
+          color:#9BA3D5;
+          font-size:16px;
+          line-height: 30px;
+          // margin-left:10px;
+          // line-height: 28px;
         }
       }
       li.active {
-        background:#409EFF;
+        .nav-title{
+          color:#388FF7;
+        }
+      }
+      li:hover{
+        .nav-title{
+          color:#388FF7;
+        }
       }
     }
 

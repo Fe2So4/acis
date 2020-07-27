@@ -4,110 +4,147 @@
       ref="unTable"
       resizable
       width="100%"
-      height="100%"
+      height="200"
       size="mini"
       border
+      auto-resize
       align="center"
-      :data="list"
+      class="scroll"
+      :data="tableData"
       highlight-current-row
-      @cell-click="handleShowDetail"
       @cell-dblclick="handleDistributeRoom"
     >
+      <!-- @cell-click="handleShowDetail" -->
       <vxe-table-column
-        field="scheduledDateTime"
+        field="opeScheduleTime"
         title="申请时间"
-        width="120"
       />
       <vxe-table-column
         field="sequence"
         title="申请台次"
-        width="120"
         show-overflow="title"
       />
       <vxe-table-column
-        field="patientName"
+        field="ptName"
         title="姓名"
-        width="120"
         type="html"
       />
       <vxe-table-column
         field="inpatientWard"
         title="病区"
-        width="120"
         type="html"
       />
       <vxe-table-column
-        field="bedNo"
-        title="床号"
+        field="bedId"
+        title="床位"
         show-overflow="title"
-        width="62"
       />
       <vxe-table-column
-        field="patientId"
+        field="visitId"
         title="住院号"
         show-overflow="title"
-        width="120"
-      />
-      <vxe-table-column
-        field="diagBeforeOperation"
-        title="诊断"
-        show-overflow="title"
-        width="62"
-      />
-      <vxe-table-column
-        field="operationName"
-        title="手术名称"
-        show-overflow="title"
-        width="120"
-        type="html"
-      />
-      <vxe-table-column
-        field="surgeon"
-        title="手术医师"
-        show-overflow="title"
-        width="120"
-        type="html"
-      />
-      <vxe-table-column
-        field="anaesthesiaName"
-        title="麻醉方法"
-        show-overflow="title"
-        width="120"
-      />
-      <vxe-table-column
-        field="operationDescription"
-        title="备注"
-        show-overflow
-        width="62"
       />
     </vxe-table>
   </div>
 </template>
 
 <script>
+import request from '@/utils/requestForMock'
+import { getOpeApply, distributeOpeApply } from '@/api/schedule'
+import moment from 'moment'
+import XEUtils from 'xe-utils'
+import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
+      list: []
     }
   },
   props: {
-    list: {
-      type: Array,
-      default: function () {
-        return []
-      }
+    time: {
+      type: String,
+      // required: true,
+      default: moment(new Date()).format('yyyy-MM-DD')
+    },
+    select: {
+      type: String,
+      default: ''
     }
   },
-  methods: {
-    handleShowDetail () {
-      this.$emit('handleShowDetail')
+  computed: {
+    ...mapGetters('Schedule', ['currentRoom']),
+    tableData () {
+      const filterName = XEUtils.toString(this.searchContent).trim().toLowerCase()
+      let searchProps = []
+      if (filterName) {
+        const filterRE = new RegExp(filterName, 'gi')
+        if (this.select === 1) {
+          searchProps = ['inpatientWard']
+        } else if (this.select === 2) {
+          searchProps = ['surgeon']
+        } else if (this.select === 3) {
+          searchProps = ['operationName']
+        } else {
+          searchProps = ['patientName']
+        }
+        // const searchProps = ['patientName', 'inpatientWard'];
+        const rest = this.list.filter(item => searchProps.some(key => XEUtils.toString(item[key]).toLowerCase()
+          .indexOf(filterName) > -1))
+        return rest.map(row => {
+          const item = Object.assign({}, row)
+          searchProps.forEach(key => {
+            item[key] = XEUtils.toString(item[key]).replace(filterRE, match =>
+              `<span class="keyword-lighten">${match}</span>`)
+          })
+          return item
+        })
+      }
+      return this.list
+    }
+  },
+  watch: {
+    time: {
+      handler (val) {
+        return val
+      }
     },
-    handleDistributeRoom () {
-      this.$emit('handleDistributeRoom')
+    imediate: true
+  },
+  methods: {
+    getData () {
+      request({
+        url: getOpeApply + '/' + this.time
+      }).then(res => {
+        const data = res.data.data
+        data.forEach(value => {
+
+        })
+        this.list = data
+      })
+    },
+    // handleShowDetail () {
+    //   this.$emit('handleShowDetail')
+    // },
+    handleDistributeRoom ({ row }) {
+      // this.$emit('handleDistributeRoom')
+      request(
+        {
+          method: 'PUT',
+          url: distributeOpeApply + `/${this.currentRoom}/${row.operationId}/${this.time}`
+        }
+      ).then(res => {
+        this.$eventHub.$emit('get-allocated')
+        this.$eventHub.$emit('get-room')
+        this.getData()
+      })
     }
   },
   mounted () {
-
+    this.getData()
+    this.$eventHub.$on('get-unallocated', () => {
+      // 获取数据
+      this.getData()
+    })
   }
 }
 </script>
