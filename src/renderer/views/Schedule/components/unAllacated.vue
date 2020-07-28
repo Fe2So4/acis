@@ -12,6 +12,7 @@
       class="scroll"
       :data="tableData"
       highlight-current-row
+      @cell-click="handleCellClick"
       @cell-dblclick="handleDistributeRoom"
     >
       <!-- @cell-click="handleShowDetail" -->
@@ -136,7 +137,11 @@ export default {
         this.$eventHub.$emit('get-allocated')
         this.$eventHub.$emit('get-room')
         this.getData()
+        this.$eventHub.$emit('get-records')
       })
+    },
+    handleCellClick ({ row }) {
+      this.$emit('changePatientDetail', row)
     }
   },
   mounted () {

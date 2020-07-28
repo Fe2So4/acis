@@ -1,25 +1,33 @@
 <template>
   <div class="page-withdraw">
-    <div
-      class="box"
-      @contextmenu="showMenu2"
+    <el-scrollbar
+      style="height:100%;"
+      class="scrollbar"
     >
       <div
-        class="box-item"
-        v-for="item in recordsList"
-        :key="item.sysno"
-        @dblclick="handleWithdraw(item.sysno)"
+        class="box"
+        @contextmenu="showMenu2"
       >
-        {{ item.message }}
+        <div
+          class="box-item"
+          v-for="item in recordsList"
+          :key="item.sysno"
+          @dblclick="handleWithdraw(item.sysno)"
+        >
+          {{ item.message }}
+        </div>
+        <vue-context-menu
+          :context-menu-data="contextMenuData2"
+          @handlerClearList="handlerClearList"
+        />
       </div>
-      <vue-context-menu
-        :context-menu-data="contextMenuData2"
-      />
-      <!-- @handlerClearList="handlerClearList" -->
-    </div>
+    </el-scrollbar>
   </div>
 </template>
 <script>
+import request from '@/utils/requestForMock'
+import { getRecord } from '@/api/schedule'
+import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
@@ -33,18 +41,33 @@ export default {
           btnName: '清空',
           fnHandler: 'handlerClearList'
         }]
-      }
+      },
+      recordsList: []
     }
   },
   props: {
-    recordsList: {
-      type: Array,
-      default: function () {
-        return []
-      }
-    }
+  },
+  computed: {
+    ...mapGetters('Schedule', ['time'])
+  },
+  mounted () {
+    this.getData()
+    this.$eventHub.$on('get-records', () => {
+      this.getData()
+    })
   },
   methods: {
+    getData () {
+      request({
+        url: getRecord + `/${this.time}`
+      }).then(res => {
+        this.recordsList = res.data.data
+      })
+    },
+    handlerClearList () {
+      console.log('qingkong')
+      this.recordsList = []
+    },
     showMenu2 () {
       // this.transferIndex1 = index // tranfer index to child component
       event.preventDefault()
@@ -63,15 +86,25 @@ export default {
 </script>
 <style lang="scss" scoped>
   .page-withdraw{
-    height: 100px;
-    background: #f3f6f9;
-    overflow-y: auto;
+    height: 100%;
+    // background: #f3f6f9;
+    // overflow-y: auto;
     .box {
-        height: 100%;
-        .box-item {
-          font: 14px/28px '';
-          cursor: pointer;
+      height: 100%;
+      .box-item {
+        font: 14px/28px '';
+        text-indent: 10px;
+        cursor: pointer;
+        color:#D0DAE5;
+        &:hover{
+          background:#2C3B66;
         }
+      }
     }
+  }
+</style>
+<style>
+  .page-withdraw .scrollbar .el-scrollbar__wrap {
+    overflow-x: hidden;
   }
 </style>

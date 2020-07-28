@@ -35,3 +35,5 @@ export const cancelClearOption = `${config.default.api.baseURL}/acis/operation/d
 export const changeConfig = `${config.default.api.baseURL}/acis/operation/editRoomDetailByRoomNo`
 // 麻醉方法查询
 export const getAnaesMethod = `${config.default.api.baseURL}/acis/operation/getAnesMethodList`
+// 日志查询
+export const getRecord = `${config.default.api.baseURL}/acis/operation/selectLogMessage`

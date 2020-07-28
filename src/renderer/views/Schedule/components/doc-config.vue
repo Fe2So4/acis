@@ -42,11 +42,13 @@
           <el-button
             type="primary"
             @click="submitConfig"
+            size="mini"
           >
             确定
           </el-button>
           <el-button
             type="primary"
+            size="mini"
             @click="configVisible = false"
           >
             取消

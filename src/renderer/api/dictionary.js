@@ -86,3 +86,8 @@ export const deleteOpeNameData = `${config.default.api.baseURL}/acis/dict/delete
 export const updateOpeNameData = `${config.default.api.baseURL}/acis/dict/updateOperationList`
 //  手术名称字典新增
 export const addOpeNameData = `${config.default.api.baseURL}/acis/dict/addOperationList`
+
+// 手术间号字典
+export const roomNoList = `${config.default.api.baseURL}/acis/operation/getRoomList`
+// 科室字典
+export const deptList = `${config.default.api.baseURL}/acis/dict/getDeptList`

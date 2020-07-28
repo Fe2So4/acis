@@ -237,7 +237,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .ope-room{
-  height:100%;
+  height:calc(100% - 28px);
   width:100%;
   .content {
       height: 100%;
