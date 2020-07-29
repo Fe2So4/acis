@@ -158,9 +158,9 @@ export default {
     },
     getDrawLineList () {
       request({
-        method: 'GET',
+        method: 'post',
         url: getBloodInfusionData,
-        params: {
+        data: {
           // startTime: this.startTime,
           startTime: '2020-07-21 09:00:00',
           endTime: '2020-07-21 13:00:00',
