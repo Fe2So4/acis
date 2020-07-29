@@ -62,7 +62,7 @@ export default {
         url: `${getDocumentsList}/${this.procedureState}`
       }).then(
         res => {
-          if (res.data.success) {
+          if (res.data && res.data.success) {
             this.documentsList = res.data.data.isUse.map(item => {
               return {
                 label: item.templateName,
