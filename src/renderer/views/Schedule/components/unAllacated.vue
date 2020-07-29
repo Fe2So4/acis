@@ -131,7 +131,7 @@ export default {
       request(
         {
           method: 'PUT',
-          url: distributeOpeApply + `/${this.currentRoom}/${row.operationId}/${this.time}`
+          url: distributeOpeApply + `/${this.currentRoom.roomNo}/${row.operationId}/${this.time}`
         }
       ).then(res => {
         this.$eventHub.$emit('get-allocated')

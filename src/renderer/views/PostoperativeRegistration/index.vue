@@ -6,8 +6,8 @@
           el-form-item(label="患者ID" prop="ptId")
             el-input(v-model="form.patient_id")
         el-col(:span="6")
-          el-form-item(label="住院号" prop="hospitalNo")
-            el-input(v-model="form.hospitalNo")
+          el-form-item(label="住院号" prop="visit_id")
+            el-input(v-model="form.visit_id")
         el-col(:span="6")
           el-form-item(label="姓名")
             el-input(v-model="form.patient_name")
@@ -25,7 +25,7 @@
             el-date-picker(v-model="form.birthday" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd")
         el-col(:span="6")
           el-form-item(label="床号")
-            el-input(v-model="form.bed_id" :disabled="form.bed_id!==''")
+            el-input(v-model="form.bed_id")
         el-col(:span="12")
           el-form-item(label="所在科室")
             el-select(v-model="form.dept_code" placeholder="请选择所在科室")
@@ -338,7 +338,7 @@ export default {
         patient_id: [
           { required: true, message: '请输入患者ID', trigger: 'change' }
         ],
-        hospitalNo: [{ required: true, message: '请输入住院号', trigger: 'change' }],
+        visit_id: [{ required: true, message: '请输入住院号', trigger: 'change' }],
         ope_room: [{ required: true, message: '请选择手术间', trigger: 'change' }]
       },
       level: [{ value: '0', label: '特' }, { value: '1', label: '大' }, { value: '2', label: '中' }, { value: '3', label: '小' }],
@@ -509,15 +509,15 @@ export default {
         'sec_supply_nurse',
         'ope_name_after'
       ]
-      // const sheel4 = ['nurse_shift_record',
-      //   'anesthesia_satisfaction',
-      //   'operative_process',
-      //   'equipment_inventory',
-      //   'blood_transfusion_volume',
-      //   'fluid_volume',
-      //   'blood_losses',
-      //   'urine_volumn',
-      //   'amount_other']
+      const sheel4 = ['nurse_shift_record',
+        'anesthesia_satisfaction',
+        'operative_process',
+        'equipment_inventory',
+        'blood_transfusion_volume',
+        'fluid_volume',
+        'blood_losses',
+        'urine_volumn',
+        'amount_other']
       obj.acis_pat_master_index = []
       obj.acis_ope_apply_info = []
       obj.acis_ope_schedule_info = []
@@ -538,11 +538,11 @@ export default {
             obj.acis_ope_schedule_info.push(item)
           }
         })
-        // sheel4.forEach(_item4 => {
-        //   if (_item4 === item.className) {
-        //     obj.acis_amount_record.push(item)
-        //   }
-        // })
+        sheel4.forEach(_item4 => {
+          if (_item4 === item.className) {
+            obj.acis_amount_record.push(item)
+          }
+        })
       })
       // console.log(obj)
       request({

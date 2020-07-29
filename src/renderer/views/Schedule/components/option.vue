@@ -2,24 +2,61 @@
   <div class="option">
     <span>共0台</span>
     <span>
-      <el-button type="text" size="mini" @click="showPreview">提交前预览</el-button>
-      <el-button type="text" size="mini">刷新</el-button>
-      <el-button type="text" size="mini">切换</el-button>
-      <el-button type="text" size="mini">提交</el-button>
+      <el-button
+        type="text"
+        size="mini"
+        @click="showPreview"
+      >提交前预览</el-button>
+      <el-button
+        type="text"
+        size="mini"
+      >刷新</el-button>
+      <el-button
+        type="text"
+        size="mini"
+      >切换</el-button>
+      <el-button
+        type="text"
+        size="mini"
+        @click="submitAll"
+      >提交</el-button>
     </span>
   </div>
 </template>
 <script>
+import request from '@/utils/requestForMock'
+import { submitAllApply } from '@/api/schedule'
+import { mapGetters } from 'vuex'
 export default {
-  data() {
-    return {};
+  data () {
+    return {}
+  },
+  computed: {
+    ...mapGetters('Schedule', ['time'])
   },
   methods: {
-    showPreview() {
-      this.$emit("showPreview");
+    showPreview () {
+      this.$emit('showPreview')
     },
-  },
-};
+    submitAll () {
+      request({
+        url: submitAllApply + '/' + this.time,
+        method: 'PUT'
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.$message({ type: 'success', message: '提交成功' })
+          this.$eventHub.$emit('get-unallocated')
+          this.$eventHub.$emit('get-allocated')
+          this.$eventHub.$emit('get-room')
+          this.$eventHub.$emit('get-records')
+          this.$eventHub.$emit('get-DocNurse')
+        } else {
+          this.$message({ type: 'warning', message: '提交失败' })
+        }
+      })
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
 .option {

@@ -1,7 +1,12 @@
 import moment from 'moment'
 const state = {
   time: moment(new Date()).format('yyyy-MM-DD'),
-  currentRoom: '601'
+  currentRoom:
+  {
+    roomNo: '601',
+    maxCount: '',
+    count: ''
+  }
 }
 const getters = {
   time: state => state.time,

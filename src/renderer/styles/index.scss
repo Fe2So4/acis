@@ -105,7 +105,7 @@ input[type="time"] {
   background-color: #2c354f;
   border-width: 1px;
 }
-#app /deep/ .vxe-table .vxe-table--body-wrapper .vxe-cell {
+#app /deep/ .vxe-table .vxe-table--body-wrapper .vxe-body--row {
   color: #fff;
 }
 
@@ -135,7 +135,7 @@ input[type="time"] {
 }
 /*边角，即两个滚动条的交汇处*/
 .scroll div::-webkit-scrollbar-corner {
-  background-color: #ffffff;
+  background-color: #1E222E;
 }
 
 /*日期时间选择器*/
