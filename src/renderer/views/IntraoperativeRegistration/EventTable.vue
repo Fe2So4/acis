@@ -1,0 +1,317 @@
+<template>
+  <div class="eventTable">
+    <div
+      class="table"
+    >
+      <vxe-table
+        border="inner"
+        ref="table"
+        resizable
+        highlight-hover-row
+        height="330px"
+        :data="tableData"
+        :edit-config="{trigger: 'click', mode: 'cell'}"
+        class="scroll"
+        size="mini"
+      >
+        <vxe-table-column
+          type="checkbox"
+          width="40"
+        />
+        <vxe-table-column
+          field="eventType"
+          title="类型"
+          width="60"
+        />
+        <vxe-table-column
+          field="eventName"
+          title="事件名称"
+          width="200"
+        />
+        <vxe-table-column
+          field="approach"
+          title="途径"
+          width="80"
+          :edit-render="{
+            name: '$select',
+            options: approachList,
+            optionProps: {
+              value: 'detailCode',
+              label: 'detailName'
+            },
+            events: {
+              change: onApproachChange
+            }
+          }"
+        />
+        <vxe-table-column
+          field="concentration"
+          title="浓度"
+          width="80"
+          :edit-render="{name: '$input', props: {type: 'float', digits: 2}}"
+        />
+        <vxe-table-column
+          field="concentrationUnit"
+          title="单位"
+          width="80"
+        />
+        <vxe-table-column
+          field="speed"
+          title="速度"
+          width="80"
+          :edit-render="{name: '$input', props: {type: 'float', digits: 2}}"
+        />
+        <vxe-table-column
+          field="speedUnit"
+          title="单位"
+          width="80"
+        />
+        <vxe-table-column
+          field="dosage"
+          title="计量"
+          width="80"
+          :edit-render="{name: '$input', props: {type: 'float', digits: 2}}"
+        />
+        <vxe-table-column
+          field="dosageUnit"
+          title="单位"
+          width="80"
+        />
+        <vxe-table-column
+          field="eventStartTime"
+          title="发生时间"
+          width="130"
+          :edit-render="{
+            name: '$input',
+            props: {
+              type: 'datetime',
+              'label-format':'yyyy-MM-dd HH:mm',
+              'parse-format':'yyyy-MM-dd HH:mm',
+              'value-format':'yyyy-MM-dd HH:mm',
+              editable: false,
+              clearable: true
+            },
+            events: {
+              change: onStartTimeChange
+            }
+          }"
+        />
+        <!--         <vxe-table-column
+          field="isHolding"
+          title=""
+          width="40"
+        >
+          <template
+            v-slot="{ row }"
+          >
+            {{ row.isHolding ? '->': '' }}
+          </template>
+        </vxe-table-column>-->
+        <vxe-table-column
+          field="holdingTime"
+          title="持续时间"
+          width="100"
+          :edit-render="{name: '$input', props: {type: 'number'}, events: {change: onHoldingTimeChange}}"
+        />
+        <vxe-table-column
+          field="eventEndTime"
+          title="结束时间"
+          width="130"
+          :edit-render="{
+            name: '$input',
+            props: {
+              type: 'datetime',
+              'label-format':'yyyy-MM-dd HH:mm',
+              'parse-format':'yyyy-MM-dd HH:mm',
+              'value-format':'yyyy-MM-dd HH:mm',
+              editable: false,
+              clearable: true
+            },
+            events: {
+              change: onEndTimeChange
+            }
+          }"
+        />
+      </vxe-table>
+    </div>
+    <div class="buttons">
+      <div class="left">
+        <el-button
+          size="mini"
+          type="primary"
+        >
+          保存模板
+        </el-button>
+        <el-button size="mini">
+          套用模板
+        </el-button>
+        <span>类型筛选</span>
+        <el-select
+          size="mini"
+          v-model="eventType"
+          @change="onChangeEventType"
+        >
+          <el-option
+            v-for="type in eventList"
+            :key="type.eventId"
+            :value="type.eventId"
+            :label="type.eventName"
+          />
+        </el-select>
+      </div>
+      <div class="right">
+        <el-button
+          size="mini"
+          type="primary"
+          @click="onSave"
+        >
+          保存
+        </el-button>
+        <el-button
+          @click="onDelete"
+          size="mini"
+        >
+          删除
+        </el-button>
+        <el-button
+          size="mini"
+          @click="onRefresh"
+        >
+          刷新
+        </el-button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import moment from 'moment'
+export default {
+  name: 'EventTable',
+  props: {
+    tableData: {
+      required: true,
+      type: Array
+    },
+    approachList: {
+      required: true,
+      type: Array
+    },
+    eventList: {
+      required: true,
+      type: Array
+    }
+  },
+  data () {
+    return {
+      eventType: ''
+    }
+  },
+  methods: {
+    onApproachChange ({ row }) {
+      this.$emit('change-event', row)
+    },
+    onStartTimeChange ({ row }) {
+      this.changeTimeData(row, 'eventStartTime')
+      this.$emit('change-event', row)
+    },
+    onHoldingTimeChange ({ row }) {
+      this.changeTimeData(row, 'holdingTime')
+      this.$emit('change-event', row)
+    },
+    onEndTimeChange ({ row }) {
+      this.changeTimeData(row, 'eventEndTime')
+      this.$emit('change-event', row)
+    },
+    onChangeEventType (val) {},
+    onSave () {
+      this.$emit('save-event')
+    },
+    onDelete () {
+      const selectedArr = this.$refs.table.getCheckboxRecords()
+      if (selectedArr.length) {
+        selectedArr.forEach(row => {
+          this.$emit('delete-event', row)
+        })
+      }
+    },
+    onRefresh () {
+      this.$emit('refresh-event')
+    },
+    changeTimeData (row, changedItem) {
+      const { eventStartTime, eventEndTime, holdingTime } = row
+      const startMoment = eventStartTime ? moment(eventStartTime) : 0
+      const endMoment = eventEndTime ? moment(eventEndTime) : 0
+      switch (changedItem) {
+        case 'eventStartTime':
+          if (eventStartTime) {
+            if (eventEndTime) {
+              row.isHolding = '1'
+              row.holdingTime = endMoment.diff(startMoment, 'minutes')
+            } else {
+              row.isHolding = '0'
+            }
+          } else {
+            row.isHolding = '0'
+            row.holdingTime = ''
+            row.eventEndTime = ''
+          }
+
+          break
+        case 'eventEndTime':
+          if (eventEndTime) {
+            if (eventStartTime) {
+              row.isHolding = '1'
+              row.holdingTime = endMoment.diff(startMoment, 'minutes')
+            } else {
+              row.isHolding = '0'
+              row.holdingTime = ''
+              row.eventEndTime = ''
+            }
+          } else {
+            row.isHolding = '0'
+            row.holdingTime = ''
+          }
+          break
+        case 'holdingTime':
+          if (+holdingTime) {
+            if (eventStartTime) {
+              row.isHolding = '1'
+              row.eventEndTime = startMoment
+                .add(holdingTime, 'm')
+                .format('YYYY-MM-DD HH:mm')
+            } else {
+              row.isHolding = '0'
+              row.holdingTime = ''
+              row.eventEndTime = ''
+            }
+          } else {
+            row.isHolding = '0'
+            row.holdingTime = ''
+            row.eventEndTime = ''
+          }
+          break
+      }
+    }
+  }
+}
+</script>
+<style lang='scss' scoped>
+.eventTable {
+  border: 1px solid #39425c;
+  border-radius: 5px;
+  height: 400px;
+  .buttons {
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .left,
+    .right {
+      height: 30px;
+      padding: 0 20px;
+      color: #9BA3D5;
+    }
+  }
+}
+</style>
