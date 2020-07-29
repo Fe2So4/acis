@@ -6,13 +6,13 @@
        span {{title}}
        i(class="el-icon-close" @click="handleClose")
       .dialog-body
-        component(:is="componentName")
+        //- component(:is="componentName")
         //- OperationOverview
         //- Event
         //- <operation-handover/>
         //- Hemodynamics
         //- IntraoperativePatients
-        //- PostoperativeRegistration
+        PostoperativeRegistration
         //- IntraoperativeRegistration
         //- PatientDetail
         //- DeviceGather

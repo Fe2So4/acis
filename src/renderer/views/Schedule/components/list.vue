@@ -1,13 +1,7 @@
 <template>
   <div class="list">
-    <el-scrollbar
-      style="height:100%;"
-      class="scrollbar"
-    >
-      <div
-        class="list-all"
-        @contextmenu="showMenu()"
-      >
+    <el-scrollbar style="height:100%;" class="scrollbar">
+      <div class="list-all" @contextmenu="showMenu()">
         <div
           class="list-item"
           :class="{'active':activeIndex == index}"
@@ -16,95 +10,89 @@
           @click="handleCurrent(item,index)"
           @dblclick="handledbClick(item,index)"
           @contextmenu="handleCurrent(item,index)"
-        >
-          {{ item.result }}
-        </div>
+        >{{ item.result }}</div>
       </div>
     </el-scrollbar>
-    <vue-context-menu
-      :context-menu-data="contextMenuData"
-      @handleDocConfig="handleDocConfig"
-    />
+    <vue-context-menu :context-menu-data="contextMenuData" @handleDocConfig="handleDocConfig" />
   </div>
 </template>
 <script>
 export default {
-  name: 'List',
-  data () {
+  name: "List",
+  data() {
     return {
       contextMenuData1: {
         axis: {
           x: null,
-          y: null
+          y: null,
         },
-        menulists: [{ btnName: '医生设置' }]
+        menulists: [{ btnName: "医生设置" }],
       },
       activeIndex: 0,
-      selectItem: {}
-    }
+      selectItem: {},
+    };
   },
-  props: ['dataList', 'contextMenuData'],
-  computed: {
-
-  },
+  props: ["dataList", "contextMenuData"],
+  computed: {},
   watch: {
     dataList: {
-      handler (newValue, old) {
-        return newValue
+      handler(newValue, old) {
+        return newValue;
       },
       deep: true,
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   methods: {
-    handleCurrent (item, i) {
-      this.activeIndex = i
-      this.selectItem = item
+    handleCurrent(item, i) {
+      this.activeIndex = i;
+      this.selectItem = item;
     },
-    handleDocConfig () {
-      this.$emit('handleDocConfig', this.selectItem)
+    handleDocConfig() {
+      console.log(123);
+      this.$emit("handleDocConfig", this.selectItem);
     },
-    showMenu () {
+    showMenu() {
       // this.transferIndex1 = index // tranfer index to child component
-      event.preventDefault()
-      var x = event.clientX
-      var y = event.clientY
+      event.preventDefault();
+      var x = event.clientX;
+      var y = event.clientY;
       this.contextMenuData.axis = {
         x,
-        y
-      }
+        y,
+      };
     },
-    handledbClick (item, i) {
+    handledbClick(item, i) {
       // console.log(i)
-      this.$emit('handleDistribute', item)
-    }
+      this.$emit("handleDistribute", item);
+    },
   },
-  mounted () {
+  mounted() {
     // console.log(this.f_height,'height')
-  }
-}
+  },
+};
 </script>
 <style lang="scss">
-    .list{
-        // height:100%;
-        height:500px;
-        .list-all {
-            // position: relative;
-            height:100%;
-            // overflow-y:auto;
-            .list-item {
-                font:12px/30px "";
-                padding-left:10px;
-                border-bottom:1px dashed #f3f6f9;
-            }
-            .active{
-              background:#f1f3f6;
-            }
-        }
+.list {
+  // height:100%;
+  height: 500px;
+  .list-all {
+    // position: relative;
+    height: 100%;
+    // overflow-y:auto;
+    .list-item {
+      font: 12px/30px "";
+      padding-left: 10px;
+      border-bottom: 1px dashed #f3f6f9;
     }
+    .active {
+      background: #f1f3f6;
+    }
+  }
+}
 </style>
 <style>
-  .list .scrollbar .el-scrollbar__wrap {
-      overflow-x: hidden;
-  }
+.list .scrollbar .el-scrollbar__wrap {
+  overflow-x: hidden;
+}
 </style>

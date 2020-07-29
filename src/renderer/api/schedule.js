@@ -32,6 +32,12 @@ export const cancelClearDistribute = `${config.default.api.baseURL}/acis/operati
 // 撤销清空操作
 export const cancelClearOption = `${config.default.api.baseURL}/acis/operation/deleteLogBySysno`
 // 通过手术间号更改手术间配置信息
-export const changeConfig = `${config.default.api.baseURL}/acis/operation/editRoomDetailByRoomNo`
+export const changeConfigByRoomNo = `${config.default.api.baseURL}/acis/operation/editRoomDetailByRoomNo`
+// 通过手术间号查询手术间配置信息
+export const getConfigByRoomNo = `${config.default.api.baseURL}/acis/operation/getRoomDetailByRoomNo`
 // 麻醉方法查询
 export const getAnaesMethod = `${config.default.api.baseURL}/acis/operation/getAnesMethodList`
+// 日志查询
+export const getRecord = `${config.default.api.baseURL}/acis/operation/selectLogMessage`
+//提交前预览
+export const previewList = `${config.default.api.baseURL}/acis/operation/getOpeInfo`

@@ -154,7 +154,7 @@ export default {
         }).then(res => {
           this.$eventHub.$emit('get-unallocated')
           this.$eventHub.$emit('get-room')
-          // this.$eventHub.$emit('get-')
+          this.$eventHub.$emit('get-records')
           this.getData()
         })
       }
