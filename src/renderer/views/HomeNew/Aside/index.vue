@@ -71,7 +71,7 @@ export default {
       activesNames: '1',
       isCollapse: false,
       showOverflow: false,
-      showDialog: true, // 开启弹窗
+      showDialog: false, // 开启弹窗
       componentName: '',
       navList: [
         {
@@ -181,7 +181,8 @@ export default {
             },
             { name: 'PACU状态', componentName: 'PacuStatus', index: '4-4' },
             { name: '设备采集', componentName: 'DeviceGather', index: '4-5' },
-            { name: '字典', componentName: 'Dictionary', index: '4-6' }
+            { name: '字典', componentName: 'Dictionary', index: '4-6' },
+            { name: '患者预警', componentName: 'PatientWarning', index: '4-7' }
           ],
           icon: 'el-icon-monitor'
         },

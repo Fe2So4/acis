@@ -145,11 +145,11 @@ export default {
     },
     getDrawLineList () {
       request({
-        method: 'GET',
+        method: 'post',
         url: getDrugListRecords,
-        params: {
+        data: {
           startTime: this.startTime,
-          end: this.endTime,
+          endTime: this.endTime,
           // startTime: '2020-07-21 17:00:00',
           // endTime: '2020-07-21 21:00:00',
           operationId: this.operationId

@@ -49,5 +49,9 @@ export default {
   padding: 10px;
   border-radius: 4px;
   background: rgba(0,0,0,0.8);
+  color: white;
+  p {
+    margin: 0;
+  }
 }
 </style>

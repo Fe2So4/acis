@@ -803,9 +803,9 @@ export default {
     },
     getPastEventData () {
       return request({
-        method: 'GET',
+        method: 'post',
         url: getEventData,
-        params: {
+        data: {
           startTime: this.startTime,
           endTime: this.endTime,
           operationId: this.operationId

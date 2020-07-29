@@ -134,9 +134,9 @@ export default {
     },
     getEventData () {
       return request({
-        method: 'GET',
+        method: 'post',
         url: getEventData,
-        params: {
+        data: {
           startTime: this.startTime,
           endTime: this.endTime,
           operationId: this.operationId
