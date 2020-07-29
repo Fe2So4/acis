@@ -63,7 +63,7 @@
               </el-tooltip>
               <div class="room-info-item">
                 <el-tooltip
-                  :content="item.number"
+                  :content="item.tip"
                   placement="bottom"
                   effect="light"
                   :open-delay="2000"
@@ -194,6 +194,7 @@ export default {
       }).then(res => {
         const data = res.data.data
         data.forEach(item => {
+          item.tip = item.number + '/' + item.maxCount
           if (item.number === '0') {
             item.process = 0
           } else {
@@ -203,9 +204,9 @@ export default {
         this.roomList = data
       })
     },
-    changeRoom (item, i) {
+    async changeRoom (item, i) {
       this.roomIndex = i
-      this.setCurrentRoom(item.roomNo)
+      await this.setCurrentRoom({ roomNo: item.roomNo, maxCount: item.maxCount, count: item.number })
       // this.$emit('changeRoom', item)
       setTimeout(() => {
         this.$eventHub.$emit('get-allocated')

@@ -28,7 +28,7 @@ export const changeTwoRoomData = `${config.default.api.baseURL}/acis/operation/c
 // 清空手术间
 export const clearAllRoomData = `${config.default.api.baseURL}/acis/operation/clearArrange`
 // 撤销手术间或麻醉医生护士安排
-export const cancelClearDistribute = `${config.default.api.baseURL}/acis/operation/deleteLog`
+export const cancelClearDistribute = `${config.default.api.baseURL}/acis/operation/deleteLogBySysno`
 // 撤销清空操作
 export const cancelClearOption = `${config.default.api.baseURL}/acis/operation/deleteLogBySysno`
 // 通过手术间号更改手术间配置信息
@@ -39,5 +39,12 @@ export const getConfigByRoomNo = `${config.default.api.baseURL}/acis/operation/g
 export const getAnaesMethod = `${config.default.api.baseURL}/acis/operation/getAnesMethodList`
 // 日志查询
 export const getRecord = `${config.default.api.baseURL}/acis/operation/selectLogMessage`
-//提交前预览
+// 提交前预览
 export const previewList = `${config.default.api.baseURL}/acis/operation/getOpeInfo`
+// 提交全部手术申请
+export const submitAllApply = `${config.default.api.baseURL}/acis/operation/submitRoomSchedule`
+// 提交某条手术申请
+export const submitSimpleApply = `${config.default.api.baseURL}/acis/operation/submitRoomSchedule`
+
+// 修改医护配置
+export const updateDocNurseConfig = `${config.default.api.baseURL}/acis/operation/updateDocConfigInfo`

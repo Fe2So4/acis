@@ -20,7 +20,7 @@
         width="82"
       />
       <vxe-table-column
-        field="patientName"
+        field="ptName"
         title="病人"
         width="82"
       />
@@ -30,23 +30,23 @@
         width="120"
       />
       <vxe-table-column
-        field="bedNo"
+        field="bedId"
         title="床号"
         width="82"
       />
       <vxe-table-column
-        field="patientId"
+        field="visitId"
         title="住院号"
         width="120"
       />
       <!-- <vxe-table-column field="diagBeforeOperation" title="诊断" width="120"></vxe-table-column> -->
       <vxe-table-column
-        field="surgeon"
+        field="surgeonName"
         title="手术医师"
         width="82"
       />
       <vxe-table-column
-        field="scheduledDateTime"
+        field="opeScheduleTime"
         title="手术时间"
         width="82"
       />
@@ -62,7 +62,7 @@
         width="120"
       />
       <vxe-table-column
-        field="doctor"
+        field="anesDocName"
         title="主麻医师"
         width="82"
         show-overflow="title"
@@ -86,13 +86,14 @@
         show-overflow="title"
       />
       <vxe-table-column
-        field="name"
+        field="memo"
         title="备注"
         width="82"
       />
       <vxe-table-column
         title="操作"
-        width="180"
+        width="120"
+        fixed="right"
       >
         <template v-slot="{ row }">
           <template>
@@ -138,14 +139,31 @@ export default {
   methods: {
     getData () {
       request({
-        url: getAllocatedList + `/${this.currentRoom}/${this.time}`
+        url: getAllocatedList + `/${this.currentRoom.roomNo}/${this.time}`
       }).then(res => {
         const data = res.data.data
+        data.forEach(item => {
+          item.subDoc = (
+            item.firstAnesDocName +
+          ',' +
+          item.secAnesDocName +
+          ',' +
+          item.thirdAnesDocName
+          )
+            .replace(/^,+/, '')
+            .replace(/,+$/, '')
+          item.washNurse = (item.firstOpeNurseName + ',' + item.secOpeNurseName + ',' + item.thirdOpeNurseName)
+            .replace(/^,+/, '')
+            .replace(/,+$/, '')
+          item.hangNurse = (item.firstSupplyNurseName + ',' + item.secSupplyNurseName + ',' + item.thirdSupplyNurseName)
+            .replace(/^,+/, '')
+            .replace(/,+$/, '')
+        })
         this.data = data
       })
     },
     cancelSingle (row) {
-      if (row.state === 2) {
+      if (row.state === '2') {
         this.$message({ type: 'warning', message: '当前手术申请已提交' })
       } else {
         request({
@@ -173,7 +191,7 @@ export default {
         }
       } else {
         return {
-          color: 'black'
+          color: 'green'
         }
       }
     },
