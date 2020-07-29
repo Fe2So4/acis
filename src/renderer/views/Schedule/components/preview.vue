@@ -14,12 +14,14 @@
         border
         ref="previewTable"
         size="mini"
+        auto-resize
         align="center"
+        :row-style="rowStyle"
         highlight-current-row
         :data="previewList"
       >
         <vxe-table-column
-          field="roomNo"
+          field="opeRoom"
           title="手术间"
           width="82"
         />
@@ -29,7 +31,7 @@
           width="82"
         />
         <vxe-table-column
-          field="patientName"
+          field="ptName"
           title="姓名"
           width="120"
         />
@@ -39,12 +41,12 @@
           width="82"
         />
         <vxe-table-column
-          field="bedNo"
+          field="bedId"
           title="床位"
           width="120"
         />
         <vxe-table-column
-          field="patientId"
+          field="visitId"
           title="住院号"
           width="120"
           show-overflow="title"
@@ -60,17 +62,17 @@
           width="82"
         />
         <vxe-table-column
-          field="anaesDoc"
+          field="anesDoc"
           title="麻醉医师"
           show-overflow="title"
         />
         <vxe-table-column
-          field="washNurse"
+          field="opeNurse"
           title="洗手护士"
           show-overflow="title"
         />
         <vxe-table-column
-          field="hangNurse"
+          field="supplyNurse"
           title="巡回护士"
           show-overflow="title"
         />
@@ -104,6 +106,20 @@ export default {
     ...mapGetters('Schedule', ['time'])
   },
   methods: {
+    rowStyle ({
+      row,
+      rowIndex
+    }) {
+      if (row.state === '1') {
+        return {
+          color: 'red'
+        }
+      } else {
+        return {
+          color: 'green'
+        }
+      }
+    },
     // 获取预览列表
     // async getPreviewList () {
     //   const formData = new FormData()

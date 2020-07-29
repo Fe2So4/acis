@@ -19,7 +19,7 @@
             mode="out-in"
           >
             <!-- <keep-alive include="scheduling"> -->
-            <router-view :key="key" />
+            <router-view />
             <!-- </keep-alive> -->
           </transition>
         </el-main>
@@ -109,9 +109,9 @@ export default {
     }
   },
   computed: {
-    key () {
-      return this.$route.path
-    }
+    // key () {
+    //   return this.$route.path
+    // }
   },
   watch: {
     $route: {

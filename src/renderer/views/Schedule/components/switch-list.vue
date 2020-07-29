@@ -7,36 +7,44 @@
       ref="previewTable"
       size="mini"
       align="center"
+      auto-resize
+      class="scroll"
+      :row-style="rowStyle"
       highlight-current-row
       :data="switchList"
     >
       <vxe-table-column
-        field="room"
+        field="opeRoom"
         title="手术间"
-        width="82"
+        width="60"
       />
       <vxe-table-column
         field="sequence"
         title="台次"
-        width="82"
+        width="60"
+      />
+      <vxe-table-column
+        field="ptName"
+        title="病人ID"
+        width="120"
       />
       <vxe-table-column
         field="ptName"
         title="姓名"
-        width="120"
-      />
-      <vxe-table-column
-        field="inpatientWard"
-        title="病区"
         width="82"
       />
       <vxe-table-column
-        field="bedNo"
-        title="床位"
-        width="120"
+        field="age"
+        title="年龄"
+        width="82"
       />
       <vxe-table-column
-        field="inpNo"
+        field="bedId"
+        title="床位"
+        width="60"
+      />
+      <vxe-table-column
+        field="visitId"
         title="住院号"
         width="120"
         show-overflow="title"
@@ -47,42 +55,109 @@
         width="120"
       />
       <vxe-table-column
-        field="surgeon"
+        field="surgeonName"
         title="手术医师"
         width="82"
       />
       <vxe-table-column
-        field="anaesDoc"
-        title="麻醉医师"
+        field="assist1"
+        title="助手1"
+        width="82"
+      />
+      <vxe-table-column
+        field="assist2"
+        title="助手2"
+        width="82"
+      />
+      <vxe-table-column
+        field="assist3"
+        title="助手3"
+        width="82"
+      />
+      <vxe-table-column
+        field="anesDocName"
+        title="主麻"
+        show-overflow="title"
+        width="82"
+      />
+      <vxe-table-column
+        field="firstAnesDocName"
+        title="副麻1"
+        width="82"
         show-overflow="title"
       />
       <vxe-table-column
-        field="washNurse"
-        title="洗手护士"
+        field="secAnesDocName"
+        title="副麻2"
+        width="82"
         show-overflow="title"
       />
       <vxe-table-column
-        field="hangNurse"
-        title="巡回护士"
+        field="firstOpeNurseName"
+        title="洗手1"
+        width="82"
+        show-overflow="title"
+      />
+      <vxe-table-column
+        field="secOpeNurseName"
+        title="洗手2"
+        width="82"
+        show-overflow="title"
+      />
+      <vxe-table-column
+        field="firstSupplyNurseName"
+        title="巡回1"
+        width="82"
+        show-overflow="title"
+      />
+      <vxe-table-column
+        field="secSupplyNurseName"
+        title="巡回2"
+        width="82"
         show-overflow="title"
       />
     </vxe-table>
   </div>
 </template>
 <script>
-// import request from '@/utils/requestForMock'
-// import {} from "@/api/schedule";
+import request from '@/utils/requestForMock'
+import { getSwitchList } from '@/api/schedule'
+import { mapGetters } from 'vuex'
 export default {
   data () {
-    return {}
-  },
-  props: {
-    switchList: {
-      type: Array,
-      default: function () {
-        return []
-      }
+    return {
+      switchList: []
     }
+  },
+  props: {},
+  computed: {
+    ...mapGetters('Schedule', ['time'])
+  },
+  methods: {
+    rowStyle ({
+      row,
+      rowIndex
+    }) {
+      if (row.state === '1') {
+        return {
+          color: 'red'
+        }
+      } else {
+        return {
+          color: 'green'
+        }
+      }
+    },
+    getSwitchList () {
+      request({
+        url: getSwitchList + '/' + this.time
+      }).then(res => {
+        this.switchList = res.data.data
+      })
+    }
+  },
+  mounted () {
+    this.getSwitchList()
   }
 }
 </script>

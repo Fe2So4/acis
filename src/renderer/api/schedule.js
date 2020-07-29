@@ -25,7 +25,7 @@ export const distributeHangNurse = `${config.default.api.baseURL}/acis/operation
 export const changeRoomData = `${config.default.api.baseURL}/acis/operation/changeDataFromTwoRooms`
 // 更换手术间信息
 export const changeTwoRoomData = `${config.default.api.baseURL}/acis/operation/changeRoom`
-// 清空手术间
+// 右键清空操作
 export const clearAllRoomData = `${config.default.api.baseURL}/acis/operation/clearArrange`
 // 撤销手术间或麻醉医生护士安排
 export const cancelClearDistribute = `${config.default.api.baseURL}/acis/operation/deleteLogBySysno`
@@ -48,3 +48,5 @@ export const submitSimpleApply = `${config.default.api.baseURL}/acis/operation/s
 
 // 修改医护配置
 export const updateDocNurseConfig = `${config.default.api.baseURL}/acis/operation/updateDocConfigInfo`
+// 切换列表
+export const getSwitchList = `${config.default.api.baseURL}/acis/operation/getOpeInfoInArrange`

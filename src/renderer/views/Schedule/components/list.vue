@@ -75,11 +75,15 @@ export default {
     },
     handledbClick (item, i) {
       // console.log(i)
-      // if(){
-
-      // }else{
-      this.$emit('handleDistribute', item)
-      // }
+      if (parseInt(item.count) < parseInt(item.maxOperoomCount)) {
+        this.$emit('handleDistribute', item)
+      } else {
+        if (item.userJob === '1') {
+          this.$message({ type: 'warning', message: '该医生已达到最大台数' })
+        } else {
+          this.$message({ type: 'warning', message: '该护士已达到最大台数' })
+        }
+      }
     }
   },
   mounted () {
@@ -89,8 +93,8 @@ export default {
 </script>
 <style lang="scss">
 .list {
-  // height:100%;
-  height: 500px;
+  height:100%;
+  // height: 500px;
   .list-all {
     // position: relative;
     height: 100%;
@@ -99,6 +103,9 @@ export default {
       font: 12px/30px "";
       padding-left: 10px;
       border-bottom: 1px dashed #f3f6f9;
+      &:hover{
+        background: #f1f3f6;
+      }
     }
     .active {
       background: #f1f3f6;

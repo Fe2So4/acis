@@ -3,8 +3,8 @@
     el-form(:model="form" ref="form" label-width="100px" class="demo-ruleForm" size="mini" :rules="rules")
       el-row
         el-col(:span="6")
-          el-form-item(label="患者ID" prop="ptId")
-            el-input(v-model="form.patient_id")
+          el-form-item(label="患者ID" prop="patient_id")
+            el-input(v-model="form.patient_id" @blur="getData")
         el-col(:span="6")
           el-form-item(label="住院号" prop="visit_id")
             el-input(v-model="form.visit_id")
@@ -229,27 +229,27 @@
         el-col(:span="5")
           el-form-item(label="护士换班")
             <el-radio-group v-model="form.nurse_shift_record">
-              <el-radio :label="1">未换班</el-radio>
-              <el-radio :label="2">换班</el-radio>
+              <el-radio label="1">未换班</el-radio>
+              <el-radio label="2">换班</el-radio>
             </el-radio-group>
         el-col(:span="9")
           el-form-item(label="麻醉满意度")
             <el-radio-group v-model="form.anesthesia_satisfaction">
-              <el-radio :label="1">满意</el-radio>
-              <el-radio :label="2">不全满意</el-radio>
-              <el-radio :label="3">改麻醉</el-radio>
+              <el-radio label="1">满意</el-radio>
+              <el-radio label="2">不全满意</el-radio>
+              <el-radio label="3">改麻醉</el-radio>
             </el-radio-group>
         el-col(:span="5")
           el-form-item(label="手术过程顺利")
             <el-radio-group v-model="form.operative_process">
-              <el-radio :label="1">顺利</el-radio>
-              <el-radio :label="2">不顺利</el-radio>
+              <el-radio label="1">顺利</el-radio>
+              <el-radio label="2">不顺利</el-radio>
             </el-radio-group>
         el-col(:span="5")
           el-form-item(label="器械清点")
             <el-radio-group v-model="form.equipment_inventory">
-              <el-radio :label="1">对数</el-radio>
-              <el-radio :label="2">不对数</el-radio>
+              <el-radio label="1">对数</el-radio>
+              <el-radio label="2">不对数</el-radio>
             </el-radio-group>
       el-row
         el-col(:span="5")
@@ -521,7 +521,7 @@ export default {
       obj.acis_pat_master_index = []
       obj.acis_ope_apply_info = []
       obj.acis_ope_schedule_info = []
-      // obj.acis_amount_record = []
+      obj.acis_amount_record = []
       this.list.forEach(item => {
         sheel1.forEach(_item1 => {
           if (_item1 === item.className) {
@@ -560,7 +560,7 @@ export default {
     }
   },
   mounted () {
-    this.getData()
+    // this.getData()
     // 获取手术方法
     this.getMethodData()
     // 获取手术等级

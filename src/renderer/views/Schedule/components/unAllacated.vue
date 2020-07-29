@@ -4,7 +4,7 @@
       ref="unTable"
       resizable
       width="100%"
-      height="200"
+      height="100%"
       size="mini"
       border
       auto-resize
@@ -20,11 +20,11 @@
         field="opeScheduleTime"
         title="申请时间"
       />
-      <vxe-table-column
+      <!-- <vxe-table-column
         field="sequence"
         title="申请台次"
         show-overflow="title"
-      />
+      /> -->
       <vxe-table-column
         field="ptName"
         title="姓名"
@@ -128,17 +128,21 @@ export default {
     // },
     handleDistributeRoom ({ row }) {
       // this.$emit('handleDistributeRoom')
-      request(
-        {
-          method: 'PUT',
-          url: distributeOpeApply + `/${this.currentRoom.roomNo}/${row.operationId}/${this.time}`
-        }
-      ).then(res => {
-        this.$eventHub.$emit('get-allocated')
-        this.$eventHub.$emit('get-room')
-        this.getData()
-        this.$eventHub.$emit('get-records')
-      })
+      if (parseInt(this.currentRoom.count) < parseInt(this.currentRoom.maxCount)) {
+        request(
+          {
+            method: 'PUT',
+            url: distributeOpeApply + `/${this.currentRoom.roomNo}/${row.operationId}/${this.time}`
+          }
+        ).then(res => {
+          this.$eventHub.$emit('get-allocated')
+          this.$eventHub.$emit('get-room')
+          this.getData()
+          this.$eventHub.$emit('get-records')
+        })
+      } else {
+        this.$message({ type: 'warning', message: '当前手术间已到达最大台次' })
+      }
     },
     handleCellClick ({ row }) {
       this.$emit('changePatientDetail', row)

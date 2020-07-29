@@ -11,10 +11,10 @@
         type="text"
         size="mini"
       >刷新</el-button>
-      <el-button
+      <!-- <el-button
         type="text"
         size="mini"
-      >切换</el-button>
+      >切换</el-button> -->
       <el-button
         type="text"
         size="mini"
@@ -55,6 +55,11 @@ export default {
         }
       })
     }
+  },
+  mounted () {
+    this.$eventHub.$on('submit-all', () => {
+      this.submitAll()
+    })
   }
 }
 </script>

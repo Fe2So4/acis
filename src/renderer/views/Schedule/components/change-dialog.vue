@@ -3,11 +3,15 @@
     <el-dialog
       :title="changeTitle"
       :visible.sync="changeVisible"
-      width="60%"
+      width="40%"
+      :before-close="handleClose"
     >
       <el-row>
         {{ changeType != 2 ? '把该手术重新分配到' : '需要把' }}{{ changeType == 2 ? currentId + '号手术间的数据与' : '' }}
-        <el-select v-model="arrangeRoom">
+        <el-select
+          v-model="arrangeRoom"
+          size="mini"
+        >
           <el-option
             v-for="(item,index) in roomNoList"
             :key="index"
@@ -47,12 +51,14 @@
         <el-button
           type="primary"
           @click="submitChangeRoom"
+          size="mini"
         >
           确定
         </el-button>
         <el-button
           type="primary"
           @click="changeVisible=false"
+          size="mini"
         >
           取消
         </el-button>
@@ -67,9 +73,43 @@ export default {
       arrangeRoom: '',
       roomNoList: [],
       currentId: '',
-      changeContent: [],
+      changeContent: [
+        {
+          label: '主麻',
+          value: 'A'
+        },
+        {
+          label: '副麻1',
+          value: 'B'
+        },
+        {
+          label: '副麻2',
+          value: 'C'
+        },
+        {
+          label: '副麻3',
+          value: 'D'
+        },
+        {
+          label: '洗手1',
+          value: 'E'
+        },
+        {
+          label: '洗手2',
+          value: 'F'
+        },
+        {
+          label: '巡回1',
+          value: 'G'
+        },
+        {
+          label: '巡回2',
+          value: 'H'
+        }
+      ],
       checkedContent: [],
-      changeType: ''
+      // changeType: '',
+      isIndeterminate: true
     }
   },
   props: {
@@ -80,16 +120,37 @@ export default {
     changeVisible: {
       type: Boolean,
       default: false
+    },
+    changeType: {
+      type: String,
+      required: true
     }
   },
   methods: {
     submitChangeRoom () {
 
     },
-    handleCheckAllChange () {
-
+    handleCheckAllChange (val) {
+      const arr = []
+      this.changeContent.forEach(value => {
+        arr.push(value.value)
+      })
+      this.checkedContent = val ? arr : []
+      this.isIndeterminate = false
     },
-    handleCheckedContentChange () {}
+    handleCheckedContentChange (value) {
+      console.log(value.length)
+      const checkedCount = value.length
+      this.checkAll = checkedCount === this.changeContent.length
+      this.isIndeterminate =
+        checkedCount > 0 && checkedCount < this.changeContent.length
+    },
+    handleClose () {
+      this.$eventHub.$emit('handle-close')
+    }
+  },
+  mounted () {
+    this.handleCheckAllChange()
   }
 }
 </script>

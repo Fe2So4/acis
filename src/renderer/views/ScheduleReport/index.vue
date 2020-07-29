@@ -12,6 +12,6 @@ export default {
 </script>
 <style lang="stylus" scoped>
   .report {
-
+    color:#fff;
   }
 </style>

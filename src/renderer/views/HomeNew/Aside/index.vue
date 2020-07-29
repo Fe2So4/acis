@@ -160,6 +160,16 @@ export default {
               name: '术后登记',
               index: '3-16',
               componentName: 'PostoperativeRegistration'
+            },
+            {
+              name: '手术信息',
+              index: '3-17',
+              componentName: 'OperationInfo'
+            },
+            {
+              name: '手术登记',
+              index: '3-18',
+              componentName: 'OperationRegisteration'
             }
           ],
           icon: 'el-icon-s-data'

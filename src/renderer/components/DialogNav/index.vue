@@ -65,6 +65,8 @@ import OperationArrangement from '@/views/OperationArrangement/index'
 import About from '@/views/About/index'
 import OperationOverview from '@/views/OperationOverview/index'
 import PostoperativeRegistration from '@/views/PostoperativeRegistration/index'
+import OperationInfo from '@/views/OperationInfo/index'
+import OperationRegisteration from '@/views/OperationRegisteration/index'
 export default {
   name: 'DialogNav',
   data () {
@@ -112,7 +114,9 @@ export default {
     OperationArrangement,
     About,
     OperationOverview,
-    PostoperativeRegistration
+    PostoperativeRegistration,
+    OperationInfo,
+    OperationRegisteration
   },
   methods: {
     handleClose () {

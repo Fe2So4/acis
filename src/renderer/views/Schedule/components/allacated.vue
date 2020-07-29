@@ -5,6 +5,7 @@
       width="100%"
       border
       ref="xTable2"
+      auto-resize
       size="mini"
       align="center"
       highlight-current-row
@@ -23,11 +24,6 @@
         field="ptName"
         title="病人"
         width="82"
-      />
-      <vxe-table-column
-        field="inpatientWard"
-        title="病区"
-        width="120"
       />
       <vxe-table-column
         field="bedId"
@@ -118,50 +114,53 @@
 
 <script>
 import request from '@/utils/requestForMock'
-import { getAllocatedList, cancelOpeApply } from '@/api/schedule'
+import { cancelOpeApply } from '@/api/schedule'
 import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
-      data: []
     }
   },
   props: {
+    data: {
+      type: Array,
+      required: true
+    }
   },
   computed: {
     ...mapGetters('Schedule', ['currentRoom', 'time'])
   },
   watch: {
-    handler (val) {
-      this.getData()
-    }
+    // handler (val) {
+    //   this.getData()
+    // }
   },
   methods: {
-    getData () {
-      request({
-        url: getAllocatedList + `/${this.currentRoom.roomNo}/${this.time}`
-      }).then(res => {
-        const data = res.data.data
-        data.forEach(item => {
-          item.subDoc = (
-            item.firstAnesDocName +
-          ',' +
-          item.secAnesDocName +
-          ',' +
-          item.thirdAnesDocName
-          )
-            .replace(/^,+/, '')
-            .replace(/,+$/, '')
-          item.washNurse = (item.firstOpeNurseName + ',' + item.secOpeNurseName + ',' + item.thirdOpeNurseName)
-            .replace(/^,+/, '')
-            .replace(/,+$/, '')
-          item.hangNurse = (item.firstSupplyNurseName + ',' + item.secSupplyNurseName + ',' + item.thirdSupplyNurseName)
-            .replace(/^,+/, '')
-            .replace(/,+$/, '')
-        })
-        this.data = data
-      })
-    },
+    // getData () {
+    //   request({
+    //     url: getAllocatedList + `/${this.currentRoom.roomNo}/${this.time}`
+    //   }).then(res => {
+    //     const data = res.data.data
+    //     data.forEach(item => {
+    //       item.subDoc = (
+    //         item.firstAnesDocName +
+    //       ',' +
+    //       item.secAnesDocName +
+    //       ',' +
+    //       item.thirdAnesDocName
+    //       )
+    //         .replace(/^,+/, '')
+    //         .replace(/,+$/, '')
+    //       item.washNurse = (item.firstOpeNurseName + ',' + item.secOpeNurseName + ',' + item.thirdOpeNurseName)
+    //         .replace(/^,+/, '')
+    //         .replace(/,+$/, '')
+    //       item.hangNurse = (item.firstSupplyNurseName + ',' + item.secSupplyNurseName + ',' + item.thirdSupplyNurseName)
+    //         .replace(/^,+/, '')
+    //         .replace(/,+$/, '')
+    //     })
+    //     this.data = data
+    //   })
+    // },
     cancelSingle (row) {
       if (row.state === '2') {
         this.$message({ type: 'warning', message: '当前手术申请已提交' })
@@ -173,7 +172,7 @@ export default {
           this.$eventHub.$emit('get-unallocated')
           this.$eventHub.$emit('get-room')
           this.$eventHub.$emit('get-records')
-          this.getData()
+          this.$eventHub.$emit('get-allocated')
         })
       }
       // this.$emit('cancelSingle', row)
@@ -203,11 +202,11 @@ export default {
     }
   },
   mounted () {
-    this.getData()
-    this.$eventHub.$on('get-allocated', () => {
-      // 获取数据
-      this.getData()
-    })
+    // this.getData()
+    // this.$eventHub.$on('get-allocated', () => {
+    //   // 获取数据
+    //   this.getData()
+    // })
   }
 }
 </script>

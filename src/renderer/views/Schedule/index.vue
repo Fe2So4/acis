@@ -155,7 +155,7 @@
           class="content-info"
         >
           <div class="allocated">
-            <Allacate />
+            <Allacate :data="allacatedList" />
           </div>
           <div class="patient-detail">
             申请时间：
@@ -185,12 +185,12 @@
           v-show="showSwitch"
           class="switch"
         >
-          切换
+          <switch-list v-if="showSwitch" />
         </div>
         <vue-context-menu
           :context-menu-data="contextMenuData7"
           @handleShowSwitch="handleShowSwitch"
-          @submitSimple="submitSimple"
+          @submitSimple="submitRoomAll"
           @handleChangeRoom="handleChangeRoom(1)"
           @handleClear1="handleClear(1)"
           @handleClear2="handleClear(2)"
@@ -221,6 +221,7 @@
     />
     <change-dialog
       :change-title="changeTitle"
+      :change-type="changeType"
       :change-visible="changeVisible"
       @handleClose="handleClose"
     />
@@ -244,16 +245,14 @@ import {
   // getRecordsList,
   getAnaesMethods,
   getSwitchList,
-  submitRoomAll,
+  // submitRoomAll,
   submitSimple,
-  clearDocOrNurse,
   configMaxDefalut,
   updateRoomContent,
   updateRoom,
   // cancelSingle,
   submitRoomConfig,
   submitEditDetail,
-  submitAll,
   // distributeOpeDoc,
   getDocList,
   getNurseList,
@@ -261,7 +260,9 @@ import {
   distributeSubAnaes,
   distributeHangNurse,
   distributeWashNurse,
-  cancelClearDistribute
+  cancelClearDistribute,
+  clearAllRoomData,
+  getAllocatedList
 } from '@/api/schedule'
 import moment from 'moment'
 import Unallocated from './components/unAllacated'
@@ -277,6 +278,7 @@ import WithDraw from './components/withdraw'
 import OperationDoc from './components/operation-doc'
 import Option from './components/option'
 import Preview from './components/preview'
+import SwitchList from './components/switch-list'
 // import AllocatedDetail from './components/allocated-detail'
 import {
   // addOperationRoom,
@@ -286,6 +288,7 @@ export default {
   name: 'Scheduling',
   data () {
     return {
+      allacatedList: [],
       dept: '',
       roomVisible: false,
       changeTitle: '',
@@ -391,12 +394,20 @@ export default {
                 fnHandler: 'handleClear7'
               },
               {
-                btnName: '巡回护士1',
+                btnName: '洗手护士3',
                 fnHandler: 'handleClear8'
               },
               {
-                btnName: '巡回护士2',
+                btnName: '巡回护士1',
                 fnHandler: 'handleClear9'
+              },
+              {
+                btnName: '巡回护士2',
+                fnHandler: 'handleClear10'
+              },
+              {
+                btnName: '巡回护士3',
+                fnHandler: 'handleClear11'
               }
             ]
           },
@@ -505,7 +516,7 @@ export default {
       roomNoList: [],
       userId: '',
       arrangeRoom: '',
-      changeType: 1,
+      changeType: '1',
       // changeTitle: '更换手术间',
       currentPage: 1,
       maxCount: null, // 最大
@@ -522,7 +533,7 @@ export default {
     List,
     Room,
     RoomConfig,
-    // SwitchList,
+    SwitchList,
     ChangeDialog,
     DocConfig,
     OperationDoc,
@@ -559,6 +570,32 @@ export default {
     // 切换患者基本信息
     changePatientDetail (row) {
       this.patientBasBasicInfo = row
+    },
+    // 获取当前排班列表数据
+    getData () {
+      request({
+        url: getAllocatedList + `/${this.currentRoom.roomNo}/${this.timeDate}`
+      }).then(res => {
+        const data = res.data.data
+        data.forEach(item => {
+          item.subDoc = (
+            item.firstAnesDocName +
+          ',' +
+          item.secAnesDocName +
+          ',' +
+          item.thirdAnesDocName
+          )
+            .replace(/^,+/, '')
+            .replace(/,+$/, '')
+          item.washNurse = (item.firstOpeNurseName + ',' + item.secOpeNurseName + ',' + item.thirdOpeNurseName)
+            .replace(/^,+/, '')
+            .replace(/,+$/, '')
+          item.hangNurse = (item.firstSupplyNurseName + ',' + item.secSupplyNurseName + ',' + item.thirdSupplyNurseName)
+            .replace(/^,+/, '')
+            .replace(/,+$/, '')
+        })
+        this.allacatedList = data
+      })
     },
     getDepartmentList () {
       const formData = new FormData()
@@ -802,7 +839,7 @@ export default {
         }
       })
     },
-    // 撤销操作
+    // 撤销操作--new
     async handleWithdraw (sysno) {
       request({ url: cancelClearDistribute + '/' + sysno, method: 'PUT' }).then(
         (res) => {
@@ -943,47 +980,12 @@ export default {
         this.switchList = res
       })
     },
-    // 提交所有
-    async submitAll () {
-      // await this.getPreviewList()
-      const arr = []
-      this.previewList.forEach((value) => {
-        if (value.state === 1) {
-          arr.push(value)
-        }
-      })
-      if (arr.length > 0) {
-        const formData = new FormData()
-        formData.append('date', this.timeDate)
-        submitAll(formData).then((res) => {
-          this.getRoomList()
-          this.getAllocatedList()
-          this.getNurseList()
-          this.getDoctorList()
-          this.previewList = []
-        })
-      } else {
-        this.$message({
-          message: '请选择正确提交内容',
-          type: 'warning'
-        })
-      }
-    },
     // 提交手术间所有
     submitRoomAll () {
-      if (this.unsubmitList.length > 0) {
-        const formData = new FormData()
-        formData.append('roomNo', this.currentId)
-        formData.append('date', this.timeDate)
-        submitRoomAll(formData)
-      } else {
-        this.$message({
-          message: '当前手术间未新分配手术',
-          type: 'warning'
-        })
-      }
+      this.$eventHub.$emit('submit-all')
     },
-    // 提交手术间单条手术申请
+
+    // 提交手术间单条手术申请---new
     submitSimple () {
       if (this.allocatedList.length > 0) {
         if (this.selectAllocated.state === '2') {
@@ -1013,11 +1015,48 @@ export default {
         })
       }
     },
+
     // 选中单条手术申请
     handleSimpleApply ({ row }) {
       this.selectAllocated = row
     },
-    handleClear () {},
+    // 清空操作 1~2
+    handleClear (param) {
+      const arr = []
+      this.allacatedList.forEach(item => {
+        if (item.state === '1') {
+          arr.push({
+            opeScheduleTime: item.opeScheduleTime,
+            opeRoom: item.opeRoom,
+            operationId: item.operationId,
+            patientId: item.patientId
+          })
+        }
+      })
+      if (arr.length > 0) {
+        request({
+          method: 'POST',
+          url: clearAllRoomData + '/' + param,
+          data: arr
+        }).then(res => {
+          if (res.data.code === 200) {
+            this.$eventHub.$emit('get-unallocated')
+            this.$eventHub.$emit('get-allocated')
+            this.$eventHub.$emit('get-room')
+            this.$eventHub.$emit('get-records')
+            this.getNurseList()
+            this.getDoctorList()
+            this.$message({ type: 'success', message: '清空成功' })
+          } else {
+            this.$message({ type: 'error', message: '清空失败' })
+          }
+        })
+      } else {
+        this.$message({ type: 'warning', message: '当前手术间无待提交申请' })
+      }
+      // obj.opeScheduleTime = this.timeDate
+      // obj.opeRoom = this.currentRoom.roomNo
+    },
     // 开启医生配置弹框
     handleDocConfig (param) {
       this.configVisible = true
@@ -1046,30 +1085,30 @@ export default {
       }
     },
     // 清空手术间--医生--护士 1:清空全部 2：主麻 ~~~~ 9：巡回护士2
-    clearRoomDocOrNurse (param) {
-      const type = param
-      // let formData = new FormData();
-      const arr = []
-      const obj = {}
-      obj.type = type
-      // formData.append('type',type);
-      this.allocatedList.forEach((value) => {
-        arr.push({
-          scheduleId: value.scheduleId,
-          visitId: value.visitId,
-          patientId: value.patientId
-        })
-      })
-      obj.obj = arr
-      clearDocOrNurse(obj).then((res) => {
-        this.getRoomList()
-        this.getAllocatedList()
-        this.getUnallocatedList()
-        this.getNurseList()
-        this.getDoctorList()
-        this.getRecordsList()
-      })
-    },
+    // clearRoomDocOrNurse (param) {
+    //   const type = param
+    //   // let formData = new FormData();
+    //   const arr = []
+    //   const obj = {}
+    //   obj.type = type
+    //   // formData.append('type',type);
+    //   this.allocatedList.forEach((value) => {
+    //     arr.push({
+    //       scheduleId: value.scheduleId,
+    //       visitId: value.visitId,
+    //       patientId: value.patientId
+    //     })
+    //   })
+    //   obj.obj = arr
+    //   clearDocOrNurse(obj).then((res) => {
+    //     this.getRoomList()
+    //     this.getAllocatedList()
+    //     this.getUnallocatedList()
+    //     this.getNurseList()
+    //     this.getDoctorList()
+    //     this.getRecordsList()
+    //   })
+    // },
     // 提交配置信息
     submitConfig () {
       const formData = new FormData()
@@ -1254,6 +1293,10 @@ export default {
   async mounted () {
     this.getNurseList()
     this.getDoctorList()
+    this.getData()
+    this.$eventHub.$on('get-allocated', () => {
+      this.getData()
+    })
     this.$eventHub.$on('get-DocNurse', () => {
       this.getNurseList()
       this.getDoctorList()
@@ -1302,7 +1345,6 @@ export default {
       height: calc(100% - 110px);
       .switch {
         height: 100%;
-        background: pink;
       }
       .content-info {
         height: 100%;
@@ -1356,6 +1398,9 @@ export default {
 .schedule /deep/ .el-collapse-item__wrap {
   background: #252c40;
   border-bottom: 1px solid #000;
+  .el-collapse-item__content{
+    padding-bottom:unset;
+  }
 }
 .schedule /deep/ .vue-contextmenu-listWrapper {
   background: #1e222e;

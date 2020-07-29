@@ -12,12 +12,12 @@
           v-for="(item,index) in signsList"
           :key="index"
         >
-          <p :style="{color:item.color}">
+          <p :style="{color:item.itemColor}">
             <span>{{ item.itemName }}</span>
-            <span>{{ item.unit }}</span>
+            <span>{{ item.itemUnit }}</span>
           </p>
-          <p :style="{color:item.color}">
-            {{ item.value }}
+          <p :style="{color:item.itemColor}">
+            {{ item.itemValue===''? '-' : item.itemValue }}
           </p>
         </li>
       </el-scrollbar>
@@ -25,31 +25,99 @@
   </div>
 </template>
 <script>
+import { getSignItemList } from '@/api/signData'
+import {
+  getSocketData
+} from '@/api/medicalDocument'
+import request from '@/utils/requestForMock'
+import io from 'socket.io-client'
+import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
-      signsList: [{ itemName: '心率', unit: 'bpm', value: '87', color: '#18B24E' },
-        { itemName: 'PULSE', unit: 'bpm', value: '70', color: '#18B24E' },
-        { itemName: '动脉平均压', unit: 'bpm', value: '70', color: '#18B24E' },
-        { itemName: '呼吸', unit: '次/分', value: '18', color: '#5BB9F5' },
-        { itemName: '动脉压', unit: 'mmHg', value: '114/56', color: '#F0E34E' },
-        { itemName: '无创压', unit: 'mmHg', value: '90/63', color: '#F0E34E' },
-        { itemName: '体温', unit: '℃', value: '36.3', color: '#5BB9F5' },
-        { itemName: 'ETCO2', unit: '次/分', value: '33', color: '#F0E34E' },
-        { itemName: 'FiO2', unit: 'L/min', value: '26', color: '#F73D3D' }
-      ],
+      signsList: [],
+      // signsList: [{ itemName: '心率', unit: 'bpm', value: '87', color: '#18B24E' },
+      //   { itemName: 'PULSE', unit: 'bpm', value: '70', color: '#18B24E' },
+      //   { itemName: '动脉平均压', unit: 'bpm', value: '70', color: '#18B24E' },
+      //   { itemName: '呼吸', unit: '次/分', value: '18', color: '#5BB9F5' },
+      //   { itemName: '动脉压', unit: 'mmHg', value: '114/56', color: '#F0E34E' },
+      //   { itemName: '无创压', unit: 'mmHg', value: '90/63', color: '#F0E34E' },
+      //   { itemName: '体温', unit: '℃', value: '36.3', color: '#5BB9F5' },
+      //   { itemName: 'ETCO2', unit: '次/分', value: '33', color: '#F0E34E' },
+      //   { itemName: 'FiO2', unit: 'L/min', value: '26', color: '#F73D3D' }
+      // ],
       wrapStyle: [
         {
           'overflow-x': 'hidden'
         }
-      ]
+      ],
+      socket: null
     }
   },
-
+  computed: {
+    ...mapGetters('Base', ['operationId'])
+  },
+  beforeDestroy () {
+    if (this.socket) {
+      this.socket.close()
+      this.socket = null
+    }
+  },
   methods: {
-
+    getList () {
+      request({
+        url: getSignItemList
+      }).then(res => {
+        const data = res.data.data
+        data.forEach(item => {
+          item.itemValue = ''
+        })
+        this.signsList = data
+      })
+    },
+    getSocket () {
+      const loginUserNum = 'b0f9d8bda9244397a44cb8ff278937d9'
+      // const loginUserNum = this.operationId
+      this.socket = io(getSocketData, {
+        query: {
+          loginUserNum
+        }
+      })
+      this.socket.on('connect', () => {
+        console.log('socket.io connected')
+      })
+      this.socket.on('reconnect_error', e => {
+        console.error(e)
+      })
+      this.socket.on('disconnect', () => {
+        console.log('socket.io disconnect')
+      })
+      // 体征曲线
+      const that = this
+      this.socket.on('push_monitor_event_realtime', res => {
+        if (Array.isArray(res)) {
+          // 回应socket.io
+          that.socket.emit('push_monitor_event_realtime', {
+            loginUserNum,
+            content: res
+          })
+          // console.log(res)
+          res.forEach(item => {
+            this.signsList.forEach(_item => {
+              if (_item.itemCode === item.itemCode) {
+                _item.itemValue = item.itemValue
+              }
+            })
+          })
+        }
+      })
+    }
   },
   mounted () {
+    this.getList()
+    if (this.operationId !== '') {
+      this.getSocket()
+    }
   }
 }
 </script>

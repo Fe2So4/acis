@@ -28,7 +28,7 @@
                   class="IconT"
                   style="background:#2E96F7;"
                 >
-                  1
+                  {{ item.index }}
                 </div>
               </div>
             </div>
@@ -94,6 +94,12 @@ export default {
   methods: {
     handleChange (item) {
       this.activeIndex = item.index
+      if (item.index === 1) {
+        this.$router.push('/schedule-home/schedule')
+      }
+      if (item.index === 2) {
+        this.$router.push('/schedule-home/report')
+      }
     },
     miniWindow () {
       // 最小化窗口
