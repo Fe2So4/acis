@@ -1,17 +1,20 @@
 <template>
   <div class="intraoperativeRegistration">
     <div class="event">
-      <div class="table">
+      <div>
         <event-table
-          :table-data="tableData"
+          :table-data="filteredTableData"
           :approach-list="approachList"
           :event-list="eventList"
+          @change-type="onChangeType"
+          @show-templates="onShowTemplates"
           @change-event="onChangeEvent"
           @delete-event="onDeleteEvent"
           @save-event="onSaveEvent"
+          @refresh-event="onRefreshEvent"
         />
       </div>
-      <div class="list">
+      <div>
         <event-list
           :event-list="eventList"
           @add-event="onAddEvent"
@@ -19,8 +22,13 @@
       </div>
     </div>
     <div class="detail">
-      <div>table</div>
+      <sign-and-monitor-table :event-list="eventList" />
     </div>
+    <dialog-event-template
+      :visible.sync="dialogTemplateVisible"
+      :approach-list="approachList"
+      v-if="dialogTemplateVisible"
+    />
   </div>
 </template>
 
@@ -28,11 +36,14 @@
 import {
   getExistEvent,
   getApproachList,
-  getEventList
+  getEventList,
+  saveEvent
 } from '@/api/intraoperative'
 import request from '@/utils/requestForMock'
 import EventTable from './EventTable'
 import EventList from './EventList'
+import DialogEventTemplate from './DialogEventTemplate'
+import SignAndMonitorTable from './SignAndMonitorTable'
 import { createNamespacedHelpers } from 'vuex'
 import moment from 'moment'
 const { mapState } = createNamespacedHelpers('Base')
@@ -40,23 +51,34 @@ export default {
   name: 'IntraoperativeRegistration',
   components: {
     EventTable,
-    EventList
+    EventList,
+    DialogEventTemplate,
+    SignAndMonitorTable
   },
   data () {
     return {
       tableData: [],
       approachList: [],
       eventList: [],
-      originRowLength: 0,
       existIndex: 0,
       addIndex: 0,
       changedMap: {},
       deletedMap: {},
-      addedMap: {}
+      addedMap: {},
+      filterType: '',
+      dialogTemplateVisible: false
     }
   },
   computed: {
-    ...mapState(['operationId'])
+    ...mapState(['operationId']),
+    filteredTableData () {
+      if (this.filterType) {
+        return this.tableData.filter(
+          (item) => item.eventId === this.filterType
+        )
+      }
+      return [...this.tableData]
+    }
   },
   created () {
     this.getExistEvent()
@@ -64,6 +86,9 @@ export default {
     this.getEventList()
   },
   methods: {
+    onShowTemplates () {
+      this.dialogTemplateVisible = true
+    },
     onAddEvent (event) {
       const startTime = moment().format('YYYY-MM-DD HH:mm')
       event = Object.assign(
@@ -88,6 +113,7 @@ export default {
         },
         event
       )
+      event.isHolding = '0'
       this.tableData.push(event)
       this.addedMap[event.addIndex] = event
     },
@@ -95,36 +121,105 @@ export default {
       if (row._tag === 'exist') {
         this.changedMap[row.existIndex] = row
       } else if (row._tag === 'add') {
-        this.changedMap[row.addIndex] = row
+        this.addedMap[row.addIndex] = row
       }
     },
     onDeleteEvent (row) {
       if (row._tag === 'exist') {
         delete this.changedMap[row.existIndex]
         this.deletedMap[row.existIndex] = row
-        const data = this.tableData.find(
+        const rowIndex = this.tableData.findIndex(
           (item) => item.existIndex === row.existIndex
         )
-        const rowIndex = this.tableData.indexOf(data)
         this.tableData.splice(rowIndex, 1)
       } else if (row._tag === 'add') {
         delete this.addedMap[row.addIndex]
-        const data = this.tableData.find(
+        const rowIndex = this.tableData.findIndex(
           (item) => item.addIndex === row.addIndex
         )
-        const rowIndex = this.tableData.indexOf(data)
         this.tableData.splice(rowIndex, 1)
       }
     },
     onSaveEvent () {
-      console.log(
-        'changedMap',
-        this.changedMap,
-        'deletedMap',
-        this.deletedMap,
-        'addedMap',
-        this.addedMap
-      )
+      const requestArr = []
+      const changedList = Object.values(this.changedMap).map((item) => {
+        const obj = {};
+        ({
+          approach: obj.approach,
+          concentration: obj.concentration,
+          concentrationUnit: obj.concentrationUnit,
+          detailId: obj.detailId,
+          dosage: obj.dosage,
+          dosageUnit: obj.dosageUnit,
+          eventEndTime: obj.eventEndTime,
+          eventId: obj.eventId,
+          eventName: obj.eventName,
+          eventStartTime: obj.eventStartTime,
+          eventType: obj.eventType,
+          holdingTime: obj.holdingTime,
+          id: obj.id,
+          isHolding: obj.isHolding,
+          speed: obj.speed,
+          speedUnit: obj.speedUnit
+        } = item)
+        obj.operationId = this.operationId
+        return obj
+      })
+      if (changedList.length) {
+        requestArr.push(this.saveEvent(changedList, 1))
+      }
+      const addedList = Object.values(this.addedMap).map((item) => {
+        const obj = {};
+        ({
+          approach: obj.approach,
+          concentration: obj.concentration,
+          concentrationUnit: obj.concentrationUnit,
+          detailId: obj.detailId,
+          dosage: obj.dosage,
+          dosageUnit: obj.dosageUnit,
+          eventEndTime: obj.eventEndTime,
+          eventId: obj.eventId,
+          eventName: obj.eventName,
+          eventStartTime: obj.eventStartTime,
+          eventType: obj.eventType,
+          holdingTime: obj.holdingTime,
+          isHolding: obj.isHolding,
+          speed: obj.speed,
+          speedUnit: obj.speedUnit
+        } = item)
+        obj.operationId = this.operationId
+        return obj
+      })
+      if (addedList.length) {
+        requestArr.push(this.saveEvent(addedList, 0))
+      }
+      const deletedList = Object.values(this.deletedMap).map((item) => {
+        const obj = {};
+        ({
+          id: obj.id,
+          eventId: obj.eventId
+        } = item)
+        return obj
+      })
+      if (deletedList.length) {
+        requestArr.push(this.saveEvent(deletedList, 2))
+      }
+      if (requestArr.length) {
+        return Promise.all(requestArr).then(
+          res => {
+            const success = res.every(res => res.data && res.data.data)
+            if (success) {
+              this.init()
+            }
+          }
+        )
+      }
+    },
+    onRefreshEvent () {
+      this.init()
+    },
+    onChangeType (type) {
+      this.filterType = type
     },
     getExistEvent () {
       return request({
@@ -133,36 +228,60 @@ export default {
         params: {
           operationId: this.operationId
         }
-      }).then((res) => {
-        if (res.data && res.data.success) {
-          this.tableData = res.data.data.map((item) => {
-            item.existIndex = this.existIndex++
-            item._tag = 'exist'
-            return item
-          })
-          this.originRowLength = this.tableData.length
-        }
       })
+        .then((res) => {
+          if (res.data && res.data.success) {
+            this.tableData = res.data.data.map((item) => {
+              item.existIndex = this.existIndex++
+              item._tag = 'exist'
+              return item
+            })
+          }
+        })
+        .catch((e) => {})
     },
     getApproachList () {
       return request({
         method: 'get',
         url: getApproachList
-      }).then((res) => {
-        if (res.data && res.data.success) {
-          this.approachList = res.data.data
-        }
       })
+        .then((res) => {
+          if (res.data && res.data.success) {
+            this.approachList = res.data.data
+          }
+        })
+        .catch((e) => {})
     },
     getEventList () {
       return request({
         url: getEventList,
         method: 'get'
-      }).then((res) => {
-        if (res.data && res.data.success) {
-          this.eventList = res.data.data
+      })
+        .then((res) => {
+          if (res.data && res.data.success) {
+            this.eventList = res.data.data
+          }
+        })
+        .catch((e) => {})
+    },
+    saveEvent (list, mode) {
+      return request({
+        url: saveEvent,
+        method: 'post',
+        data: {
+          list,
+          mode
         }
       })
+    },
+    init () {
+      this.tableData = []
+      this.existIndex = 0
+      this.addIndex = 0
+      this.changedMap = {}
+      this.deletedMap = {}
+      this.addedMap = {}
+      this.getExistEvent()
     }
   }
 }
@@ -177,10 +296,10 @@ export default {
     display: grid;
     grid-template-columns: 80% calc(20% - 20px);
     grid-gap: 20px;
-    .table {
-    }
-    .list {
-    }
+  }
+  .detail {
+    margin-top: 20px;
+    height: calc(100% - 420px);
   }
 }
 </style>
