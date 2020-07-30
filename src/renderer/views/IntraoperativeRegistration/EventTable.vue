@@ -1,8 +1,6 @@
 <template>
   <div class="eventTable">
-    <div
-      class="table"
-    >
+    <div class="table">
       <vxe-table
         border="inner"
         ref="table"
@@ -48,7 +46,7 @@
           field="concentration"
           title="浓度"
           width="80"
-          :edit-render="{name: '$input', props: {type: 'float', digits: 2}}"
+          :edit-render="{name: '$input', props: {type: 'float', digits: 2}, events:{change: onInputChange}}"
         />
         <vxe-table-column
           field="concentrationUnit"
@@ -59,7 +57,7 @@
           field="speed"
           title="速度"
           width="80"
-          :edit-render="{name: '$input', props: {type: 'float', digits: 2}}"
+          :edit-render="{name: '$input', props: {type: 'float', digits: 2}, events:{change: onInputChange}}"
         />
         <vxe-table-column
           field="speedUnit"
@@ -68,9 +66,9 @@
         />
         <vxe-table-column
           field="dosage"
-          title="计量"
+          title="剂量"
           width="80"
-          :edit-render="{name: '$input', props: {type: 'float', digits: 2}}"
+          :edit-render="{name: '$input', props: {type: 'float', digits: 2}, events:{change: onInputChange}}"
         />
         <vxe-table-column
           field="dosageUnit"
@@ -88,8 +86,7 @@
               'label-format':'yyyy-MM-dd HH:mm',
               'parse-format':'yyyy-MM-dd HH:mm',
               'value-format':'yyyy-MM-dd HH:mm',
-              editable: false,
-              clearable: true
+              editable: false
             },
             events: {
               change: onStartTimeChange
@@ -139,17 +136,22 @@
         <el-button
           size="mini"
           type="primary"
+          @click="onSaveAsTemplate"
         >
           保存模板
         </el-button>
-        <el-button size="mini">
+        <el-button
+          size="mini"
+          @click="onShowTemplates"
+        >
           套用模板
         </el-button>
-        <span>类型筛选</span>
+        <span style="margin: 0 10px">类型筛选</span>
         <el-select
           size="mini"
           v-model="eventType"
           @change="onChangeEventType"
+          clearable
         >
           <el-option
             v-for="type in eventList"
@@ -211,6 +213,9 @@ export default {
     onApproachChange ({ row }) {
       this.$emit('change-event', row)
     },
+    onInputChange ({ row }) {
+      this.$emit('change-event', row)
+    },
     onStartTimeChange ({ row }) {
       this.changeTimeData(row, 'eventStartTime')
       this.$emit('change-event', row)
@@ -223,14 +228,20 @@ export default {
       this.changeTimeData(row, 'eventEndTime')
       this.$emit('change-event', row)
     },
-    onChangeEventType (val) {},
+    onSaveAsTemplate () {},
+    onShowTemplates () {
+      this.$emit('show-templates')
+    },
+    onChangeEventType (eventId) {
+      this.$emit('change-type', eventId)
+    },
     onSave () {
       this.$emit('save-event')
     },
     onDelete () {
       const selectedArr = this.$refs.table.getCheckboxRecords()
       if (selectedArr.length) {
-        selectedArr.forEach(row => {
+        selectedArr.forEach((row) => {
           this.$emit('delete-event', row)
         })
       }
@@ -256,7 +267,6 @@ export default {
             row.holdingTime = ''
             row.eventEndTime = ''
           }
-
           break
         case 'eventEndTime':
           if (eventEndTime) {
@@ -310,7 +320,7 @@ export default {
     .right {
       height: 30px;
       padding: 0 20px;
-      color: #9BA3D5;
+      color: #9ba3d5;
     }
   }
 }

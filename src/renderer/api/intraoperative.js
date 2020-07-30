@@ -32,3 +32,27 @@ export const getExistEvent = mock
 export const getApproachList = mock
   ? ''
   : baseXie + 'acis/dict/getCommonDictdetails/D004'
+// 保存修改、删除、添加的数据 - 谢 - 2020-07-30
+export const saveEvent = mock
+  ? ''
+  : baseXie + 'acis/intraoperative/info/storageAcisIntraoEventRegistList'
+// 获取事件模板列表 - 谢 - 2020-07-30
+export const getEventTemplateList = mock
+  ? ''
+  : baseXie + 'acis/intraoperative/templete/getAnesthesiaEventTempleteList'
+// 获取事件模板具体内容 - 谢 - 2020-07-30
+export const getEventTemplateDetail = mock
+  ? ''
+  : baseXie + 'acis/intraoperative/templete/getAnesthesiaEventTemplete'
+// 获取监测数据 - 谢 - 2020-07-30
+export const getMonitorData = mock
+  ? ''
+  : baseXie + 'acis/intraoperative/info/getAcisIntraoMonitorListenData'
+// 添加体征/监测项目 - 谢 - 2020-07-30
+export const addSignOrMonitorItem = mock
+  ? ''
+  : baseXie + 'acis/intraoperative/templete/addAcisIntraoEventTemplete'
+// 删除体征/监测项目 - 谢 - 2020-07-30
+export const deleteSignOrMonitorItem = mock
+  ? ''
+  : baseXie + 'acis/intraoperative/templete/deleteAcisIntraoEventTemplete'
