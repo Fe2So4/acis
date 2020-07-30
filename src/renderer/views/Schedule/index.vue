@@ -175,7 +175,7 @@
               :time="this.timeDate"
               @handleClear="handleClear"
               @submitRoomAll="submitRoomAll"
-              @handleChangeRoom="handleChangeRoom"
+              @handleChangeRoom="handleChangeRoom(2)"
               @roomConfig="roomConfig"
             />
             <Option @showPreview="showPreview" />
