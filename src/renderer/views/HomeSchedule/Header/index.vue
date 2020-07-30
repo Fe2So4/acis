@@ -77,6 +77,13 @@ export default {
           route: '/schedule-home/report',
           name: 'ScheduleReport',
           index: 2
+        },
+        {
+          title: 'HIS同步',
+          icon: 'el-icon-s-data',
+          route: '/schedule-home/report',
+          name: 'ScheduleReport',
+          index: 3
         }
       ],
       activeIndex: 1
@@ -99,6 +106,9 @@ export default {
       }
       if (item.index === 2) {
         this.$router.push('/schedule-home/report')
+      }
+      if (item.index === 3) {
+        console.log('his同步')
       }
     },
     miniWindow () {

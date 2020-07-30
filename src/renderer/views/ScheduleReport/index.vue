@@ -1,10 +1,19 @@
 <template lang="pug">
-  .report 我是排手术班表啊
+  .report
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="手术排班表" name="first">手术排班表</el-tab-pane>
+      <el-tab-pane label="手术通知单" name="second">手术通知单</el-tab-pane>
+    </el-tabs>
 </template>
 <script>
 export default {
   data () {
     return {
+      activeName: 'first'
+    }
+  },
+  methods: {
+    handleClick () {
 
     }
   }

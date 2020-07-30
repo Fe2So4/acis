@@ -1,7 +1,7 @@
 <template>
   <div class="aside">
     <div class="title">
-      Dandelion 麻醉临床信息系统
+      Dandelion 围手术期临床信息系统
     </div>
     <div
       class="img"
@@ -23,7 +23,7 @@
           @change="handleChange"
         >
           <el-collapse-item
-            v-for="item in navList"
+            v-for="item in navs"
             :key="item.index"
             :name="item.index"
           >
@@ -61,7 +61,9 @@
 </template>
 <script>
 import Dialog from '@/components/DialogNav/index'
+import { getNavs } from '@/api/nav'
 import { mapActions, mapGetters } from 'vuex'
+import request from '@/utils/requestForMock'
 // import Overview from '../../../components/OperationOverview/index'
 export default {
   name: 'Aside',
@@ -71,12 +73,12 @@ export default {
       activesNames: '1',
       isCollapse: false,
       showOverflow: false,
-      showDialog: false, // 开启弹窗
+      showDialog: true, // 开启弹窗
       componentName: '',
       navList: [
         {
           name: '大事件',
-          index: '1',
+          index: 'M001',
           subNav: [
             { name: '麻药', index: '1-1', componentName: 'Event' },
             { name: '用药', index: '1-2', componentName: 'Event' },
@@ -92,10 +94,10 @@ export default {
           ],
           icon: 'el-icon-star-on'
         },
-        { name: '系统集成', index: '2', subNav: [], icon: 'el-icon-location' },
+        { name: '系统集成', index: 'M002', subNav: [], icon: 'el-icon-location' },
         {
           name: '患者操作',
-          index: '3',
+          index: 'M003',
           subNav: [
             {
               name: '手术概览',
@@ -176,7 +178,7 @@ export default {
         },
         {
           name: '常用功能',
-          index: '4',
+          index: 'M004',
           subNav: [
             { name: '血流动力', index: '4-1', componentName: 'Hemodynamics' },
             {
@@ -197,33 +199,58 @@ export default {
           icon: 'el-icon-monitor'
         },
         {
-          name: '其他',
-          index: '5',
+          name: '护理管理',
+          index: 'M005',
           subNav: [
             {
-              name: '系统配置',
+              name: '床位管理',
               index: '5-1',
               componentName: 'ConfigurationSystem'
             },
             {
-              name: '模板设计器',
+              name: '护理评估',
               index: '5-2',
               componentName: 'TemplateDesigner'
             },
             {
-              name: '模板展示',
+              name: '医嘱处理',
               index: '5-3',
               componentName: 'TemplateDisplayer'
             },
-            { name: '修改密码', index: '5-4', componentName: 'ChangePass' },
-            { name: '关于', index: '5-5', componentName: 'About' }
+            { name: '整体护理', index: '5-4', componentName: 'ChangePass' },
+            { name: '护理文书', index: '5-5', componentName: 'About' }
+          ],
+          icon: 'el-icon-s-management'
+        },
+        {
+          name: '其他',
+          index: 'M006',
+          subNav: [
+            {
+              name: '系统配置',
+              index: '6-1',
+              componentName: 'ConfigurationSystem'
+            },
+            {
+              name: '模板设计器',
+              index: '6-2',
+              componentName: 'TemplateDesigner'
+            },
+            {
+              name: '模板展示',
+              index: '6-3',
+              componentName: 'TemplateDisplayer'
+            },
+            { name: '修改密码', index: '6-4', componentName: 'ChangePass' },
+            { name: '关于', index: '6-5', componentName: 'About' }
           ],
           icon: 'el-icon-s-tools'
         }
       ],
       overviewList: [],
       activeIndex: null,
-      path: ''
+      path: '',
+      navs: []
     }
   },
   components: {
@@ -285,6 +312,32 @@ export default {
     },
     openConfiguration (route, name) {
       this.$electron.ipcRenderer.send('open-new-window', route, name)
+    },
+    getNavList () {
+      request({
+        url: getNavs + '/' + 3
+      }).then(res => {
+        const data = res.data.data
+        for (const item in data) {
+          this.navList.forEach(_item => {
+            if (_item.index === item) {
+              data[item].forEach(
+                value1 => {
+                  _item.subNav.forEach(value2 => {
+                    if (value1.perName === value2.name) {
+                      value1.componentName = value2.componentName
+                    }
+                  })
+                }
+              )
+            }
+          }
+          )
+          // console.log(data[item])
+        }
+        console.log(data)
+        this.navs = data
+      })
     }
   },
   mounted () {
@@ -296,6 +349,7 @@ export default {
       // 关闭弹窗
       this.handleDialogClose()
     })
+    this.getNavList()
   }
 }
 </script>
@@ -310,7 +364,7 @@ export default {
     color: #0094ff;
     line-height: 30px;
     // background: #f8f9fa;
-    text-indent: 10px;
+    text-indent: 2px;
     font-size: 12px;
     cursor: pointer;
   }

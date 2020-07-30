@@ -109,6 +109,12 @@
         </template>
       </vxe-table-column>
     </vxe-table>
+    <allocated-detail
+      v-if="detailVisible"
+      :detail-visible="detailVisible"
+      :detail="detailApply"
+      @close="handleClose"
+    />
   </div>
 </template>
 
@@ -116,9 +122,12 @@
 import request from '@/utils/requestForMock'
 import { cancelOpeApply } from '@/api/schedule'
 import { mapGetters } from 'vuex'
+import AllocatedDetail from './allocated-detail'
 export default {
   data () {
     return {
+      detailVisible: false,
+      detailApply: null
     }
   },
   props: {
@@ -126,6 +135,9 @@ export default {
       type: Array,
       required: true
     }
+  },
+  components: {
+    AllocatedDetail
   },
   computed: {
     ...mapGetters('Schedule', ['currentRoom', 'time'])
@@ -136,31 +148,6 @@ export default {
     // }
   },
   methods: {
-    // getData () {
-    //   request({
-    //     url: getAllocatedList + `/${this.currentRoom.roomNo}/${this.time}`
-    //   }).then(res => {
-    //     const data = res.data.data
-    //     data.forEach(item => {
-    //       item.subDoc = (
-    //         item.firstAnesDocName +
-    //       ',' +
-    //       item.secAnesDocName +
-    //       ',' +
-    //       item.thirdAnesDocName
-    //       )
-    //         .replace(/^,+/, '')
-    //         .replace(/,+$/, '')
-    //       item.washNurse = (item.firstOpeNurseName + ',' + item.secOpeNurseName + ',' + item.thirdOpeNurseName)
-    //         .replace(/^,+/, '')
-    //         .replace(/,+$/, '')
-    //       item.hangNurse = (item.firstSupplyNurseName + ',' + item.secSupplyNurseName + ',' + item.thirdSupplyNurseName)
-    //         .replace(/^,+/, '')
-    //         .replace(/,+$/, '')
-    //     })
-    //     this.data = data
-    //   })
-    // },
     cancelSingle (row) {
       if (row.state === '2') {
         this.$message({ type: 'warning', message: '当前手术申请已提交' })
@@ -194,11 +181,20 @@ export default {
         }
       }
     },
-    handleDetailVisible () {
-      this.$emit('handleDetailVisible')
+    handleDetailVisible ({ row }) {
+      if (row.state === '2') {
+        this.$message({ type: 'warning', message: '当前手术申请已提交' })
+      } else {
+        this.detailVisible = true
+        this.detailApply = JSON.parse(JSON.stringify(row))
+      }
     },
-    handleSimpleApply () {
-      this.$emit('handleSimpleApply')
+    handleSimpleApply ({ row }) {
+      // console.log(row)
+      this.$emit('handleSimpleApply', row)
+    },
+    handleClose () {
+      this.detailVisible = false
     }
   },
   mounted () {

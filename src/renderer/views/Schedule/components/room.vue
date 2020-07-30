@@ -89,7 +89,7 @@
               @handleClear7="handleClear(7)"
               @handleClear8="handleClear(8)"
               @handleClear9="handleClear(9)"
-              @handleChangeRoom="handleChangeRoom(2)"
+              @handleChangeRoom="handleChangeRoom('2')"
               @roomConfig="roomConfig"
             />
           </div>
@@ -232,6 +232,9 @@ export default {
     },
     roomConfig () {
       this.$emit('roomConfig')
+    },
+    handleChangeRoom (param) {
+      this.$emit('handleChangeRoom', param)
     }
   }
 }

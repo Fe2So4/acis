@@ -155,7 +155,10 @@
           class="content-info"
         >
           <div class="allocated">
-            <Allacate :data="allacatedList" />
+            <Allacate
+              :data="allacatedList"
+              @handleSimpleApply="handleSimpleApply"
+            />
           </div>
           <div class="patient-detail">
             申请时间：
@@ -175,7 +178,7 @@
               :time="this.timeDate"
               @handleClear="handleClear"
               @submitRoomAll="submitRoomAll"
-              @handleChangeRoom="handleChangeRoom(2)"
+              @handleChangeRoom="handleChangeRoom('2')"
               @roomConfig="roomConfig"
             />
             <Option @showPreview="showPreview" />
@@ -191,7 +194,7 @@
           :context-menu-data="contextMenuData7"
           @handleShowSwitch="handleShowSwitch"
           @submitSimple="submitRoomAll"
-          @handleChangeRoom="handleChangeRoom(1)"
+          @handleChangeRoom="handleChangeRoom('1')"
           @handleClear1="handleClear(1)"
           @handleClear2="handleClear(2)"
           @handleClear3="handleClear(3)"
@@ -211,7 +214,6 @@
       :doctor-visible="doctorVisible"
       :doctor-list="doctorList"
     />
-    <!-- <allocated-detail :detail-visible="detailVisible" /> -->
     <doc-config
       v-if="configVisible"
       :config-visible="configVisible"
@@ -220,10 +222,14 @@
       @handleClose="handleClose"
     />
     <change-dialog
+      v-if="changeVisible"
       :change-title="changeTitle"
       :change-type="changeType"
+      :select-allocated="selectAllocated"
       :change-visible="changeVisible"
+      :allacated-list="allacatedList"
       @handleClose="handleClose"
+      @clearSelectAllocation="clearSelectAllocation"
     />
     <Preview
       v-if="previewVisible"
@@ -240,20 +246,11 @@
 </template>
 <script>
 import {
-  // withDraw,
-  // getAllocatedList,
-  // getRecordsList,
   getAnaesMethods,
   getSwitchList,
-  // submitRoomAll,
   submitSimple,
   configMaxDefalut,
-  updateRoomContent,
-  updateRoom,
-  // cancelSingle,
   submitRoomConfig,
-  submitEditDetail,
-  // distributeOpeDoc,
   getDocList,
   getNurseList,
   distributeMainAnaes,
@@ -279,7 +276,7 @@ import OperationDoc from './components/operation-doc'
 import Option from './components/option'
 import Preview from './components/preview'
 import SwitchList from './components/switch-list'
-// import AllocatedDetail from './components/allocated-detail'
+
 import {
   // addOperationRoom,
   getDepartmentList
@@ -606,6 +603,7 @@ export default {
             .replace(/^,+/, '')
             .replace(/,+$/, '')
         })
+        this.$eventHub.$emit('clearSelectAllocation')
         this.allacatedList = data
       })
     },
@@ -747,7 +745,7 @@ export default {
     //     this.addzero(second)
     //   return s
     // },
-    // 双击分配护士，麻醉医生等信息
+    // 双击分配护士，麻醉医生等信息 --new
     handleDistributeDoctor (item, i) {
       switch (this.defaultCollapse) {
         case 'B':
@@ -767,7 +765,7 @@ export default {
         // this.getNurseList();
       }
     },
-    // 分配主麻医生
+    // 分配主麻医生--new
     arrangeOpeMainDoc (id, result) {
       request({
         method: 'PUT',
@@ -788,7 +786,7 @@ export default {
         }
       })
     },
-    // 分配副麻医生
+    // 分配副麻医生--new
     arrangeOpeSubDoc (id, result) {
       request({
         method: 'PUT',
@@ -809,7 +807,7 @@ export default {
         }
       })
     },
-    // 分配巡回护士
+    // 分配巡回护士--new
     arrangeHangNurse (id, result) {
       request({
         method: 'PUT',
@@ -830,7 +828,7 @@ export default {
         }
       })
     },
-    // 分配洗手护士
+    // 分配洗手护士--new
     arrangeWashNurse (id, result) {
       request({
         method: 'PUT',
@@ -881,101 +879,6 @@ export default {
       const d = new Date()
       this.date = d.getTime()
     },
-    changeMainDoc (val) {
-      this.selectMainDoc = val
-    },
-    changeSubDoc1 (val) {
-      this.selectSubDoc1 = val
-    },
-    changeSubDoc2 (val) {
-      this.selectSubDoc2 = val
-    },
-    changeSubDoc3 (val) {
-      this.selectSubDoc3 = val
-    },
-    changeWashNurse1 (val) {
-      this.selectWashNurse1 = val
-    },
-    changeWashNurse2 (val) {
-      this.selectWashNurse2 = val
-    },
-    changeHangNurse1 (val) {
-      this.selectHangNurse1 = val
-    },
-    changeHangNurse2 (val) {
-      this.selectHangNurse2 = val
-    },
-    changeAnaesMethods (val) {
-      this.selectAnaesMethod = val
-    },
-    selectOperaion1 (param) {
-      this.detailForm.anaesthesiaCode = param
-      // this.detailForm.surgeonCode = param;
-    },
-    selectOperaion2 (param) {
-      this.detailForm.doctorCode = param
-    },
-    selectOperaion3 (param) {
-      this.detailForm.firstDoctorCode = param
-    },
-    selectOperaion4 (param) {
-      this.detailForm.secondDoctorCode = param
-    },
-    selectOperaion5 (param) {
-      this.detailForm.thirdDoctorCode = param
-    },
-    selectOperaion6 (param) {
-      this.detailForm.washFirstNurseCode = param
-    },
-    selectOperaion7 (param) {
-      this.detailForm.washSecondNurseCode = param
-    },
-    selectOperaion8 (param) {
-      this.detailForm.runFirstDoctorCode = param
-    },
-    selectOperaion9 (param) {
-      this.detailForm.runSecondDoctorCode = param
-    },
-    // 确认修改手术申请详情
-    handleChangeDetail () {
-      const formData = new FormData()
-      formData.append('patientId', this.detailForm.patientId)
-      formData.append('scheduleId', this.detailForm.scheduleId)
-      formData.append('visitId', this.detailForm.visitId)
-      formData.append('sequence', this.detailForm.sequence)
-      formData.append('scheduledDateTime', this.detailTime)
-      formData.append('operationNameCode', this.detailForm.operationNameCode)
-      formData.append('anaesthesiaCode', this.detailForm.anaesthesiaCode)
-      formData.append('doctorCode', this.detailForm.doctorCode)
-      formData.append('firstDoctorCode', this.detailForm.firstDoctorCode)
-      formData.append('secondDoctorCode', this.detailForm.secondDoctorCode)
-      formData.append('thirdDoctorCode', this.detailForm.thirdDoctorCode)
-      formData.append('washFirstNurseCode', this.detailForm.washFirstNurseCode)
-      formData.append(
-        'washSecondNurseCode',
-        this.detailForm.washSecondNurseCode
-      )
-      formData.append('runFirstDoctorCode', this.detailForm.runFirstDoctorCode)
-      formData.append(
-        'runSecondDoctorCode',
-        this.detailForm.runSecondDoctorCode
-      )
-      formData.append(
-        'diagBeforeOperation',
-        this.detailForm.diagBeforeOperation
-      )
-      submitEditDetail(formData).then((res) => {
-        this.$message({
-          message: '修改成功',
-          type: 'success'
-        })
-        this.detailVisible = false
-        this.getRoomList()
-        this.getAllocatedList()
-        this.getDoctorList()
-        this.getNurseList()
-      })
-    },
     // 选择当前医护信息
     selectCurrentPerson (param) {
       this.currentDocOrNur = param
@@ -996,7 +899,6 @@ export default {
     submitRoomAll () {
       this.$eventHub.$emit('submit-all')
     },
-
     // 提交手术间单条手术申请---new
     submitSimple () {
       if (this.allocatedList.length > 0) {
@@ -1029,10 +931,10 @@ export default {
     },
 
     // 选中单条手术申请
-    handleSimpleApply ({ row }) {
+    handleSimpleApply (row) {
       this.selectAllocated = row
     },
-    // 清空操作 1~2
+    // 清空操作 1~2 --new
     handleClear (param) {
       const arr = []
       this.allacatedList.forEach((item) => {
@@ -1069,7 +971,7 @@ export default {
       // obj.opeScheduleTime = this.timeDate
       // obj.opeRoom = this.currentRoom.roomNo
     },
-    // 开启医生配置弹框
+    // 开启医生配置弹框--new
     handleDocConfig (param) {
       this.configVisible = true
       this.configForm.userId = param.userId
@@ -1084,11 +986,8 @@ export default {
     },
     // 清除部分区域右击事件
     clearContextMenu () {
-      // console.log(this.$refs.detail)
       const detail = this.$refs.detail
       const title = this.$refs.title
-      // let title = document.querySelector('.floor-number')
-      // let detail = document.querySelector('.detail')
       detail.oncontextmenu = function (e) {
         return false
       }
@@ -1096,31 +995,6 @@ export default {
         return false
       }
     },
-    // 清空手术间--医生--护士 1:清空全部 2：主麻 ~~~~ 9：巡回护士2
-    // clearRoomDocOrNurse (param) {
-    //   const type = param
-    //   // let formData = new FormData();
-    //   const arr = []
-    //   const obj = {}
-    //   obj.type = type
-    //   // formData.append('type',type);
-    //   this.allocatedList.forEach((value) => {
-    //     arr.push({
-    //       scheduleId: value.scheduleId,
-    //       visitId: value.visitId,
-    //       patientId: value.patientId
-    //     })
-    //   })
-    //   obj.obj = arr
-    //   clearDocOrNurse(obj).then((res) => {
-    //     this.getRoomList()
-    //     this.getAllocatedList()
-    //     this.getUnallocatedList()
-    //     this.getNurseList()
-    //     this.getDoctorList()
-    //     this.getRecordsList()
-    //   })
-    // },
     // 提交配置信息
     submitConfig () {
       const formData = new FormData()
@@ -1138,115 +1012,39 @@ export default {
         })
       })
     },
-
+    // 清空当前选中手术列表
+    clearSelectAllocation () {
+      this.selectAllocated = {}
+    },
     // 手术间内容更换操作
     handleChangeRoom (param) {
       this.changeType = param
-      if (param === 1) {
+      if (param === '1') {
+        if (this.allacatedList.length > 0) {
+          if (this.selectAllocated.operationId) {
+            if (this.selectAllocated.state === '2') {
+              this.$message({ type: 'warning', message: '该手术申请已提交' })
+              return
+            } else {
+            }
+          } else {
+            this.$message({ type: 'warning', message: '请选择手术申请' })
+            return
+          }
+        } else {
+          this.$message({ type: 'warning', message: '当前手术间无申请信息' })
+          return
+        }
         this.changeTitle = '更换手术间'
       } else {
         this.changeTitle = '更换内容'
       }
       this.changeVisible = true
     },
-    submitChangeRoom () {
-      const obj = {}
-      obj.oldRoom = this.currentId
-      if (this.changeType === 1) {
-        if (this.allocatedList.length > 0) {
-          if (this.selectAllocated.patientId) {
-            obj.scheduleId = this.selectAllocated.scheduleId
-            obj.visitId = this.selectAllocated.visitId
-            obj.patientId = this.selectAllocated.patientId
-          } else {
-            return
-          }
-        } else {
-          this.$message({
-            message: '当前手术间未安排手术',
-            type: 'warning'
-          })
-          return
-        }
-      }
-      if (this.arrangeRoom !== '') {
-        obj.operatingRoomNo = this.arrangeRoom
-      } else {
-        this.$message({
-          message: '请选择需要交换的手术间',
-          type: 'warning'
-        })
-        return
-      }
-      obj.date = this.timeDate
-      let secSupplyNurse = 0
-      let firstSupplyNurse = 0
-      let secOpeNurse = 0
-      let firstOpeNurse = 0
-      let firstAnesDoc = 0
-      let secAnesDoc = 0
-      let thirdAnesDoc = 0
-      let anesDoc = 0
-      const arr = this.checkedContent
-      if (arr.indexOf('A') !== -1) {
-        anesDoc = 1
-      }
-      if (arr.indexOf('B') !== -1) {
-        firstAnesDoc = 1
-      }
-      if (arr.indexOf('C') !== -1) {
-        secAnesDoc = 1
-      }
-      if (arr.indexOf('D') !== -1) {
-        thirdAnesDoc = 1
-      }
-      if (arr.indexOf('E') !== -1) {
-        firstOpeNurse = 1
-      }
-      if (arr.indexOf('F') !== -1) {
-        secOpeNurse = 1
-      }
-      if (arr.indexOf('G') !== -1) {
-        firstSupplyNurse = 1
-      }
-      if (arr.indexOf('H') !== -1) {
-        secSupplyNurse = 1
-      }
-      obj.firstAnesDoc = firstAnesDoc.toString()
-      obj.anesDoc = anesDoc.toString()
-      obj.secAnesDoc = secAnesDoc.toString()
-      obj.thirdAnesDoc = thirdAnesDoc.toString()
-      obj.firstOpeNurse = firstOpeNurse.toString()
-      obj.secOpeNurse = secOpeNurse.toString()
-      obj.firstSupplyNurse = firstSupplyNurse.toString()
-      obj.secSupplyNurse = secSupplyNurse.toString()
-      if (this.changeType === 2) {
-        updateRoomContent(obj).then((res) => {
-          this.changeVisible = false
-          this.$message({
-            message: '交换成功',
-            type: 'success'
-          })
-          this.getRoomList()
-          this.getAllocatedList()
-        })
-      } else {
-        updateRoom(obj).then((res) => {
-          this.changeVisible = false
-          this.$message({
-            message: '交换成功',
-            type: 'success'
-          })
-          this.getRoomList()
-          this.getAllocatedList()
-        })
-      }
-    },
     roomConfig () {
       this.roomVisible = true
     },
     submitRoomConfig () {
-      // submitRoomConfig()
       this.roomVisible = false
       const formData = new FormData()
       formData.append('deptCode', this.dept)
@@ -1265,6 +1063,7 @@ export default {
       this.previewVisible = false
       this.configVisible = false
       this.roomVisible = false
+      this.changeVisible = false
     },
     // 左侧高度自适应
     getH () {
@@ -1308,6 +1107,9 @@ export default {
     this.getData()
     this.$eventHub.$on('get-allocated', () => {
       this.getData()
+    })
+    this.$eventHub.$on('clearSelectAllocation', () => {
+      this.clearSelectAllocation()
     })
     this.$eventHub.$on('get-DocNurse', () => {
       this.getNurseList()

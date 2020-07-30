@@ -21,9 +21,9 @@ export const distributeWashNurse = `${config.default.api.baseURL}/acis/operation
 export const distributeSubAnaes = `${config.default.api.baseURL}/acis/operation/arrangeOtherAnesDoc`
 // 安排巡回护士并生成日志
 export const distributeHangNurse = `${config.default.api.baseURL}/acis/operation/arrangeSupplyNurse`
-// 交换两个手术间数据
+// 交换两个手术间数据---手术间
 export const changeRoomData = `${config.default.api.baseURL}/acis/operation/changeDataFromTwoRooms`
-// 更换手术间信息
+// 更换手术间信息---单条
 export const changeTwoRoomData = `${config.default.api.baseURL}/acis/operation/changeRoom`
 // 右键清空操作
 export const clearAllRoomData = `${config.default.api.baseURL}/acis/operation/clearArrange`
@@ -50,3 +50,11 @@ export const submitSimpleApply = `${config.default.api.baseURL}/acis/operation/s
 export const updateDocNurseConfig = `${config.default.api.baseURL}/acis/operation/updateDocConfigInfo`
 // 切换列表
 export const getSwitchList = `${config.default.api.baseURL}/acis/operation/getOpeInfoInArrange`
+
+// 查询详情页护士列表
+export const getDetailDocList = `${config.default.api.baseURL}/acis/operation/getNurseList1`
+// 查询详情页医师列表
+export const getDetailNurseList = `${config.default.api.baseURL}/acis/operation/getAnesDocList1`
+
+// 更改单条手术申请
+export const updateSimpleApply = `${config.default.api.baseURL}/acis/operation/updateOpeArrangeInfo`

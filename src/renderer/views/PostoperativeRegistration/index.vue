@@ -560,7 +560,7 @@ export default {
     }
   },
   mounted () {
-    // this.getData()
+    this.getData()
     // 获取手术方法
     this.getMethodData()
     // 获取手术等级
