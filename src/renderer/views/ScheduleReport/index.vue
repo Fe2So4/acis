@@ -6,18 +6,18 @@
       Notice
 </template>
 <script>
-import Notice from "./components/notice";
+import Notice from './components/notice'
 export default {
-  data() {
+  data () {
     return {
-      activeName: "first",
-    };
+      activeName: 'first'
+    }
   },
   components: { Notice },
   methods: {
-    handleClick() {},
-  },
-};
+    handleClick () {}
+  }
+}
 </script>
 <style lang="stylus" scoped>
 .report {
