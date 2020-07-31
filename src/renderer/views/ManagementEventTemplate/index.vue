@@ -310,7 +310,8 @@ export default {
           this.$confirm('当前有未保存的数据, 是否继续?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
-            type: 'warning'
+            type: 'warning',
+            customClass: 'messageBox'
           })
             .then(() => {
               this.getEventTemplateDetail(node.id)
