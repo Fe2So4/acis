@@ -177,6 +177,11 @@ export default {
               name: '手术登记',
               index: '3-18',
               componentName: 'OperationRegisteration'
+            },
+            {
+              name: '复苏登记',
+              index: '3-19',
+              componentName: 'RecoveryRegistration'
             }
           ],
           icon: 'el-icon-s-data'
