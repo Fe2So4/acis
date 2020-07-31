@@ -228,7 +228,9 @@ export default {
       this.changeTimeData(row, 'eventEndTime')
       this.$emit('change-event', row)
     },
-    onSaveAsTemplate () {},
+    onSaveAsTemplate () {
+      this.$emit('save-template')
+    },
     onShowTemplates () {
       this.$emit('show-templates')
     },

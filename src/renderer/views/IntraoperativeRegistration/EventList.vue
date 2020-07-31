@@ -1,19 +1,23 @@
 <template>
   <div class="eventList">
-    <div class="buttons">
-      <div
-        class="button"
-        v-for="button in eventList"
-        :key="button.eventId"
-      >
-        <el-button
-          size="mini"
-          @click="onClickEventButton(button.eventId)"
+    <el-scrollbar
+      :wrap-style="wrapStyle"
+    >
+      <div class="buttons">
+        <div
+          class="button"
+          v-for="button in eventList"
+          :key="button.eventId"
         >
-          {{ button.eventName }}
-        </el-button>
-      </div>+
-    </div>
+          <el-button
+            size="mini"
+            @click="onClickEventButton(button.eventId)"
+          >
+            {{ button.eventName }}
+          </el-button>
+        </div>
+      </div>
+    </el-scrollbar>
     <div class="detailTable">
       <vxe-table
         show-header-overflow
@@ -50,6 +54,11 @@ export default {
   },
   data () {
     return {
+      wrapStyle: [
+        {
+          'overflow-x': 'hidden'
+        }
+      ],
       detailData: []
     }
   },

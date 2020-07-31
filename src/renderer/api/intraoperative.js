@@ -56,3 +56,23 @@ export const addSignOrMonitorItem = mock
 export const deleteSignOrMonitorItem = mock
   ? ''
   : baseXie + 'acis/intraoperative/templete/deleteAcisIntraoEventTemplete'
+// 保存模板 - 谢 - 2020-07-31
+export const addNewTemplate = mock
+  ? ''
+  : baseXie + 'acis/intraoperative/templete/addAnesthesiaEventTemplete'
+// 保存体征/监测数据 - 谢 - 2020-07-31
+export const saveSignOrMonitorData = mock
+  ? ''
+  : baseXie + 'acis/intraoperative/info/editAcisIntraoMonitorAndListenData'
+// 保存修改后的模板 - 谢 - 2020-07-31
+export const saveChangedEventTemplate = mock
+  ? ''
+  : baseXie + 'acis/intraoperative/templete/editAnesIntraoTempleteDetail'
+// 删除事件模板 - 谢 - 2020-07-31
+export const deleteEventTemplate = mock
+  ? ''
+  : baseXie + 'acis/intraoperative/templete/deleteAnesthesiaEventTemplete'
+// 重命名事件模板名称 - 谢 - 2020-07-31
+export const renameEventTemplate = mock
+  ? ''
+  : baseXie + 'acis/intraoperative/templete/changeAcisIntraoTempleteName'

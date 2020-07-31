@@ -30,7 +30,7 @@
             ref="table"
             resizable
             highlight-hover-row
-            height="330px"
+            height="499px"
             :data="tableData"
             :edit-config="{trigger: 'click', mode: 'cell'}"
             class="scroll"
@@ -119,7 +119,7 @@
           popper-class="dateTimePicker"
         />
         <el-checkbox
-          v-model="useDosage"
+          v-model="notUseDosage"
           size="mini"
           style="margin: 0 10px"
         >
@@ -128,6 +128,8 @@
         <el-button
           type="primary"
           @click="onUseTemplate"
+          :true-label="false"
+          :false-label="true"
           size="mini"
         >
           套 用
@@ -166,7 +168,7 @@ export default {
     const date = moment().format('YYYY-MM-DD HH:mm')
     return {
       date: date,
-      useDosage: false,
+      notUseDosage: false,
       treeData: [],
       defaultProps: {
         children: 'list',
@@ -183,7 +185,11 @@ export default {
       this.$emit('update:visible', false)
     },
     onUseTemplate () {
-      this.$emit('use-template')
+      this.$emit('use-template', {
+        list: this.tableData,
+        date: this.date,
+        useDosage: !this.notUseDosage
+      })
     },
     onNodeClick (node) {
       if (Object.hasOwnProperty.call(node, 'id')) {

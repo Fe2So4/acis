@@ -305,8 +305,7 @@ export default {
       return flag
     },
     saveNormalData () {
-      const list = this.widgetList.filter((widget) => widget.value)
-      const customDataList = list
+      const customDataList = this.widgetList
         .filter(
           (widget) =>
             widget.dirty &&

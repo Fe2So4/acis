@@ -184,6 +184,10 @@ export default {
     },
     // 清空
     clear () {
+      this.scoreCriticalDegree = '' // 危重程度
+      this.scoreMortality = '' // 死亡率
+      this.grossScore = '' // 总分
+      this.scoreClass = '' // 等级
       Object.values(this.group).forEach(group => {
         group.forEach(item => {
           let value = ''
