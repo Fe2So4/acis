@@ -39,6 +39,7 @@ import Hemodynamics from '@/views/Hemodynamics/index'
 import ChangePass from '@/views/ChangePassword/index'
 import Event from '@/views/Event/index'
 import TemplateManagement from '@/views/TemplateManagement/index'
+import ManagementEventTemplate from '@/views/ManagementEventTemplate/index'
 import TemplateDesigner from '@/views/TemplateDesigner/index'
 import TemplateDisplayer from '@/views/TemplateDisplayer/index'
 import ConfigurationSystem from '@/views/ConfigurationSystem/index'
@@ -89,6 +90,7 @@ export default {
     Hemodynamics,
     Event,
     TemplateManagement,
+    ManagementEventTemplate,
     TemplateDesigner,
     ConfigurationSystem,
     OperationHandover,

@@ -8,6 +8,7 @@
           :event-list="eventList"
           @change-type="onChangeType"
           @show-templates="onShowTemplates"
+          @save-template="onShowConfirmDialog"
           @change-event="onChangeEvent"
           @delete-event="onDeleteEvent"
           @save-event="onSaveEvent"
@@ -25,9 +26,14 @@
       <sign-and-monitor-table :event-list="eventList" />
     </div>
     <dialog-event-template
+      v-if="dialogTemplateVisible"
       :visible.sync="dialogTemplateVisible"
       :approach-list="approachList"
-      v-if="dialogTemplateVisible"
+      @use-template="onUseTemplate"
+    />
+    <dialog-confirm
+      :visible.sync="dialogConfirmVisible"
+      @save-template="onSaveTemplate"
     />
   </div>
 </template>
@@ -37,13 +43,15 @@ import {
   getExistEvent,
   getApproachList,
   getEventList,
-  saveEvent
+  saveEvent,
+  addNewTemplate
 } from '@/api/intraoperative'
 import request from '@/utils/requestForMock'
 import EventTable from './EventTable'
 import EventList from './EventList'
 import DialogEventTemplate from './DialogEventTemplate'
 import SignAndMonitorTable from './SignAndMonitorTable'
+import DialogConfirm from './DialogConfirm'
 import { createNamespacedHelpers } from 'vuex'
 import moment from 'moment'
 const { mapState } = createNamespacedHelpers('Base')
@@ -53,7 +61,8 @@ export default {
     EventTable,
     EventList,
     DialogEventTemplate,
-    SignAndMonitorTable
+    SignAndMonitorTable,
+    DialogConfirm
   },
   data () {
     return {
@@ -66,7 +75,8 @@ export default {
       deletedMap: {},
       addedMap: {},
       filterType: '',
-      dialogTemplateVisible: false
+      dialogTemplateVisible: false,
+      dialogConfirmVisible: false
     }
   },
   computed: {
@@ -195,24 +205,19 @@ export default {
       }
       const deletedList = Object.values(this.deletedMap).map((item) => {
         const obj = {};
-        ({
-          id: obj.id,
-          eventId: obj.eventId
-        } = item)
+        ({ id: obj.id, eventId: obj.eventId } = item)
         return obj
       })
       if (deletedList.length) {
         requestArr.push(this.saveEvent(deletedList, 2))
       }
       if (requestArr.length) {
-        return Promise.all(requestArr).then(
-          res => {
-            const success = res.every(res => res.data && res.data.data)
-            if (success) {
-              this.init()
-            }
+        return Promise.all(requestArr).then((res) => {
+          const success = res.every((res) => res.data && res.data.data)
+          if (success) {
+            this.init()
           }
-        )
+        })
       }
     },
     onRefreshEvent () {
@@ -220,6 +225,99 @@ export default {
     },
     onChangeType (type) {
       this.filterType = type
+    },
+    onUseTemplate ({ list, date, useDosage }) {
+      const arr = list.map(
+        ({
+          approach,
+          concentration,
+          concentrationUnit,
+          detailId,
+          dosage,
+          dosageUnit,
+          eventId,
+          eventName,
+          eventType,
+          holdingTime,
+          isHolding,
+          modeId,
+          speed,
+          speedUnit
+        }) => {
+          let eventEndTime = ''
+          if (isHolding && holdingTime) {
+            eventEndTime = moment(date)
+              .add(holdingTime, 'm')
+              .format('YYYY-MM-DD HH:mm')
+          }
+          return {
+            eventId,
+            detailId,
+            eventType,
+            eventName,
+            approach,
+            concentration,
+            concentrationUnit,
+            speed,
+            speedUnit,
+            dosage: useDosage ? dosage : '',
+            dosageUnit,
+            isHolding,
+            eventStartTime: date,
+            eventEndTime,
+            holdingTime,
+            addIndex: this.addIndex++,
+            _tag: 'add'
+          }
+        }
+      )
+      arr.forEach((event) => {
+        this.addedMap[event.addIndex] = event
+        this.tableData.push(event)
+      })
+      this.dialogTemplateVisible = false
+    },
+    onShowConfirmDialog () {
+      this.dialogConfirmVisible = true
+    },
+    onSaveTemplate ({ havingWay, templateName, templateParentName }) {
+      this.dialogConfirmVisible = false
+      const list = this.tableData.map(({
+        approach,
+        concentration,
+        concentrationUnit,
+        detailId,
+        dosage,
+        dosageUnit,
+        eventId,
+        eventName,
+        eventType,
+        holdingTime,
+        isHolding,
+        speed,
+        speedUnit
+      }) => {
+        return {
+          approach,
+          concentration,
+          concentrationUnit,
+          detailId,
+          dosage,
+          dosageUnit,
+          eventId,
+          eventName,
+          eventType,
+          holdingTime,
+          isHolding,
+          speed,
+          speedUnit
+        }
+      })
+      if (list.length) {
+        this.addNewTemplate({
+          havingWay, templateName, templateParentName, list
+        })
+      }
     },
     getExistEvent () {
       return request({
@@ -272,6 +370,34 @@ export default {
           list,
           mode
         }
+      })
+    },
+    addNewTemplate ({ havingWay, templateName, templateParentName, list }) {
+      return request({
+        url: addNewTemplate,
+        method: 'post',
+        data: {
+          havingWay,
+          templeteName: templateName,
+          templeteParentName: templateParentName,
+          list
+        }
+      }).then(
+        res => {
+          if (res.data && res.data.success) {
+            this.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+          } else {
+            return Promise.reject(new Error())
+          }
+        }
+      ).catch(e => {
+        this.$message({
+          message: '保存失败',
+          type: 'error'
+        })
       })
     },
     init () {

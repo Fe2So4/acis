@@ -73,7 +73,7 @@ export default {
       activesNames: 'M001',
       isCollapse: false,
       showOverflow: false,
-      showDialog: true, // 开启弹窗
+      showDialog: false, // 开启弹窗
       componentName: '',
       navList: [
         {
@@ -189,7 +189,7 @@ export default {
             {
               name: '模板管理',
               index: '4-2',
-              componentName: 'TemplateManagement'
+              componentName: 'ManagementEventTemplate'
             },
             {
               name: '手术交班',

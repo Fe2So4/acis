@@ -305,8 +305,7 @@ export default {
       return flag
     },
     saveNormalData () {
-      const list = this.widgetList.filter((widget) => widget.value)
-      const customDataList = list
+      const customDataList = this.widgetList
         .filter(
           (widget) =>
             widget.dirty &&
@@ -374,7 +373,8 @@ export default {
       this.$confirm('此操作将不会保存修改, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
+        customClass: 'messageBox'
       })
         .then(() => {
           nextFn()

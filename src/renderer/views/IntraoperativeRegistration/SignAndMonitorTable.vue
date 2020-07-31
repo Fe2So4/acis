@@ -120,7 +120,8 @@ import { getTemplateInfo, getSignData } from '@/api/medicalDocument'
 import {
   getMonitorData,
   addSignOrMonitorItem,
-  deleteSignOrMonitorItem
+  deleteSignOrMonitorItem,
+  saveSignOrMonitorData
 } from '@/api/intraoperative'
 import { getSignList } from '@/api/generalConfig'
 import request from '@/utils/requestForMock'
@@ -174,11 +175,28 @@ export default {
     onInputChange (data) {
       console.log(data)
     },
-    onSave () {},
+    onSave () {
+      const list = this.tableData.reduce((acc, item) => {
+        const { itemName, itemCode, itemUnit, disColor, drawIcon, _XID, ...points } = item
+        const timePoints = Object.keys(points)
+        const items = timePoints.map(timePoint => {
+          return {
+            timePoint,
+            itemName,
+            itemCode,
+            itemUnit,
+            itemValue: points[timePoint]
+          }
+        })
+        return [...acc, ...items]
+      }, [])
+      // console.log(list)
+      this.saveSignOrMonitorData(list)
+    },
     onRefresh () {
       this.getData()
     },
-    onAddItem (event) {
+    onAddItem (event, scope) {
       this.addSignOrMonitorItem(event)
     },
     onDeleteItem () {
@@ -223,10 +241,8 @@ export default {
         method: 'post',
         url: getSignData,
         data: {
-          // startTime: this.startTime,
-          // endTime: this.endTime,
-          startTime: '2020-07-14 17:30',
-          endTime: '2020-07-14 21:30',
+          startTime: this.startTime,
+          endTime: this.endTime,
           dataMode: 5, // 5-正常模式 1-抢救模式
           operationId: this.operationId,
           modeCode: 'N033'
@@ -244,10 +260,8 @@ export default {
         method: 'post',
         url: getMonitorData,
         data: {
-          // startTime: this.startTime,
-          // endTime: this.endTime,
-          startTime: '2020-07-23 17:30',
-          endTime: '2020-07-23 21:30',
+          startTime: this.startTime,
+          endTime: this.endTime,
           operationId: this.operationId
         }
       })
@@ -291,7 +305,6 @@ export default {
       )
     },
     deleteSignOrMonitorItem ({ itemCode, itemName }) {
-      console.log(itemCode, itemName)
       const mode = this.state === 'sign' ? 1 : 2
       return request({
         url: deleteSignOrMonitorItem,
@@ -347,6 +360,36 @@ export default {
         return obj
       })
       return arr
+    },
+    saveSignOrMonitorData (list) {
+      const mode = this.state === 'sign' ? 1 : 2
+      return request({
+        method: 'post',
+        url: saveSignOrMonitorData,
+        data: {
+          list,
+          mode,
+          operationId: this.operationId
+        }
+      }).then(
+        res => {
+          if (res.data && res.data.success) {
+            this.$message({
+              type: 'success',
+              message: '保存成功'
+            })
+          } else {
+            return Promise.reject(new Error())
+          }
+        }
+      ).catch(
+        e => {
+          this.$message({
+            type: 'error',
+            message: '保存失败'
+          })
+        }
+      )
     }
   }
 }
