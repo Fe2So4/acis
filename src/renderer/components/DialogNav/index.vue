@@ -6,9 +6,9 @@
        span {{title}}
        i(class="el-icon-close" @click="handleClose")
       .dialog-body
-        component(:is="componentName")
+        //- component(:is="componentName")
         //- OperationOverview
-        //- Event
+        Event
         //- <operation-handover/>
         //- Hemodynamics
         //- IntraoperativePatients
@@ -138,6 +138,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  background:rgba(108,119,128,0.2);
 
   .dialog-content {
     padding: 0px 20px 20px;

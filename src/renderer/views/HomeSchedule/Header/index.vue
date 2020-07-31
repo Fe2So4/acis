@@ -2,8 +2,7 @@
   <div class="common-header-container">
     <div class="logo-container">
       <div class="title">
-        <p>Dandelion智慧手术中心</p>
-        <p>麻醉临床信息系统v1.0.0</p>
+        <p>Dandelion智慧手术中心<i />智能排班</p>
       </div>
       <div class="logo-img">
         <img
@@ -43,6 +42,8 @@
 </template>
 
 <script>
+import { synchroApply, synchroPatient } from '@/api/schedule'
+import request from '@/utils/requestForMock'
 const {
   BrowserWindow
 } = require('electron').remote
@@ -86,7 +87,7 @@ export default {
           index: 3
         }
       ],
-      activeIndex: 1
+      activeIndex: 2
     }
   },
   props: ['lock'],
@@ -99,6 +100,29 @@ export default {
   created () {
   },
   methods: {
+    async synchro () {
+      await request({
+        url: synchroApply,
+        params: {
+          start: 10,
+          end: 10
+        }
+      })
+      //
+      request({
+        url: synchroPatient,
+        params: {
+          start: 10,
+          end: 10
+        }
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.$message({ type: 'success', message: '同步成功' })
+        } else {
+          this.$message({ type: 'error', message: res.data.msg })
+        }
+      })
+    },
     handleChange (item) {
       this.activeIndex = item.index
       if (item.index === 1) {
@@ -108,7 +132,7 @@ export default {
         this.$router.push('/schedule-home/report')
       }
       if (item.index === 3) {
-        console.log('his同步')
+        this.synchro()
       }
     },
     miniWindow () {
@@ -157,6 +181,7 @@ export default {
       .logo-img {
         height:40px;
         width:152px;
+        margin-top: 10px;
         img{
           width:100%;
           height:100%;
@@ -166,8 +191,17 @@ export default {
       .title {
         font-size: 12px;
         color:#0094FF;
+        line-height: 24px;
         p{
           margin:0;
+          i{
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #388FF7;
+            margin:0 4px;
+          }
         }
       }
     }

@@ -58,3 +58,17 @@ export const getDetailNurseList = `${config.default.api.baseURL}/acis/operation/
 
 // 更改单条手术申请
 export const updateSimpleApply = `${config.default.api.baseURL}/acis/operation/updateOpeArrangeInfo`
+// 手术通知单查询
+export const getNoticeData = `${config.default.api.baseURL}/acis/operation/getOpeInformForm`
+
+// 手术通知单患者列表查询
+export const getNoticePtList = `${config.default.api.baseURL}/acis/operation/getPtOpeInfoList`
+
+// 排班表列表查询
+export const getTableList = `${config.default.api.baseURL}/acis/operation/getOpeScheduleForm`
+
+// 同步手术申请信息
+export const synchroApply = `${config.default.api.baseURL}/acis/operation/syncOpeApplyInfo`
+
+// 同步患者信息
+export const synchroPatient = `${config.default.api.baseURL}/acis/operation/syncPatMasterIndex`

@@ -12,60 +12,32 @@
         />
       </div>
       <div class="content">
-        <ul>
-          <li>
-            <el-button
-              size="mini"
-              @dblclick.native="handleAddAnesthetic"
+        <el-scrollbar
+          style="height:100%;width:100%;"
+          class="scrollbar"
+        >
+          <ul>
+            <li
+              class="clearfix"
+              v-for="item in fromList"
+              :key="item.id"
             >
-              镇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;静
-            </el-button>
-          </li>
-          <li
-            v-for="(item,index) in 10"
-            :key="index"
-          >
-            <el-button
-              size="mini"
-              @dblclick.native="handleAddAnesthetic"
-            >
-              咪达挫抡
-            </el-button>
-          </li>
-        </ul>
-        <ul>
-          <li>
-            <el-button
-              size="mini"
-              @click="handleAddAnesthetic"
-            >
-              10
-            </el-button>
-            <el-button size="mini">
-              20
-            </el-button>
-            <el-button size="mini">
-              20
-            </el-button>
-            <el-button size="mini">
-              20
-            </el-button>
-          </li>
-          <li>
-            <el-button size="mini">
-              10
-            </el-button>
-            <el-button size="mini">
-              20
-            </el-button>
-            <el-button size="mini">
-              40
-            </el-button>
-            <el-button size="mini">
-              30
-            </el-button>
-          </li>
-        </ul>
+              <!-- <el-button
+                size="mini"
+                @dblclick.native="handleAddAnesthetic"
+              /> -->
+              <div class="event-button">
+                <span class="button">{{ item.detailName }}</span>
+              </div>
+              <div class="dose-button">
+                <span>{{ item.usualDose1 }}</span>
+                <span>{{ item.usualDose2 }}</span>
+                <span>{{ item.usualDose3 }}</span>
+                <span>{{ item.usualDose4 }}</span>
+              </div>
+            </li>
+          </ul>
+        </el-scrollbar>
       </div>
       <div class="pagination">
         <el-pagination
@@ -125,6 +97,8 @@
 </template>
 <script>
 import AnaesTable from '@/components/AnaesTable/index'
+import request from '@/utils/requestForMock'
+import { getEventList } from '@/api/anaesDrug'
 // import OtherEvent from './components/otherEvent'
 export default {
   name: 'Event',
@@ -152,11 +126,14 @@ export default {
         height: '36px',
         textAlign: 'center'
       },
-      fromList: [{ event: 'UI', label: 'PCA' }, { event: 'UX', label: 'aaa' }],
+      fromList: [],
       activeRow: null,
       activeColumnId: null,
       time: '',
-      currentRow: null
+      currentRow: null,
+      currentPage: 0,
+      pageSize: 10,
+      total: 0
     }
   },
   components: {
@@ -179,12 +156,26 @@ export default {
         input && input.select()
       })
     },
+    getEventList () {
+      request({
+        url: getEventList,
+        params: {
+          eventCode: 'E002',
+          pageIndex: 1,
+          pageSize: 10
+        }
+      }).then(res => {
+        // console.log(res.data.data)
+        this.fromList = res.data.data.list
+      })
+    },
     onCellBlur () {
       this.activeRow = null
       this.activeColumnId = null
     }
   },
   mounted () {
+    this.getEventList()
   }
 }
 </script>
@@ -210,7 +201,7 @@ export default {
           height: 100%;
           padding:20px;
           margin-right:20px;
-          width: 354px;
+          width: 374px;
           float: left;
           display: flex;
           background: #1E222E;
@@ -229,13 +220,50 @@ export default {
           .content{
               flex: 1;
               display: flex;
+              height: 100%;
               ul{
+                  height: 100%;
                   padding:5px;
                   flex: 1;
                   li{
                       margin-bottom: 5px;
                       .el-button{
                           width: 100%;
+                      }
+                      .event-button{
+                        .button{
+                          display: inline-block;
+                          width:150px;
+                          border-radius:4px;
+                          line-height: 30px;
+                          text-indent: 10px;
+                          background:rgba(37,44,64,1);
+                          border:1px solid rgba(53,62,86,1);
+                          color:#9BA3D5;
+                          cursor: pointer;
+                          &:hover{
+                            background: #0094FF;
+                            color:#fff;
+                          }
+                        }
+                      }
+                      .dose-button{
+                        span{
+                          width:36px;
+                          height:30px;
+                          background:rgba(37,44,64,1);
+                          border:1px solid rgba(53,62,86,1);
+                          border-radius:4px;
+                          display: inline-block;
+                          line-height: 30px;
+                          color: #9BA3D5;
+                          cursor: pointer;
+                          text-align: center;
+                          &:hover{
+                            background: #0094FF;
+                            color:#fff;
+                          }
+                        }
                       }
                   }
                   &:last-child{
@@ -259,7 +287,7 @@ export default {
       }
       .right{
         height: 100%;
-        width:calc(100% - 374px);
+        width:calc(100% - 394px);
         float: right;
         padding: 0 5px;
         display: flex;
@@ -289,4 +317,9 @@ export default {
     .event /deep/ .el-table th>.cell{
         text-align: center;
     }
+</style>
+<style>
+.event .scrollbar .el-scrollbar__wrap {
+  overflow-x: hidden;
+}
 </style>

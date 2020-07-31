@@ -204,7 +204,7 @@ export default {
           top:35px;
         }
         .title{
-          color:#0094FF;
+          color:#0078FF;
           margin-top: 40px;
           text-align: center;
           line-height: 30px;
@@ -213,7 +213,7 @@ export default {
         .line{
           width:60px;
           height:2px;
-          background:rgba(0,148,255,1);
+          background:#0078FF;
           border-radius:1px;
           margin: 0 auto;
           margin-bottom: 40px;
@@ -237,7 +237,7 @@ export default {
             display: block;
             float: left;
             text-align: center;
-            background: #0094FF;
+            background: #0078FF;
             color:#fff;
             border-radius:5px;
             font-size: 16px;

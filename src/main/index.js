@@ -3,7 +3,6 @@
 import { app, BrowserWindow, Menu, ipcMain } from 'electron'
 import '../renderer/store'
 const fs = require('fs')
-
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -201,3 +200,5 @@ ipcMain.on('show-EMR', (e, name) => {
   printWin = createEMRWindow(name)
 })
 // ---------------------------------显示病历功能 end--------------
+
+// 打印手术通知单
