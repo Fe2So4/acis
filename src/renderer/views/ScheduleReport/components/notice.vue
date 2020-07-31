@@ -1,6 +1,9 @@
 <template>
   <div class="notice">
-    <el-form :inline="true" size="mini">
+    <el-form
+      :inline="true"
+      size="mini"
+    >
       <el-form-item>
         <!-- <el-time-picker></el-time-picker> -->
       </el-form-item>
@@ -18,13 +21,13 @@
 </template>
 <script>
 export default {
-  name: "Notice",
-  data() {
-    return {};
+  name: 'Notice',
+  data () {
+    return {}
   },
   computed: {},
-  methods: {},
-};
+  methods: {}
+}
 </script>
 <style lang="scss" scoped>
 .notice {
