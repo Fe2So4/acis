@@ -1,140 +1,95 @@
 <template>
   <div class="patient-info">
-    <div
-      class="search"
-    >
-      <el-scrollbar
-        class="rowScrollbar"
-      >
+    <div class="search">
+      <el-scrollbar class="rowScrollbar">
         <el-row>
-          <el-form
-            :inline="true"
-            size="mini"
-          >
+          <el-form :inline="true" size="mini">
             <el-form-item>
-              <el-radio-group
-                v-model="opeState"
-                style="margin-bottom: 30px;"
-                size="mini"
-              >
+              <el-radio-group v-model="opeState" style="margin-bottom: 30px;" size="mini">
                 <el-radio-button
                   v-for="item in filterList"
                   :key="item.label"
                   :label="item.value"
-                >
-                  {{ item.label }}
-                </el-radio-button>
+                >{{ item.label }}</el-radio-button>
               </el-radio-group>
               <el-checkbox-group
                 v-model="operationStatus"
                 style="display:inline-block;margin-left:14px;"
                 size="mini"
-                @change="handleFilter"
+                @change="handleChange"
               >
                 <el-checkbox
                   v-for="status in statusList"
                   :label="status.value"
                   :value="status.value"
                   :key="status.value"
-                >
-                  {{ status.label }}
-                </el-checkbox>
+                >{{ status.label }}</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
             <el-form-item label="手术间">
-              <el-select
-                v-model="opeRoom"
-                size="mini"
-                placeholder=""
-                clearable
-                style="width:160px;"
-              >
-                <el-option
-                  v-for="item in roomList"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
+              <el-select v-model="opeRoom" size="mini" placeholder clearable style="width:160px;">
+                <el-option v-for="item in roomList" :key="item" :label="item" :value="item" />
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button
-                size="mini"
-                @click="getPatientList('')"
-              >
-                搜索
-              </el-button>
-              <el-button
-                size="mini"
-                @click="hanldeSearchMore"
-              >
-                <i
-                  class="el-icon-d-arrow-right"
-                />
+              <el-button size="mini" @click="getPatientList('')">搜索</el-button>
+              <el-button size="mini" @click="hanldeSearchMore">
+                <i class="el-icon-d-arrow-right" />
               </el-button>
             </el-form-item>
           </el-form>
         </el-row>
         <el-row>
-          <el-form
-            :model="searchForm"
-            :inline="true"
-            size="mini"
-          >
+          <el-form :model="searchForm" :inline="true" size="mini">
             <el-form-item label="ID">
-              <el-input
-                v-model="searchForm.id"
-                style="width:130px;"
-              />
+              <el-input v-model="searchForm.id" style="width:130px;" />
             </el-form-item>
             <el-form-item label="姓名">
-              <el-input
-                v-model="searchForm.name"
-                style="width:130px;"
-              />
+              <el-input v-model="searchForm.name" style="width:130px;" />
             </el-form-item>
             <el-form-item label="日期">
               <el-date-picker
                 style="width:130px"
                 v-model="searchForm.date"
                 type="date"
-                placeholder=""
+                placeholder
                 format="yyyy-MM-dd"
                 value-format="yyyy-MM-dd"
               />
             </el-form-item>
             <el-form-item>
-              <el-button @click="handleRegister(1)">
-                急诊登记
-              </el-button>
-              <el-button @click="handleChangeList(1)">
-                今天列表
-              </el-button>
-              <el-button @click="handleChangeList(2)">
-                明天列表
-              </el-button>
-              <el-button @click="handleRegister(2)">
-                手术排台
-              </el-button>
+              <el-button @click="handleRegister(1)">急诊登记</el-button>
+              <el-button @click="handleChangeList(1)">今天列表</el-button>
+              <el-button @click="handleChangeList(2)">明天列表</el-button>
+              <el-button @click="handleRegister(2)">手术排台</el-button>
             </el-form-item>
           </el-form>
         </el-row>
       </el-scrollbar>
-      <div
-        class="other-search"
-        v-show="showMore"
-      >
+      <div class="other-search" v-show="showMore">
         <el-row>
-          <el-form
-            :inline="true"
-            :model="searchForm"
-            size="mini"
-          >
+          <el-form :inline="true" :model="searchForm" size="mini">
             <el-form-item label="麻醉方法">
-              <el-input v-model="searchForm.anaesMethod" />
+              <!-- <el-input v-model="searchForm.anaesMethod" /> -->
+              <el-select v-model="searchForm.anaesMethod" placeholder="请选择">
+                <el-option
+                  v-for="item in anaesMethod"
+                  :key="item.anesCode"
+                  :label="item.anesName"
+                  :value="item.anesCode"
+                ></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="麻醉医生">
-              <el-input v-model="searchForm.anaesDoc" />
+              <!-- <el-input v-model="searchForm.anaesDoc" /> -->
+              <el-select v-model="searchForm.anaesDoc" placeholder="请选择">
+                <el-option
+                  v-for="item in doctorList"
+                  :key="item.userId"
+                  :label="item.userName"
+                  :value="item.userId"
+                ></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="终止日期">
               <el-date-picker
@@ -149,39 +104,42 @@
           </el-form>
         </el-row>
         <el-row>
-          <el-form
-            :inline="true"
-            :model="searchForm"
-            size="mini"
-          >
+          <el-form :inline="true" :model="searchForm" size="mini">
             <el-form-item label="住院科室">
-              <el-input v-model="searchForm.dept" />
+              <!-- <el-input v-model="searchForm.dept" /> -->
+              <el-select v-model="searchForm.dept" placeholder="请选择所在科室">
+                <el-option
+                  v-for="item in deptList"
+                  :key="item.deptCode"
+                  :label="item.deptName"
+                  :value="item.deptCode"
+                ></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="手术名称">
-              <el-input v-model="searchForm.opeName" />
+              <!-- <el-input v-model="searchForm.opeName" /> -->
+              <el-select v-model="searchForm.opeName" placeholder="请选择">
+                <el-option
+                  v-for="item in opeName"
+                  :key="item.opeCode"
+                  :label="item.opeName"
+                  :value="item.opeCode"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-form>
         </el-row>
       </div>
     </div>
-    <div
-      class="patient-card"
-    >
-      <el-scrollbar
-        style="height:100%;"
-        class="scrollbar"
-      >
+    <div class="patient-card">
+      <el-scrollbar style="height:100%;" class="scrollbar">
         <ul
           v-infinite-scroll="loadMore"
           :infinite-scroll-disabled="disabled"
           :infinite-scroll-immediate="false"
           infinite-scroll-distance="5"
         >
-          <li
-            v-for="(item,index) in cardList"
-            :key="index"
-            @click="handleJump(item)"
-          >
+          <li v-for="(item,index) in cardList" :key="index" @click="handleJump(item)">
             <div class="title">
               <span>手术室 {{ item.roomNo }}</span>
               <span>{{ item.stateName }}</span>
@@ -191,311 +149,401 @@
                 <span>{{ item.sequence }}</span>
               </div>
               <div class="info">
-                <p><span class="label">患者</span><span>{{ item.patientName }}</span><span class="overflow">{{ item.patientId }}</span></p>
-                <p><span class="label">住院号</span><span>{{ item.visitId }}</span></p>
                 <p>
-                  <span class="label">手术</span><span
+                  <span class="label">患者</span>
+                  <span>{{ item.patientName }}</span>
+                  <span class="overflow">{{ item.patientId }}</span>
+                </p>
+                <p>
+                  <span class="label">住院号</span>
+                  <span>{{ item.visitId }}</span>
+                </p>
+                <p>
+                  <span class="label">手术</span>
+                  <span
                     class="overflow"
                     style="width:150px;margin-left:0;margin-right:0;"
                   >{{ item.opeName }}</span>
                 </p>
-                <p><span class="label">时间</span><span>{{ item.opeTime }}</span></p>
                 <p>
-                  <span class="label">术者</span><span style="min-width:40px;">{{ item.surgeonName }}</span><span
-                    class="label"
-                    style="margin-left:10px;"
-                  >麻醉</span><span>{{ item.anesDocName }}</span>
+                  <span class="label">时间</span>
+                  <span>{{ item.opeTime }}</span>
+                </p>
+                <p>
+                  <span class="label">术者</span>
+                  <span style="min-width:40px;">{{ item.surgeonName }}</span>
+                  <span class="label" style="margin-left:10px;">麻醉</span>
+                  <span>{{ item.anesDocName }}</span>
                 </p>
               </div>
-              <div
-                class="status"
-              >
+              <div class="status">
                 <div v-if="item.emergency">
                   <div style="display:flex;justify-content:center;">
-                    <img
-                      style="height:26px;width:26px;"
-                      src="@/assets/emergency.png"
-                      alt=""
-                    >
+                    <img style="height:26px;width:26px;" src="@/assets/emergency.png" alt />
                   </div>
-                  <div :style="{color:'red',fontSize:'14px',textAlign:'center'}">
-                    急诊
-                  </div>
+                  <div :style="{color:'red',fontSize:'14px',textAlign:'center'}">急诊</div>
                 </div>
                 <div v-if="item.quarantine">
                   <div style="display:flex;justify-content:center;">
-                    <img
-                      style="height:26px;width:26px;"
-                      src="@/assets/quarantine.png"
-                      alt=""
-                    >
+                    <img style="height:26px;width:26px;" src="@/assets/quarantine.png" alt />
                   </div>
-                  <div :style="{color:'orange',fontSize:'14px',textAlign:'center'}">
-                    隔离
-                  </div>
+                  <div :style="{color:'orange',fontSize:'14px',textAlign:'center'}">隔离</div>
                 </div>
                 <div v-if="item.radiate">
                   <div style="display:flex;justify-content:center;">
-                    <img
-                      style="height:26px;width:26px;"
-                      src="@/assets/radiation.png"
-                      alt=""
-                    >
+                    <img style="height:26px;width:26px;" src="@/assets/radiation.png" alt />
                   </div>
-                  <div :style="{color:'yellow',fontSize:'14px',textAlign:'center'}">
-                    放射
-                  </div>
+                  <div :style="{color:'yellow',fontSize:'14px',textAlign:'center'}">放射</div>
                 </div>
               </div>
             </div>
           </li>
         </ul>
-        <p
-          v-if="loading"
-          class="loading"
-        >
-          加载中...
-        </p>
-        <p
-          v-if="noMore&&cardList.length>0"
-          class="loading"
-        >
-          没有更多了
-        </p>
+        <p v-if="loading" class="loading">加载中...</p>
+        <p v-if="noMore&&cardList.length>0" class="loading">没有更多了</p>
       </el-scrollbar>
     </div>
   </div>
 </template>
 <script>
-import moment from 'moment'
-import request from '../../utils/requestForMock'
-import { opeList, roomList } from '@/api/patientList'
-import { mapActions } from 'vuex'
+import moment from "moment";
+import request from "../../utils/requestForMock";
+import { opeList, roomList } from "@/api/patientList";
+import { mapActions } from "vuex";
+import {
+  anaesMethodDetail,
+  doctorData,
+  opeNameData,
+  deptList,
+} from "@/api/dictionary";
 export default {
-  name: 'PatientInfo',
-  data () {
+  name: "PatientInfo",
+  data() {
     return {
       loading: false,
       searchForm: {
-        id: '',
-        name: '',
-        date: moment(new Date()).format('yyyy-MM-DD'),
-        endDate: '',
-        anaesDoc: '',
-        anaesMethod: '',
-        status: '',
-        dept: '',
-        opeName: ''
+        id: "",
+        name: "",
+        date: moment(new Date()).format("yyyy-MM-DD"),
+        endDate: "",
+        anaesDoc: "",
+        anaesMethod: "",
+        status: "",
+        dept: "",
+        opeName: "",
       },
-      opeRoom: '',
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
-      filterList: [{ label: '全部', value: 0 }, { label: '术前', value: 1 }, { label: '术中', value: 2 }, { label: '术后', value: 3 }],
+      opeRoom: "",
+      options: [
+        {
+          value: "选项1",
+          label: "黄金糕",
+        },
+        {
+          value: "选项2",
+          label: "双皮奶",
+        },
+        {
+          value: "选项3",
+          label: "蚵仔煎",
+        },
+        {
+          value: "选项4",
+          label: "龙须面",
+        },
+        {
+          value: "选项5",
+          label: "北京烤鸭",
+        },
+      ],
+      filterList: [
+        { label: "全部", value: 0 },
+        { label: "术前", value: 1 },
+        { label: "术中", value: 2 },
+        { label: "术后", value: 3 },
+      ],
       opeState: 0,
       operationStatus: [],
-      statusList: [{ label: '急诊', value: 'emergency' }, { label: '本人的', value: 'self' }, { label: '隔离', value: 'quarantine' }, { label: '放射', value: 'radiate' }],
+      statusList: [
+        { label: "急诊", value: "emergency" },
+        { label: "本人的", value: "self" },
+        { label: "隔离", value: "quarantine" },
+        { label: "放射", value: "radiate" },
+      ],
       showMore: false,
       currentPage: 1,
       pageSize: 16,
       cardList: [],
       dataList: [],
       roomList: [],
-      totalPages: 1
-    }
+      totalPages: 1,
+      anaesMethod: [],
+      doctorList: [],
+      opeName: [],
+      deptList: [],
+    };
   },
-  components: {
-  },
+  components: {},
   computed: {
-    noMore () {
-      return this.currentPage >= this.totalPages
+    noMore() {
+      return this.currentPage >= this.totalPages;
     },
-    disabled () {
-      return this.loading || this.noMore
-    }
+    disabled() {
+      return this.loading || this.noMore;
+    },
   },
-  created () {
-    this.getRoomList()
+  created() {
+    this.getRoomList();
+    // 获取科室列表
+    this.getDeptList();
+    // 获取手术名称
+    this.getOpeName();
+    // 获取手术医生列表
+    this.getDoctorList();
+    // 获取手术方法
+    this.getMethodData();
   },
-  mounted () {
-    this.getPatientList()
+  mounted() {
+    this.getPatientList();
   },
   methods: {
-    ...mapActions('Base', ['setPatientId', 'setOperationId', 'setPatientCardInfo']),
-    handleChangeList (param) {
-      const d = new Date()
-      if (param === 1) {
-        this.searchForm.date = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
-      } else {
-        d.setTime(d.getTime() + 24 * 60 * 60 * 1000)
-        this.searchForm.date = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
-      }
-      this.getPatientList('')
+    ...mapActions("Base", [
+      "setPatientId",
+      "setOperationId",
+      "setPatientCardInfo",
+    ]),
+    getMethodData() {
+      request({
+        url: anaesMethodDetail,
+        method: "GET",
+      }).then((res) => {
+        const data = res.data.data;
+        this.anaesMethod = data;
+      });
     },
-    handleFilter (val) {
-      const list = this.dataList
-      let rest = null
-      if (val.length > 0) {
-        rest = list.filter(item => {
-          if (val.indexOf('emergency') !== -1) {
-            return item.emergency === true
+    getDoctorList() {
+      request({
+        url: doctorData + "/1",
+        method: "GET",
+      }).then((res) => {
+        const data = res.data.data;
+        this.doctorList = data;
+      });
+    },
+    getOpeName() {
+      request({
+        url: opeNameData,
+      }).then((res) => {
+        const data = res.data.data;
+        this.opeName = data;
+      });
+    },
+    getDeptList() {
+      request({
+        url: deptList,
+      }).then((res) => {
+        this.deptList = res.data.data;
+      });
+    },
+    handleChangeList(param) {
+      const d = new Date();
+      if (param === 1) {
+        this.searchForm.date =
+          d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+      } else {
+        d.setTime(d.getTime() + 24 * 60 * 60 * 1000);
+        this.searchForm.date =
+          d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+      }
+      this.getPatientList("");
+    },
+    handleChange(arr) {
+      this.operationStatus.length > 1 && this.operationStatus.shift();
+      this.$nextTick(() => {
+        let val =
+          this.operationStatus.length > 0 ? this.operationStatus[0] : "";
+      });
+      const list = this.dataList;
+      let rest = null;
+      if (arr.length > 0) {
+        rest = list.filter((item) => {
+          if (arr.indexOf("emergency") !== -1) {
+            return item.emergency === true;
           }
-          if (val.indexOf('quatantine' !== -1)) {
-            return item.quatantine === true
+          if (arr.indexOf("quarantine") !== -1) {
+            return item.quarantine === true;
           }
-          if (val.indexOf('radiate' !== -1)) {
-            return item.radiate === true
+          if (arr.indexOf("radiate") !== -1) {
+            return item.radiate === true;
           }
-        })
+        });
         // console.log(rest)
-        this.cardList = rest
+        this.cardList = rest;
       } else {
-        this.cardList = this.dataList
+        this.cardList = this.dataList;
       }
     },
-    handleJump (item) {
-      this.setPatientId(item.patientId)
-      this.setOperationId(item.operationId)
-      this.setPatientCardInfo({ roomNo: item.sequence, ptName: item.patientName, gender: item.gender, ptId: item.patientId })
-      this.$router.push('/home/patientInfo')
+    handleFilter(val) {
+      const list = this.dataList;
+      let rest = null;
+      if (val.length > 0) {
+        rest = list.filter((item) => {
+          if (val.indexOf("emergency") !== -1) {
+            return item.emergency === true;
+          }
+          if (val.indexOf("quatantine" !== -1)) {
+            return item.quatantine === true;
+          }
+          if (val.indexOf("radiate" !== -1)) {
+            return item.radiate === true;
+          }
+        });
+        // console.log(rest)
+        this.cardList = rest;
+      } else {
+        this.cardList = this.dataList;
+      }
     },
-    handleRegister (param) {
+    handleJump(item) {
+      this.setPatientId(item.patientId);
+      this.setOperationId(item.operationId);
+      this.setPatientCardInfo({
+        roomNo: item.sequence,
+        ptName: item.patientName,
+        gender: item.gender,
+        ptId: item.patientId,
+      });
+      this.$router.push("/home/patientInfo");
+    },
+    handleRegister(param) {
       if (param === 1) {
-        this.$eventHub.$emit('show-dialog', { name: '急诊登记', componentName: 'EmergencyTreatment' })
+        this.$eventHub.$emit("show-dialog", {
+          name: "急诊登记",
+          componentName: "EmergencyTreatment",
+        });
       } else {
-        this.$eventHub.$emit('show-dialog', { name: '手术排台', componentName: 'OperationArrangement' })
+        this.$eventHub.$emit("show-dialog", {
+          name: "手术排台",
+          componentName: "OperationArrangement",
+        });
       }
     },
-    hanldeSearchMore () {
-      this.showMore = !this.showMore
+    hanldeSearchMore() {
+      this.showMore = !this.showMore;
     },
     // 获取房间号
-    getRoomList () {
-      console.log('123')
+    getRoomList() {
+      console.log("123");
       request({
-        method: 'GET',
-        url: roomList
-      }).then(res => {
-        const data = res.data.data
-        this.roomList = data.roomList
-        this.opeRoom = data.defaultRoom
-      })
+        method: "GET",
+        url: roomList,
+      }).then((res) => {
+        const data = res.data.data;
+        this.roomList = data.roomList;
+        this.opeRoom = data.defaultRoom;
+      });
     },
-    getPatientList (param) {
-      if (param === '') {
-        this.currentPage = 1
+    getPatientList(param) {
+      if (param === "") {
+        this.currentPage = 1;
       }
-      const obj = {}
-      const search = {}
-      obj.start = this.currentPage
-      obj.pageSize = this.pageSize
-      obj.opeState = this.opeState
-      obj.roomNo = this.opeRoom
-      search.patientId = this.searchForm.id
-      search.name = this.searchForm.name
-      search.date = this.searchForm.date
-      search.anesMethod = this.searchForm.anaesMethod
-      search.anesDoc = this.searchForm.anaesDoc
-      search.dept = this.searchForm.dept
-      search.opeName = this.searchForm.opeName
-      search.deadLine = this.searchForm.endDate
-      Object.assign(obj, search)
+      const obj = {};
+      const search = {};
+      obj.start = this.currentPage;
+      obj.pageSize = this.pageSize;
+      obj.opeState = this.opeState;
+      obj.roomNo = this.opeRoom;
+      search.patientId = this.searchForm.id;
+      search.name = this.searchForm.name;
+      search.date = this.searchForm.date;
+      search.anesMethod = this.searchForm.anaesMethod;
+      search.anesDoc = this.searchForm.anaesDoc;
+      search.dept = this.searchForm.dept;
+      search.opeName = this.searchForm.opeName;
+      search.deadLine = this.searchForm.endDate;
+      Object.assign(obj, search);
       request({
-        method: 'GET',
+        method: "GET",
         url: opeList,
-        params: obj
-      }).then(res => {
-        const data = res.data.data.list || []
-        this.totalPages = res.data.data.pages
+        params: obj,
+      }).then((res) => {
+        const data = res.data.data.list || [];
+        this.totalPages = res.data.data.pages;
         // this.loading = false
-        data.forEach(value => {
+        data.forEach((value) => {
           if (value.opeScheduleTime) {
             // value.opeTime = moment(value.opeScheduleTime).format('yyyy-MM-DD HH:mm')
-            value.opeTime = value.opeScheduleTime
+            value.opeTime = value.opeScheduleTime;
           } else {
-            value.opeTime = ''
+            value.opeTime = "";
           }
           if (value.isEmergency === 0) {
-            value.emergency = true
+            value.emergency = true;
           } else {
-            value.emergency = false
+            value.emergency = false;
           }
-        })
-        if (param === 'scroll') {
-          this.cardList = this.cardList.concat(data)
-          this.dataList = this.dataList.concat(data)
+        });
+        if (param === "scroll") {
+          this.cardList = this.cardList.concat(data);
+          this.dataList = this.dataList.concat(data);
         } else {
-          this.cardList = data
-          this.dataList = data
+          this.cardList = data;
+          this.dataList = data;
         }
-      })
+      });
     },
-    loadMore () {
-      this.loading = true
+    loadMore() {
+      this.loading = true;
       setTimeout(() => {
-        this.currentPage += 1
-        this.getPatientList('scroll')
-        this.loading = false
-      }, 2000)
-    }
-  }
-}
+        this.currentPage += 1;
+        this.getPatientList("scroll");
+        this.loading = false;
+      }, 2000);
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
 .patient-info {
   height: 100%;
   width: 100%;
-  padding:0 0 0 12px;
+  padding: 0 0 0 12px;
   // display: flex;
   // flex-direction: column;
-  .search{
+  .search {
     // flex: 1;
-    height:118px;
-    background:rgba(24,28,39,1);
-    box-shadow:0px 0px 12px 3px rgba(0, 0, 0, 0.4);
-    border-radius:5px;
-    width:100%;
-    padding:20px;
-    position:relative;
-    .other-search{
-      position:absolute;
-      padding:20px 20px 0 20px;
-      width:100%;
-      background:#181c27;
-      box-shadow:0px 0px 12px 3px rgba(0, 0, 0, 0.4);
-      border-radius:5px;
-      top:120px;
-      left:0;
+    height: 118px;
+    background: rgba(24, 28, 39, 1);
+    box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+    border-radius: 5px;
+    width: 100%;
+    padding: 20px;
+    position: relative;
+    .other-search {
+      position: absolute;
+      padding: 20px 20px 0 20px;
+      width: 100%;
+      background: #181c27;
+      box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+      border-radius: 5px;
+      top: 120px;
+      left: 0;
       z-index: 1;
     }
   }
-  .el-radio-group{
-    margin-bottom:0 !important;
+  .el-radio-group {
+    margin-bottom: 0 !important;
   }
-  .patient-card{
+  .patient-card {
     // flex: 1;
     // height:calc(100% - 118px);
-    height:calc(100% - 121px);
+    height: calc(100% - 121px);
     box-sizing: border-box;
-    padding-top:20px;
-    .loading{
-      text-align:center;
-      color:#fff;
+    padding-top: 20px;
+    .loading {
+      text-align: center;
+      color: #fff;
     }
-    ul{
+    ul {
       display: grid;
       // height:100%;
       // overflow-y:auto;
@@ -503,115 +551,119 @@ export default {
       grid-column-gap: 20px;
       grid-row-gap: 20px;
       // justify-content: space-around;
-      li{
-        box-shadow:0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+      li {
+        box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
         cursor: pointer;
-        border-radius:5px;
-        padding:0 0 14px 0;
-        background:#181C27;
-        border:1px solid #181c27;
+        border-radius: 5px;
+        padding: 0 0 14px 0;
+        background: #181c27;
+        border: 1px solid #181c27;
         width: 392px;
-        height:196px;
-        font-size:14px;
+        height: 196px;
+        font-size: 14px;
         display: flex;
         flex-direction: column;
         transition: all 0.5s;
-        .title{
+        .title {
           display: flex;
           justify-content: space-between;
-          span{
-            color:#7f85a9;
-            padding:0 10px;
-            line-height:28px;
-            &:last-child{
-              color:#0094ff;
+          span {
+            color: #7f85a9;
+            padding: 0 10px;
+            line-height: 28px;
+            &:last-child {
+              color: #0094ff;
             }
           }
         }
-        .content{
+        .content {
           flex: 1;
           // display: flex;
           overflow: hidden;
-          .room{
-            width:100px;
+          .room {
+            width: 100px;
             float: left;
             height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            span{
-              box-shadow:0 0 12px 3px #373a44;
+            span {
+              box-shadow: 0 0 12px 3px #373a44;
               box-sizing: border-box;
               width: 100%;
-              height:46px;
+              height: 46px;
               display: block;
-              line-height:46px;
-              background:linear-gradient(120deg,rgba(84,190,234,1),rgba(219,83,160,1));
-              border-radius:0px 23px 23px 0px;
-              font-size:26px;
-              font-weight:bold;
+              line-height: 46px;
+              background: linear-gradient(
+                120deg,
+                rgba(84, 190, 234, 1),
+                rgba(219, 83, 160, 1)
+              );
+              border-radius: 0px 23px 23px 0px;
+              font-size: 26px;
+              font-weight: bold;
               color: #fff;
-              text-shadow:0px 1px 3px rgba(0, 0, 0, 0.2);
+              text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
               text-align: center;
             }
           }
-          .info{
+          .info {
             height: 100%;
             float: left;
             width: calc(100% - 174px);
-            padding:0 0 0 20px;
+            padding: 0 0 0 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            p{
-              padding:0;
-              margin:0;
-              width:100%;
-              height:28px;
+            p {
+              padding: 0;
+              margin: 0;
+              width: 100%;
+              height: 28px;
               overflow: hidden;
-              color:#9BA3D5;
+              color: #9ba3d5;
               display: flex;
-              span{
-                color:#D0DAE5;
+              span {
+                color: #d0dae5;
                 line-height: 28px;
                 display: block;
-              &:first-child{
-                span{
-                  &:last-child{
-                    background:yellow;
-                    // width: 80px;
-                    max-width: 140px;
+                &:first-child {
+                  span {
+                    &:last-child {
+                      background: yellow;
+                      // width: 80px;
+                      max-width: 140px;
+                    }
                   }
                 }
               }
-              }
-              .overflow{
+              .overflow {
                 // max-width: 140px;
                 width: 80px;
-                margin:0 10px;
+                margin: 0 10px;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
               }
-              .label{
-                color:#9BA3D5;
-                margin-right:10px;
+              .label {
+                color: #9ba3d5;
+                margin-right: 10px;
               }
             }
           }
-          .status{
+          .status {
             // background: pink;
             height: 100%;
-            width:74px;
+            width: 74px;
             float: right;
-            display:flex;
-            flex-direction:column;
-            justify-content:space-around;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
           }
         }
-        &:hover{
-          border:1px solid #0094ff;
-          background:#262c3c;
+        &:hover {
+          border: 1px solid #0094ff;
+          background: #262c3c;
           // transform:scale(1.1,1.1);
         }
       }
@@ -620,16 +672,16 @@ export default {
 }
 </style>
 <style>
-  .el-picker-panel{
-    background:#252c40 !important;
-  }
-  .scrollbar .el-scrollbar__wrap {
-    overflow-x: hidden;
-  }
-  .scrollbar .el-scrollbar__wrap .el-scrollbar__view{
-    /* height:100%; */
-  }
-  .rowScrollbar .el-scrollbar__wrap .el-scrollbar__view{
-   white-space: nowrap;
-  }
+.el-picker-panel {
+  background: #252c40 !important;
+}
+.scrollbar .el-scrollbar__wrap {
+  overflow-x: hidden;
+}
+.scrollbar .el-scrollbar__wrap .el-scrollbar__view {
+  /* height:100%; */
+}
+.rowScrollbar .el-scrollbar__wrap .el-scrollbar__view {
+  white-space: nowrap;
+}
 </style>
