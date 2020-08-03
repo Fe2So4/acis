@@ -79,19 +79,19 @@ export default {
         {
           name: '大事件',
           index: 'M001',
-          subNav: [
-            { name: '麻药', index: '1-1', componentName: 'Event' },
-            { name: '用药', index: '1-2', componentName: 'Event' },
-            { name: '事件', index: '1-3', componentName: 'Event' },
-            { name: '输液', index: '1-4', componentName: 'Event' },
-            { name: '出量', index: '1-5', componentName: 'Event' },
-            { name: '插管', index: '1-6', componentName: 'Event' },
-            { name: '拔管', index: '1-7', componentName: 'Event' },
-            { name: '输血', index: '1-8', componentName: 'Event' },
-            { name: '输氧', index: '1-9', componentName: 'Event' },
-            { name: '呼吸', index: '1-10', componentName: 'Event' },
-            { name: '其他', index: '1-11', componentName: 'Event' }
-          ],
+          // subNav: [
+          //   { name: '麻药', index: '1-1', componentName: 'Event' },
+          //   { name: '用药', index: '1-2', componentName: 'Event' },
+          //   { name: '事件', index: '1-3', componentName: 'Event' },
+          //   { name: '输液', index: '1-4', componentName: 'Event' },
+          //   { name: '出量', index: '1-5', componentName: 'Event' },
+          //   { name: '插管', index: '1-6', componentName: 'Event' },
+          //   { name: '拔管', index: '1-7', componentName: 'Event' },
+          //   { name: '输血', index: '1-8', componentName: 'Event' },
+          //   { name: '输氧', index: '1-9', componentName: 'Event' },
+          //   { name: '呼吸', index: '1-10', componentName: 'Event' },
+          //   { name: '其他', index: '1-11', componentName: 'Event' }
+          // ],
           icon: 'el-icon-star-on'
         },
         {
@@ -103,104 +103,104 @@ export default {
         {
           name: '患者操作',
           index: 'M003',
-          subNav: [
-            {
-              name: '手术概览',
-              index: '3-1',
-              componentName: 'OperationOverview'
-            },
-            {
-              name: '术中患者列表',
-              index: '3-2',
-              componentName: 'IntraoperativePatients'
-            },
-            {
-              name: '术中登记',
-              index: '3-3',
-              componentName: 'IntraoperativeRegistration'
-            },
-            { name: '患者详情', index: '3-4', componentName: 'PatientDetail' },
-            {
-              name: '手术取消',
-              index: '3-5',
-              componentName: 'OperationCancel'
-            },
-            {
-              name: '复苏进程',
-              index: '3-6',
-              componentName: 'OperationCancel'
-            },
-            {
-              name: '复苏床位',
-              index: '3-7',
-              componentName: 'ResuscitationBed'
-            },
-            { name: '实时状态', index: '3-8', componentName: 'RealtimeStatus' },
-            { name: '麻醉评分', index: '3-9', componentName: 'AnaesScore' },
-            {
-              name: '检验信息',
-              index: '3-10',
-              componentName: 'InspectionInformation'
-            },
-            {
-              name: '医嘱信息',
-              index: '3-11',
-              componentName: 'MedicalOrderInformation'
-            },
-            {
-              name: '检查结果',
-              index: '3-12',
-              componentName: 'InspectionResult'
-            },
-            {
-              name: '病历病程',
-              index: '3-13',
-              componentName: 'MedicalRecordCourse'
-            },
-            { name: '状态维护', index: '3-14', componentName: 'StateMaintain' },
-            {
-              name: '手术等级',
-              index: '3-15',
-              componentName: 'OperationLevel'
-            },
-            {
-              name: '术后登记',
-              index: '3-16',
-              componentName: 'PostoperativeRegistration'
-            },
-            {
-              name: '手术信息',
-              index: '3-17',
-              componentName: 'OperationInfo'
-            },
-            {
-              name: '手术登记',
-              index: '3-18',
-              componentName: 'OperationRegisteration'
-            }
-          ],
+          // subNav: [
+          //   {
+          //     name: '手术概览',
+          //     index: '3-1',
+          //     componentName: 'OperationOverview'
+          //   },
+          //   {
+          //     name: '术中患者列表',
+          //     index: '3-2',
+          //     componentName: 'IntraoperativePatients'
+          //   },
+          //   {
+          //     name: '术中登记',
+          //     index: '3-3',
+          //     componentName: 'IntraoperativeRegistration'
+          //   },
+          //   { name: '患者详情', index: '3-4', componentName: 'PatientDetail' },
+          //   {
+          //     name: '手术取消',
+          //     index: '3-5',
+          //     componentName: 'OperationCancel'
+          //   },
+          //   {
+          //     name: '复苏进程',
+          //     index: '3-6',
+          //     componentName: 'OperationCancel'
+          //   },
+          //   {
+          //     name: '复苏床位',
+          //     index: '3-7',
+          //     componentName: 'ResuscitationBed'
+          //   },
+          //   { name: '实时状态', index: '3-8', componentName: 'RealtimeStatus' },
+          //   { name: '麻醉评分', index: '3-9', componentName: 'AnaesScore' },
+          //   {
+          //     name: '检验信息',
+          //     index: '3-10',
+          //     componentName: 'InspectionInformation'
+          //   },
+          //   {
+          //     name: '医嘱信息',
+          //     index: '3-11',
+          //     componentName: 'MedicalOrderInformation'
+          //   },
+          //   {
+          //     name: '检查结果',
+          //     index: '3-12',
+          //     componentName: 'InspectionResult'
+          //   },
+          //   {
+          //     name: '病历病程',
+          //     index: '3-13',
+          //     componentName: 'MedicalRecordCourse'
+          //   },
+          //   { name: '状态维护', index: '3-14', componentName: 'StateMaintain' },
+          //   {
+          //     name: '手术等级',
+          //     index: '3-15',
+          //     componentName: 'OperationLevel'
+          //   },
+          //   {
+          //     name: '术后登记',
+          //     index: '3-16',
+          //     componentName: 'PostoperativeRegistration'
+          //   },
+          //   {
+          //     name: '手术信息',
+          //     index: '3-17',
+          //     componentName: 'OperationInfo'
+          //   },
+          //   {
+          //     name: '手术登记',
+          //     index: '3-18',
+          //     componentName: 'OperationRegisteration'
+          //   }
+          // ],
           icon: 'el-icon-s-data'
         },
         {
           name: '常用功能',
           index: 'M004',
-          subNav: [
-            { name: '血流动力', index: '4-1', componentName: 'Hemodynamics' },
-            {
-              name: '模板管理',
-              index: '4-2',
-              componentName: 'ManagementEventTemplate'
-            },
-            {
-              name: '手术交班',
-              componentName: 'OperationHandover',
-              index: '4-3'
-            },
-            { name: 'PACU状态', componentName: 'PacuStatus', index: '4-4' },
-            { name: '设备采集', componentName: 'DeviceGather', index: '4-5' },
-            { name: '字典', componentName: 'Dictionary', index: '4-6' },
-            { name: '患者预警', componentName: 'PatientWarning', index: '4-7' }
-          ],
+          // subNav: [
+          //   { name: '血流动力', index: '4-1', componentName: 'Hemodynamics' },
+          //   {
+          //     name: '模板管理',
+          //     index: '4-2',
+          //     componentName: 'ManagementEventTemplate'
+          //   },
+          //   {
+          //     name: '手术交班',
+          //     componentName: 'OperationHandover',
+          //     index: '4-3'
+          //   },
+          //   { name: 'PACU状态', componentName: 'PacuStatus', index: '4-4' },
+          //   { name: '设备采集', componentName: 'DeviceGather', index: '4-5' },
+          //   { name: '字典', componentName: 'Dictionary', index: '4-6' },
+          //   { name: '患者预警', componentName: 'PatientWarning', index: '4-7' }
+          // ],
           icon: 'el-icon-monitor'
         },
         // {
@@ -230,28 +230,127 @@ export default {
         {
           name: '其他',
           index: 'M005',
-          subNav: [
-            {
-              name: '系统配置',
-              index: '6-1',
-              componentName: 'ConfigurationSystem'
-            },
-            {
-              name: '模板设计器',
-              index: '6-2',
-              componentName: 'TemplateDesigner'
-            },
-            {
-              name: '模板展示',
-              index: '6-3',
-              componentName: 'TemplateDisplayer'
-            },
-            { name: '修改密码', index: '6-4', componentName: 'ChangePass' },
-            { name: '关于', index: '6-5', componentName: 'About' }
-          ],
           icon: 'el-icon-s-tools'
         }
       ],
+      subNavList: [{ name: '麻药', index: '1-1', componentName: 'Event' },
+        { name: '用药', index: '1-2', componentName: 'Event' },
+        { name: '事件', index: '1-3', componentName: 'Event' },
+        { name: '输液', index: '1-4', componentName: 'Event' },
+        { name: '出量', index: '1-5', componentName: 'Event' },
+        { name: '插管', index: '1-6', componentName: 'Event' },
+        { name: '拔管', index: '1-7', componentName: 'Event' },
+        { name: '输血', index: '1-8', componentName: 'Event' },
+        { name: '输氧', index: '1-9', componentName: 'Event' },
+        { name: '呼吸', index: '1-10', componentName: 'Event' },
+        { name: '其他', index: '1-11', componentName: 'Event' },
+        {
+          name: '系统配置',
+          index: '6-1',
+          componentName: 'ConfigurationSystem'
+        },
+        {
+          name: '模板设计器',
+          index: '6-2',
+          componentName: 'TemplateDesigner'
+        },
+        {
+          name: '模板展示',
+          index: '6-3',
+          componentName: 'TemplateDisplayer'
+        },
+        { name: '修改密码', index: '6-4', componentName: 'ChangePass' },
+        { name: '关于', index: '6-5', componentName: 'About' },
+        { name: '血流动力', index: '4-1', componentName: 'Hemodynamics' },
+        {
+          name: '模板管理',
+          index: '4-2',
+          componentName: 'ManagementEventTemplate'
+        },
+        {
+          name: '手术交班',
+          componentName: 'OperationHandover',
+          index: '4-3'
+        },
+        { name: 'PACU状态', componentName: 'PacuStatus', index: '4-4' },
+        { name: '设备采集', componentName: 'DeviceGather', index: '4-5' },
+        { name: '字典', componentName: 'Dictionary', index: '4-6' },
+        { name: '患者预警', componentName: 'PatientWarning', index: '4-7' },
+        {
+          name: '手术概览',
+          index: '3-1',
+          componentName: 'OperationOverview'
+        },
+        {
+          name: '术中患者列表',
+          index: '3-2',
+          componentName: 'IntraoperativePatients'
+        },
+        {
+          name: '术中登记',
+          index: '3-3',
+          componentName: 'IntraoperativeRegistration'
+        },
+        { name: '患者详情', index: '3-4', componentName: 'PatientDetail' },
+        {
+          name: '手术取消',
+          index: '3-5',
+          componentName: 'OperationCancel'
+        },
+        {
+          name: '复苏进程',
+          index: '3-6',
+          componentName: 'OperationCancel'
+        },
+        {
+          name: '复苏床位',
+          index: '3-7',
+          componentName: 'ResuscitationBed'
+        },
+        { name: '实时状态', index: '3-8', componentName: 'RealtimeStatus' },
+        { name: '麻醉评分', index: '3-9', componentName: 'AnaesScore' },
+        {
+          name: '检验信息',
+          index: '3-10',
+          componentName: 'InspectionInformation'
+        },
+        {
+          name: '医嘱信息',
+          index: '3-11',
+          componentName: 'MedicalOrderInformation'
+        },
+        {
+          name: '检查结果',
+          index: '3-12',
+          componentName: 'InspectionResult'
+        },
+        {
+          name: '病历病程',
+          index: '3-13',
+          componentName: 'MedicalRecordCourse'
+        },
+        { name: '状态维护', index: '3-14', componentName: 'StateMaintain' },
+        {
+          name: '手术等级',
+          index: '3-15',
+          componentName: 'OperationLevel'
+        },
+        {
+          name: '术后登记',
+          index: '3-16',
+          componentName: 'PostoperativeRegistration'
+        },
+        {
+          name: '手术信息',
+          index: '3-17',
+          componentName: 'OperationInfo'
+        },
+        {
+          name: '手术登记',
+          index: '3-18',
+          componentName: 'OperationRegisteration'
+        }],
+
       overviewList: [],
       activeIndex: null,
       path: '',
@@ -343,7 +442,7 @@ export default {
               _item.name = item.name
               _item.icon = item.icon
               _item.subNav.forEach((value2) => {
-                item.subNav.forEach((value1) => {
+                this.subNavList.forEach((value1) => {
                   if (value2.perName === value1.name) {
                     value2.componentName = value1.componentName
                   }

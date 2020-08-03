@@ -52,8 +52,232 @@
         麻醉事件
       </div>
       <div class="content">
-        <anaes-table :table-data="tableData" />
+        <!-- <anaes-table :table-data="tableData" /> -->
         <!-- <other-event /> -->
+        <vxe-table
+          show-overflow
+          size="mini"
+          ref="xTable"
+          width="100%"
+          align="center"
+          height="100%"
+          auto-resize
+          keep-source
+          class="anaesTable scroll"
+          :loading="loading"
+          :data="tableData"
+          highlight-hover-row
+          :checkbox-config="{checkStrictly: true}"
+          :edit-config="{trigger: 'click', mode: 'cell', showStatus: true}"
+        >
+          <vxe-table-column
+            type="checkbox"
+            width="60"
+            title="选择"
+          />
+          <vxe-table-column
+            field="type"
+            title="类型"
+            width="60"
+          />
+          <vxe-table-column
+            field="eventName"
+            title="事件名称"
+            :edit-render="{}"
+            width="120"
+          >
+            <template v-slot:edit="{ row }">
+              <el-input
+                v-model="row.eventName"
+                size="mini"
+              />
+            </template>
+          </vxe-table-column>
+          <vxe-table-column
+            field="method"
+            title="途径"
+            :edit-render="{}"
+            width="120"
+          >
+            <template v-slot:edit="{ row }">
+              <el-input
+                v-model="row.method"
+                size="mini"
+              />
+            </template>
+          </vxe-table-column>
+          <vxe-table-column
+            field="concentration"
+            title="浓度"
+            :edit-render="{}"
+            width="80"
+          >
+            <template v-slot:edit="{row}">
+              <el-input
+                v-model="row.concentration"
+                size="mini"
+              />
+            </template>
+          </vxe-table-column>
+          <vxe-table-column
+            field="concentrationUnit"
+            title="单位"
+            :edit-render="{}"
+            width="120"
+          >
+            <template v-slot:edit="scope">
+              <el-select
+                v-model="scope.row.concentrationUnit"
+                size="mini"
+                @change="$refs.xTable.updateStatus(scope)"
+              >
+                <el-option
+                  v-for="item in unitList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </template>
+            <template v-slot="{ row }">
+              {{ getSelectLabel(row.concentrationUnit, unitList) }}
+            </template>
+          </vxe-table-column>
+          <vxe-table-column
+            field="speed"
+            title="速度"
+            :edit-render="{}"
+            width="80"
+          >
+            <template v-slot:edit="{ row }">
+              <el-input
+                v-model="row.speed"
+                size="mini"
+              />
+            </template>
+          </vxe-table-column>
+          <vxe-table-column
+            field="speedUnit"
+            title="单位"
+            :edit-render="{}"
+            width="120"
+          >
+            <template v-slot:edit="scope">
+              <el-select
+                v-model="scope.row.speedUnit"
+                size="mini"
+                @change="$refs.xTable.updateStatus(scope)"
+              >
+                <el-option
+                  v-for="item in unitList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </template>
+            <template v-slot="{ row }">
+              {{ getSelectLabel(row.speedUnit, unitList) }}
+            </template>
+          </vxe-table-column>
+          <vxe-table-column
+            field="dose"
+            title="剂量"
+            :edit-render="{}"
+            width="80"
+          >
+            <template v-slot:edit="{ row }">
+              <el-input
+                v-model="row.dose"
+                size="mini"
+              />
+            </template>
+          </vxe-table-column>
+          <vxe-table-column
+            field="doseUnit"
+            title="单位"
+            :edit-render="{}"
+            width="120"
+          >
+            <template v-slot:edit="scope">
+              <el-select
+                v-model="scope.row.doseUnit"
+                size="mini"
+                @change="$refs.xTable.updateStatus(scope)"
+              >
+                <el-option
+                  v-for="item in unitList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </template>
+            <template v-slot="{ row }">
+              {{ getSelectLabel(row.doseUnit, unitList) }}
+            </template>
+          </vxe-table-column>
+          <vxe-table-column
+            field="startTime"
+            title="发生时间"
+            :edit-render="{}"
+            width="150"
+          >
+            <template v-slot:edit="{ row }">
+              <el-date-picker
+                v-model="row.startTime"
+                type="datetime"
+                size="mini"
+                format="MM-dd HH:mm"
+                value-format="MM-dd HH:mm"
+              />
+            </template>
+            <template v-slot="{ row }">
+              {{ formatDate(row.startTime, 'MM-DD HH:mm') }}
+            </template>
+          </vxe-table-column>
+          <vxe-table-column
+            field="continue"
+            title="是否持续"
+            width="80"
+          >
+            <template v-slot="{ row }">
+              <el-switch v-model="row.continue" />
+            </template>
+          </vxe-table-column>
+          <vxe-table-column
+            field="continueTime"
+            title="持续时间"
+            :edit-render="{}"
+            width="100"
+          >
+            <template v-slot:edit="{ row }">
+              <el-input
+                v-model="row.continueTime"
+                size="mini"
+              />
+            </template>
+          </vxe-table-column>
+          <vxe-table-column
+            field="endTime"
+            title="结束时间"
+            :edit-render="{}"
+            width="150"
+          >
+            <template v-slot:edit="{ row }">
+              <el-date-picker
+                v-model="row.endTime"
+                size="mini"
+                type="datetime"
+                format="MM-dd HH:mm"
+                value-format="MM-dd HH:mm"
+              />
+            </template>
+            <template v-slot="{ row }">
+              {{ formatDate(row.endTime, 'MM-DD HH:mm') }}
+            </template>
+          </vxe-table-column>
+        </vxe-table>
       </div>
       <div class="option">
         <el-row>
@@ -96,9 +320,11 @@
   </div>
 </template>
 <script>
-import AnaesTable from '@/components/AnaesTable/index'
+// import AnaesTable from '@/components/AnaesTable/index'
 import request from '@/utils/requestForMock'
-import { getEventList } from '@/api/anaesDrug'
+import { getEventList, optionEvent } from '@/api/anaesDrug'
+import XEUtils from 'xe-utils'
+import moment from 'moment'
 // import OtherEvent from './components/otherEvent'
 export default {
   name: 'Event',
@@ -133,14 +359,23 @@ export default {
       currentRow: null,
       currentPage: 0,
       pageSize: 10,
-      total: 0
+      total: 0,
+      loading: false,
+      unitList: [{ label: 'mg/h', value: '1' }, { label: 'mg/m', value: '2' }]
     }
   },
   components: {
-    AnaesTable
+    // AnaesTable
     // OtherEvent
   },
   methods: {
+    formatDate (value, format) {
+      return moment(value).format(format)
+    },
+    getSelectLabel (value, list, valueProp = 'value', labelField = 'label') {
+      const item = XEUtils.find(list, item => item[valueProp] === value)
+      return item ? item[labelField] : null
+    },
     // 选中当前行
     handleCurrentChange (val) {
       this.currentRow = val
@@ -172,6 +407,13 @@ export default {
     onCellBlur () {
       this.activeRow = null
       this.activeColumnId = null
+    },
+    handleOptionEvent () {
+      request({
+        url: optionEvent
+      }).then(res => {
+        console.log(res)
+      })
     }
   },
   mounted () {
@@ -296,8 +538,9 @@ export default {
         flex-direction: column;
         .content{
             height:calc(100% - 90px);
-            flex: 1;
-            display: flex;
+            // flex: 1;
+            // display: flex;
+            width: 100%;
         }
         .option{
             text-align: right;

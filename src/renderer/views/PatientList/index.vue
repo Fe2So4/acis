@@ -505,7 +505,6 @@ export default {
             return item.radiate === true
           }
         })
-        // console.log(rest)
         this.cardList = rest
       } else {
         this.cardList = this.dataList

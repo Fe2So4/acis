@@ -53,7 +53,7 @@
         <div class="option clearfix">
           <div
             class="button"
-            @click="jumpHome"
+            @click="login"
           >
             确定
           </div>
@@ -71,7 +71,6 @@
       <div class="close">
         <i
           class="el-icon-minus"
-
           @click="mini"
         />
         <i
@@ -84,10 +83,11 @@
 </template>
 
 <script>
+import { login } from '../../api/login'
+import request from '@/utils/requestForMock'
+
 const { BrowserWindow } = require('electron').remote
 const win = BrowserWindow.getAllWindows()[0]
-
-// import { login } from '../../api/login'
 // import { setUserToken, setCurrentAccount } from '../../utils/storage'
 
 export default {
@@ -115,7 +115,6 @@ export default {
   },
   methods: {
     jumpHome () {
-      this.$router.push('/home')
     },
     login () {
       this.$refs.form.validate((valid) => {
@@ -128,7 +127,17 @@ export default {
           //   setCurrentAccount(this.form.username)
           //   // this.$router.push('/statistics/operation-quantity')
           //   this.$router.push('/apply/index')
-
+          request({
+            method: 'POST',
+            url: login,
+            data: {
+              loginName: this.form.username,
+              loginPwd: this.form.password
+            }
+          }).then(res => {
+            this.$router.push('/home')
+            // console.log(res)
+          })
           win.maximize()
           // })
         } else {
