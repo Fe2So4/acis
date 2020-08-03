@@ -2,6 +2,7 @@ import request from '@/utils/requestForMock'
 import {
   getAnesthesiaGradeItem,
   showAnesthesiaGradeItem,
+  showTotalScore,
   // saveAnesthesiaGrade,
   calculateAnesthesiaGrade
 } from '@/api/anaesScore'
@@ -27,7 +28,8 @@ export default {
       scoreCriticalDegree: '', // 危重程度
       scoreMortality: '', // 死亡率
       grossScore: '', // 总分
-      scoreClass: '' // 等级
+      scoreClass: '', // 等级
+      valueSnapshot: ''
     }
   },
   computed: {
@@ -35,6 +37,7 @@ export default {
   },
   created () {
     this.getGradeItemAndValue()
+    this.showTotalScore()
   },
   methods: {
     getGradeItemAndValue () {
@@ -76,6 +79,29 @@ export default {
         }
       })
     },
+    // 回显总分
+    showTotalScore () {
+      return request({
+        method: 'post',
+        url: showTotalScore,
+        params: {
+          anesthesiaScoreId: this.anesthesiaScoreId,
+          operationId: this.operationId,
+          patientId: this.patientId
+        }
+      }).then(
+        res => {
+          if (res.data && res.data.success) {
+            ({
+              ScoreCriticalDegree: this.scoreCriticalDegree,
+              ScoreMortality: this.scoreMortality,
+              GrossScore: this.grossScore,
+              ScoreClass: this.scoreClass
+            } = res.data.data)
+          }
+        }
+      )
+    },
     // 保存
     // saveAnesthesiaGrade (list) {
     //   return request({
@@ -90,7 +116,7 @@ export default {
     //   })
     // },
     // 获取已填写过的评分项
-    getDirtyList () {
+    getFilledList () {
       return [...Object.values(this.group)].reduce((acc, group) => {
         let values = group.filter(item => item.value)
         const { length } = values
@@ -120,6 +146,7 @@ export default {
         return [...acc, ...values]
       }, [])
     },
+    // 点击评分
     calculateAnesthesiaGrade (list) {
       return request({
         method: 'post',
@@ -138,13 +165,18 @@ export default {
             GrossScore: this.grossScore,
             ScoreClass: this.scoreClass
           } = res.data.data)
+          // 保存快照
+          this.valueSnapshot = JSON.stringify(this.group)
         }
       })
     },
+    // 初始化各组
     initGroups (itemList, valueList) {
       Object.keys(this.group).forEach(key => {
         this.group[key] = this.initGroup(itemList, valueList, key)
       })
+      // 生成快照
+      this.valueSnapshot = JSON.stringify(this.group)
     },
     initGroup (itemList, valueList, id) {
       const listItem = itemList.find(item => item.group - id === 0)
@@ -159,6 +191,7 @@ export default {
             if (valueItem) {
               switch (item.type) {
                 case 'checkbox':
+                  // 回显时布尔值为字符串
                   value = valueItem.value === 'true'
                   break
                 default:
@@ -202,7 +235,7 @@ export default {
       })
     },
     async save () {
-      // const list = this.getDirtyList()
+      // const list = this.getFilledList()
       // if (list.length === 0) {
       //   return this.$message({
       //     message: '未填写任何评分项',
@@ -222,8 +255,13 @@ export default {
       //   })
       // }
     },
+    // 判断是否有修改值
+    validateModified () {
+      return this.valueSnapshot === JSON.stringify(this.group)
+    },
     async calculate () {
-      const list = this.getDirtyList()
+      if (this.validateModified()) return
+      const list = this.getFilledList()
       if (list.length === 0) {
         return this.$message({
           message: '未填写任何评分项',

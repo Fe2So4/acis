@@ -17,8 +17,6 @@
           Apache
         el-tab-pane(label="TISS评分" name="7")
           Tiss
-        el-tab-pane(label="镇痛评分" name="8")
-          Analgesia
 </template>
 <script>
 import Balthazar from './Balthazar/index'
@@ -28,7 +26,6 @@ import ChildPugh from './ChildPugh/index'
 import Pars from './Pars/index'
 import GoldMan from './GoldMan/index'
 import Apache from './Apache/index'
-import Analgesia from './Analgesia/index'
 export default {
   name: 'AnaesScore',
   data () {
@@ -43,8 +40,7 @@ export default {
     ChildPugh,
     Pars,
     GoldMan,
-    Apache,
-    Analgesia
+    Apache
   },
   methods: {
     handleClick (tab, event) {

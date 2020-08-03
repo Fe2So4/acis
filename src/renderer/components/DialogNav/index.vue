@@ -69,6 +69,7 @@ import PostoperativeRegistration from '@/views/PostoperativeRegistration/index'
 import OperationInfo from '@/views/OperationInfo/index'
 import OperationRegisteration from '@/views/OperationRegisteration/index'
 import RecoveryRegistration from '@/views/RecoveryRegistration/index'
+import AnalgesicScore from '@/views/AnalgesicScore/index'
 export default {
   name: 'DialogNav',
   data () {
@@ -120,7 +121,8 @@ export default {
     PostoperativeRegistration,
     OperationInfo,
     OperationRegisteration,
-    RecoveryRegistration
+    RecoveryRegistration,
+    AnalgesicScore
   },
   methods: {
     handleClose () {

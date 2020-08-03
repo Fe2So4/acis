@@ -48,6 +48,14 @@ export default {
       return navs
     }
   },
+  watch: {
+    procedureState: {
+      async handler (val) {
+        await this.getDocumentsList()
+        this.handleClick(this.navList[0])
+      }
+    }
+  },
   async created () {
     await this.getDocumentsList()
     this.handleClick(this.navList[0])
