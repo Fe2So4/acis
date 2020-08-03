@@ -876,7 +876,7 @@ export default {
         obj.concentration = param.concentration
         obj.concentrationUnit = param.concentrationUnit
         obj.dosageUnit = param.doseUnit
-        obj.operationId = 'b0f9d8bda9244397a44cb8ff278937d9'
+        obj.operationId = this.operationId
         if (param.continue) {
           obj.isHolding = 1
           obj.eventEndTime = param.endTime

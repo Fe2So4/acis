@@ -1,38 +1,38 @@
 <template lang="pug">
-  .dialog(@click.stop="()=>{}")
-    //- .dialog-mask
-    .dialog-content
-      .dialog-title
-       span {{title}}
-       i(class="el-icon-close" @click="handleClose")
-      .dialog-body
-        component(:is="componentName")
-        //- OperationOverview
-        //- Event
-        //- <operation-handover/>
-        //- Hemodynamics
-        //- IntraoperativePatients
-        //- PostoperativeRegistration
-        //- IntraoperativeRegistration
-        //- PatientDetail
-        //- DeviceGather
-        //- StateMaintain
-        //- ResuscitationBed
-        //- RealtimeStatus
-        //- PacuStatus
-        //- AnaesScore
-        //- InspectionInformation
-        //- PatientWarning
-        //- MedicalOrderInformation
-        //- InspectionResult
-        //- MedicalRecordCourse
-        //- EmergencyTreatment
-        //- OperationLevel
-        //- OperationArrangement
-        //- //- About
-        //- TemplateDisplayer
-        //- Dictionary
-    //- .dialog-footer
+.dialog(@click.stop="() => {}")
+  //- .dialog-mask
+  .dialog-content
+    .dialog-title
+      span {{ title }}
+      i.el-icon-close(@click="handleClose")
+    .dialog-body
+      component(:is="componentName")
+      //- OperationOverview
+      //- Event
+      //- <operation-handover/>
+      //- Hemodynamics
+      //- IntraoperativePatients
+      //- PostoperativeRegistration
+      //- IntraoperativeRegistration
+      //- PatientDetail
+      //- DeviceGather
+      //- StateMaintain
+      //- ResuscitationBed
+      //- RealtimeStatus
+      //- PacuStatus
+      //- AnaesScore
+      //- InspectionInformation
+      //- PatientWarning
+      //- MedicalOrderInformation
+      //- InspectionResult
+      //- MedicalRecordCourse
+      //- EmergencyTreatment
+      //- OperationLevel
+      //- OperationArrangement
+      //- //- About
+      //- TemplateDisplayer
+      //- Dictionary
+  //- .dialog-footer
 </template>
 <script>
 import Hemodynamics from '@/views/Hemodynamics/index'
@@ -142,6 +142,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  background: rgba(108, 119, 128, 0.2);
 
   .dialog-content {
     padding: 0px 20px 20px;

@@ -78,6 +78,11 @@ export default {
     endTime: {
       type: String,
       default: ''
+    },
+    operationId: {
+      type: String,
+      required: false,
+      default: ''
     }
   },
   watch: {
@@ -161,11 +166,11 @@ export default {
         method: 'post',
         url: getBloodInfusionData,
         data: {
-          // startTime: this.startTime,
-          startTime: '2020-07-21 09:00:00',
-          endTime: '2020-07-21 13:00:00',
-          // operationId: this.operationId
-          operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
+          startTime: this.startTime,
+          // startTime: '2020-07-21 09:00:00',
+          endTime: this.endTime,
+          operationId: this.operationId
+          // operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
         }
       }).then(res => {
         const data = res.data.data
@@ -801,7 +806,6 @@ export default {
         if (evt.originalEvent.button === 2) {
           if (evt.target.attr('className').indexOf('row') !== -1) {
             this.groupNo = evt.target.attr('index')
-            console.log(this.groupNo, 'ddddyyyywwwww')
             this.drugStartTime = evt.x * interval
             if (evt.target.attr('className').indexOf('infusion') !== -1) {
               this.list = this.infusionList
@@ -903,7 +907,7 @@ export default {
         obj.concentration = param.concentration
         obj.concentrationUnit = param.concentrationUnit
         obj.dosageUnit = param.doseUnit
-        obj.operationId = 'b0f9d8bda9244397a44cb8ff278937d9'
+        obj.operationId = this.operationId
         if (param.continue) {
           obj.isHolding = 1
           obj.eventEndTime = param.endTime + ':00'
@@ -949,21 +953,21 @@ export default {
               width /
               (moment(this.configuration.xAxis.endTime) -
                 moment(this.configuration.xAxis.startTime))
-            // const startTime = Math.round(
-            //   (moment(item.startTime) -
-            //     moment(this.configuration.xAxis.startTime)) *
-            //     interval
-            // )
             const startTime = Math.round(
               (moment(item.startTime) -
-                moment('2020-7-21 09:00')) *
+                moment(this.configuration.xAxis.startTime)) *
                 interval
             )
+            // const startTime = Math.round(
+            //   (moment(item.startTime) -
+            //     moment('2020-7-21 09:00')) *
+            //     interval
+            // )
             let endTime = null
             if (item.endTime !== '') {
               endTime = Math.round(
                 (moment(item.endTime) -
-                  moment('2020-7-21 09:00')) *
+                  moment(this.configuration.xAxis.endTime)) *
                   interval
               )
             }
@@ -1093,21 +1097,21 @@ export default {
               width /
               (moment(this.configuration.xAxis.endTime) -
                 moment(this.configuration.xAxis.startTime))
-            // const startTime = Math.round(
-            //   (moment(item.startTime) -
-            //     moment(this.configuration.xAxis.startTime)) *
-            //     interval
-            // )
             const startTime = Math.round(
               (moment(item.startTime) -
-                moment('2020-7-21 09:00')) *
+                moment(this.configuration.xAxis.startTime)) *
                 interval
             )
+            // const startTime = Math.round(
+            //   (moment(item.startTime) -
+            //     moment('2020-7-21 09:00')) *
+            //     interval
+            // )
             let endTime = null
             if (item.endTime !== '') {
               endTime = Math.round(
                 (moment(item.endTime) -
-                  moment('2020-7-21 09:00')) *
+                  moment(this.configuration.xAxis.endTime)) *
                   interval
               )
             }

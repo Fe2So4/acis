@@ -1,7 +1,7 @@
 <template>
   <div class="aside">
     <div class="title">
-      Dandelion 围手术期临床信息系统
+      Dandelion 智慧手术中心<i />麻醉
     </div>
     <div
       class="img"
@@ -329,34 +329,20 @@ export default {
         url: getNavs + '/' + 3
       }).then((res) => {
         const data = res.data.data
+        console.log(data)
         const empty = []
-        for (const item in data) {
-          // this.navList.forEach(_item => {
-          //   if (_item.index === item) {
-          //     data[item].forEach(
-          //       value1 => {
-          //         _item.subNav.forEach(value2 => {
-          //           if (value1.perName === value2.name) {
-          //             value1.componentName = value2.componentName
-          //           }
-          //         })
-          //       }
-          //     )
-          //   }
-          // }
-          // )
-          if (item === 'notUse') continue
-          empty.push({
-            mainNav: item,
-            subNav: data[item]
-          })
-          // console.log(data[item])
+        for (var item in data) {
+          if (item === 'notUse') {
+
+          } else {
+            empty.push({
+              mainNav: item,
+              subNav: data[item]
+            })
+          }
         }
-        console.log(empty)
+        console.log(empty, 'empty')
         empty.forEach((_item) => {
-          // if (_item.mainNav === "notUse") {
-          //   continue;
-          // }
           this.navList.forEach((item) => {
             if (item.index === _item.mainNav) {
               _item.name = item.name
@@ -371,7 +357,6 @@ export default {
             }
           })
         })
-        // console.log(empty);
         this.navs = empty
       })
     }
@@ -399,10 +384,19 @@ export default {
   .title {
     color: #0094ff;
     line-height: 30px;
+    text-align: center;
     // background: #f8f9fa;
     text-indent: 2px;
     font-size: 12px;
     cursor: pointer;
+    i{
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #388FF7;
+      margin:0 4px;
+    }
   }
   .img {
     // height:34px;

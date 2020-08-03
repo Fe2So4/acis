@@ -1,11 +1,7 @@
 <template>
   <div class="patient-info">
-    <div
-      class="search"
-    >
-      <el-scrollbar
-        class="rowScrollbar"
-      >
+    <div class="search">
+      <el-scrollbar class="rowScrollbar">
         <el-row>
           <el-form
             :inline="true"
@@ -29,7 +25,7 @@
                 v-model="operationStatus"
                 style="display:inline-block;margin-left:14px;"
                 size="mini"
-                @change="handleFilter"
+                @change="handleChange"
               >
                 <el-checkbox
                   v-for="status in statusList"
@@ -45,7 +41,7 @@
               <el-select
                 v-model="opeRoom"
                 size="mini"
-                placeholder=""
+                placeholder
                 clearable
                 style="width:160px;"
               >
@@ -68,9 +64,7 @@
                 size="mini"
                 @click="hanldeSearchMore"
               >
-                <i
-                  class="el-icon-d-arrow-right"
-                />
+                <i class="el-icon-d-arrow-right" />
               </el-button>
             </el-form-item>
           </el-form>
@@ -98,7 +92,7 @@
                 style="width:130px"
                 v-model="searchForm.date"
                 type="date"
-                placeholder=""
+                placeholder
                 format="yyyy-MM-dd"
                 value-format="yyyy-MM-dd"
               />
@@ -131,10 +125,32 @@
             size="mini"
           >
             <el-form-item label="麻醉方法">
-              <el-input v-model="searchForm.anaesMethod" />
+              <!-- <el-input v-model="searchForm.anaesMethod" /> -->
+              <el-select
+                v-model="searchForm.anaesMethod"
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in anaesMethod"
+                  :key="item.anesCode"
+                  :label="item.anesName"
+                  :value="item.anesCode"
+                />
+              </el-select>
             </el-form-item>
             <el-form-item label="麻醉医生">
-              <el-input v-model="searchForm.anaesDoc" />
+              <!-- <el-input v-model="searchForm.anaesDoc" /> -->
+              <el-select
+                v-model="searchForm.anaesDoc"
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in doctorList"
+                  :key="item.userId"
+                  :label="item.userName"
+                  :value="item.userId"
+                />
+              </el-select>
             </el-form-item>
             <el-form-item label="终止日期">
               <el-date-picker
@@ -155,18 +171,38 @@
             size="mini"
           >
             <el-form-item label="住院科室">
-              <el-input v-model="searchForm.dept" />
+              <!-- <el-input v-model="searchForm.dept" /> -->
+              <el-select
+                v-model="searchForm.dept"
+                placeholder="请选择所在科室"
+              >
+                <el-option
+                  v-for="item in deptList"
+                  :key="item.deptCode"
+                  :label="item.deptName"
+                  :value="item.deptCode"
+                />
+              </el-select>
             </el-form-item>
             <el-form-item label="手术名称">
-              <el-input v-model="searchForm.opeName" />
+              <!-- <el-input v-model="searchForm.opeName" /> -->
+              <el-select
+                v-model="searchForm.opeName"
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in opeName"
+                  :key="item.opeCode"
+                  :label="item.opeName"
+                  :value="item.opeCode"
+                />
+              </el-select>
             </el-form-item>
           </el-form>
         </el-row>
       </div>
     </div>
-    <div
-      class="patient-card"
-    >
+    <div class="patient-card">
       <el-scrollbar
         style="height:100%;"
         class="scrollbar"
@@ -191,31 +227,43 @@
                 <span>{{ item.sequence }}</span>
               </div>
               <div class="info">
-                <p><span class="label">患者</span><span>{{ item.patientName }}</span><span class="overflow">{{ item.patientId }}</span></p>
-                <p><span class="label">住院号</span><span>{{ item.visitId }}</span></p>
                 <p>
-                  <span class="label">手术</span><span
+                  <span class="label">患者</span>
+                  <span>{{ item.patientName }}</span>
+                  <span class="overflow">{{ item.patientId }}</span>
+                </p>
+                <p>
+                  <span class="label">住院号</span>
+                  <span>{{ item.visitId }}</span>
+                </p>
+                <p>
+                  <span class="label">手术</span>
+                  <span
                     class="overflow"
                     style="width:150px;margin-left:0;margin-right:0;"
                   >{{ item.opeName }}</span>
                 </p>
-                <p><span class="label">时间</span><span>{{ item.opeTime }}</span></p>
                 <p>
-                  <span class="label">术者</span><span style="min-width:40px;">{{ item.surgeonName }}</span><span
+                  <span class="label">时间</span>
+                  <span>{{ item.opeTime }}</span>
+                </p>
+                <p>
+                  <span class="label">术者</span>
+                  <span style="min-width:40px;">{{ item.surgeonName }}</span>
+                  <span
                     class="label"
                     style="margin-left:10px;"
-                  >麻醉</span><span>{{ item.anesDocName }}</span>
+                  >麻醉</span>
+                  <span>{{ item.anesDocName }}</span>
                 </p>
               </div>
-              <div
-                class="status"
-              >
+              <div class="status">
                 <div v-if="item.emergency">
                   <div style="display:flex;justify-content:center;">
                     <img
                       style="height:26px;width:26px;"
                       src="@/assets/emergency.png"
-                      alt=""
+                      alt
                     >
                   </div>
                   <div :style="{color:'red',fontSize:'14px',textAlign:'center'}">
@@ -227,7 +275,7 @@
                     <img
                       style="height:26px;width:26px;"
                       src="@/assets/quarantine.png"
-                      alt=""
+                      alt
                     >
                   </div>
                   <div :style="{color:'orange',fontSize:'14px',textAlign:'center'}">
@@ -239,7 +287,7 @@
                     <img
                       style="height:26px;width:26px;"
                       src="@/assets/radiation.png"
-                      alt=""
+                      alt
                     >
                   </div>
                   <div :style="{color:'yellow',fontSize:'14px',textAlign:'center'}">
@@ -271,6 +319,12 @@ import moment from 'moment'
 import request from '../../utils/requestForMock'
 import { opeList, roomList } from '@/api/patientList'
 import { mapActions } from 'vuex'
+import {
+  anaesMethodDetail,
+  doctorData,
+  opeNameData,
+  deptList
+} from '@/api/dictionary'
 export default {
   name: 'PatientInfo',
   data () {
@@ -288,37 +342,56 @@ export default {
         opeName: ''
       },
       opeRoom: '',
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
-      filterList: [{ label: '全部', value: 0 }, { label: '术前', value: 1 }, { label: '术中', value: 2 }, { label: '术后', value: 3 }],
+      options: [
+        {
+          value: '选项1',
+          label: '黄金糕'
+        },
+        {
+          value: '选项2',
+          label: '双皮奶'
+        },
+        {
+          value: '选项3',
+          label: '蚵仔煎'
+        },
+        {
+          value: '选项4',
+          label: '龙须面'
+        },
+        {
+          value: '选项5',
+          label: '北京烤鸭'
+        }
+      ],
+      filterList: [
+        { label: '全部', value: 0 },
+        { label: '术前', value: 1 },
+        { label: '术中', value: 2 },
+        { label: '术后', value: 3 }
+      ],
       opeState: 0,
       operationStatus: [],
-      statusList: [{ label: '急诊', value: 'emergency' }, { label: '本人的', value: 'self' }, { label: '隔离', value: 'quarantine' }, { label: '放射', value: 'radiate' }],
+      statusList: [
+        { label: '急诊', value: 'emergency' },
+        { label: '本人的', value: 'self' },
+        { label: '隔离', value: 'quarantine' },
+        { label: '放射', value: 'radiate' }
+      ],
       showMore: false,
       currentPage: 1,
       pageSize: 16,
       cardList: [],
       dataList: [],
       roomList: [],
-      totalPages: 1
+      totalPages: 1,
+      anaesMethod: [],
+      doctorList: [],
+      opeName: [],
+      deptList: []
     }
   },
-  components: {
-  },
+  components: {},
   computed: {
     noMore () {
       return this.currentPage >= this.totalPages
@@ -329,27 +402,99 @@ export default {
   },
   created () {
     this.getRoomList()
+    // 获取科室列表
+    this.getDeptList()
+    // 获取手术名称
+    this.getOpeName()
+    // 获取手术医生列表
+    this.getDoctorList()
+    // 获取手术方法
+    this.getMethodData()
   },
   mounted () {
     this.getPatientList()
   },
   methods: {
-    ...mapActions('Base', ['setPatientId', 'setOperationId', 'setPatientCardInfo']),
+    ...mapActions('Base', [
+      'setPatientId',
+      'setOperationId',
+      'setPatientCardInfo'
+    ]),
+    getMethodData () {
+      request({
+        url: anaesMethodDetail,
+        method: 'GET'
+      }).then((res) => {
+        const data = res.data.data
+        this.anaesMethod = data
+      })
+    },
+    getDoctorList () {
+      request({
+        url: doctorData + '/1',
+        method: 'GET'
+      }).then((res) => {
+        const data = res.data.data
+        this.doctorList = data
+      })
+    },
+    getOpeName () {
+      request({
+        url: opeNameData
+      }).then((res) => {
+        const data = res.data.data
+        this.opeName = data
+      })
+    },
+    getDeptList () {
+      request({
+        url: deptList
+      }).then((res) => {
+        this.deptList = res.data.data
+      })
+    },
     handleChangeList (param) {
       const d = new Date()
       if (param === 1) {
-        this.searchForm.date = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
+        this.searchForm.date =
+          d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
       } else {
         d.setTime(d.getTime() + 24 * 60 * 60 * 1000)
-        this.searchForm.date = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
+        this.searchForm.date =
+          d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
       }
       this.getPatientList('')
+    },
+    handleChange (arr) {
+      this.operationStatus.length > 1 && this.operationStatus.shift()
+      this.$nextTick(() => {
+        const val = this.operationStatus.length > 0 ? this.operationStatus[0] : ''
+      })
+      const list = this.dataList
+      let rest = null
+      if (arr.length > 0) {
+        rest = list.filter((item) => {
+          if (arr.indexOf('emergency') !== -1) {
+            return item.emergency === true
+          }
+          if (arr.indexOf('quarantine') !== -1) {
+            return item.quarantine === true
+          }
+          if (arr.indexOf('radiate') !== -1) {
+            return item.radiate === true
+          }
+        })
+        // console.log(rest)
+        this.cardList = rest
+      } else {
+        this.cardList = this.dataList
+      }
     },
     handleFilter (val) {
       const list = this.dataList
       let rest = null
       if (val.length > 0) {
-        rest = list.filter(item => {
+        rest = list.filter((item) => {
           if (val.indexOf('emergency') !== -1) {
             return item.emergency === true
           }
@@ -369,14 +514,25 @@ export default {
     handleJump (item) {
       this.setPatientId(item.patientId)
       this.setOperationId(item.operationId)
-      this.setPatientCardInfo({ roomNo: item.sequence, ptName: item.patientName, gender: item.gender, ptId: item.patientId })
+      this.setPatientCardInfo({
+        roomNo: item.sequence,
+        ptName: item.patientName,
+        gender: item.gender,
+        ptId: item.patientId
+      })
       this.$router.push('/home/patientInfo')
     },
     handleRegister (param) {
       if (param === 1) {
-        this.$eventHub.$emit('show-dialog', { name: '急诊登记', componentName: 'EmergencyTreatment' })
+        this.$eventHub.$emit('show-dialog', {
+          name: '急诊登记',
+          componentName: 'EmergencyTreatment'
+        })
       } else {
-        this.$eventHub.$emit('show-dialog', { name: '手术排台', componentName: 'OperationArrangement' })
+        this.$eventHub.$emit('show-dialog', {
+          name: '手术排台',
+          componentName: 'OperationArrangement'
+        })
       }
     },
     hanldeSearchMore () {
@@ -388,7 +544,7 @@ export default {
       request({
         method: 'GET',
         url: roomList
-      }).then(res => {
+      }).then((res) => {
         const data = res.data.data
         this.roomList = data.roomList
         this.opeRoom = data.defaultRoom
@@ -417,11 +573,11 @@ export default {
         method: 'GET',
         url: opeList,
         params: obj
-      }).then(res => {
+      }).then((res) => {
         const data = res.data.data.list || []
         this.totalPages = res.data.data.pages
         // this.loading = false
-        data.forEach(value => {
+        data.forEach((value) => {
           if (value.opeScheduleTime) {
             // value.opeTime = moment(value.opeScheduleTime).format('yyyy-MM-DD HH:mm')
             value.opeTime = value.opeScheduleTime
@@ -458,44 +614,44 @@ export default {
 .patient-info {
   height: 100%;
   width: 100%;
-  padding:0 0 0 12px;
+  padding: 0 0 0 12px;
   // display: flex;
   // flex-direction: column;
-  .search{
+  .search {
     // flex: 1;
-    height:118px;
-    background:rgba(24,28,39,1);
-    box-shadow:0px 0px 12px 3px rgba(0, 0, 0, 0.4);
-    border-radius:5px;
-    width:100%;
-    padding:20px;
-    position:relative;
-    .other-search{
-      position:absolute;
-      padding:20px 20px 0 20px;
-      width:100%;
-      background:#181c27;
-      box-shadow:0px 0px 12px 3px rgba(0, 0, 0, 0.4);
-      border-radius:5px;
-      top:120px;
-      left:0;
+    height: 118px;
+    background: rgba(24, 28, 39, 1);
+    box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+    border-radius: 5px;
+    width: 100%;
+    padding: 20px;
+    position: relative;
+    .other-search {
+      position: absolute;
+      padding: 20px 20px 0 20px;
+      width: 100%;
+      background: #181c27;
+      box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+      border-radius: 5px;
+      top: 120px;
+      left: 0;
       z-index: 1;
     }
   }
-  .el-radio-group{
-    margin-bottom:0 !important;
+  .el-radio-group {
+    margin-bottom: 0 !important;
   }
-  .patient-card{
+  .patient-card {
     // flex: 1;
     // height:calc(100% - 118px);
-    height:calc(100% - 121px);
+    height: calc(100% - 121px);
     box-sizing: border-box;
-    padding-top:20px;
-    .loading{
-      text-align:center;
-      color:#fff;
+    padding-top: 20px;
+    .loading {
+      text-align: center;
+      color: #fff;
     }
-    ul{
+    ul {
       display: grid;
       // height:100%;
       // overflow-y:auto;
@@ -503,115 +659,119 @@ export default {
       grid-column-gap: 20px;
       grid-row-gap: 20px;
       // justify-content: space-around;
-      li{
-        box-shadow:0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+      li {
+        box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
         cursor: pointer;
-        border-radius:5px;
-        padding:0 0 14px 0;
-        background:#181C27;
-        border:1px solid #181c27;
+        border-radius: 5px;
+        padding: 0 0 14px 0;
+        background: #181c27;
+        border: 1px solid #181c27;
         width: 392px;
-        height:196px;
-        font-size:14px;
+        height: 196px;
+        font-size: 14px;
         display: flex;
         flex-direction: column;
         transition: all 0.5s;
-        .title{
+        .title {
           display: flex;
           justify-content: space-between;
-          span{
-            color:#7f85a9;
-            padding:0 10px;
-            line-height:28px;
-            &:last-child{
-              color:#0094ff;
+          span {
+            color: #7f85a9;
+            padding: 0 10px;
+            line-height: 28px;
+            &:last-child {
+              color: #0094ff;
             }
           }
         }
-        .content{
+        .content {
           flex: 1;
           // display: flex;
           overflow: hidden;
-          .room{
-            width:100px;
+          .room {
+            width: 100px;
             float: left;
             height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            span{
-              box-shadow:0 0 12px 3px #373a44;
+            span {
+              box-shadow: 0 0 12px 3px #373a44;
               box-sizing: border-box;
               width: 100%;
-              height:46px;
+              height: 46px;
               display: block;
-              line-height:46px;
-              background:linear-gradient(120deg,rgba(84,190,234,1),rgba(219,83,160,1));
-              border-radius:0px 23px 23px 0px;
-              font-size:26px;
-              font-weight:bold;
+              line-height: 46px;
+              background: linear-gradient(
+                120deg,
+                rgba(84, 190, 234, 1),
+                rgba(219, 83, 160, 1)
+              );
+              border-radius: 0px 23px 23px 0px;
+              font-size: 26px;
+              font-weight: bold;
               color: #fff;
-              text-shadow:0px 1px 3px rgba(0, 0, 0, 0.2);
+              text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
               text-align: center;
             }
           }
-          .info{
+          .info {
             height: 100%;
             float: left;
             width: calc(100% - 174px);
-            padding:0 0 0 20px;
+            padding: 0 0 0 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            p{
-              padding:0;
-              margin:0;
-              width:100%;
-              height:28px;
+            p {
+              padding: 0;
+              margin: 0;
+              width: 100%;
+              height: 28px;
               overflow: hidden;
-              color:#9BA3D5;
+              color: #9ba3d5;
               display: flex;
-              span{
-                color:#D0DAE5;
+              span {
+                color: #d0dae5;
                 line-height: 28px;
                 display: block;
-              &:first-child{
-                span{
-                  &:last-child{
-                    background:yellow;
-                    // width: 80px;
-                    max-width: 140px;
+                &:first-child {
+                  span {
+                    &:last-child {
+                      background: yellow;
+                      // width: 80px;
+                      max-width: 140px;
+                    }
                   }
                 }
               }
-              }
-              .overflow{
+              .overflow {
                 // max-width: 140px;
                 width: 80px;
-                margin:0 10px;
+                margin: 0 10px;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
               }
-              .label{
-                color:#9BA3D5;
-                margin-right:10px;
+              .label {
+                color: #9ba3d5;
+                margin-right: 10px;
               }
             }
           }
-          .status{
+          .status {
             // background: pink;
             height: 100%;
-            width:74px;
+            width: 74px;
             float: right;
-            display:flex;
-            flex-direction:column;
-            justify-content:space-around;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
           }
         }
-        &:hover{
-          border:1px solid #0094ff;
-          background:#262c3c;
+        &:hover {
+          border: 1px solid #0094ff;
+          background: #262c3c;
           // transform:scale(1.1,1.1);
         }
       }
@@ -620,16 +780,16 @@ export default {
 }
 </style>
 <style>
-  .el-picker-panel{
-    background:#252c40 !important;
-  }
-  .scrollbar .el-scrollbar__wrap {
-    overflow-x: hidden;
-  }
-  .scrollbar .el-scrollbar__wrap .el-scrollbar__view{
-    /* height:100%; */
-  }
-  .rowScrollbar .el-scrollbar__wrap .el-scrollbar__view{
-   white-space: nowrap;
-  }
+.el-picker-panel {
+  background: #252c40 !important;
+}
+.scrollbar .el-scrollbar__wrap {
+  overflow-x: hidden;
+}
+.scrollbar .el-scrollbar__wrap .el-scrollbar__view {
+  /* height:100%; */
+}
+.rowScrollbar .el-scrollbar__wrap .el-scrollbar__view {
+  white-space: nowrap;
+}
 </style>
