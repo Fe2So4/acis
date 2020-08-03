@@ -317,7 +317,7 @@
 </template>
 
 <script>
-import { register, getRegisterData } from "@/api/register";
+import { register, getRegisterData } from '@/api/register'
 import {
   commonTermsDetail,
   anaesMethodDetail,
@@ -325,81 +325,81 @@ import {
   diagnoseData,
   doctorData,
   opeNameData,
-  deptList,
-} from "@/api/dictionary";
-import request from "@/utils/requestForMock";
+  deptList
+} from '@/api/dictionary'
+import request from '@/utils/requestForMock'
 export default {
-  name: "PostoperativeRegistration",
-  data() {
+  name: 'PostoperativeRegistration',
+  data () {
     return {
       form: {
-        patient_id: "",
-        visit_id: "",
-        patient_name: "",
-        gender: "",
-        birthday: "",
-        bed_id: "",
-        dept_code: "",
-        diagnose_after: "",
-        memo: "",
-        ope_schedule_time: "",
-        sequence: "",
-        ope_room: "",
-        is_quarantine: "",
-        ope_grade: "",
-        anes_method: "",
-        notch_level: "",
-        notch_num: "",
-        is_emergency: "",
-        infuse_doc: "",
-        anes_doc: "",
-        surgeon: "",
-        sec_anes_doc: "",
-        third_anes_doc: "",
-        first_ope_nurse: "",
-        sec_ope_nurse: "",
-        ope_name_after: "",
-        hospitalNo: "",
-        room: "",
-        first_assist: "",
-        second_assist: "",
-        third_assist: "",
-        forth_assist: "",
-        nurse_shift_record: "",
-        anesthesia_satisfaction: "",
-        operative_process: "",
-        equipment_inventory: "",
-        blood_transfusion_volume: "",
-        fluid_volume: "",
-        blood_losses: "",
-        urine_volumn: "",
-        amount_other: "",
+        patient_id: '',
+        visit_id: '',
+        patient_name: '',
+        gender: '',
+        birthday: '',
+        bed_id: '',
+        dept_code: '',
+        diagnose_after: '',
+        memo: '',
+        ope_schedule_time: '',
+        sequence: '',
+        ope_room: '',
+        is_quarantine: '',
+        ope_grade: '',
+        anes_method: '',
+        notch_level: '',
+        notch_num: '',
+        is_emergency: '',
+        infuse_doc: '',
+        anes_doc: '',
+        surgeon: '',
+        sec_anes_doc: '',
+        third_anes_doc: '',
+        first_ope_nurse: '',
+        sec_ope_nurse: '',
+        ope_name_after: '',
+        hospitalNo: '',
+        room: '',
+        first_assist: '',
+        second_assist: '',
+        third_assist: '',
+        forth_assist: '',
+        nurse_shift_record: '',
+        anesthesia_satisfaction: '',
+        operative_process: '',
+        equipment_inventory: '',
+        blood_transfusion_volume: '',
+        fluid_volume: '',
+        blood_losses: '',
+        urine_volumn: '',
+        amount_other: ''
       },
       rules: {
         patient_id: [
-          { required: true, message: "请输入患者ID", trigger: "change" },
+          { required: true, message: '请输入患者ID', trigger: 'change' }
         ],
         visit_id: [
-          { required: true, message: "请输入住院号", trigger: "change" },
+          { required: true, message: '请输入住院号', trigger: 'change' }
         ],
         ope_room: [
-          { required: true, message: "请选择手术间", trigger: "change" },
-        ],
+          { required: true, message: '请选择手术间', trigger: 'change' }
+        ]
       },
       level: [
-        { value: "0", label: "特" },
-        { value: "1", label: "大" },
-        { value: "2", label: "中" },
-        { value: "3", label: "小" },
+        { value: '0', label: '特' },
+        { value: '1', label: '大' },
+        { value: '2', label: '中' },
+        { value: '3', label: '小' }
       ],
       isolation: [
-        { value: "0", label: "正常" },
-        { value: "1", label: "隔离" },
-        { value: "2", label: "放射" },
+        { value: '0', label: '正常' },
+        { value: '1', label: '隔离' },
+        { value: '2', label: '放射' }
       ],
       changeTime: [
-        { value: "0", label: "急诊" },
-        { value: "1", label: "择期" },
+        { value: '0', label: '急诊' },
+        { value: '1', label: '择期' }
       ],
       list: [],
       opeLevel: [],
@@ -413,252 +413,252 @@ export default {
       opeName: [],
       deptList: [],
       genderList: [
-        { value: "1", label: "男" },
-        { value: "2", label: "女" },
-      ],
-    };
+        { value: '1', label: '男' },
+        { value: '2', label: '女' }
+      ]
+    }
   },
   methods: {
-    submitForm(formName) {
+    submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.updataData();
+          this.updataData()
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
     },
-    getData() {
+    getData () {
       request({
-        method: "POST",
+        method: 'POST',
         url: getRegisterData,
         params: {
-          operationId: "10000011",
-        },
+          operationId: '10000011'
+        }
       }).then((res) => {
-        const data = res.data.data;
+        const data = res.data.data
         for (var i in this.form) {
           data.forEach((item) => {
             if (item.className === i) {
-              if (item.value === "") {
-                this.form[i] = item.label;
+              if (item.value === '') {
+                this.form[i] = item.label
               } else {
-                this.form[i] = item.value;
+                this.form[i] = item.value
               }
             }
-          });
+          })
         }
-        this.list = data;
-      });
+        this.list = data
+      })
     },
-    getLevelData(param) {
+    getLevelData (param) {
       request({
-        url: commonTermsDetail + "/" + "D010",
-        method: "GET",
+        url: commonTermsDetail + '/' + 'D010',
+        method: 'GET'
       }).then((res) => {
-        const data = res.data.data;
-        this.opeLevel = data;
-      });
+        const data = res.data.data
+        this.opeLevel = data
+      })
     },
-    getMethodData() {
+    getMethodData () {
       request({
         url: anaesMethodDetail,
-        method: "GET",
+        method: 'GET'
       }).then((res) => {
-        const data = res.data.data;
-        this.anaesMethod = data;
-      });
+        const data = res.data.data
+        this.anaesMethod = data
+      })
     },
-    getEmergencyData() {
+    getEmergencyData () {
       request({
-        url: commonTermsDetail + "/" + "D019",
-        method: "GET",
+        url: commonTermsDetail + '/' + 'D019',
+        method: 'GET'
       }).then((res) => {
-        const data = res.data.data;
-        this.emergencyList = data;
-      });
+        const data = res.data.data
+        this.emergencyList = data
+      })
     },
-    getQuarantineData() {
+    getQuarantineData () {
       request({
-        url: commonTermsDetail + "/" + "D018",
-        method: "GET",
+        url: commonTermsDetail + '/' + 'D018',
+        method: 'GET'
       }).then((res) => {
-        const data = res.data.data;
-        this.quarantineList = data;
-      });
+        const data = res.data.data
+        this.quarantineList = data
+      })
     },
-    getRoomData() {
+    getRoomData () {
       request({
         url: roomNoList,
-        method: "GET",
+        method: 'GET'
       }).then((res) => {
-        const data = res.data.data;
-        this.roomList = data;
-      });
+        const data = res.data.data
+        this.roomList = data
+      })
     },
-    getDiagnoseList() {
+    getDiagnoseList () {
       request({
-        url: diagnoseData,
+        url: diagnoseData
       }).then((res) => {
-        const data = res.data.data;
-        this.diagnoseList = data;
-      });
+        const data = res.data.data
+        this.diagnoseList = data
+      })
     },
-    getDoctorList() {
+    getDoctorList () {
       request({
-        url: doctorData + "/1",
-        method: "GET",
+        url: doctorData + '/1',
+        method: 'GET'
       }).then((res) => {
-        const data = res.data.data;
-        this.doctorList = data;
-      });
+        const data = res.data.data
+        this.doctorList = data
+      })
     },
-    getNurseList() {
+    getNurseList () {
       request({
-        url: doctorData + "/2",
-        method: "GET",
+        url: doctorData + '/2',
+        method: 'GET'
       }).then((res) => {
-        const data = res.data.data;
-        this.nurseList = data;
-      });
+        const data = res.data.data
+        this.nurseList = data
+      })
     },
-    getOpeName() {
+    getOpeName () {
       request({
-        url: opeNameData,
+        url: opeNameData
       }).then((res) => {
-        const data = res.data.data;
-        this.opeName = data;
-      });
+        const data = res.data.data
+        this.opeName = data
+      })
     },
-    updataData() {
+    updataData () {
       for (var i in this.form) {
         this.list.forEach((item) => {
           if (item.className === i) {
-            if (item.value === "") {
-              item.label = this.form[i];
+            if (item.value === '') {
+              item.label = this.form[i]
             } else {
-              item.value = this.form[i];
-              item.label = "";
+              item.value = this.form[i]
+              item.label = ''
             }
           }
-        });
+        })
       }
       // console.log(this.list)
-      const obj = {};
-      const sheel1 = ["patient_id", "patient_name", "gender", "birthday"];
+      const obj = {}
+      const sheel1 = ['patient_id', 'patient_name', 'gender', 'birthday']
       const sheel2 = [
-        "visit_id",
-        "bed_id",
-        "dept_code",
-        "memo",
-        "ope_schedule_time",
-        "ope_grade",
-        "anes_method",
-        "surgeon",
-        "first_assist",
-        "second_assist",
-        "third_assist",
-        "forth_assist",
-      ];
+        'visit_id',
+        'bed_id',
+        'dept_code',
+        'memo',
+        'ope_schedule_time',
+        'ope_grade',
+        'anes_method',
+        'surgeon',
+        'first_assist',
+        'second_assist',
+        'third_assist',
+        'forth_assist'
+      ]
       const sheel3 = [
-        "diagnose_after",
-        "sequence",
-        "ope_room",
-        "is_quarantine",
-        "notch_level",
-        "notch_num",
-        "is_emergency",
-        "infuse_doc",
-        "anes_doc",
-        "first_anes_doc",
-        "sec_anes_doc",
-        "third_anes_doc",
-        "first_ope_nurse",
-        "sec_ope_nurse",
-        "first_supply_nurse",
-        "sec_supply_nurse",
-        "ope_name_after",
-      ];
+        'diagnose_after',
+        'sequence',
+        'ope_room',
+        'is_quarantine',
+        'notch_level',
+        'notch_num',
+        'is_emergency',
+        'infuse_doc',
+        'anes_doc',
+        'first_anes_doc',
+        'sec_anes_doc',
+        'third_anes_doc',
+        'first_ope_nurse',
+        'sec_ope_nurse',
+        'first_supply_nurse',
+        'sec_supply_nurse',
+        'ope_name_after'
+      ]
       const sheel4 = [
-        "nurse_shift_record",
-        "anesthesia_satisfaction",
-        "operative_process",
-        "equipment_inventory",
-        "blood_transfusion_volume",
-        "fluid_volume",
-        "blood_losses",
-        "urine_volumn",
-        "amount_other",
-      ];
-      obj.acis_pat_master_index = [];
-      obj.acis_ope_apply_info = [];
-      obj.acis_ope_schedule_info = [];
-      obj.acis_amount_record = [];
+        'nurse_shift_record',
+        'anesthesia_satisfaction',
+        'operative_process',
+        'equipment_inventory',
+        'blood_transfusion_volume',
+        'fluid_volume',
+        'blood_losses',
+        'urine_volumn',
+        'amount_other'
+      ]
+      obj.acis_pat_master_index = []
+      obj.acis_ope_apply_info = []
+      obj.acis_ope_schedule_info = []
+      obj.acis_amount_record = []
       this.list.forEach((item) => {
         sheel1.forEach((_item1) => {
           if (_item1 === item.className) {
-            obj.acis_pat_master_index.push(item);
+            obj.acis_pat_master_index.push(item)
           }
-        });
+        })
         sheel2.forEach((_item2) => {
           if (_item2 === item.className) {
-            obj.acis_ope_apply_info.push(item);
+            obj.acis_ope_apply_info.push(item)
           }
-        });
+        })
         sheel3.forEach((_item3) => {
           if (_item3 === item.className) {
-            obj.acis_ope_schedule_info.push(item);
+            obj.acis_ope_schedule_info.push(item)
           }
-        });
+        })
         sheel4.forEach((_item4) => {
           if (_item4 === item.className) {
-            obj.acis_amount_record.push(item);
+            obj.acis_amount_record.push(item)
           }
-        });
-      });
+        })
+      })
       // console.log(obj)
       request({
-        url: register + "?operationId=10000011",
-        method: "POST",
-        data: obj,
-      });
+        url: register + '?operationId=10000011',
+        method: 'POST',
+        data: obj
+      })
     },
-    getDeptList() {
+    getDeptList () {
       request({
-        url: deptList,
+        url: deptList
       }).then((res) => {
-        this.deptList = res.data.data;
-      });
-    },
+        this.deptList = res.data.data
+      })
+    }
   },
-  mounted() {
-    this.getData();
+  mounted () {
+    this.getData()
     // 获取手术方法
-    this.getMethodData();
+    this.getMethodData()
     // 获取手术等级
-    this.getLevelData();
+    this.getLevelData()
     // 获取隔离方式
-    this.getQuarantineData();
+    this.getQuarantineData()
     // 获取急诊择期
-    this.getEmergencyData();
+    this.getEmergencyData()
     // 获取房间号
-    this.getRoomData();
+    this.getRoomData()
     // 获取诊断列表
-    this.getDiagnoseList();
+    this.getDiagnoseList()
     // 获取手术医生列表
-    this.getDoctorList();
+    this.getDoctorList()
     // 获取护士列表
-    this.getNurseList();
+    this.getNurseList()
     // 获取手术名称
-    this.getOpeName();
+    this.getOpeName()
     // 获取科室列表
-    this.getDeptList();
-  },
-};
+    this.getDeptList()
+  }
+}
 </script>
 
 <style lang="stylus" scoped>
