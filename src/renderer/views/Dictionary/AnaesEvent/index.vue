@@ -23,9 +23,9 @@
           height="100%"
           size="mini"
           class="scroll"
-          :data="tableData"
           @current-change="currentChangeEvent"
-          :checkbox-config="{checkStrictly: true}"
+          :data="tableData"
+          :checkbox-config="{checkStrictly: true,highlight: true}"
           :edit-config="{trigger: 'click', mode: 'cell', showStatus: true,activeMethod: activeRowMethod}"
         )
           vxe-table-column(field="detailCode" title="序号" width='60')
@@ -39,7 +39,7 @@
           vxe-table-column(field="chargeType" title="收费分类" :edit-render="{}" width="200")
             template(v-slot:edit="{ row }")
               el-select(size="mini" v-model="row.chargeType" @change="handleBlur")
-                el-option(v-for="item in chargeTypeList" :label="item.detailName" :value="item.detailCode" :key="item.detailCode")
+                el-option(v-for="item in chargeTypeList" :label="item.detailName" :value="item.detailId" :key="item.detailId")
             template(v-slot="{ row }") {{ getSelectLabel(row.chargeType, chargeTypeList) }}
           vxe-table-column(field="dose" title="剂量" :edit-render="{}" width="200")
             template(v-slot:edit="{ row }")
@@ -65,7 +65,7 @@
           vxe-table-column(field="way" title="途径" :edit-render="{}" width="200")
             template(v-slot:edit="{ row }")
               el-select(size="mini" v-model="row.way" @change="handleBlur")
-                el-option(v-for="item in conUnitList" :label="item.detail_name" :value="item.detail_code" :key="item.detail_code")
+                el-option(v-for="item in channelList" :label="item.detail_name" :value="item.detail_code" :key="item.detail_code")
           vxe-table-column(field="isContinue" title="持续" :edit-render="{}" width="200")
             template(v-slot:edit="{ row }")
               el-select(size="mini" v-model="row.isContinue" @change="handleBlur")
@@ -156,7 +156,7 @@ export default {
       }).then(res => {
         const data = res.data.data
         data.forEach(item => {
-          item.value = item.detailCode
+          item.value = item.detailId
           item.label = item.detailName
         })
         this.chargeTypeList = data
@@ -367,7 +367,7 @@ export default {
       if (param.chargeType === '') {
         obj.chargeType = 0
       } else {
-        obj.chargeType = param.chargeType
+        obj.chargeType = parseInt(param.chargeType)
       }
       obj.detailName = param.detailName
       obj.drugSpec = param.drugSpec
@@ -388,6 +388,11 @@ export default {
         } else {
           value.isContinue = true
         }
+        if (value.chargeType === '') {
+          value.chargeType = 0
+        } else {
+          value.chargeType = parseInt(value.chargeType)
+        }
         for (var k in value) {
           if (k === 'eventName') {
             delete value[k]
@@ -405,9 +410,11 @@ export default {
       console.log(insertRecords, updateRecords)
       if (insertRecords.length > 0) {
         this.addDetail(insertRecords[0])
+        console.log('add')
       }
       if (updateRecords.length > 0) {
         this.updateDetail(updateRecords)
+        console.log('update')
       }
       this.addDisabled = false
       this.saveDisabled = true

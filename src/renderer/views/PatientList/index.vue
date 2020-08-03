@@ -469,6 +469,7 @@ export default {
       this.operationStatus.length > 1 && this.operationStatus.shift()
       this.$nextTick(() => {
         const val = this.operationStatus.length > 0 ? this.operationStatus[0] : ''
+        console.log(val)
       })
       const list = this.dataList
       let rest = null

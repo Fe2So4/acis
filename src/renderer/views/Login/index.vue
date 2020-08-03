@@ -9,7 +9,8 @@
           line
         </p>
         <p>
-          围手术期临床信息系统
+          <!-- 围手术期临床信息系统 -->
+          麻醉临床信息系统
           <span>v1.0.0</span>
         </p>
         <img
@@ -83,12 +84,13 @@
 </template>
 
 <script>
-import { login } from '../../api/login'
+import { login } from '@/api/login'
 import request from '@/utils/requestForMock'
+// import { setUserToken, setCurrentAccount } from '../../utils/storage'
+import { setUserToken } from '../../utils/storage'
 
 const { BrowserWindow } = require('electron').remote
 const win = BrowserWindow.getAllWindows()[0]
-// import { setUserToken, setCurrentAccount } from '../../utils/storage'
 
 export default {
   name: 'Login',
@@ -123,23 +125,25 @@ export default {
           //   loginName: this.form.username,
           //   loginPwd: this.form.password
           // }).then(res => {
-          //   setUserToken(res)
           //   setCurrentAccount(this.form.username)
           //   // this.$router.push('/statistics/operation-quantity')
           //   this.$router.push('/apply/index')
           request({
-            method: 'POST',
+            method: 'post',
             url: login,
             data: {
               loginName: this.form.username,
               loginPwd: this.form.password
             }
           }).then(res => {
-            this.$router.push('/home')
-            // console.log(res)
+            if (res.data.code === '0') {
+              setUserToken(res.data.data)
+              this.$router.push('/home')
+            } else {
+              this.$message({ type: 'error', message: '登录失败' })
+            }
           })
           win.maximize()
-          // })
         } else {
           return false
         }

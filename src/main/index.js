@@ -27,7 +27,7 @@ function createWindow () {
     // frame: true,
     // fullscreen: true, // 是否全屏
     webPreferences: {
-      // webSecurity: false,
+      // webSecurity: false, // 官方建议不要禁用
       nodeIntegration: true
     }
     // movable: false// 可否移动
@@ -44,7 +44,7 @@ function createWindow () {
     })
   }
   // 显示开发者工具
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', () => {
     mainWindow = null

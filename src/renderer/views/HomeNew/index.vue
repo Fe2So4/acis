@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <el-container>
-      <el-aside width="190px">
+      <el-aside width="220px">
         <Aside />
       </el-aside>
       <el-container style="padding-left:8px;">

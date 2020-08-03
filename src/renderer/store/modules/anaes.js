@@ -1,12 +1,16 @@
 const state = {
-  eventType: ''
+  eventType: {
+    eventName: '麻药',
+    eventCode: ''
+  }
 }
 const getters = {
   eventType: state => state.eventType
 }
 const mutations = {
   SET_EVENT_TYPE (state, payload) {
-    state.eventType = payload
+    state.eventType.eventName = payload.perName
+    state.eventType.eventCode = payload.perCode
   }
 }
 const actions = {

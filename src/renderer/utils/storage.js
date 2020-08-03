@@ -1,6 +1,6 @@
 const ptId = 'CURRENT_PTID'
-const token = 'AIMS_URSER_TOKEN'
-const account = 'AIMS_CURRENT_ACCOUNT'
+const token = 'ACIS_URSER_TOKEN'
+const account = 'ACIS_CURRENT_ACCOUNT'
 
 export function setStoragePtId (val) {
   return localStorage.setItem(ptId, val)
