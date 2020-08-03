@@ -9,7 +9,7 @@
         height="330px"
         :data="tableData"
         :edit-config="{trigger: 'click', mode: 'cell'}"
-        class="scroll"
+        class="scroll table"
         size="mini"
       >
         <vxe-table-column
@@ -79,31 +79,24 @@
           field="eventStartTime"
           title="发生时间"
           width="130"
-          :edit-render="{
-            name: '$input',
-            props: {
-              type: 'datetime',
-              'label-format':'yyyy-MM-dd HH:mm',
-              'parse-format':'yyyy-MM-dd HH:mm',
-              'value-format':'yyyy-MM-dd HH:mm',
-              editable: false
-            },
-            events: {
-              change: onStartTimeChange
-            }
-          }"
-        />
-        <!--         <vxe-table-column
-          field="isHolding"
-          title=""
-          width="40"
+          :edit-render="{}"
         >
-          <template
-            v-slot="{ row }"
-          >
-            {{ row.isHolding ? '->': '' }}
+          <template v-slot:edit="{ row }">
+            <el-date-picker
+              v-model="row.eventStartTime"
+              type="datetime"
+              format="yyyy-MM-dd HH:mm"
+              value-format="yyyy-MM-dd HH:mm"
+              popper-class="dateTimePicker"
+              size="mini"
+              :clearable="false"
+              @change="(val) => {onStartTimeChange({row})}"
+            />
           </template>
-        </vxe-table-column>-->
+          <template v-slot="{ row }">
+            {{ row.eventStartTime }}
+          </template>
+        </vxe-table-column>
         <vxe-table-column
           field="holdingTime"
           title="持续时间"
@@ -114,21 +107,23 @@
           field="eventEndTime"
           title="结束时间"
           width="130"
-          :edit-render="{
-            name: '$input',
-            props: {
-              type: 'datetime',
-              'label-format':'yyyy-MM-dd HH:mm',
-              'parse-format':'yyyy-MM-dd HH:mm',
-              'value-format':'yyyy-MM-dd HH:mm',
-              editable: false,
-              clearable: true
-            },
-            events: {
-              change: onEndTimeChange
-            }
-          }"
-        />
+          :edit-render="{}"
+        >
+          <template v-slot:edit="{ row }">
+            <el-date-picker
+              v-model="row.eventEndTime"
+              type="datetime"
+              format="yyyy-MM-dd HH:mm"
+              value-format="yyyy-MM-dd HH:mm"
+              popper-class="dateTimePicker"
+              size="mini"
+              @change="(val) => {onEndTimeChange({row})}"
+            />
+          </template>
+          <template v-slot="{ row }">
+            {{ row.eventEndTime }}
+          </template>
+        </vxe-table-column>
       </vxe-table>
     </div>
     <div class="buttons">
@@ -324,6 +319,9 @@ export default {
       padding: 0 20px;
       color: #9ba3d5;
     }
+  }
+  & ::v-deep .vxe-table .vxe-body--column .vxe-cell {
+    white-space: unset;
   }
 }
 </style>

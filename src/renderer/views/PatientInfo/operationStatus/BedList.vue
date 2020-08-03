@@ -9,7 +9,6 @@
           v-for="item in list"
           :key="item.bedNum"
           @click="onBedClick(item)"
-          :class="{disabled: !item.operationConditionName, actived: item.patientId === patientId}"
         >
           <div class="title">
             <span>{{ item.operationConditionName || '空闲' }}</span>
@@ -51,7 +50,7 @@
 </template>
 <script>
 import { createNamespacedHelpers } from 'vuex'
-const { mapState, mapActions } = createNamespacedHelpers('Base')
+const { mapState } = createNamespacedHelpers('Base')
 export default {
   name: 'BedList',
   props: {
@@ -63,22 +62,22 @@ export default {
     }
   },
   data () {
+    const wrapStyle = Object.freeze([
+      {
+        'overflow-x': 'hidden'
+      }
+    ])
     return {
-      wrapStyle: [
-        {
-          'overflow-x': 'hidden'
-        }
-      ]
+      wrapStyle
     }
   },
   computed: {
     ...mapState(['patientId'])
   },
   methods: {
-    ...mapActions(['setPatientId']),
     onBedClick (item) {
-      if (item.patientId) {
-        this.setPatientId(item.patientId)
+      if (!item.patientId) {
+        this.$emit('select-bed', item)
       }
     }
   }

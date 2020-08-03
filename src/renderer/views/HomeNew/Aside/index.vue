@@ -349,6 +349,11 @@ export default {
           name: '手术登记',
           index: '3-18',
           componentName: 'OperationRegisteration'
+        },
+        {
+          name: '镇痛评分',
+          index: '3-19',
+          componentName: 'AnalgesicScore'
         }],
 
       overviewList: [],

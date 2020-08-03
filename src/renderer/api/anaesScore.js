@@ -22,3 +22,8 @@ export const calculateAnesthesiaGrade = mock
 export const showAnesthesiaGradeItem = mock
   ? '/api/showAnesthesiaGradeItem'
   : baseZhong + 'acis/posIS/posAnesthesiaGrade/echoInfo'
+
+// 回显麻醉评分项 - 钟 - 2020-08-03
+export const showTotalScore = mock
+  ? ''
+  : baseZhong + 'acis/posIS/posAnesthesiaGrade/showTotalScore'

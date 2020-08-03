@@ -66,10 +66,10 @@ export const addNewEvent = mock
   ? '/api/addNewEvent'
   : baseXie + 'acis/intraoperative/info/addAcisIntraoEvents'
 
-// 获取文书列表 - 钟 - 2020-07-21
+// 获取文书列表 - 谢 - 2020-08-03
 export const getDocumentsList = mock
   ? '/api/getDocumentsList'
-  : baseZhong + 'acis/superConfig/getWritMenu'
+  : baseXie + 'acis/superConfig/getWritMenu'
 
 // 获取字典源数据 - 钟 - 2020-07-14
 export const getDictionaryData = mock

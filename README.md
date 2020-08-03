@@ -52,6 +52,7 @@ npm run lint
 #  -MedicalRecordCourse 病历病程 
 #  -EmergencyTreatment 急诊登记 
 #  -OperationInfo 手术信息 
+#  -RecoveryRegistration 复苏登记 
 ```
 
 ---
