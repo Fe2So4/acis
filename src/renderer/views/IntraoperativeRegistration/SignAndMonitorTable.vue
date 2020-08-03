@@ -129,6 +129,12 @@ import { createNamespacedHelpers } from 'vuex'
 const { mapState } = createNamespacedHelpers('Base')
 export default {
   name: 'SignAndMonitorTable',
+  props: {
+    operationState: {
+      default: 2,
+      type: [String, Number]
+    }
+  },
   data () {
     return {
       startTime: '',
@@ -173,7 +179,6 @@ export default {
       this.getData()
     },
     onInputChange (data) {
-      console.log(data)
     },
     onSave () {
       const list = this.tableData.reduce((acc, item) => {
@@ -190,7 +195,6 @@ export default {
         })
         return [...acc, ...items]
       }, [])
-      // console.log(list)
       this.saveSignOrMonitorData(list)
     },
     onRefresh () {
@@ -217,7 +221,7 @@ export default {
           intervalTime: 5,
           pageIndex,
           pageTimeInterval: 4,
-          operState: 2
+          operState: this.operationState
         }
       }).then((res) => {
         const { startTime, endTime, totalPage, pageIndex } = res.data.data

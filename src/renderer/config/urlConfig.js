@@ -2,7 +2,6 @@ let api
 if (process.env.NODE_ENV === 'production') {
   /// 生产环境api接口地址
   api = {
-    // baseURL: 'http://106.15.197.99'
     baseURL: 'http://localhost:8090'
   }
 } else {
