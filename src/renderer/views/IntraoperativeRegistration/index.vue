@@ -54,7 +54,7 @@ import SignAndMonitorTable from './SignAndMonitorTable'
 import DialogConfirm from './DialogConfirm'
 import { createNamespacedHelpers } from 'vuex'
 import moment from 'moment'
-const { mapState } = createNamespacedHelpers('Base')
+const { mapState, mapGetters } = createNamespacedHelpers('Base')
 export default {
   name: 'IntraoperativeRegistration',
   components: {
@@ -81,6 +81,7 @@ export default {
   },
   computed: {
     ...mapState(['operationId']),
+    ...mapGetters(['validateHours']),
     filteredTableData () {
       if (this.filterType) {
         return this.tableData.filter(
@@ -151,6 +152,7 @@ export default {
       }
     },
     onSaveEvent () {
+      if (!this.validate72Hours()) return
       const requestArr = []
       const changedList = Object.values(this.changedMap).map((item) => {
         const obj = {};
@@ -408,6 +410,16 @@ export default {
       this.deletedMap = {}
       this.addedMap = {}
       this.getExistEvent()
+    },
+    validate72Hours () {
+      const result = this.validateHours(72)
+      if (!result) {
+        this.$message({
+          type: 'warning',
+          message: '距离手术结束已经超过72小时！不可进行操作'
+        })
+      }
+      return result
     }
   }
 }

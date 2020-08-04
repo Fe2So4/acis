@@ -1,8 +1,11 @@
+import moment from 'moment'
 const state = {
   // 当前登录用户id
-  userId: '666',
+  // userId: '666',
+  userId: '',
   // 病人id
-  patientId: '1000001',
+  // patientId: '1000001',
+  patientId: '',
   // patientId: 'a54sd',
   // 手术id
   // operationId: 'b0f9d8bda9244397a44cb8ff278937d9',
@@ -31,12 +34,23 @@ const state = {
     ptName: '',
     gender: '',
     ptId: ''
-  }
+  },
+  // 存储各手术状态时间，conCode解释同procedureState
+  operationStateMap: {}
 }
 const getters = {
   patientId: state => state.patientId,
   operationId: state => state.operationId,
-  ptCardInfo: state => state.ptCardInfo
+  ptCardInfo: state => state.ptCardInfo,
+  validateHours: state => (hours) => {
+    if (state.operationStateMap[11] && state.operationStateMap[11].time) {
+      const { time } = state.operationStateMap[11]
+      if (moment().diff(moment(time), 'hours') > hours) {
+        return false
+      }
+    }
+    return true
+  }
 }
 const mutations = {
   SET_PATIENT_CARDINFO (state, payload) {
@@ -74,6 +88,12 @@ const mutations = {
   },
   CLEAR_PROCEDURE_STATE (state) {
     state.procedureState = ''
+  },
+  SET_OPERATION_STATE_MAP (state, obj) {
+    state.operationStateMap = obj
+  },
+  CLEAR_OPERATION_STATE_MAP (state) {
+    state.operationStateMap = {}
   }
 }
 
@@ -110,6 +130,14 @@ const actions = {
   },
   clearProcedureState ({ commit }) {
     commit('CLEAR_PROCEDURE_STATE')
+  },
+  setOperationStateList ({ commit }, list) {
+    const obj = list.reduce((acc, item) => {
+      acc[item.conCode] = item
+      return acc
+    }, {})
+    commit('CLEAR_OPERATION_STATE_MAP')
+    commit('SET_OPERATION_STATE_MAP', obj)
   }
 }
 

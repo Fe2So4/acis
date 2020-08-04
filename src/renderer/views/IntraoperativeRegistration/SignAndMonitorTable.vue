@@ -66,6 +66,7 @@
         <el-button
           @click="onSave"
           size="mini"
+          type="primary"
         >
           保存
         </el-button>
@@ -126,7 +127,7 @@ import {
 import { getSignList } from '@/api/generalConfig'
 import request from '@/utils/requestForMock'
 import { createNamespacedHelpers } from 'vuex'
-const { mapState } = createNamespacedHelpers('Base')
+const { mapState, mapGetters } = createNamespacedHelpers('Base')
 export default {
   name: 'SignAndMonitorTable',
   props: {
@@ -154,6 +155,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['validateHours']),
     ...mapState(['operationId'])
   },
   async created () {
@@ -181,6 +183,7 @@ export default {
     onInputChange (data) {
     },
     onSave () {
+      if (!this.validate72Hours()) return
       const list = this.tableData.reduce((acc, item) => {
         const { itemName, itemCode, itemUnit, disColor, drawIcon, _XID, ...points } = item
         const timePoints = Object.keys(points)
@@ -394,6 +397,16 @@ export default {
           })
         }
       )
+    },
+    validate72Hours () {
+      const result = this.validateHours(72)
+      if (!result) {
+        this.$message({
+          type: 'warning',
+          message: '距离手术结束已经超过72小时！不可进行操作'
+        })
+      }
+      return result
     }
   }
 }

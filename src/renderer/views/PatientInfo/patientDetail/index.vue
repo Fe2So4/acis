@@ -42,6 +42,10 @@ export default {
   },
   methods: {
     getPatientInfo () {
+      if (this.operationId === '') {
+        this.$router.push('/home')
+        return
+      }
       request({
         method: 'GET',
         url: patientDetail + '/' + this.operationId

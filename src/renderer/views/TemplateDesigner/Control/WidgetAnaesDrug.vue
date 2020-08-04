@@ -109,8 +109,7 @@ export default {
       // 注册刷新事件
       this.$eventHub.$on('document-refresh', () => {
         // 获取数据
-        this.getDrugList()
-        console.log('麻醉用药')
+        this.getDrawLineList()
       })
       // 注册刷新事件
       this.$eventHub.$on('document-redraw', () => {
@@ -118,7 +117,7 @@ export default {
         this.setLayout()
         this.setContent()
         // 获取数据
-        this.getDrugList()
+        this.getDrawLineList()
       })
     }
     // this.setDrug()

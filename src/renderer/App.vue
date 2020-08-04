@@ -8,7 +8,7 @@
 // import '@/mock/mockData'
 export default {
   name: 'Acis',
-  mounted () {
+  created () {
     this.$electron.ipcRenderer.on('route', (e, locationName) => {
       if (locationName) {
         this.$router.push({
