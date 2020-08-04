@@ -14,7 +14,9 @@
             name="fade"
             mode="out-in"
           >
-            <router-view />
+            <keep-alive include="PatientList">
+              <router-view />
+            </keep-alive>
           </transition>
         </el-main>
       </el-container>

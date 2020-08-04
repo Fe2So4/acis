@@ -17,7 +17,7 @@
             <span>{{ item.itemUnit }}</span>
           </p>
           <p :style="{color:item.itemColor}">
-            {{ item.itemValue===''? '-' : item.itemValue }}
+            {{ item.itemValue==='' ? '-' : item.itemValue }}
           </p>
         </li>
       </el-scrollbar>
@@ -76,8 +76,8 @@ export default {
       })
     },
     getSocket () {
-      const loginUserNum = 'b0f9d8bda9244397a44cb8ff278937d9'
-      // const loginUserNum = this.operationId
+      // const loginUserNum = 'b0f9d8bda9244397a44cb8ff278937d9'
+      const loginUserNum = this.operationId
       this.socket = io(getSocketData, {
         query: {
           loginUserNum

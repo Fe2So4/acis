@@ -6,9 +6,9 @@
       span {{ title }}
       i.el-icon-close(@click="handleClose")
     .dialog-body
-      //- component(:is="componentName")
+      component(:is="componentName")
       //- OperationOverview
-      Event
+      //- Event
       //- <operation-handover/>
       //- Hemodynamics
       //- IntraoperativePatients

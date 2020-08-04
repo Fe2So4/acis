@@ -5,7 +5,11 @@ const mock =
 
 const URL_BASE = 'localhost'
 const URL_LI = '192.168.1.177'
+// const URL_LI1 = '106.15.197.99'
+const URL_LI1 = '47.103.105.200'
+// const URL_XIE = '47.103.105.200'
 const URL_XIE = '192.168.1.198'
+// const URL_ZHONG = '47.103.105.200'
 // const URL_ZHONG = '192.168.1.192'
 const URL_ZHONG = '192.168.1.157'
 const PORT_BASE = '8090'
@@ -19,7 +23,7 @@ const baseLi =
     : base
 const socketLi =
 process.env.NODE_ENV === 'development'
-  ? `http://${URL_LI}:${PORT_SOCKET}/`
+  ? `http://${URL_LI1}:${PORT_SOCKET}/`
   : `http://${URL_BASE}:${PORT_SOCKET}/`
 
 // 谢

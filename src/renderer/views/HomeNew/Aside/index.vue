@@ -74,7 +74,7 @@ export default {
       activesNames: 'M001',
       isCollapse: false,
       showOverflow: false,
-      showDialog: true, // 开启弹窗
+      showDialog: false, // 开启弹窗
       componentName: '',
       navList: [
         {
@@ -283,9 +283,9 @@ export default {
         console.log('触发')
         this.setEventType(item)
       }
-      this.showDialog = true
-      this.dialogTitle = item.name
+      this.dialogTitle = item.perName
       this.componentName = item.componentName
+      this.showDialog = true
     },
     handleShowOverview () {
       if (this.isCollapse === true) {

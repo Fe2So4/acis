@@ -1,277 +1,277 @@
 <template lang="pug">
-.operation-registeration
-  el-form.demo-ruleForm(
-    :model="form",
-    ref="form",
-    label-width="100px",
-    size="mini",
-    :rules="rules"
-  )
-    el-row
-      el-col(:span="6")
-        el-form-item(label="患者ID", prop="patient_id")
-          el-input(v-model="form.patient_id")
-      el-col(:span="6")
-        el-form-item(label="住院号", prop="visit_id")
-          el-input(v-model="form.visit_id")
-      el-col(:span="6")
-        el-form-item(label="姓名")
-          el-input(v-model="form.patient_name")
-      el-col(:span="6")
-        el-form-item(label="性别")
-          el-select(v-model="form.gender", placeholder="请选择")
-            el-option(
-              v-for="item in genderList",
-              :key="item.value",
-              :label="item.label",
-              :value="item.value"
+  .operation-registeration
+    el-form.demo-ruleForm(
+      :model="form",
+      ref="form",
+      label-width="100px",
+      size="mini",
+      :rules="rules"
+    )
+      el-row
+        el-col(:span="6")
+          el-form-item(label="患者ID", prop="patient_id")
+            el-input(v-model="form.patient_id")
+        el-col(:span="6")
+          el-form-item(label="住院号", prop="visit_id")
+            el-input(v-model="form.visit_id")
+        el-col(:span="6")
+          el-form-item(label="姓名")
+            el-input(v-model="form.patient_name")
+        el-col(:span="6")
+          el-form-item(label="性别")
+            el-select(v-model="form.gender", placeholder="请选择")
+              el-option(
+                v-for="item in genderList",
+                :key="item.value",
+                :label="item.label",
+                :value="item.value"
+              )
+      el-row
+        el-col(:span="6")
+          el-form-item(label="出生日期")
+            el-date-picker(
+              v-model="form.birthday",
+              type="date",
+              value-format="yyyy-MM-dd",
+              format="yyyy-MM-dd"
             )
-  el-row
-    el-col(:span="6")
-      el-form-item(label="出生日期")
-        el-date-picker(
-          v-model="form.birthday",
-          type="date",
-          value-format="yyyy-MM-dd",
-          format="yyyy-MM-dd"
-        )
-    el-col(:span="6")
-      el-form-item(label="床号")
-        el-input(v-model="form.bed_id")
-    el-col(:span="12")
-      el-form-item(label="所在科室")
-        el-select(v-model="form.dept_code", placeholder="请选择所在科室")
-          el-option(
-            v-for="item in deptList",
-            :key="item.deptCode",
-            :label="item.deptName",
-            :value="item.deptCode"
-          )
-  el-row
-    el-col(:span="24")
-      el-form-item(label="主要诊断")
-        el-select(v-model="form.diagnose_after", placeholder="请选择诊断")
-          el-option(
-            v-for="item in diagnoseList",
-            :key="item.diagCode",
-            :label="item.diagName",
-            :value="item.diagCode"
-          )
-  el-row
-    el-col(:span="24")
-      el-form-item(label="病情")
-        el-input(v-model="form.memo")
-  el-row
-    el-col(:span="6")
-      el-form-item(label="手术时间")
-        el-input(v-model="form.ope_schedule_time")
-    el-col(:span="6")
-      el-form-item(label="台次")
-        el-input(v-model="form.sequence")
-    el-col(:span="12")
-      el-form-item(label="手术间", prop="room")
-        el-select(v-model="form.ope_room", placeholder="请选择手术间")
-          el-option(
-            v-for="item in roomList",
-            :key="item",
-            :label="item",
-            :value="item"
-          )
-  el-row
-    el-col(:span="6")
-      el-form-item(label="隔离")
-        el-select(v-model="form.is_quarantine", placeholder="请选择是否隔离")
-          el-option(
-            v-for="item in quarantineList",
-            :key="item.detailCode",
-            :label="item.detailName",
-            :value="item.detailCode"
-          )
-    el-col(:span="6")
-      el-form-item(label="等级")
-        el-select(v-model="form.ope_grade", placeholder="请选择等级")
-          el-option(
-            v-for="item in opeLevel",
-            :key="item.detailCode",
-            :label="item.detailName",
-            :value="item.detailCode"
-          )
-    el-col(:span="12")
-      el-form-item(label="麻醉方法")
-        el-select(v-model="form.anes_method", placeholder="请选择")
-          el-option(
-            v-for="item in anaesMethod",
-            :key="item.anesCode",
-            :label="item.anesName",
-            :value="item.anesCode"
-          )
-  el-row
-    el-col(:span="6")
-      el-form-item(label="切口等级")
-        el-input(v-model="form.notch_level")
-    el-col(:span="6")
-      el-form-item(label="切口个数")
-        el-input(v-model="form.notch_num")
-    el-col(:span="12")
-      el-form-item(label="急诊择期")
-        el-select(v-model="form.is_emergency", placeholder="请选择")
-          el-option(
-            v-for="item in changeTime",
-            :key="item.value",
-            :label="item.label",
-            :value="item.value"
-          )
-  el-row
-    el-col(:span="6")
-      el-form-item(label="手术医师")
-        el-select(v-model="form.surgeon", placeholder="请选择手术间")
-          el-option(
-            v-for="item in doctorList",
-            :key="item.userId",
-            :label="item.userName",
-            :value="item.userId"
-          )
-    el-col(:span="18")
-      el-row
         el-col(:span="6")
-          el-form-item(label="手术助手")
-            el-select(v-model="form.first_assist", placeholder="请选择")
-              el-option(
-                v-for="item in doctorList",
-                :key="item.userId",
-                :label="item.userName",
-                :value="item.userId",
-                :disabled="item.userId === form.second_assist || item.userId === form.third_assist || item.userId === form.forth_assist"
-              )
-        el-col(:span="6")
-          el-form-item(label="")
-            el-select(v-model="form.second_assist", placeholder="请选择")
-              el-option(
-                v-for="item in doctorList",
-                :key="item.userId",
-                :label="item.userName",
-                :value="item.userId",
-                :disabled="item.userId === form.first_assist || item.userId === form.third_assist || item.userId === form.forth_assist"
-              )
-        el-col(:span="6")
-          el-form-item(label="")
-            el-select(v-model="form.third_assist", placeholder="请选择")
-              el-option(
-                v-for="item in doctorList",
-                :key="item.userId",
-                :label="item.userName",
-                :value="item.userId",
-                :disabled="item.userId === form.second_assist || item.userId === form.first_assist || item.userId === form.forth_assist"
-              )
-        el-col(:span="6")
-          el-form-item(label="")
-            el-select(v-model="form.forth_assist", placeholder="请选择")
-              el-option(
-                v-for="item in doctorList",
-                :key="item.userId",
-                :label="item.userName",
-                :value="item.userId",
-                :disabled="item.userId === form.second_assist || item.userId === form.first_assist || item.userId === form.third_assist"
-              )
-  el-row
-    el-col(:span="6")
-      el-form-item(label="灌注医生")
-        el-select(v-model="form.infuse_doc", placeholder="请选择")
-          el-option(
-            v-for="item in doctorList",
-            :key="item.userId",
-            :label="item.userName",
-            :value="item.userId"
-          )
-    el-col(:span="18")
-      el-row
-        el-col(:span="8")
-          el-form-item(label="麻醉医生")
-            el-select(v-model="form.first_anes_doc", placeholder="请选择")
-              el-option(
-                v-for="item in doctorList",
-                :key="item.userId",
-                :label="item.userName",
-                :value="item.userId",
-                :disabled="form.sec_anes_doc === item.userId || form.third_anes_doc === item.userId"
-              )
-        el-col(:span="8")
-          el-form-item(label="")
-            el-select(v-model="form.sec_anes_doc", placeholder="请选择")
-              el-option(
-                v-for="item in doctorList",
-                :key="item.userId",
-                :label="item.userName",
-                :value="item.userId",
-                :disabled="form.first_anes_doc === item.userId || form.third_anes_doc === item.userId"
-              )
-        el-col(:span="8")
-          el-form-item(label="")
-            el-select(v-model="form.third_anes_doc", placeholder="请选择")
-              el-option(
-                v-for="item in doctorList",
-                :key="item.userId",
-                :label="item.userName",
-                :value="item.userId",
-                :disabled="form.sec_anes_doc === item.userId || form.first_anes_doc === item.userId"
-              )
-  el-row
-    el-col(:span="12")
-      el-row
+          el-form-item(label="床号")
+            el-input(v-model="form.bed_id")
         el-col(:span="12")
-          el-form-item(label="洗手护士")
-            el-select(v-model="form.first_ope_nurse", placeholder="请选择")
+          el-form-item(label="所在科室")
+            el-select(v-model="form.dept_code", placeholder="请选择所在科室")
               el-option(
-                v-for="item in nurseList",
-                :key="item.userId",
-                :label="item.userName",
-                :value="item.userId",
-                :disabled="item.userId === form.sec_ope_nurse"
+                v-for="item in deptList",
+                :key="item.deptCode",
+                :label="item.deptName",
+                :value="item.deptCode"
+              )
+      el-row
+        el-col(:span="24")
+          el-form-item(label="主要诊断")
+            el-select(v-model="form.diagnose_after", placeholder="请选择诊断")
+              el-option(
+                v-for="item in diagnoseList",
+                :key="item.diagCode",
+                :label="item.diagName",
+                :value="item.diagCode"
+              )
+      el-row
+        el-col(:span="24")
+          el-form-item(label="病情")
+            el-input(v-model="form.memo")
+      el-row
+        el-col(:span="6")
+          el-form-item(label="手术时间")
+            el-input(v-model="form.ope_schedule_time")
+        el-col(:span="6")
+          el-form-item(label="台次")
+            el-input(v-model="form.sequence")
+        el-col(:span="12")
+          el-form-item(label="手术间", prop="ope_room")
+            el-select(v-model="form.ope_room", placeholder="请选择手术间")
+              el-option(
+                v-for="item in roomList",
+                :key="item",
+                :label="item",
+                :value="item"
+              )
+      el-row
+        el-col(:span="6")
+          el-form-item(label="隔离")
+            el-select(v-model="form.is_quarantine", placeholder="请选择是否隔离")
+              el-option(
+                v-for="item in quarantineList",
+                :key="item.detailCode",
+                :label="item.detailName",
+                :value="item.detailCode"
+              )
+        el-col(:span="6")
+          el-form-item(label="等级")
+            el-select(v-model="form.ope_grade", placeholder="请选择等级")
+              el-option(
+                v-for="item in opeLevel",
+                :key="item.detailCode",
+                :label="item.detailName",
+                :value="item.detailCode"
               )
         el-col(:span="12")
-          el-form-item(label="")
-            el-select(v-model="form.sec_ope_nurse", placeholder="请选择")
+          el-form-item(label="麻醉方法")
+            el-select(v-model="form.anes_method", placeholder="请选择")
               el-option(
-                v-for="item in nurseList",
+                v-for="item in anaesMethod",
+                :key="item.anesCode",
+                :label="item.anesName",
+                :value="item.anesCode"
+              )
+      el-row
+        el-col(:span="6")
+          el-form-item(label="切口等级")
+            el-input(v-model="form.notch_level")
+        el-col(:span="6")
+          el-form-item(label="切口个数")
+            el-input(v-model="form.notch_num")
+        el-col(:span="12")
+          el-form-item(label="急诊择期")
+            el-select(v-model="form.is_emergency", placeholder="请选择")
+              el-option(
+                v-for="item in changeTime",
+                :key="item.value",
+                :label="item.label",
+                :value="item.value"
+              )
+      el-row
+        el-col(:span="6")
+          el-form-item(label="手术医师")
+            el-select(v-model="form.surgeon", placeholder="请选择手术间")
+              el-option(
+                v-for="item in doctorList",
                 :key="item.userId",
                 :label="item.userName",
-                :value="item.userId",
-                :disabled="item.userId === form.first_ope_nurse"
+                :value="item.userId"
               )
-    el-col(:span="12")
-      el-form-item(label="巡回护士")
-        el-row(type="flex", justify="space-between")
-          el-col(:span="10")
-            el-select(v-model="form.first_supply_nurse", placeholder="请选择")
+        el-col(:span="18")
+          el-row
+            el-col(:span="6")
+              el-form-item(label="手术助手")
+                el-select(v-model="form.first_assist", placeholder="请选择")
+                  el-option(
+                    v-for="item in doctorList",
+                    :key="item.userId",
+                    :label="item.userName",
+                    :value="item.userId",
+                    :disabled="item.userId === form.second_assist || item.userId === form.third_assist || item.userId === form.forth_assist"
+                  )
+            el-col(:span="6")
+              el-form-item(label="")
+                el-select(v-model="form.second_assist", placeholder="请选择")
+                  el-option(
+                    v-for="item in doctorList",
+                    :key="item.userId",
+                    :label="item.userName",
+                    :value="item.userId",
+                    :disabled="item.userId === form.first_assist || item.userId === form.third_assist || item.userId === form.forth_assist"
+                  )
+            el-col(:span="6")
+              el-form-item(label="")
+                el-select(v-model="form.third_assist", placeholder="请选择")
+                  el-option(
+                    v-for="item in doctorList",
+                    :key="item.userId",
+                    :label="item.userName",
+                    :value="item.userId",
+                    :disabled="item.userId === form.second_assist || item.userId === form.first_assist || item.userId === form.forth_assist"
+                  )
+            el-col(:span="6")
+              el-form-item(label="")
+                el-select(v-model="form.forth_assist", placeholder="请选择")
+                  el-option(
+                    v-for="item in doctorList",
+                    :key="item.userId",
+                    :label="item.userName",
+                    :value="item.userId",
+                    :disabled="item.userId === form.second_assist || item.userId === form.first_assist || item.userId === form.third_assist"
+                  )
+      el-row
+        el-col(:span="6")
+          el-form-item(label="灌注医生")
+            el-select(v-model="form.infuse_doc", placeholder="请选择")
               el-option(
-                v-for="item in nurseList",
+                v-for="item in doctorList",
                 :key="item.userId",
                 :label="item.userName",
-                :value="item.userId",
-                :disabled="item.userId === form.sec_supply_nurse"
+                :value="item.userId"
               )
-          el-col(:span="10")
-            el-select(v-model="form.sec_supply_nurse", placeholder="请选择")
+        el-col(:span="18")
+          el-row
+            el-col(:span="8")
+              el-form-item(label="麻醉医生")
+                el-select(v-model="form.first_anes_doc", placeholder="请选择")
+                  el-option(
+                    v-for="item in doctorList",
+                    :key="item.userId",
+                    :label="item.userName",
+                    :value="item.userId",
+                    :disabled="form.sec_anes_doc === item.userId || form.third_anes_doc === item.userId"
+                  )
+            el-col(:span="8")
+              el-form-item(label="")
+                el-select(v-model="form.sec_anes_doc", placeholder="请选择")
+                  el-option(
+                    v-for="item in doctorList",
+                    :key="item.userId",
+                    :label="item.userName",
+                    :value="item.userId",
+                    :disabled="form.first_anes_doc === item.userId || form.third_anes_doc === item.userId"
+                  )
+            el-col(:span="8")
+              el-form-item(label="")
+                el-select(v-model="form.third_anes_doc", placeholder="请选择")
+                  el-option(
+                    v-for="item in doctorList",
+                    :key="item.userId",
+                    :label="item.userName",
+                    :value="item.userId",
+                    :disabled="form.sec_anes_doc === item.userId || form.first_anes_doc === item.userId"
+                  )
+      el-row
+        el-col(:span="12")
+          el-row
+            el-col(:span="12")
+              el-form-item(label="洗手护士")
+                el-select(v-model="form.first_ope_nurse", placeholder="请选择")
+                  el-option(
+                    v-for="item in nurseList",
+                    :key="item.userId",
+                    :label="item.userName",
+                    :value="item.userId",
+                    :disabled="item.userId === form.sec_ope_nurse"
+                  )
+            el-col(:span="12")
+              el-form-item(label="")
+                el-select(v-model="form.sec_ope_nurse", placeholder="请选择")
+                  el-option(
+                    v-for="item in nurseList",
+                    :key="item.userId",
+                    :label="item.userName",
+                    :value="item.userId",
+                    :disabled="item.userId === form.first_ope_nurse"
+                  )
+        el-col(:span="12")
+          el-form-item(label="巡回护士")
+            el-row(type="flex", justify="space-between")
+              el-col(:span="10")
+                el-select(v-model="form.first_supply_nurse", placeholder="请选择")
+                  el-option(
+                    v-for="item in nurseList",
+                    :key="item.userId",
+                    :label="item.userName",
+                    :value="item.userId",
+                    :disabled="item.userId === form.sec_supply_nurse"
+                  )
+              el-col(:span="10")
+                el-select(v-model="form.sec_supply_nurse", placeholder="请选择")
+                  el-option(
+                    v-for="item in nurseList",
+                    :key="item.userId",
+                    :label="item.userName",
+                    :value="item.userId",
+                    :disabled="item.userId === form.first_supply_nurse"
+                  )
+      el-row
+        el-col(:span="24")
+          el-form-item(label="手术名称")
+            el-select(v-model="form.ope_name_after", placeholder="请选择")
               el-option(
-                v-for="item in nurseList",
-                :key="item.userId",
-                :label="item.userName",
-                :value="item.userId",
-                :disabled="item.userId === form.first_supply_nurse"
+                v-for="item in opeName",
+                :key="item.opeCode",
+                :label="item.opeName",
+                :value="item.opeCode"
               )
-  el-row
-    el-col(:span="24")
-      el-form-item(label="手术名称")
-        el-select(v-model="form.ope_name_after", placeholder="请选择")
-          el-option(
-            v-for="item in opeName",
-            :key="item.opeCode",
-            :label="item.opeName",
-            :value="item.opeCode"
-          )
-  .option
-    el-button(size="mini", @click="resetForm('form')") 刷新(R)
-    el-button(size="mini", @click="submitForm('form')") 保存(S)
+    .option
+      el-button(size="mini", @click="resetForm('form')") 刷新(R)
+      el-button(size="mini", @click="submitForm('form')") 保存(S)
 </template>
 
 <script>
@@ -286,6 +286,7 @@ import {
   deptList
 } from '@/api/dictionary'
 import request from '@/utils/requestForMock'
+import { mapGetters } from 'vuex'
 export default {
   name: 'EmergencyTreatment',
   data () {
@@ -371,6 +372,9 @@ export default {
       ]
     }
   },
+  computed: {
+    ...mapGetters('Base', ['operationId'])
+  },
   methods: {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
@@ -390,7 +394,7 @@ export default {
         method: 'POST',
         url: getRegisterData,
         params: {
-          operationId: '10000011'
+          operationId: this.operationId
         }
       }).then((res) => {
         const data = res.data.data

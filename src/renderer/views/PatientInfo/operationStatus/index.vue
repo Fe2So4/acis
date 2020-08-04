@@ -100,7 +100,7 @@ export default {
     this.getStatusList()
   },
   methods: {
-    ...mapActions('Base', ['setProcedureState']),
+    ...mapActions('Base', ['setProcedureState', 'clearOperationId']),
     getStatusList () {
       request({
         method: 'GET',
@@ -119,6 +119,7 @@ export default {
     },
     back () {
       this.$router.push('/home')
+      this.clearOperationId()
     },
     handleChangeNav (nav) {
       const scrollbarEl = this.$refs.scrollbar.wrap
@@ -192,6 +193,10 @@ export default {
             display: inline-block;
             line-height: 22px;
             text-indent: 13px;
+            text-overflow: ellipsis;
+            white-space:nowrap;
+            max-width:80px;
+            // overflow:hidden;
           }
         }
       }

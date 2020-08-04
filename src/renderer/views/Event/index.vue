@@ -298,7 +298,7 @@
       </div>
       <div class="option">
         <el-row>
-          <span>类型筛选</span>
+          <!-- <span>类型筛选</span>
           <el-select
             v-model="select"
             size="mini"
@@ -317,7 +317,7 @@
             >
               输液
             </el-option>
-          </el-select>
+          </el-select> -->
           <el-button
             size="mini"
             @click="handleSave"
@@ -396,8 +396,19 @@ export default {
     // AnaesTable
     // OtherEvent
   },
+  watch: {
+    eventType: {
+      handler (newVal) {
+        this.getEventList()
+        this.getEventDetail()
+      },
+      // immediate: true,
+      deep: true
+    }
+  },
   computed: {
-    ...mapGetters('Anaes', ['eventType'])
+    ...mapGetters('Anaes', ['eventType']),
+    ...mapGetters('Base', ['operationId'])
   },
   methods: {
     handleCheck ({ records }) {
@@ -412,8 +423,8 @@ export default {
       request({
         url: getEventDetail,
         params: {
-          operationId: 'b0f9d8bda9244397a44cb8ff278937d9',
-          eventId: 'E0021'
+          operationId: this.operationId,
+          eventId: this.eventType.eventCode
         }
       }).then((res) => {
         const data = res.data.data
@@ -451,13 +462,15 @@ export default {
         eventEndTime: moment(new Date()).format('yyyy-MM-dd HH:mm'),
         eventName: item.detailName,
         // eventType: this.eventType.eventName, // 此处需要写活
-        eventType: '麻药', // 此处需要写活
+        // eventType: '麻药', // 此处需要写活
+        eventType: this.eventType.eventName, // 此处需要写活
         holdingTime: item.holdingTime,
         isHolding: item.isContinue,
         speed: item.speed,
         speedUnit: item.speedUnit,
         eventStartTime: moment(new Date()).format('yyyy-MM-dd HH:mm'),
-        operationId: 'b0f9d8bda9244397a44cb8ff278937d9', // 写活
+        // operationId: 'b0f9d8bda9244397a44cb8ff278937d9', // 写活
+        operationId: this.operationId, // 写活
         id: item.id,
         eventId: item.eventCode,
         detailId: item.detailCode,
@@ -581,7 +594,7 @@ export default {
       request({
         url: getEventList,
         params: {
-          eventCode: 'E002',
+          eventCode: this.eventType.eventCode,
           pageIndex: this.currentPage,
           pageSize: this.pageSize
         }
@@ -636,8 +649,8 @@ export default {
     this.getDoseUnit()
     this.getSpeedUnit()
     this.getConUnit()
-    this.getEventList()
-    this.getEventDetail()
+    // this.getEventList()
+    // this.getEventDetail()
   },
   mounted () {}
 }
