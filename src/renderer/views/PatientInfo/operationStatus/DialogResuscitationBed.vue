@@ -59,7 +59,14 @@ export default {
       this.$emit('update:visible', false)
     },
     onSelectBed (item) {
-      this.selectResuscitationBed(item.bedNum)
+      this.$confirm(`床位号为${item.bedNum}, 是否继续?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        customClass: 'messageBox'
+      }).then(() => {
+        this.selectResuscitationBed(item.bedNum)
+      }).catch(() => {})
     },
     // 获取复苏床位列表
     getResuscitationBedList () {

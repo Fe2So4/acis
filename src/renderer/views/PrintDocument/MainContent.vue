@@ -21,6 +21,7 @@
             :patient-id="patientId"
             :total-page="totalPage"
             :page-index="pageIndex"
+            :operation-phase="operationPhase"
             @finish="onFinish(item.name)"
           />
         </widget-wrapper>
@@ -81,6 +82,10 @@ export default {
       required: false,
       type: [Number, String],
       default: ''
+    },
+    operationPhase: {
+      required: true,
+      type: [String, Number]
     }
   },
   data () {
@@ -110,7 +115,6 @@ export default {
     background: #fff;
     .widgetContent {
       position: relative;
-      height: 100%;
     }
   }
 }

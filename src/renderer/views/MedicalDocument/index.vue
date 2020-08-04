@@ -27,6 +27,7 @@
       :is-rescue-mode="isRescueMode"
       :total-page="totalPage"
       :page-index="pageIndex"
+      :displayed-buttons="displayedButtons"
       @changePage="onChangePage"
       @changeRescueMode="onChangeRescueMode"
       @print="onPrint"
@@ -94,11 +95,16 @@ export default {
       syncHis: '', // 是否开启右击
       opePhase: '', // 文书属于的手术阶段
       loadingVisible: false,
-      changedSignDataList: []
+      changedSignDataList: [],
+      buttonConfig: ''
     }
   },
   computed: {
-    ...mapState(['operationId', 'patientId'])
+    ...mapState(['operationId', 'patientId']),
+    // 展示的按钮
+    displayedButtons () {
+      return this.buttonConfig.split(',')
+    }
   },
   watch: {
     $route: {
@@ -108,6 +114,7 @@ export default {
         this.pageInfo = to.params.pageInfo
         this.syncHis = to.params.syncHis
         this.opePhase = to.params.opePhase
+        this.buttonConfig = to.params.buttonConfig
       },
       immediate: true
     }
@@ -212,19 +219,25 @@ export default {
           operState: this.opePhase
         }
       }).then((res) => {
-        const { startTime, endTime, totalPage, pageIndex } = res.data.data
-        this.startTime = startTime
-        this.endTime = endTime
-        this.totalPage = totalPage
-        this.pageIndex = pageIndex
-        this.tempList.forEach((widget) => {
-          // x轴起止时间更改
-          if (widget.xAxis) {
-            widget.xAxis.startTime = startTime
-            widget.xAxis.endTime = endTime
-          }
-        })
-        return res.data.data
+        if (res.data && res.data.success) {
+          const { startTime, endTime, totalPage, pageIndex } = res.data.data
+          this.startTime = startTime
+          this.endTime = endTime
+          this.totalPage = totalPage
+          this.pageIndex = pageIndex
+          this.tempList.forEach((widget) => {
+            // x轴起止时间更改
+            if (widget.xAxis) {
+              widget.xAxis.startTime = startTime
+              widget.xAxis.endTime = endTime
+            }
+          })
+        } else {
+          this.$message({
+            type: 'warning',
+            message: '未进入手术室或进入复苏室'
+          })
+        }
       })
     },
     async getData (pageIndex) {
@@ -258,7 +271,7 @@ export default {
     },
     onPrint () {
       this.$electron.ipcRenderer.send('print-document', {
-        path: `/printDocument/${this.templateId}/${this.operationId}/${this.patientId}/${this.pageIndex}/${this.isRescueMode}`
+        path: `/printDocument/${this.templateId}/${this.operationId}/${this.patientId}/${this.pageIndex}/${this.isRescueMode}/${this.opePhase}`
       })
     },
     onPrintAll () {},

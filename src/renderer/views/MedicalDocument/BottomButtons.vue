@@ -46,15 +46,16 @@
       >
         普通模式
       </div>
-      <div
+      <!-- <div
         class="button"
         @click="$emit('printAll')"
       >
         集中打印
-      </div>
+      </div> -->
       <div
         class="button"
         @click="$emit('print')"
+        v-show="displayedButtons.includes('PRINT')"
       >
         打印
       </div>
@@ -67,12 +68,14 @@
       <div
         class="button"
         @click="$emit('save')"
+        v-show="displayedButtons.includes('SAVE')"
       >
         保存
       </div>
       <div
         class="button"
         @click="$emit('configure')"
+        v-show="displayedButtons.includes('CONFIG')"
       >
         配置
       </div>
@@ -97,12 +100,16 @@ export default {
       default: false
     },
     totalPage: {
-      type: Number || String,
+      type: [Number, String],
       default: 1
     },
     pageIndex: {
-      type: Number || String,
+      type: [Number, String],
       default: 0
+    },
+    displayedButtons: {
+      type: Array,
+      required: true
     }
   },
   data () {

@@ -33,7 +33,8 @@ export default {
               rescueMode: item.rescueMode,
               pageInfo: item.pageInfo,
               syncHis: item.syncHis,
-              opePhase: item.opePhase
+              opePhase: item.opePhase,
+              buttonConfig: item.buttonConfig
             }
           }
         }
@@ -51,6 +52,7 @@ export default {
   watch: {
     procedureState: {
       async handler (val) {
+        console.log('procedureState')
         await this.getDocumentsList()
         this.handleClick(this.navList[0])
       }
@@ -78,7 +80,8 @@ export default {
                 rescueMode: item.rescueMode,
                 pageInfo: item.pageInfo,
                 syncHis: item.syncHis,
-                opePhase: item.opePhase
+                opePhase: item.opePhase,
+                buttonConfig: item.params
               }
             })
           }

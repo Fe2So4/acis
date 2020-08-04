@@ -58,7 +58,7 @@
               )
     .right-arow(@click="handleChangeNav(2)")
       i.el-icon-arrow-right.arow
-  DialogResuscitationBed(:visible.sync="dialogResuscitationBedVisible")
+  DialogResuscitationBed(:visible.sync="dialogResuscitationBedVisible" v-if="dialogResuscitationBedVisible")
 </template>
 <script>
 import unstart from '@/assets/unstart.png'
@@ -100,20 +100,27 @@ export default {
     this.getStatusList()
   },
   methods: {
-    ...mapActions('Base', ['setProcedureState', 'clearOperationId']),
+    ...mapActions('Base', ['setProcedureState', 'setOperationStateList', 'clearOperationId']),
     getStatusList () {
-      request({
+      if (this.operationId === '') {
+        this.$router.push('/home')
+        return
+      }
+      return request({
         method: 'GET',
         url: `${patientStatus}/${this.operationId}`
       }).then((res) => {
         if (res.data && res.data.success) {
           this.opeStatusList = res.data.data
-          const effectiveState = res.data.data.find(item => item.state === 1)
+          const effectiveState = res.data.data.find((item) => item.state === 1)
           if (effectiveState) {
             this.setProcedureState(effectiveState.conCode)
           } else {
-            this.setProcedureState(this.opeStatusList[this.opeStatusList.length - 1].conCode)
+            this.setProcedureState(
+              this.opeStatusList[this.opeStatusList.length - 1].conCode
+            )
           }
+          this.setOperationStateList(res.data.data)
         }
       })
     },
@@ -143,7 +150,7 @@ export default {
       }).then((res) => {
         this.getStatusList()
         // 入复苏室状态情况下需要选择床位和增加设备信息
-        if (param.conCode === 12) {
+        if (+param.conCode === 12) {
           this.showResuscitationBed()
         }
       })

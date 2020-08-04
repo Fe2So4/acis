@@ -15,6 +15,8 @@
             type="datetime"
             placeholder="选择日期时间"
             value-format="yyyy-MM-dd HH:mm:ss"
+            size="mini"
+            popper-class="dateTimePicker"
           />
         </el-form-item>
         <el-form-item
@@ -26,6 +28,8 @@
             type="datetime"
             placeholder="选择日期时间"
             value-format="yyyy-MM-dd HH:mm:ss"
+            size="mini"
+            popper-class="dateTimePicker"
           />
         </el-form-item>
       </el-form>
@@ -33,12 +37,16 @@
         slot="footer"
         class="dialog-footer"
       >
-        <el-button @click="onCancel">
+        <el-button
+          @click="onCancel"
+          size="mini"
+        >
           取 消
         </el-button>
         <el-button
           type="primary"
           @click="onConfirm"
+          size="mini"
         >
           确 定
         </el-button>
@@ -50,6 +58,7 @@
 <script>
 import { addNewEvent } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
+import { mapState } from 'vuex'
 export default {
   name: 'DialogEventTimeRange',
   props: {
@@ -68,6 +77,11 @@ export default {
       endTime: '',
       formLabelWidth: '120px'
     }
+  },
+  computed: {
+    ...mapState('Base', [
+      'operationId'
+    ])
   },
   methods: {
     onCancel () {
@@ -104,7 +118,7 @@ export default {
             eventEndTime: this.endTime,
             eventType,
             iconColor,
-            operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
+            operationId: this.operationId
           }
         ]
       })

@@ -13,6 +13,7 @@
       :paper-setting="paperSetting"
       :total-page="totalPage"
       :page-index="pageIndex"
+      :operation-phase="opePhase"
     />
   </div>
 </template>
@@ -44,7 +45,8 @@ export default {
       canvasWidgetList: [],
       templateId: '',
       operationId: '',
-      patientId: ''
+      patientId: '',
+      opePhase: ''
     }
   },
   created () {
@@ -52,6 +54,7 @@ export default {
     this.operationId = this.$route.params.operationId
     this.patientId = this.$route.params.patientId
     this.pageIndex = this.$route.params.pageIndex
+    this.opePhase = this.$route.params.opePhase
     this.isRescueMode = this.$route.params.isRescueMode === 'true'
     this.getData(this.pageIndex)
   },
@@ -135,7 +138,8 @@ export default {
           operationId: this.operationId,
           intervalTime,
           pageIndex,
-          pageTimeInterval
+          pageTimeInterval,
+          operState: this.opePhase
         }
       }).then(res => {
         const { startTime, endTime, totalPage, pageIndex } = res.data.data
