@@ -501,7 +501,8 @@ export default {
           {
             distinguishCancelAndClose: true,
             confirmButtonText: '保存',
-            cancelButtonText: '放弃修改'
+            cancelButtonText: '放弃修改',
+            customClass: 'messageBox'
           }
         )
           .then(() => {
@@ -567,7 +568,8 @@ export default {
           {
             distinguishCancelAndClose: true,
             confirmButtonText: '保存',
-            cancelButtonText: '放弃修改'
+            cancelButtonText: '放弃修改',
+            customClass: 'messageBox'
           }
         )
           .then(() => {

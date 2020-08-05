@@ -10,8 +10,8 @@ const state = {
   // 手术id
   // operationId: 'b0f9d8bda9244397a44cb8ff278937d9',
   operationId: '',
-  // 手术间
-  roomNo: '603',
+  // 当前选中病人手术间
+  roomNo: '',
   // 手术状态
   // 3 准备手术
   // 4 入诱导室
@@ -138,6 +138,12 @@ const actions = {
     }, {})
     commit('CLEAR_OPERATION_STATE_MAP')
     commit('SET_OPERATION_STATE_MAP', obj)
+  },
+  clearBaseInfo ({ dispatch }) {
+    dispatch('clearPatientId')
+    dispatch('clearOperationId')
+    dispatch('clearRoomNo')
+    dispatch('clearProcedureState')
   }
 }
 

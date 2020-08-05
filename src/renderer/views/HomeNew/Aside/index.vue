@@ -273,7 +273,8 @@ export default {
         this.$confirm('当前操作需先选择患者', '提示', {
           confirmButtonText: '确定',
           type: 'warning',
-          showCancelButton: false
+          showCancelButton: false,
+          customClass: 'messageBox'
         }).then(() => {})
         return
       }

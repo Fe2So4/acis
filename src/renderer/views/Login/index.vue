@@ -91,7 +91,6 @@ import request from '@/utils/requestForMock'
 import { setUserToken } from '../../utils/storage'
 
 const { BrowserWindow } = require('electron').remote
-const win = BrowserWindow.getFocusedWindow()
 
 export default {
   name: 'Login',
@@ -114,6 +113,7 @@ export default {
   created () {
     // win.setSize(1366, 768)
     // win.setBounds({ width: 1366, height: 768 })
+    const win = BrowserWindow.getFocusedWindow()
     if (win) {
       win.unmaximize()
     }
@@ -142,11 +142,14 @@ export default {
             if (res.data.code === '0') {
               setUserToken(res.data.data)
               this.$router.push('/home')
+              const win = BrowserWindow.getFocusedWindow()
+              if (win) {
+                win.maximize()
+              }
             } else {
               this.$message({ type: 'error', message: '登录失败' })
             }
           })
-          win.maximize()
         } else {
           return false
         }
@@ -158,9 +161,11 @@ export default {
       }
     },
     close () {
+      const win = BrowserWindow.getFocusedWindow()
       win.close()
     },
     mini () {
+      const win = BrowserWindow.getFocusedWindow()
       win.minimize()
     }
   }

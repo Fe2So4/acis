@@ -407,7 +407,8 @@ export default {
       'setPatientId',
       'setOperationId',
       'setPatientCardInfo',
-      'setProcedureState'
+      'setProcedureState',
+      'setRoomNo'
     ]),
     hanldeSelectPatient (item, index) {
       this.setPatientId(item.patientId)
@@ -510,20 +511,21 @@ export default {
       this.setPatientId(item.patientId)
       this.setOperationId(item.operationId)
       this.setProcedureState(item.state)
-      if (item.state === 6) {
-        this.$eventHub.$emit('show-dialog', {
-          perName: '设备采集', componentName: 'DeviceGather', necessary: true
-        })
-      } else {
-        this.setPatientCardInfo({
-          roomNo: item.sequence,
-          ptName: item.patientName,
-          gender: item.gender,
-          ptId: item.patientId
-        })
-        this.$router.push('/home/patientInfo')
-        this.activeIndex = null
-      }
+      this.setRoomNo(item.roomNo)
+      // if (item.state === 6) {
+      //   this.$eventHub.$emit('show-dialog', {
+      //     perName: '设备采集', componentName: 'DeviceGather', necessary: true
+      //   })
+      // } else {
+      //   }
+      this.setPatientCardInfo({
+        roomNo: item.sequence,
+        ptName: item.patientName,
+        gender: item.gender,
+        ptId: item.patientId
+      })
+      this.$router.push('/home/patientInfo')
+      this.activeIndex = null
     },
     handleRegister (param) {
       if (param === 1) {

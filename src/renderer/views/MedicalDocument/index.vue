@@ -280,7 +280,7 @@ export default {
       // 重置修改过的体征
       this.changedSignDataList = []
       this.getData(this.pageIndex)
-      this.$eventHub.$emit('document-refresh')
+      // this.$eventHub.$emit('document-refresh')
     },
     onSave () {
       const modified = this.validateModified()

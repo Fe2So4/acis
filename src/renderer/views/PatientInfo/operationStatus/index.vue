@@ -1,64 +1,64 @@
 <template lang="pug">
-  .operation-status.clearfix
-    .card
-      .top
-        span 姓名
-          span {{ ptCardInfo.ptName }}
-        span 性别
-          span {{ ptCardInfo.gender }}
-      .center ID
-        span {{ ptCardInfo.ptId }}
-      .bottom
-        i.el-icon-back(@click="back")
-        .room {{ ptCardInfo.roomNo }}
-    .step
-      .left-arow(@click="handleChangeNav(1)")
-        i.el-icon-arrow-left.arow
-      .scroll-content(ref="scrollContent")
-        el-scrollbar.rowScrollbar(style="overflow-y:hidden;", ref="scrollbar")
-          ul
-            li(v-for="(item, index) in opeStatusList", :key="index")
-              .img
-                img(:src="getImg(item.state)")
-                .line(v-if="item.state == 0 && index > 0")
-                .gray(v-else-if="item.state == 2 && index > 0")
-                  ol
-                    li
-                    li
-                    li
-                    li
-                    li
-                    li
-                    li
-                    li
-                .loading(v-else-if="item.state == 1 && index > 0")
-                  ol
-                    li
-                    li
-                    li
-                    li
-                    li
-                    li
-                    li
-                    li
-              .title {{ item.conName }}
-              .time
-                el-date-picker(
-                  v-model="item.time",
-                  :readonly="item.state == 0",
-                  :disabled="item.state == 2",
-                  size="mini",
-                  type="datetime",
-                  style="width:130px;",
-                  placeholder="",
-                  @change="handleAddOpeStatusTime(item)",
-                  format="MM-dd HH:mm",
-                  value-format="yyyy-MM-dd HH:mm:ss",
-                  popper-class="dateTimePicker"
-                )
-      .right-arow(@click="handleChangeNav(2)")
-        i.el-icon-arrow-right.arow
-    DialogResuscitationBed(:visible.sync="dialogResuscitationBedVisible")
+.operation-status.clearfix
+  .card
+    .top
+      span 姓名
+        span {{ ptCardInfo.ptName }}
+      span 性别
+        span {{ ptCardInfo.gender }}
+    .center ID
+      span {{ ptCardInfo.ptId }}
+    .bottom
+      i.el-icon-back(@click="back")
+      .room {{ ptCardInfo.roomNo }}
+  .step
+    .left-arow(@click="handleChangeNav(1)")
+      i.el-icon-arrow-left.arow
+    .scroll-content(ref="scrollContent")
+      el-scrollbar.rowScrollbar(style="overflow-y:hidden;", ref="scrollbar")
+        ul
+          li(v-for="(item, index) in opeStatusList", :key="index")
+            .img
+              img(:src="getImg(item.state)")
+              .line(v-if="item.state == 0 && index > 0")
+              .gray(v-else-if="item.state == 2 && index > 0")
+                ol
+                  li
+                  li
+                  li
+                  li
+                  li
+                  li
+                  li
+                  li
+              .loading(v-else-if="item.state == 1 && index > 0")
+                ol
+                  li
+                  li
+                  li
+                  li
+                  li
+                  li
+                  li
+                  li
+            .title {{ item.conName }}
+            .time
+              el-date-picker(
+                v-model="item.time",
+                :readonly="item.state == 0",
+                :disabled="item.state == 2",
+                size="mini",
+                type="datetime",
+                style="width:130px;",
+                placeholder="",
+                @change="handleAddOpeStatusTime(item)",
+                format="MM-dd HH:mm",
+                value-format="yyyy-MM-dd HH:mm:ss",
+                popper-class="dateTimePicker"
+              )
+    .right-arow(@click="handleChangeNav(2)")
+      i.el-icon-arrow-right.arow
+  DialogResuscitationBed(:visible.sync="dialogResuscitationBedVisible")
 </template>
 <script>
 import unstart from '@/assets/unstart.png'
@@ -110,7 +110,11 @@ export default {
     this.getStatusList()
   },
   methods: {
-    ...mapActions('Base', ['setProcedureState', 'setOperationStateList', 'clearOperationId']),
+    ...mapActions('Base', [
+      'setProcedureState',
+      'setOperationStateList',
+      'clearBaseInfo'
+    ]),
     getStatusList () {
       if (this.operationId === '') {
         return
@@ -127,7 +131,7 @@ export default {
     },
     back () {
       this.$router.push('/home')
-      this.clearOperationId()
+      this.clearBaseInfo()
     },
     handleChangeNav (nav) {
       const scrollbarEl = this.$refs.scrollbar.wrap
@@ -204,8 +208,8 @@ export default {
             line-height: 22px;
             text-indent: 13px;
             text-overflow: ellipsis;
-            white-space:nowrap;
-            max-width:80px;
+            white-space: nowrap;
+            max-width: 80px;
             // overflow:hidden;
           }
         }
