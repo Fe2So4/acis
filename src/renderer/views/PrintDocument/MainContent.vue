@@ -115,6 +115,8 @@ export default {
     background: #fff;
     .widgetContent {
       position: relative;
+      overflow: hidden;
+      height: 100%;
     }
   }
 }

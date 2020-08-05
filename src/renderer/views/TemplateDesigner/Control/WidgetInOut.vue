@@ -203,7 +203,17 @@ export default {
           this.setTransfusionLine()
           // this.setDrugLine()
           this.setDrugTotal()
+          // 通知渲染完成----通知打印
+          this.$emit('finish')
         })
+        // this.infusionDataList = infusionDataList
+        // this.bloodTransfusionDataList = bloodTransfusionDataList
+        // this.setDrug()
+        // this.setInfusionLine()
+        // this.setTransfusionLine()
+        // // this.setDrugLine()
+        // this.setDrugTotal()
+      // })
       }
     },
     setStyle () {

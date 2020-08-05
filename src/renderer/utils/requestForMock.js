@@ -1,5 +1,5 @@
 import axios from 'axios'
-// import { Message } from 'element-ui'
+import { Message } from 'element-ui'
 // import { getUserToken, removeUserToken } from '../utils/storage'
 import { getUserToken } from '../utils/storage'
 // const request = (options) => {
@@ -22,7 +22,6 @@ request.interceptors.request.use(function (config) {
   const token = getUserToken()
   if (token) {
     config.headers.Authorization = token // 将token放到请求头发送给服务器
-    return config
   }
   return config
 }, function (error) {
@@ -36,6 +35,10 @@ request.interceptors.response.use(function (response) {
   return response
 }, function (error) {
   // 对响应错误做点什么
+  Message({
+    type: 'error',
+    message: JSON.stringify(error, '', 2)
+  })
   return Promise.reject(error)
 })
 export default request

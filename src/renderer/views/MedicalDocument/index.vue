@@ -271,7 +271,7 @@ export default {
     },
     onPrint () {
       this.$electron.ipcRenderer.send('print-document', {
-        path: `/printDocument/${this.templateId}/${this.operationId}/${this.patientId}/${this.pageIndex}/${this.isRescueMode}/${this.opePhase}`
+        path: `/printDocument/${this.templateId}/${this.operationId}/${this.patientId}/${this.pageIndex}/${this.isRescueMode}/${this.opePhase}/${this.pageInfo}`
       })
     },
     onPrintAll () {},

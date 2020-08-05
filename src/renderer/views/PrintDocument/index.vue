@@ -6,14 +6,14 @@
       :widget-list="widgetList"
       :start-time="startTime"
       :end-time="endTime"
+      :paper-setting="paperSetting"
       :is-rescue-mode="isRescueMode"
       :operation-id="operationId"
       :patient-id="patientId"
-      @widget-finish="onWidgetFinish"
-      :paper-setting="paperSetting"
       :total-page="totalPage"
       :page-index="pageIndex"
       :operation-phase="opePhase"
+      @widget-finish="onWidgetFinish"
     />
   </div>
 </template>
@@ -39,14 +39,15 @@ export default {
       endTime: '',
       totalPage: 1,
       pageIndex: 0,
-      isIntraoperative: false,
       isRescueMode: false,
       paperSetting: {},
       canvasWidgetList: [],
       templateId: '',
       operationId: '',
       patientId: '',
-      opePhase: ''
+      rescueMode: '', // 是否有抢救模式
+      pageInfo: '', // 是否分页
+      opePhase: '' // 文书属于的手术阶段
     }
   },
   created () {
@@ -55,7 +56,9 @@ export default {
     this.patientId = this.$route.params.patientId
     this.pageIndex = this.$route.params.pageIndex
     this.opePhase = this.$route.params.opePhase
+    this.pageInfo = this.$route.params.pageInfo
     this.isRescueMode = this.$route.params.isRescueMode === 'true'
+    console.log(this.$route.params)
     this.getData(this.pageIndex)
   },
   methods: {
@@ -78,21 +81,21 @@ export default {
             patientId: this.patientId
           }
         })
-      ]).then(res => {
+      ]).then((res) => {
         const [widgetList, valueMap] = [
           res[0].data.data.list,
           res[1].data.data
         ]
-        widgetList.forEach(widget => {
+        widgetList.forEach((widget) => {
           // 源数据赋值
           if (widget.dataSource) {
             const { tableName, className } = widget.dataSource
             let value = ''
             if (valueMap[tableName]) {
               const valueArr = valueMap[tableName].filter(
-                item => item.className === className
+                (item) => item.className === className
               )
-              valueArr.forEach(valueItem => {
+              valueArr.forEach((valueItem) => {
                 const { widgetId, value: widgetValue } = valueItem
                 if (widgetId && widgetId === widget.id) {
                   value = widgetValue
@@ -118,7 +121,6 @@ export default {
         this.paperSetting = paperSetting
         widgetList.splice(paperSettingIndex, 1)
         this.tempList = widgetList
-        return res[0].data.data.isIntraoperative
       })
     },
     // 只有术中文书才有，获取术中文书相关信息
@@ -141,13 +143,13 @@ export default {
           pageTimeInterval,
           operState: this.opePhase
         }
-      }).then(res => {
+      }).then((res) => {
         const { startTime, endTime, totalPage, pageIndex } = res.data.data
         this.startTime = startTime
         this.endTime = endTime
         this.totalPage = totalPage
         this.pageIndex = pageIndex
-        this.tempList.forEach(widget => {
+        this.tempList.forEach((widget) => {
           // x轴起止时间更改
           if (widget.xAxis) {
             widget.xAxis.startTime = startTime
@@ -155,21 +157,23 @@ export default {
           }
         })
         this.canvasWidgetList = this.getCanvasWidget()
-        return res.data.data
       })
     },
     async getData (pageIndex) {
-      const isIntraoperative = await this.getTemplateAndValueData()
-      if (isIntraoperative) {
+      await this.getTemplateAndValueData()
+      if (+this.pageInfo) {
         await this.getIntraoperativeData(pageIndex)
       }
       this.widgetList = this.tempList
-      this.isIntraoperative = isIntraoperative
       this.onWidgetFinish()
     },
     getCanvasWidget () {
-      const canvasWidgets = ['widget-physical-sign']
-      return this.widgetList.reduce((arr, widget) => {
+      const canvasWidgets = [
+        'widget-physical-sign',
+        'widget-in-out',
+        'widght-anaes-table'
+      ]
+      return this.tempList.reduce((arr, widget) => {
         if (canvasWidgets.includes(widget.name)) {
           return arr.concat([widget.name])
         } else {
@@ -181,14 +185,12 @@ export default {
       if (this.timer) {
         clearTimeout(this.timer)
       }
-      console.log('WidgetFinish', widgetName)
       for (let i = 0; i < this.canvasWidgetList.length; i++) {
         if (this.canvasWidgetList[i] === widgetName) {
           this.canvasWidgetList.splice(i, 1)
           break
         }
       }
-      console.log(this.canvasWidgetList.length)
       if (this.canvasWidgetList.length === 0) {
         this.timer = setTimeout(() => {
           this.$electron.ipcRenderer.send('ready-to-print')

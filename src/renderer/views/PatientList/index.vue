@@ -406,7 +406,8 @@ export default {
     ...mapActions('Base', [
       'setPatientId',
       'setOperationId',
-      'setPatientCardInfo'
+      'setPatientCardInfo',
+      'setProcedureState'
     ]),
     hanldeSelectPatient (item, index) {
       this.setPatientId(item.patientId)
@@ -508,6 +509,7 @@ export default {
     handleJump (item) {
       this.setPatientId(item.patientId)
       this.setOperationId(item.operationId)
+      this.setProcedureState(item.state)
       if (item.state === 6) {
         this.$eventHub.$emit('show-dialog', {
           perName: '设备采集', componentName: 'DeviceGather', necessary: true
