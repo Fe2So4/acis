@@ -269,8 +269,7 @@ export default {
       done()
     },
     handleChangeButton (item, index) {
-      console.log(index)
-      if (this.operationId === '') {
+      if (this.operationId === '' && item.necessary) {
         this.$confirm('当前操作需先选择患者', '提示', {
           confirmButtonText: '确定',
           type: 'warning',
@@ -280,7 +279,6 @@ export default {
       }
       this.activeIndex = index
       if (item.componentName === 'Event') {
-        console.log('触发')
         this.setEventType(item)
       }
       this.dialogTitle = item.perName

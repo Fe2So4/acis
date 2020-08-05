@@ -58,6 +58,7 @@ export default {
     ...mapGetters('Base', ['operationId'])
   },
   beforeDestroy () {
+    console.log('socket close')
     if (this.socket) {
       this.socket.close()
       this.socket = null
@@ -77,6 +78,7 @@ export default {
     },
     getSocket () {
       // const loginUserNum = 'b0f9d8bda9244397a44cb8ff278937d9'
+      // console.log(getSocketData)
       const loginUserNum = this.operationId
       this.socket = io(getSocketData, {
         query: {
@@ -92,7 +94,7 @@ export default {
       this.socket.on('disconnect', () => {
         console.log('socket.io disconnect')
       })
-      // 体征曲线
+      // 体征数据
       const that = this
       this.socket.on('push_monitor_event_realtime', res => {
         if (Array.isArray(res)) {
@@ -101,7 +103,6 @@ export default {
             loginUserNum,
             content: res
           })
-          // console.log(res)
           res.forEach(item => {
             this.signsList.forEach(_item => {
               if (_item.itemCode === item.itemCode) {

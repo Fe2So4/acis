@@ -47,6 +47,7 @@
               prefix-icon="el-icon-lock"
               placeholder="请输入密码"
               v-model="form.password"
+              @keydown.native="enter"
               show-password
             />
           </el-form-item>

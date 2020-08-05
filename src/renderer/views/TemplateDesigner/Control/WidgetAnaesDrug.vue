@@ -109,7 +109,6 @@ export default {
       // 注册刷新事件
       this.$eventHub.$on('document-refresh', () => {
         // 获取数据
-        // this.getDrugList()
         this.getDrawLineList()
       })
       // 注册刷新事件
@@ -119,12 +118,10 @@ export default {
         this.setContent()
         // 获取数据
         this.getDrawLineList()
-        // this.getDrugList()
       })
     } else {
       addListener(this.$refs.anaesDrug, this.resize)
     }
-    // this.setDrug()
   },
   beforeDestroy () {
     this.layer = null
@@ -146,37 +143,36 @@ export default {
       })
     },
     getDrawLineList () {
-      request({
-        method: 'post',
-        url: getDrugListRecords,
-        data: {
-          startTime: this.startTime,
-          endTime: this.endTime,
-          // startTime: '2020-07-21 17:00:00',
-          // endTime: '2020-07-21 21:00:00',
-          operationId: this.operationId
-          // operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
-        }
-      }).then(res => {
-        const data = res.data.data
-        data.forEach((item, index) => {
-          item.total = item.gross
-          item.data.forEach(_item => {
-            _item.startTime = _item.eventStartTime
-            _item.endTime = _item.eventEndTime
-            _item.dose = _item.dosage
-            if (_item.isHolding === '1') {
-              _item.continue = true
-            } else {
-              _item.continue = false
-            }
+      if (this.startTime && this.endTime) {
+        request({
+          method: 'post',
+          url: getDrugListRecords,
+          data: {
+            startTime: this.startTime,
+            endTime: this.endTime,
+            operationId: this.operationId
+          }
+        }).then(res => {
+          const data = res.data.data
+          data.forEach((item, index) => {
+            item.total = item.gross
+            item.data.forEach(_item => {
+              _item.startTime = _item.eventStartTime
+              _item.endTime = _item.eventEndTime
+              _item.dose = _item.dosage
+              if (_item.isHolding === '1') {
+                _item.continue = true
+              } else {
+                _item.continue = false
+              }
+            })
           })
+          this.drugList = data
+          this.setDrug()
+          this.setDrugLine()
+          this.setDrugTotal()
         })
-        this.drugList = data
-        this.setDrug()
-        this.setDrugLine()
-        this.setDrugTotal()
-      })
+      }
     },
     setStyle () {
       const { border } = this.configuration
@@ -641,33 +637,38 @@ export default {
     // 网格区右击
     handleGridRightClick () {
       if (!this.editMode) {
-        const grid = this.layer.getElementsByClassName('grid')[0]
-        const width = grid.attr('width')
-        const xAxislist = this.xAxisList
-        const xScale = Math.floor(width / xAxislist.length)
-        const interval = Math.floor(
-          this.configuration.xAxis.timeInterval * 60 * 1000 / xScale
-        )
-        grid.addEventListener('mousedown', evt => {
-          if (evt.originalEvent.button === 2) {
-            if (evt.target.attr('className') === 'row') {
-              this.groupNo = evt.target.attr('index')
-              this.drugStartTime = evt.x * interval
-              if (this.drugList[this.groupNo]) {
-                this.drugListVisible = false
-                this.currentDrug = this.drugList[this.groupNo]
-                this.currentDrug.eventType = this.drugList[this.groupNo].eventId
-                this.drugName = this.drugList[this.groupNo].eventName
-                this.drugDetailVisible = true
-              } else {
-                this.drugListVisible = true
+        if (this.startTime && this.endTime) {
+          const grid = this.layer.getElementsByClassName('grid')[0]
+          const leftPart = this.layer.getElementsByClassName('leftPart')[0]
+          const width = grid.attr('width')
+          const xAxislist = this.xAxisList
+          console.log(xAxislist)
+          const xScale = Math.floor(width / xAxislist.length)
+          const interval = Math.floor(
+            this.configuration.xAxis.timeInterval * 60 * 1000 / xScale
+          )
+          grid.addEventListener('mousedown', evt => {
+            if (evt.originalEvent.button === 2) {
+              if (evt.target.attr('className') === 'row') {
+                this.groupNo = evt.target.attr('index')
+                console.log(evt.x - leftPart.attr('width'))
+                this.drugStartTime = evt.x * interval
+                if (this.drugList[this.groupNo]) {
+                  this.drugListVisible = false
+                  this.currentDrug = this.drugList[this.groupNo]
+                  this.currentDrug.eventType = this.drugList[this.groupNo].eventId
+                  this.drugName = this.drugList[this.groupNo].eventName
+                  this.drugDetailVisible = true
+                } else {
+                  this.drugListVisible = true
+                }
+                // this.drugListVisible = true
+                this.position.positionX = evt.x
+                this.position.positionY = evt.y
               }
-              // this.drugListVisible = true
-              this.position.positionX = evt.x
-              this.position.positionY = evt.y
             }
-          }
-        })
+          })
+        }
       }
     },
     // 下拉列表添加药品

@@ -1,81 +1,81 @@
 <template lang="pug">
-el-dialog(
-  title="药品详情",
-  :visible.sync="drugDetailVisible",
-  width="30%",
-  :before-close="handleClose",
-  v-dialogDrag="true",
-  :append-to-body="true"
-)
-  h3 {{ drugName }}
-  el-form(
-    ref="form",
-    :model="form",
-    label-width="80px",
-    size="mini",
-    :rules="rules"
+  el-dialog(
+    title="药品详情",
+    :visible.sync="drugDetailVisible",
+    width="30%",
+    :before-close="handleClose",
+    v-dialogDrag="true",
+    :append-to-body="true"
   )
-    el-form-item(label="起始时间")
-      el-date-picker(
-        v-model="form.startTime",
-        type="datetime",
-        placeholder="选择开始时间",
-        format="yyyy-MM-dd HH:mm",
-        value-format="yyyy-MM-dd HH:mm"
-      )
-    el-form-item(label="结束时间", prop="endTime")
-      el-date-picker(
-        v-model="form.endTime",
-        type="datetime",
-        placeholder="选择结束时间",
-        :disabled="!form.continue",
-        format="yyyy-MM-dd HH:mm",
-        value-format="yyyy-MM-dd HH:mm"
-      )
-    el-form-item(label="持续用药")
-      el-switch(
-        v-model="form.continue",
-        active-color="#13ce66",
-        inactive-color="#ff4949"
-      )
-    el-form-item(label="途径")
-      el-select(v-model="form.channel", placeholder="请选择途径")
-        el-option(
-          v-for="item in channelList",
-          :label="item.detail_name",
-          :value="item.detail_code",
-          :key="item.detail_code"
+    h3 {{ drugName }}
+    el-form(
+      ref="form",
+      :model="form",
+      label-width="80px",
+      size="mini",
+      :rules="rules"
+    )
+      el-form-item(label="起始时间")
+        el-date-picker(
+          v-model="form.startTime",
+          type="datetime",
+          placeholder="选择开始时间",
+          format="yyyy-MM-dd HH:mm",
+          value-format="yyyy-MM-dd HH:mm"
         )
-    el-form-item(label="浓度")
-      el-input(v-model="form.concentration")
-      el-select.unit(v-model="form.concentrationUnit", placeholder="请选择单位")
-        el-option(
-          v-for="item in conUnitList",
-          :label="item.detail_name",
-          :value="item.detail_code",
-          :key="item.detail_code"
+      el-form-item(label="结束时间", prop="endTime")
+        el-date-picker(
+          v-model="form.endTime",
+          type="datetime",
+          placeholder="选择结束时间",
+          :disabled="!form.continue",
+          format="yyyy-MM-dd HH:mm",
+          value-format="yyyy-MM-dd HH:mm"
         )
-    el-form-item(label="速度")
-      el-input(v-model="form.speed")
-      el-select.unit(v-model="form.speedUnit", placeholder="请选择单位")
-        el-option(
-          v-for="item in speedUnitList",
-          :label="item.detail_name",
-          :value="item.detail_code",
-          :key="item.detail_code"
+      el-form-item(label="持续用药")
+        el-switch(
+          v-model="form.continue",
+          active-color="#13ce66",
+          inactive-color="#ff4949"
         )
-    el-form-item(label="剂量")
-      el-input(v-model="form.dose")
-      el-select.unit(v-model="form.doseUnit", placeholder="请选择单位")
-        el-option(
-          v-for="item in doseUnitList",
-          :label="item.detail_name",
-          :value="item.detail_code",
-          :key="item.detail_code"
-        )
-  span.dialog-footer(slot="footer")
-    el-button(type="primary", @click="handleSubmit('form')", size="mini") 确定
-    el-button(type="primary", @click="handleClose", size="mini") 取消
+      el-form-item(label="途径")
+        el-select(v-model="form.channel", placeholder="请选择途径")
+          el-option(
+            v-for="item in channelList",
+            :label="item.detail_name",
+            :value="item.detail_code",
+            :key="item.detail_code"
+          )
+      el-form-item(label="浓度")
+        el-input(v-model="form.concentration")
+        el-select.unit(v-model="form.concentrationUnit", placeholder="请选择单位")
+          el-option(
+            v-for="item in conUnitList",
+            :label="item.detail_name",
+            :value="item.detail_code",
+            :key="item.detail_code"
+          )
+      el-form-item(label="速度")
+        el-input(v-model="form.speed")
+        el-select.unit(v-model="form.speedUnit", placeholder="请选择单位")
+          el-option(
+            v-for="item in speedUnitList",
+            :label="item.detail_name",
+            :value="item.detail_code",
+            :key="item.detail_code"
+          )
+      el-form-item(label="剂量")
+        el-input(v-model="form.dose")
+        el-select.unit(v-model="form.doseUnit", placeholder="请选择单位")
+          el-option(
+            v-for="item in doseUnitList",
+            :label="item.detail_name",
+            :value="item.detail_code",
+            :key="item.detail_code"
+          )
+    span.dialog-footer(slot="footer")
+      el-button(type="primary", @click="handleSubmit('form')", size="mini") 确定
+      el-button(type="primary", @click="handleClose", size="mini") 取消
 </template>
 <script>
 import moment from 'moment'
@@ -91,7 +91,9 @@ export default {
   data () {
     var validateTime = (rule, value, callback) => {
       if (value === '' && this.form.continue) {
-        callback(new Error('请输入结束时间'))
+        callback(new Error('请选择结束时间'))
+      } else {
+        callback()
       }
     }
     return {
@@ -157,6 +159,7 @@ export default {
         if (valid) {
           this.$emit('handleSubmit', this.form)
         } else {
+          console.log('error submit!!')
           return false
         }
       })
