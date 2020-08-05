@@ -164,7 +164,7 @@ export default {
         },
         { name: '患者详情', componentName: 'PatientDetail', necessary: true },
         {
-          name: '手术取消',
+          name: '取消手术',
           componentName: 'OperationCancel',
           necessary: true
         },
