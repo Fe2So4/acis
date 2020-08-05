@@ -127,6 +127,8 @@ export default {
         // 重新绘制
         this.setLayout()
         this.setContent()
+        // 初始化事件标记区域
+        this.setEventTags()
         // 获取数据
         this.getData()
       })

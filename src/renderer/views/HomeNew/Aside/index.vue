@@ -163,7 +163,7 @@ export default {
         },
         { name: '患者详情', componentName: 'PatientDetail', necessary: true },
         {
-          name: '手术取消',
+          name: '取消手术',
           componentName: 'OperationCancel',
           necessary: true
         },
@@ -272,7 +272,8 @@ export default {
         this.$confirm('当前操作需先选择患者', '提示', {
           confirmButtonText: '确定',
           type: 'warning',
-          showCancelButton: false
+          showCancelButton: false,
+          customClass: 'messageBox'
         }).then(() => {})
         return
       }

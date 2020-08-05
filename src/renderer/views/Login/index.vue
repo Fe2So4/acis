@@ -10,7 +10,7 @@
         </p>
         <p>
           <!-- 围手术期临床信息系统 -->
-          临床麻醉
+          麻醉临床信息系统
           <span>v1.0.0</span>
         </p>
         <img
@@ -26,7 +26,7 @@
           >
         </div>
         <div class="title">
-          账 户 密 码 登 录
+          账户密码登录
         </div>
         <div class="line" />
         <el-form
@@ -91,7 +91,6 @@ import request from '@/utils/requestForMock'
 import { setUserToken } from '../../utils/storage'
 
 const { BrowserWindow } = require('electron').remote
-const win = BrowserWindow.getFocusedWindow()
 
 export default {
   name: 'Login',
@@ -114,6 +113,7 @@ export default {
   created () {
     // win.setSize(1366, 768)
     // win.setBounds({ width: 1366, height: 768 })
+    const win = BrowserWindow.getFocusedWindow()
     if (win) {
       win.unmaximize()
     }
@@ -142,7 +142,10 @@ export default {
             if (res.data.code === '0') {
               setUserToken(res.data.data)
               this.$router.push('/home')
-              win.maximize()
+              const win = BrowserWindow.getFocusedWindow()
+              if (win) {
+                win.maximize()
+              }
             } else {
               this.$message({ type: 'error', message: '登录失败' })
             }
@@ -158,9 +161,11 @@ export default {
       }
     },
     close () {
+      const win = BrowserWindow.getFocusedWindow()
       win.close()
     },
     mini () {
+      const win = BrowserWindow.getFocusedWindow()
       win.minimize()
     }
   }
@@ -191,17 +196,12 @@ export default {
           font-weight:bold;
           font-size: 18px;
           color:rgba(255,255,255,1);
-          background:linear-gradient(0deg,rgba(1,63,189,1) 0%, rgba(143,201,255,1) 100%);
-          -webkit-text-fill-color:transparent;
           // text-shadow:2px 3px 1px rgba(0, 0, 0, 0.8);
+          background:linear-gradient(0deg,rgba(0,94,210,1) 0%, rgba(178,218,255,1) 100%);
+          -webkit-text-fill-color:transparent;
           -webkit-background-clip:text;
           span{
             font-size: 12px;
-            color: #3CADFF;
-            // -webkit-text-fill-color:unset;
-          }
-          &:nth-child(1){
-            font-size: 14px;
           }
           &:nth-child(2){
             width:20px;
@@ -221,7 +221,7 @@ export default {
         position: relative;
         .form-icon{
           position: absolute;
-          left:60px;
+          left:70px;
           top:35px;
         }
         .title{

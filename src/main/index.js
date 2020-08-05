@@ -24,7 +24,7 @@ function createWindow () {
     height: 560,
     // useContentSize: true,
     width: 880,
-    // frame: true,
+    frame: process.env.NODE_ENV === 'development',
     // fullscreen: true, // 是否全屏
     webPreferences: {
       // webSecurity: false, // 官方建议不要禁用
@@ -44,7 +44,7 @@ function createWindow () {
     })
   }
   // 显示开发者工具
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', () => {
     mainWindow = null

@@ -105,8 +105,15 @@ export default {
       }
     }
   },
-  created () {
-    this.getMonitorInfo()
+  watch: {
+    roomNo: {
+      handler: function (val) {
+        if (val) {
+          this.getMonitorInfo()
+        }
+      },
+      immediate: true
+    }
   },
   methods: {
     checkCheckboxMethod ({ row }) {

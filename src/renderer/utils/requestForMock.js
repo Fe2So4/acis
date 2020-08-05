@@ -35,10 +35,12 @@ request.interceptors.response.use(function (response) {
   return response
 }, function (error) {
   // 对响应错误做点什么
-  Message({
-    type: 'error',
-    message: JSON.stringify(error, '', 2)
-  })
+  if (process.env.NODE_ENV === 'development') {
+    Message({
+      type: 'error',
+      message: JSON.stringify(error, '', 2)
+    })
+  }
   return Promise.reject(error)
 })
 export default request
