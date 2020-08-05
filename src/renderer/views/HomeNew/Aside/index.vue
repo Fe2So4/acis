@@ -1,8 +1,7 @@
 <template>
   <div class="aside">
     <div class="title">
-      Dandelion 智慧手术中心
-      <i />临床麻醉
+      Dandelion 智慧手术中心<i />临床麻醉
     </div>
     <div
       class="img"
@@ -373,6 +372,7 @@ export default {
     i {
       display: inline-block;
       width: 5px;
+      vertical-align: middle;
       height: 5px;
       border-radius: 50%;
       background: #388ff7;

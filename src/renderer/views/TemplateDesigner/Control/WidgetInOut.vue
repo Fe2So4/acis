@@ -1211,7 +1211,7 @@ export default {
               })
               group.append(dose)
             }
-            row[this.configuration.infusion.num + index].append(group)
+            row[this.configuration.infusion.num + index - 1].append(group)
           })
         })
       }

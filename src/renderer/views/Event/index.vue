@@ -227,7 +227,7 @@
               </el-select>
             </template>
             <template v-slot="{ row }">
-              {{ getSelectLabel(row.dosageUnit, unitList) }}
+              {{ getSelectLabel(row.dosageUnit, doseUnitList) }}
             </template>
           </vxe-table-column>
           <vxe-table-column
@@ -283,7 +283,7 @@
           >
             <template v-slot:edit="{ row }">
               <el-date-picker
-                v-model="row.endTime"
+                v-model="row.eventEndTime"
                 size="mini"
                 type="datetime"
                 format="MM-dd HH:mm"
@@ -444,7 +444,7 @@ export default {
     formatDate (value, format) {
       return moment(value).format(format)
     },
-    getSelectLabel (value, list, valueProp = 'value', labelField = 'label') {
+    getSelectLabel (value, list, valueProp = 'detail_code', labelField = 'detail_name') {
       const item = XEUtils.find(list, (item) => item[valueProp] === value)
       return item ? item[labelField] : null
     },
@@ -459,7 +459,7 @@ export default {
         concentrationUnit: item.conUnit,
         dosageUnit: item.doseUnit,
         dosage: item.dose,
-        eventEndTime: moment(new Date()).format('yyyy-MM-dd HH:mm'),
+        eventEndTime: moment(new Date()).format('yyyy-MM-DD HH:mm'),
         eventName: item.detailName,
         // eventType: this.eventType.eventName, // 此处需要写活
         // eventType: '麻药', // 此处需要写活
@@ -468,7 +468,7 @@ export default {
         isHolding: item.isContinue,
         speed: item.speed,
         speedUnit: item.speedUnit,
-        eventStartTime: moment(new Date()).format('yyyy-MM-dd HH:mm'),
+        eventStartTime: moment(new Date()).format('yyyy-MM-DD HH:mm'),
         // operationId: 'b0f9d8bda9244397a44cb8ff278937d9', // 写活
         operationId: this.operationId, // 写活
         id: item.id,
@@ -489,45 +489,40 @@ export default {
         url: optionEvent,
         method: 'POST',
         data: obj
-      }).then((res) => {})
+      }).then((res) => {
+        if (res.data.code === 200) {
+          this.getEventDetail()
+        } else {
+        }
+      })
     },
     handleDelete () {
       const selectRecords = this.$refs.xTable.getCheckboxRecords()
-      const { insertRecords, updateRecords } = this.$refs.xTable.getRecordset()
-      if (insertRecords.length > 0 || updateRecords.length > 0) {
-        this.$confirm(
-          '检测到未保存的内容，是否在删除前保存修改？',
-          '确认信息',
-          {
-            distinguishCancelAndClose: true,
-            confirmButtonText: '保存',
-            cancelButtonText: '放弃修改'
+      // const { insertRecords, updateRecords } = this.$refs.xTable.getRecordset()
+      // if (insertRecords.length > 0 || updateRecords.length > 0) {
+
+      // } else {
+      selectRecords.forEach(item => {
+        for (var k in item) {
+          if (k === '_XID' || k === 'checked') {
+            delete item[k]
           }
-        )
-          .then(() => {
-            this.handleSave()
-          })
-          .catch((action) => {
-            console.log('执行删除')
-            for (var k in selectRecords) {
-              if (k === '_XID' || k === 'checked') {
-                delete selectRecords[k]
-              }
-            }
-            const obj = {}
-            obj.mode = 2
-            obj.list = selectRecords
-            request({
-              url: optionEvent,
-              method: 'POST',
-              data: obj
-            }).then((res) => {
-              if (res.data.code === 200) {
-                this.$message({ type: 'success', message: '删除成功' })
-              }
-            })
-          })
-      }
+        }
+      })
+      const obj = {}
+      obj.mode = 2
+      obj.list = selectRecords
+      request({
+        url: optionEvent,
+        method: 'POST',
+        data: obj
+      }).then((res) => {
+        if (res.data.code === 200) {
+          this.$message({ type: 'success', message: '删除成功' })
+          this.getEventDetail()
+        }
+      })
+      // }
     },
     // 新增事件
     handleAdd (param) {
@@ -642,6 +637,9 @@ export default {
       }).then((res) => {
         this.channelList = res.data.data
       })
+    },
+    resertData () {
+      this.$refs.xTable.revertData()
     }
   },
   created () {

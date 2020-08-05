@@ -401,6 +401,9 @@ export default {
   },
   mounted () {
     this.getPatientList()
+    this.$eventHub.$on('refresh-ptlist', () => {
+      this.getPatientList()
+    })
   },
   methods: {
     ...mapActions('Base', [
