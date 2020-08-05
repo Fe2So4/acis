@@ -9,7 +9,7 @@ export const getAdviceClassify = `${config.default.api.baseURL}/acis/dict/getAdv
 // 科室列表
 export const getDeptList = `${config.default.api.baseURL}/acis/dict/getDeptList`
 
-const url = 'http://192.168.1.198:8090'
+const url = 'http://47.103.105.200:8090'
 // 查询大事件用药左侧列表
 // export const getEventList = `${config.default.api.baseURL}/acis/intraoperative/templete/getAnesthesuaBigEventDetails`
 export const getEventList = `${url}/acis/intraoperative/templete/getAnesthesuaBigEventDetails`
