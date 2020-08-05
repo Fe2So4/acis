@@ -58,7 +58,7 @@
               )
     .right-arow(@click="handleChangeNav(2)")
       i.el-icon-arrow-right.arow
-  DialogResuscitationBed(:visible.sync="dialogResuscitationBedVisible" v-if="dialogResuscitationBedVisible")
+  DialogResuscitationBed(:visible.sync="dialogResuscitationBedVisible")
 </template>
 <script>
 import unstart from '@/assets/unstart.png'
@@ -96,6 +96,16 @@ export default {
       }
     }
   },
+  watch: {
+    // operationId: {
+    //   handler: function (val) {
+    //     if (val === '') {
+    //       this.$router.push('/home')
+    //     }
+    //   },
+    //   immediate: true
+    // }
+  },
   mounted () {
     this.getStatusList()
   },
@@ -103,7 +113,6 @@ export default {
     ...mapActions('Base', ['setProcedureState', 'setOperationStateList', 'clearOperationId']),
     getStatusList () {
       if (this.operationId === '') {
-        this.$router.push('/home')
         return
       }
       return request({
@@ -112,14 +121,6 @@ export default {
       }).then((res) => {
         if (res.data && res.data.success) {
           this.opeStatusList = res.data.data
-          const effectiveState = res.data.data.find((item) => item.state === 1)
-          if (effectiveState) {
-            this.setProcedureState(effectiveState.conCode)
-          } else {
-            this.setProcedureState(
-              this.opeStatusList[this.opeStatusList.length - 1].conCode
-            )
-          }
           this.setOperationStateList(res.data.data)
         }
       })
@@ -148,15 +149,17 @@ export default {
         url: addStatus,
         data: formData
       }).then((res) => {
-        this.getStatusList()
-        // 入复苏室状态情况下需要选择床位和增加设备信息
-        if (+param.conCode === 12) {
-          this.showResuscitationBed()
+        if (res.data && res.data.success) {
+          this.setProcedureState(res.data.data)
+          this.getStatusList()
+          // 入复苏室状态情况下需要选择床位和增加设备信息
+          if (+param.conCode === 12) {
+            this.showResuscitationBed()
+          }
         }
       })
     },
     handleAddOpeStatusTime (param) {
-      console.log(param)
       this.addStatusTimePoint(param)
     },
     // 展示复苏床位

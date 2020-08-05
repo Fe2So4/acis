@@ -176,6 +176,7 @@ export default {
         this.setDrug()
         this.setDrugLine()
         this.setDrugTotal()
+        this.$emit('finish')
       })
     },
     setStyle () {

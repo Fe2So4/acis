@@ -52,7 +52,6 @@ export default {
   watch: {
     procedureState: {
       async handler (val) {
-        console.log('procedureState')
         await this.getDocumentsList()
         this.handleClick(this.navList[0])
       }

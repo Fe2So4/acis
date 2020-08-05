@@ -90,7 +90,7 @@ import request from '@/utils/requestForMock'
 import { setUserToken } from '../../utils/storage'
 
 const { BrowserWindow } = require('electron').remote
-const win = BrowserWindow.getAllWindows()[0]
+const win = BrowserWindow.getFocusedWindow()
 
 export default {
   name: 'Login',
@@ -113,7 +113,9 @@ export default {
   created () {
     // win.setSize(1366, 768)
     // win.setBounds({ width: 1366, height: 768 })
-    win.unmaximize()
+    if (win) {
+      win.unmaximize()
+    }
   },
   methods: {
     jumpHome () {
