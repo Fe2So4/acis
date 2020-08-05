@@ -109,6 +109,7 @@ export default {
       // 注册刷新事件
       this.$eventHub.$on('document-refresh', () => {
         // 获取数据
+        // this.getDrugList()
         this.getDrawLineList()
       })
       // 注册刷新事件
@@ -118,10 +119,12 @@ export default {
         this.setContent()
         // 获取数据
         this.getDrawLineList()
+        // this.getDrugList()
       })
+    } else {
+      addListener(this.$refs.anaesDrug, this.resize)
     }
     // this.setDrug()
-    addListener(this.$refs.anaesDrug, this.resize)
   },
   beforeDestroy () {
     this.layer = null
@@ -462,7 +465,7 @@ export default {
             fontFamily: '宋体',
             textAlign: 'center',
             fillColor: 'blue',
-            width: width - 1,
+            width: width,
             height: lineHeight,
             lineHeight: lineHeight,
             className: 'drug'
@@ -487,7 +490,7 @@ export default {
       textArr.forEach((item, i, arr) => {
         const title = new Label(item)
         title.attr({
-          pos: [0, lineHeight * i - (lineHeight * arr.length) / 2],
+          pos: [0, Math.round(lineHeight * i - (lineHeight * arr.length) / 2)],
           anchor: [0.5, 0],
           fontSize: 12,
           fontFamily: '宋体',
@@ -718,6 +721,7 @@ export default {
           const interval = width / (moment(this.configuration.xAxis.endTime) - moment(this.configuration.xAxis.startTime))
           const startTime = Math.round((moment(item.startTime) - moment(this.configuration.xAxis.startTime)) * interval)
           // const startTime = Math.round((moment(item.startTime) - moment('2020-7-21 17:00')) * interval)
+          console.log(startTime, 'anaesDrug')
           let endTime = null
           if (item.endTime !== '') {
             endTime = Math.round((moment(item.endTime) - moment(this.configuration.xAxis.startTime)) * interval)
@@ -840,7 +844,7 @@ export default {
             pos: [0, yScale * index],
             anchor: [0, 0],
             textAlign: 'center',
-            width: width - 1,
+            width: width,
             lineHeight: yScale,
             fontSize: 12,
             fillColor: 'blue',

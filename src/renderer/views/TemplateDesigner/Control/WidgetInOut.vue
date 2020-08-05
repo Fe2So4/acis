@@ -130,9 +130,10 @@ export default {
         this.getDrawLineList()
         this.getInfusionBloodList()
       })
+    } else {
+      addListener(this.$refs.inOut, this.resize)
     }
     // this.setDrug()
-    addListener(this.$refs.inOut, this.resize)
   },
   beforeDestroy () {
     this.layer = null
@@ -604,13 +605,13 @@ export default {
       textArr.forEach((item, i, arr) => {
         const title = new Label(item)
         title.attr({
-          pos: [0, lineHeight * i - (lineHeight * arr.length) / 2],
+          pos: [0, Math.round(lineHeight * i - (lineHeight * arr.length) / 2)],
           anchor: [0.5, 0],
           fontSize: 12,
           fontFamily: '宋体',
           textAlign: 'center',
           fillColor: 'black',
-          width: width,
+          width: width - 1,
           height: lineHeight,
           lineHeight: lineHeight
         })
@@ -734,11 +735,6 @@ export default {
           grid.append(line)
         }
       })
-      // const yAxislistMax =
-      // this.yAxis.list.reduce((max, item) => {
-      //   return Math.max(max, item.values.length)
-      // }, 0) - 1
-      // const yScale = height / yAxislistMax
       const lineNumber =
         this.configuration.infusion.num +
         this.configuration.bloodTransfusion.num +
@@ -757,7 +753,7 @@ export default {
       }
       for (let i = 0; i < this.configuration.infusion.num; i++) {
         const group = new Group({
-          pos: [0, Math.round(i * yScale)],
+          pos: [0, Math.round(i * yScale) - 0.5],
           size: [grid.attr('width'), yScale],
           className: 'infusion row',
           index: i
@@ -772,7 +768,7 @@ export default {
           ],
           size: [grid.attr('width'), yScale],
           className: 'bloodTransfusion row',
-          index: i
+          index: i + this.configuration.infusion.num
         })
         grid.append(group)
       }
@@ -787,7 +783,7 @@ export default {
           ],
           size: [grid.attr('width'), yScale],
           className: 'outPut row',
-          index: i
+          index: this.configuration.infusion.num + this.configuration.bloodTransfusion.num + i
         })
         grid.append(group)
       }
@@ -900,7 +896,7 @@ export default {
         } else {
           obj.holdingTime = ''
         }
-        obj.eventStartTime = param.startTime + ':00'
+        obj.eventStartTime = param.startTime
         obj.speedUnit = param.speedUnit
         obj.speed = param.speed
         obj.dosage = param.dose
@@ -910,7 +906,7 @@ export default {
         obj.operationId = this.operationId
         if (param.continue) {
           obj.isHolding = 1
-          obj.eventEndTime = param.endTime + ':00'
+          obj.eventEndTime = param.endTime
         } else {
           obj.eventEndTime = ''
           obj.isHolding = 0
@@ -958,16 +954,11 @@ export default {
                 moment(this.configuration.xAxis.startTime)) *
                 interval
             )
-            // const startTime = Math.round(
-            //   (moment(item.startTime) -
-            //     moment('2020-7-21 09:00')) *
-            //     interval
-            // )
             let endTime = null
             if (item.endTime !== '') {
               endTime = Math.round(
                 (moment(item.endTime) -
-                  moment(this.configuration.xAxis.endTime)) *
+                  moment(this.configuration.xAxis.startTime)) *
                   interval
               )
             }
@@ -980,8 +971,8 @@ export default {
               })
               dose.attr({
                 pos: [group.attr('width') / 2 - text / 2, 0],
-                lineHeight: group.attr('height'),
-                height: group.attr('height'),
+                lineHeight: yScale,
+                height: yScale,
                 fontSize: 12,
                 fillColor: 'blue',
                 fontFamily: '宋体',
@@ -1012,8 +1003,7 @@ export default {
                 const rightLine = new Polyline({
                   pos: [group.attr('width') - 0.5, 0],
                   points: [0, group.attr('height') / 4, 0, group.attr('height') * 3 / 4],
-                  lineWidth: 1,
-                  strokeColor: 'blue'
+                  lineWidth: 1
                 })
                 group.append(rightLine)
               }
@@ -1055,8 +1045,8 @@ export default {
               })
               dose.attr({
                 pos: [0, 0],
-                lineHeight: group.attr('height'),
-                height: group.attr('height'),
+                lineHeight: yScale,
+                height: yScale,
                 fontSize: 12,
                 fillColor: 'blue',
                 fontFamily: '宋体',
@@ -1102,16 +1092,11 @@ export default {
                 moment(this.configuration.xAxis.startTime)) *
                 interval
             )
-            // const startTime = Math.round(
-            //   (moment(item.startTime) -
-            //     moment('2020-7-21 09:00')) *
-            //     interval
-            // )
             let endTime = null
             if (item.endTime !== '') {
               endTime = Math.round(
                 (moment(item.endTime) -
-                  moment(this.configuration.xAxis.endTime)) *
+                  moment(this.configuration.xAxis.startTime)) *
                   interval
               )
             }
@@ -1195,7 +1180,8 @@ export default {
                 className: 'blood_col',
                 colIndex: i,
                 size: [text, yScale],
-                pos: [startTime, 0]
+                pos: [startTime, 0],
+                bgcolor: 'black'
               })
               dose.attr({
                 pos: [0, 0],
@@ -1382,7 +1368,7 @@ export default {
               fontFamily: '宋体',
               textAlign: 'center',
               fillColor: 'blue',
-              width: width - 1,
+              width: width,
               height: lineHeight,
               lineHeight: lineHeight
             })
@@ -1399,7 +1385,7 @@ export default {
               fontFamily: '宋体',
               textAlign: 'center',
               fillColor: 'blue',
-              width: width - 1,
+              width: width,
               height: lineHeight,
               lineHeight: lineHeight
             })
@@ -1434,7 +1420,7 @@ export default {
               fontFamily: '宋体',
               textAlign: 'center',
               fillColor: 'blue',
-              width: width - 30 - 1,
+              width: width - 30,
               height: lineHeight,
               lineHeight: lineHeight
             })
@@ -1451,7 +1437,7 @@ export default {
               fontFamily: '宋体',
               textAlign: 'center',
               fillColor: 'blue',
-              width: width - 30 - 1,
+              width: width - 30,
               height: lineHeight,
               lineHeight: lineHeight
             })

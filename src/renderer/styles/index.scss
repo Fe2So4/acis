@@ -5,7 +5,7 @@ body {
   text-rendering: optimizeLegibility;
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
     Microsoft YaHei, Arial, sans-serif;
-  // -webkit-user-select: none; //一行css搞定文本选择 内核不同添加相应的前缀即可
+  -webkit-user-select: none; //一行css搞定文本选择 内核不同添加相应的前缀即可
 }
 
 label {

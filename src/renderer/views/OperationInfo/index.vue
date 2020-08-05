@@ -69,7 +69,7 @@
         el-form-item(label="台次")
           el-input(v-model="form.sequence")
       el-col(:span="12")
-        el-form-item(label="手术间", prop="room")
+        el-form-item(label="手术间", prop="ope_room")
           el-select(v-model="form.ope_room", placeholder="请选择手术间")
             el-option(
               v-for="item in roomList",
@@ -275,6 +275,7 @@ import {
   deptList
 } from '@/api/dictionary'
 import request from '@/utils/requestForMock'
+import { mapGetters } from 'vuex'
 export default {
   name: 'OperationInfo',
   data () {
@@ -360,6 +361,9 @@ export default {
       ]
     }
   },
+  computed: {
+    ...mapGetters('Base', ['operationId'])
+  },
   methods: {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
@@ -379,7 +383,7 @@ export default {
         method: 'POST',
         url: getRegisterData,
         params: {
-          operationId: '10000011'
+          operationId: this.operationId
         }
       }).then((res) => {
         const data = res.data.data

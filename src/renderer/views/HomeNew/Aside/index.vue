@@ -144,7 +144,7 @@ export default {
           necessary: true
         },
         { name: 'PACU状态', componentName: 'PacuStatus', necessary: false },
-        { name: '设备采集', componentName: 'DeviceGather', necessary: false },
+        { name: '设备采集', componentName: 'DeviceGather', necessary: true },
         { name: '字典', componentName: 'Dictionary', necessary: false },
         { name: '患者预警', componentName: 'PatientWarning', necessary: false },
         {
@@ -283,9 +283,9 @@ export default {
         console.log('触发')
         this.setEventType(item)
       }
-      this.showDialog = true
-      this.dialogTitle = item.name
+      this.dialogTitle = item.perName
       this.componentName = item.componentName
+      this.showDialog = true
     },
     handleShowOverview () {
       if (this.isCollapse === true) {

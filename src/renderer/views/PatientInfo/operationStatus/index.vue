@@ -100,7 +100,7 @@ export default {
     this.getStatusList()
   },
   methods: {
-    ...mapActions('Base', ['setProcedureState', 'setOperationStateList']),
+    ...mapActions('Base', ['setProcedureState', 'setOperationStateList', 'clearOperationId']),
     getStatusList () {
       if (this.operationId === '') {
         this.$router.push('/home')
@@ -126,6 +126,7 @@ export default {
     },
     back () {
       this.$router.push('/home')
+      this.clearOperationId()
     },
     handleChangeNav (nav) {
       const scrollbarEl = this.$refs.scrollbar.wrap
@@ -199,6 +200,10 @@ export default {
             display: inline-block;
             line-height: 22px;
             text-indent: 13px;
+            text-overflow: ellipsis;
+            white-space:nowrap;
+            max-width:80px;
+            // overflow:hidden;
           }
         }
       }

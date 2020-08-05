@@ -229,10 +229,15 @@
                 <span>{{ item.sequence }}</span>
               </div>
               <div class="info">
-                <p>
+                <p class="clearfix">
                   <span class="label">患者</span>
-                  <span>{{ item.patientName }}</span>
-                  <span class="overflow">{{ item.patientId }}</span>
+                  <span
+                    style="text-overflow: ellipsis;
+                    white-space:nowrap;
+                    max-width:80px;
+                    overflow:hidden;"
+                  >{{ item.patientName }}</span>
+                  <span>{{ item.patientId }}</span>
                 </p>
                 <p>
                   <span class="label">住院号</span>
@@ -251,7 +256,9 @@
                 </p>
                 <p>
                   <span class="label">术者</span>
-                  <span style="min-width:40px;">{{ item.surgeonName }}</span>
+                  <span
+                    style="max-width:40px"
+                  >{{ item.surgeonName }}</span>
                   <span
                     class="label"
                     style="margin-left:10px;"
@@ -328,7 +335,7 @@ import {
   deptList
 } from '@/api/dictionary'
 export default {
-  name: 'PatientInfo',
+  name: 'PatientList',
   data () {
     return {
       loading: false,
@@ -344,28 +351,6 @@ export default {
         opeName: ''
       },
       opeRoom: '',
-      options: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        },
-        {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
-        }
-      ],
       filterList: [
         { label: '全部', value: 0 },
         { label: '术前', value: 1 },
@@ -507,12 +492,12 @@ export default {
         rest = list.filter((item) => {
           if (val.indexOf('emergency') !== -1) {
             return item.emergency === true
-          }
-          if (val.indexOf('quatantine' !== -1)) {
+          } else if (val.indexOf('quatantine' !== -1)) {
             return item.quatantine === true
-          }
-          if (val.indexOf('radiate' !== -1)) {
+          } else if (val.indexOf('radiate' !== -1)) {
             return item.radiate === true
+          } else {
+            console.log('本人')
           }
         })
         this.cardList = rest
@@ -521,26 +506,35 @@ export default {
       }
     },
     handleJump (item) {
-      // this.setPatientId(item.patientId);
-      // this.setOperationId(item.operationId);
-      this.setPatientCardInfo({
-        roomNo: item.sequence,
-        ptName: item.patientName,
-        gender: item.gender,
-        ptId: item.patientId
-      })
-      this.$router.push('/home/patientInfo')
+      this.setPatientId(item.patientId)
+      this.setOperationId(item.operationId)
+      if (item.state === 6) {
+        this.$eventHub.$emit('show-dialog', {
+          perName: '设备采集', componentName: 'DeviceGather', necessary: true
+        })
+      } else {
+        this.setPatientCardInfo({
+          roomNo: item.sequence,
+          ptName: item.patientName,
+          gender: item.gender,
+          ptId: item.patientId
+        })
+        this.$router.push('/home/patientInfo')
+        this.activeIndex = null
+      }
     },
     handleRegister (param) {
       if (param === 1) {
         this.$eventHub.$emit('show-dialog', {
-          name: '急诊登记',
-          componentName: 'EmergencyTreatment'
+          perName: '急诊登记',
+          componentName: 'EmergencyTreatment',
+          necessary: false
         })
       } else {
         this.$eventHub.$emit('show-dialog', {
-          name: '手术排台',
-          componentName: 'OperationArrangement'
+          perName: '手术排台',
+          componentName: 'OperationArrangement',
+          necessary: false
         })
       }
     },
@@ -549,7 +543,6 @@ export default {
     },
     // 获取房间号
     getRoomList () {
-      console.log('123')
       request({
         method: 'GET',
         url: roomList
@@ -585,7 +578,6 @@ export default {
       }).then((res) => {
         const data = res.data.data.list || []
         this.totalPages = res.data.data.pages
-        // this.loading = false
         data.forEach((value) => {
           if (value.opeScheduleTime) {
             // value.opeTime = moment(value.opeScheduleTime).format('yyyy-MM-DD HH:mm')
@@ -739,9 +731,11 @@ export default {
               height: 28px;
               overflow: hidden;
               color: #9ba3d5;
-              display: flex;
+              // display: flex;
               span {
                 color: #d0dae5;
+                float: left;
+                margin-right: 10px;
                 line-height: 28px;
                 display: block;
                 &:first-child {
@@ -752,6 +746,9 @@ export default {
                       max-width: 140px;
                     }
                   }
+                }
+                &:last-child{
+                  margin-right: 0;
                 }
               }
               .overflow {
