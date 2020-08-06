@@ -246,7 +246,13 @@ export default {
       if (+this.pageInfo) {
         await this.getIntraoperativeData(pageIndex)
       }
-      this.widgetList = this.tempList
+      const data = this.tempList
+      data.forEach(item => {
+        if (item.name === 'widget-anaes-table') {
+          item.name = 'widget-monitor-table'
+        }
+      })
+      this.widgetList = data
       this.loadingVisible = false
     },
     onSelectEventTimeRange (e) {

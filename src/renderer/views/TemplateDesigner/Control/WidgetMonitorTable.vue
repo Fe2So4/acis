@@ -22,7 +22,7 @@ import {
 } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
 import { Socket } from '@/model/Socket'
-// import moment from 'moment'
+import moment from 'moment'
 export default {
   data () {
     return {
@@ -40,38 +40,7 @@ export default {
       rowHeight: null,
       // startTime: '',
       // endTime: '',
-      dataList: [
-        // {
-        //   name: '心电图',
-        //   code: '1',
-        //   data: [
-        //     { time: '2020-8-8 8:8', value: '窦性心律' },
-        //     { time: '2020-8-8 8:8', value: '窦性心律' },
-        //     { time: '2020-8-8 8:8', value: '窦性心律' }
-        //   ]
-        // },
-        // {
-        //   name: '氧饱和度',
-        //   code: '2',
-        //   data: [{ time: '2020-8-8 8:8', value: '20' }]
-        // },
-        // {
-        //   name: '潮气里',
-        //   code: '3',
-        //   data: [{ time: '2020-8-8 8:8', value: '20' }]
-        // },
-        // { name: 'f', code: '4', data: [{ time: '2020-8-8 8:8', value: '20' }] },
-        // {
-        //   name: 'PEAK',
-        //   code: '5',
-        //   data: [{ time: '2020-8-8 8:8', value: '20' }]
-        // },
-        // {
-        //   name: 'PEEP',
-        //   code: '6',
-        //   data: [{ time: '2020-8-8 8:8', value: '20' }]
-        // }
-      ],
+      dataList: [],
       optionList: [
         { label: '正常', value: '0' },
         { label: '无', value: '1' },
@@ -240,11 +209,12 @@ export default {
       request({
         method: 'POST',
         data: {
-          // startTime: this.startTime,
-          startTime: '2020-07-27 19:20:00',
-          endTime: '2020-07-27 19:30:00',
-          // operationId: this.operationId
-          operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
+          startTime: this.startTime,
+          endTime: this.endTime,
+          // startTime: '2020-07-27 19:20:00',
+          // endTime: '2020-07-27 19:30:00',
+          operationId: this.operationId
+          // operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
         },
         url: getMonitorData
       }).then(res => {
@@ -320,17 +290,17 @@ export default {
     },
     getDataBySocketIO () {
       // 如果没有传入的时间
-      // if (!this.startTime || !this.endTime) {
-      //   return
-      // }
+      if (!this.startTime || !this.endTime) {
+        return
+      }
       // // 与当前时间对比，如果结束时间为当前时间之前，则不需要建立连接
-      // const now = new Date()
-      // if (+moment(this.endTime) < now) {
-      //   if (this.socket) {
-      //     this.socket.close()
-      //   }
-      //   return
-      // }
+      const now = new Date()
+      if (+moment(this.endTime) < now) {
+        if (this.socket) {
+          this.socket.close()
+        }
+        return
+      }
       // const loginUserNum = 'as6d54f6a5sd4f6a54df6a5sd4f'
       const loginUserNum = this.operationId
       this.socket = Socket.getInstance()
@@ -387,10 +357,10 @@ export default {
   height: 100%;
   width: 100%;
   display: flex;
-  border: 1px solid red;
+  border: 1px solid black;
   box-sizing: border-box;
   font-size: 12px;
-  background:#fff;
+  // background:#fff;
   .left {
     // flex 1
     height: 100%;
