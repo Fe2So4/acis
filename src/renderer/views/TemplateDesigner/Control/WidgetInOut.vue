@@ -590,36 +590,18 @@ export default {
       this.setTotalTitle()
     },
     setLeftTitle () {
-      const leftTitle = this.layer.getElementsByClassName('leftTitle')[0]
+      const leftTitle = this.layer.querySelector('.leftTitle')
+      if (!leftTitle) return
       const width = leftTitle.attr('width')
       const height = leftTitle.attr('height')
       const textArr = this.configuration.leftTitle.text.split('')
-      // const textArr = this.leftTitle.text
       const lineHeight = this.configuration.leftTitle.lineHeight
       const titleTextGroup = new Group()
       titleTextGroup.attr({
-        size: [
-          this.configuration.leftTitle.width - 1,
-          textArr.length * lineHeight
-        ],
-        pos: [this.configuration.leftTitle.width / 2, height / 2],
+        size: [Math.round(width - 1), Math.round(textArr.length * lineHeight)],
+        pos: [Math.round(width / 2), Math.round(height / 2)],
         anchor: [0.5, 0.5]
       })
-      // textArr.forEach((item, i, arr) => {
-      //   const title = new Label(item)
-      //   title.attr({
-      //     pos: [0, lineHeight * i - (lineHeight * arr.length) / 2],
-      //     anchor: [0.5, 0],
-      //     fontSize: 12,
-      //     fontFamily: '宋体',
-      //     textAlign: 'center',
-      //     fillColor: 'black',
-      //     width: width - 0.5,
-      //     height: lineHeight,
-      //     lineHeight: lineHeight
-      //   })
-      //   titleTextGroup.append(title)
-      // })
       textArr.forEach((item, i, arr) => {
         const title = new Label(item)
         title.attr({
@@ -629,7 +611,7 @@ export default {
           fontFamily: '宋体',
           textAlign: 'center',
           fillColor: 'black',
-          width: width - 1,
+          width: width,
           height: lineHeight,
           lineHeight: lineHeight
         })

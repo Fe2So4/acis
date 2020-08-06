@@ -475,19 +475,16 @@ export default {
       }
     },
     setLeftTitle () {
-      const leftTitle = this.layer.getElementsByClassName('leftTitle')[0]
+      const leftTitle = this.layer.querySelector('.leftTitle')
+      if (!leftTitle) return
       const width = leftTitle.attr('width')
       const height = leftTitle.attr('height')
       const textArr = this.configuration.leftTitle.text.split('')
-      // const textArr = this.leftTitle.text
       const lineHeight = this.configuration.leftTitle.lineHeight
       const titleTextGroup = new Group()
       titleTextGroup.attr({
-        size: [
-          this.configuration.leftTitle.width - 1,
-          textArr.length * lineHeight
-        ],
-        pos: [this.configuration.leftTitle.width / 2, height / 2],
+        size: [Math.round(width - 1), Math.round(textArr.length * lineHeight)],
+        pos: [Math.round(width / 2), Math.round(height / 2)],
         anchor: [0.5, 0.5]
       })
       textArr.forEach((item, i, arr) => {

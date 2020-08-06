@@ -1,6 +1,6 @@
 {
   "name": "acis",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "author": "dyw-design <1875742887@qq.com>",
   "description": "acis",
   "main": "./dist/electron/main.js",
@@ -55,7 +55,7 @@
     "linux": {
       "icon": "build/icons"
     },
-    "asar": false
+    "asar": true
   },
   "dependencies": {
     "axios": "^0.18.0",
