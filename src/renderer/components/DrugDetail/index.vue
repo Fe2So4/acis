@@ -78,128 +78,128 @@ el-dialog(
     el-button(type="primary", @click="handleClose", size="mini") 取消
 </template>
 <script>
-import moment from "moment";
+import moment from 'moment'
 import {
   getDoseUnit,
   getConUnit,
   getSpeedUnit,
-  getDrugChannel,
-} from "@/api/anaesDrug";
-import request from "@/utils/requestForMock";
+  getDrugChannel
+} from '@/api/anaesDrug'
+import request from '@/utils/requestForMock'
 export default {
-  name: "DrugListDetail",
-  data() {
+  name: 'DrugListDetail',
+  data () {
     var validateTime = (rule, value, callback) => {
-      if (value === "" && this.form.continue) {
-        callback(new Error("请选择结束时间"));
+      if (value === '' && this.form.continue) {
+        callback(new Error('请选择结束时间'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       form: {
-        startTime: "",
-        endTime: "",
+        startTime: '',
+        endTime: '',
         continue: true,
-        channel: "",
-        concentration: "",
-        speed: "",
-        dose: "",
-        speedUnit: "",
-        concentrationUnit: "",
-        doseUnit: "",
+        channel: '',
+        concentration: '',
+        speed: '',
+        dose: '',
+        speedUnit: '',
+        concentrationUnit: '',
+        doseUnit: ''
       },
       rules: {
-        endTime: [{ validator: validateTime, trigger: "blur" }],
+        endTime: [{ validator: validateTime, trigger: 'blur' }]
       },
       doseUnitList: [],
       speedUnitList: [],
       conUnitList: [],
-      channelList: [],
-    };
+      channelList: []
+    }
   },
   props: {
     drugDetailVisible: {
       type: Boolean,
-      default: false,
+      default: false
     },
     startTime: {
       type: Number,
-      default: null,
+      default: null
     },
     drugName: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
   watch: {
     startTime: {
-      handler(newVal, old) {
+      handler (newVal, old) {
         this.form.startTime =
-          moment(new Date()).format("yyyy-MM-DD") +
-          " " +
-          moment(newVal).format("HH:mm");
-        console.log(newVal);
+          moment(new Date()).format('yyyy-MM-DD') +
+          ' ' +
+          moment(newVal).format('HH:mm')
+        console.log(newVal)
       },
-      immediate: true,
+      immediate: true
     },
     form: {
-      handler(newVal, old) {
-        return newVal;
+      handler (newVal, old) {
+        return newVal
       },
-      deep: true,
-    },
+      deep: true
+    }
   },
   methods: {
-    handleClose() {
-      this.$emit("handleClose");
+    handleClose () {
+      this.$emit('handleClose')
     },
-    handleSubmit(formName) {
+    handleSubmit (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$emit("handleSubmit", this.form);
+          this.$emit('handleSubmit', this.form)
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
-    getDoseUnit() {
+    getDoseUnit () {
       request({
-        url: getDoseUnit,
+        url: getDoseUnit
       }).then((res) => {
-        this.doseUnitList = res.data.data;
-      });
+        this.doseUnitList = res.data.data
+      })
     },
-    getConUnit() {
+    getConUnit () {
       request({
-        url: getConUnit,
+        url: getConUnit
       }).then((res) => {
-        this.conUnitList = res.data.data;
-      });
+        this.conUnitList = res.data.data
+      })
     },
-    getSpeedUnit() {
+    getSpeedUnit () {
       request({
-        url: getSpeedUnit,
+        url: getSpeedUnit
       }).then((res) => {
-        this.speedUnitList = res.data.data;
-      });
+        this.speedUnitList = res.data.data
+      })
     },
-    getDrugChannel() {
+    getDrugChannel () {
       request({
-        url: getDrugChannel,
+        url: getDrugChannel
       }).then((res) => {
-        this.channelList = res.data.data;
-      });
-    },
+        this.channelList = res.data.data
+      })
+    }
   },
-  mounted() {
-    this.getDrugChannel();
-    this.getDoseUnit();
-    this.getSpeedUnit();
-    this.getConUnit();
-  },
-};
+  mounted () {
+    this.getDrugChannel()
+    this.getDoseUnit()
+    this.getSpeedUnit()
+    this.getConUnit()
+  }
+}
 </script>
 <style lang="stylus" scoped>
 h3 {

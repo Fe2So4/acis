@@ -2,19 +2,35 @@
   <div class="event clearfix">
     <div class="left">
       <div class="top">
-        <div class="title">拼音快速检索</div>
-        <el-input v-model="searchName" placeholder size="mini" />
+        <div class="title">
+          拼音快速检索
+        </div>
+        <el-input
+          v-model="searchName"
+          placeholder
+          size="mini"
+        />
       </div>
       <div class="content">
-        <el-scrollbar style="height:100%;width:100%;" class="scrollbar">
+        <el-scrollbar
+          style="height:100%;width:100%;"
+          class="scrollbar"
+        >
           <ul>
-            <li class="clearfix" v-for="item in fromList" :key="item.id">
+            <li
+              class="clearfix"
+              v-for="item in fromList"
+              :key="item.id"
+            >
               <!-- <el-button
                 size="mini"
                 @dblclick.native="handleAddAnesthetic"
               />-->
               <div class="event-button">
-                <span class="button" @click="handleAddAnesthetic(item)">{{ item.detailName }}</span>
+                <span
+                  class="button"
+                  @click="handleAddAnesthetic(item)"
+                >{{ item.detailName }}</span>
               </div>
               <div class="dose-button">
                 <span
@@ -49,7 +65,9 @@
       </div>
     </div>
     <div class="right">
-      <div class="title">麻醉事件</div>
+      <div class="title">
+        麻醉事件
+      </div>
       <div class="content">
         <vxe-table
           show-overflow
@@ -70,11 +88,28 @@
           :edit-config="{trigger: 'click', mode: 'cell', showStatus: true}"
         >
           <!-- @current-change="currentChangeEvent" -->
-          <vxe-table-column type="checkbox" width="60" title="选择" />
-          <vxe-table-column field="eventType" title="类型" width="60" />
-          <vxe-table-column field="eventName" title="事件名称" :edit-render="{}" width="120">
+          <vxe-table-column
+            type="checkbox"
+            width="60"
+            title="选择"
+          />
+          <vxe-table-column
+            field="eventType"
+            title="类型"
+            width="60"
+          />
+          <vxe-table-column
+            field="eventName"
+            title="事件名称"
+            :edit-render="{}"
+            width="120"
+          >
             <template v-slot:edit="{ row }">
-              <el-input v-model="row.eventName" size="mini" @blur="handleBlur" />
+              <el-input
+                v-model="row.eventName"
+                size="mini"
+                @blur="handleBlur"
+              />
             </template>
           </vxe-table-column>
           <vxe-table-column
@@ -85,7 +120,11 @@
             v-if="showColumn"
           >
             <template v-slot:edit="{ row }">
-              <el-select size="mini" v-model="row.approach" @change="handleBlur">
+              <el-select
+                size="mini"
+                v-model="row.approach"
+                @change="handleBlur"
+              >
                 <el-option
                   v-for="item in channelList"
                   :label="item.detail_name"
@@ -103,7 +142,11 @@
             v-if="showColumn"
           >
             <template v-slot:edit="{row}">
-              <el-input v-model="row.concentration" size="mini" @blur="handleBlur" />
+              <el-input
+                v-model="row.concentration"
+                size="mini"
+                @blur="handleBlur"
+              />
             </template>
           </vxe-table-column>
           <vxe-table-column
@@ -127,11 +170,23 @@
                 />
               </el-select>
             </template>
-            <template v-slot="{ row }">{{ getSelectLabel(row.concentrationUnit, conUnitList) }}</template>
+            <template v-slot="{ row }">
+              {{ getSelectLabel(row.concentrationUnit, conUnitList) }}
+            </template>
           </vxe-table-column>
-          <vxe-table-column field="speed" title="速度" :edit-render="{}" width="80" v-if="showColumn">
+          <vxe-table-column
+            field="speed"
+            title="速度"
+            :edit-render="{}"
+            width="80"
+            v-if="showColumn"
+          >
             <template v-slot:edit="{ row }">
-              <el-input v-model="row.speed" size="mini" @blur="handleBlur" />
+              <el-input
+                v-model="row.speed"
+                size="mini"
+                @blur="handleBlur"
+              />
             </template>
           </vxe-table-column>
           <vxe-table-column
@@ -155,7 +210,9 @@
                 />
               </el-select>
             </template>
-            <template v-slot="{ row }">{{ getSelectLabel(row.speedUnit, speedUnitList) }}</template>
+            <template v-slot="{ row }">
+              {{ getSelectLabel(row.speedUnit, speedUnitList) }}
+            </template>
           </vxe-table-column>
           <vxe-table-column
             field="dosage"
@@ -165,7 +222,10 @@
             v-if="showColumn"
           >
             <template v-slot:edit="{ row }">
-              <el-input v-model="row.dosage" size="mini" />
+              <el-input
+                v-model="row.dosage"
+                size="mini"
+              />
             </template>
           </vxe-table-column>
           <vxe-table-column
@@ -176,10 +236,18 @@
             v-if="eventType.eventCode==='E013'"
           >
             <template v-slot:edit="{ row }">
-              <el-input v-model="row.dosage" size="mini" />
+              <el-input
+                v-model="row.dosage"
+                size="mini"
+              />
             </template>
           </vxe-table-column>
-          <vxe-table-column field="dosageUnit" title="单位" :edit-render="{}" width="120">
+          <vxe-table-column
+            field="dosageUnit"
+            title="单位"
+            :edit-render="{}"
+            width="120"
+          >
             <template v-slot:edit="scope">
               <el-select
                 v-model="scope.row.dosageUnit"
@@ -194,9 +262,16 @@
                 />
               </el-select>
             </template>
-            <template v-slot="{ row }">{{ getSelectLabel(row.dosageUnit, doseUnitList) }}</template>
+            <template v-slot="{ row }">
+              {{ getSelectLabel(row.dosageUnit, doseUnitList) }}
+            </template>
           </vxe-table-column>
-          <vxe-table-column field="eventStartTime" title="发生时间" :edit-render="{}" width="150">
+          <vxe-table-column
+            field="eventStartTime"
+            title="发生时间"
+            :edit-render="{}"
+            width="150"
+          >
             <template v-slot:edit="{ row }">
               <el-date-picker
                 v-model="row.eventStartTime"
@@ -207,9 +282,15 @@
                 @change="handleBlur"
               />
             </template>
-            <template v-slot="{ row }">{{ formatDate(row.eventStartTime, 'MM-DD HH:mm') }}</template>
+            <template v-slot="{ row }">
+              {{ formatDate(row.eventStartTime, 'MM-DD HH:mm') }}
+            </template>
           </vxe-table-column>
-          <vxe-table-column field="isHolding" title="是否持续" width="80">
+          <vxe-table-column
+            field="isHolding"
+            title="是否持续"
+            width="80"
+          >
             <template v-slot="{ row }">
               <el-switch
                 v-model="row.isHolding"
@@ -227,10 +308,19 @@
             v-if="showColumn"
           >
             <template v-slot:edit="{ row }">
-              <el-input v-model="row.holdingTime" size="mini" @blur="handleBlur" />
+              <el-input
+                v-model="row.holdingTime"
+                size="mini"
+                @blur="handleBlur"
+              />
             </template>
           </vxe-table-column>
-          <vxe-table-column field="eventEndTime" title="结束时间" :edit-render="{}" width="150">
+          <vxe-table-column
+            field="eventEndTime"
+            title="结束时间"
+            :edit-render="{}"
+            width="150"
+          >
             <template v-slot:edit="{ row }">
               <el-date-picker
                 v-model="row.eventEndTime"
@@ -241,7 +331,9 @@
                 value-format="yyyy-MM-dd HH:mm"
               />
             </template>
-            <template v-slot="{ row }">{{ formatDate(row.eventEndTime, 'MM-DD HH:mm') }}</template>
+            <template v-slot="{ row }">
+              {{ formatDate(row.eventEndTime, 'MM-DD HH:mm') }}
+            </template>
           </vxe-table-column>
         </vxe-table>
       </div>
@@ -267,9 +359,26 @@
               输液
             </el-option>
           </el-select>-->
-          <el-button size="mini" @click="handleSave" :disabled="saveVisible">保存（S）</el-button>
-          <el-button size="mini" @click="handleDelete" :disabled="deleteVisible">删除（D）</el-button>
-          <el-button size="mini" @click="handleRefresh">刷新（R）</el-button>
+          <el-button
+            size="mini"
+            @click="handleSave"
+            :disabled="saveVisible"
+          >
+            保存（S）
+          </el-button>
+          <el-button
+            size="mini"
+            @click="handleDelete"
+            :disabled="deleteVisible"
+          >
+            删除（D）
+          </el-button>
+          <el-button
+            size="mini"
+            @click="handleRefresh"
+          >
+            刷新（R）
+          </el-button>
         </el-row>
         <p>要删除某时间点，必须选中整行！</p>
       </div>
@@ -278,7 +387,7 @@
 </template>
 <script>
 // import AnaesTable from '@/components/AnaesTable/index'
-import request from "@/utils/requestForMock";
+import request from '@/utils/requestForMock'
 import {
   getEventList,
   optionEvent,
@@ -286,29 +395,29 @@ import {
   getDoseUnit,
   getConUnit,
   getSpeedUnit,
-  getDrugChannel,
-} from "@/api/anaesDrug";
+  getDrugChannel
+} from '@/api/anaesDrug'
 
-import XEUtils from "xe-utils";
-import moment from "moment";
+import XEUtils from 'xe-utils'
+import moment from 'moment'
 // import OtherEvent from './components/otherEvent'
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex'
 export default {
-  name: "Event",
-  data() {
+  name: 'Event',
+  data () {
     return {
-      select: "",
-      searchName: "",
+      select: '',
+      searchName: '',
       tableData: [],
       cellStyle: {
-        position: "relative",
-        height: "36px",
-        textAlign: "center",
+        position: 'relative',
+        height: '36px',
+        textAlign: 'center'
       },
       fromList: [],
       activeRow: null,
       activeColumnId: null,
-      time: "",
+      time: '',
       currentRow: null,
       currentPage: 1,
       pageSize: 10,
@@ -319,13 +428,13 @@ export default {
       channelList: [],
       loading: false,
       unitList: [
-        { label: "mg/h", value: "1" },
-        { label: "mg/m", value: "2" },
+        { label: 'mg/h', value: '1' },
+        { label: 'mg/m', value: '2' }
       ],
       deleteVisible: true,
       saveVisible: true,
-      showColumn: true,
-    };
+      showColumn: true
+    }
   },
   components: {
     // AnaesTable
@@ -333,105 +442,105 @@ export default {
   },
   watch: {
     eventType: {
-      handler(newVal) {
-        this.getEventList();
-        this.getEventDetail();
+      handler (newVal) {
+        this.getEventList()
+        this.getEventDetail()
         if (
-          newVal.eventCode === "E001" ||
-          newVal.eventCode === "E010" ||
-          newVal.eventCode === "E012" ||
-          newVal.eventCode === "E013" ||
-          newVal.eventCode === "E015"
+          newVal.eventCode === 'E001' ||
+          newVal.eventCode === 'E010' ||
+          newVal.eventCode === 'E012' ||
+          newVal.eventCode === 'E013' ||
+          newVal.eventCode === 'E015'
         ) {
-          this.showColumn = false;
+          this.showColumn = false
         }
       },
       // immediate: true,
-      deep: true,
-    },
+      deep: true
+    }
   },
   computed: {
-    ...mapGetters("Anaes", ["eventType"]),
-    ...mapGetters("Base", ["operationId"]),
+    ...mapGetters('Anaes', ['eventType']),
+    ...mapGetters('Base', ['operationId'])
   },
   methods: {
-    handleBlur() {
-      const { insertRecords, updateRecords } = this.$refs.xTable.getRecordset();
+    handleBlur () {
+      const { insertRecords, updateRecords } = this.$refs.xTable.getRecordset()
       if (updateRecords.length > 0) {
-        this.saveVisible = false;
+        this.saveVisible = false
       } else {
         if (insertRecords.length > 0) {
-          this.saveVisible = false;
+          this.saveVisible = false
         } else {
-          this.saveVisible = true;
+          this.saveVisible = true
         }
       }
     },
-    handleCheck({ records }) {
-      console.log(records.length);
+    handleCheck ({ records }) {
+      console.log(records.length)
       if (records.length > 0) {
-        this.deleteVisible = false;
+        this.deleteVisible = false
       } else {
-        this.deleteVisible = true;
+        this.deleteVisible = true
       }
     },
-    getEventDetail() {
+    getEventDetail () {
       request({
         url: getEventDetail,
         params: {
           operationId: this.operationId,
-          eventId: this.eventType.eventCode,
-        },
+          eventId: this.eventType.eventCode
+        }
       }).then((res) => {
-        const data = res.data.data;
+        const data = res.data.data
         data.forEach((value) => {
-          value.checked = false;
-        });
-        this.tableData = res.data.data;
-      });
+          value.checked = false
+        })
+        this.tableData = res.data.data
+      })
     },
-    handleCurrentPageChange(val) {
+    handleCurrentPageChange (val) {
       // 改变默认的页数
-      this.currentPage = val;
-      this.getEventList();
+      this.currentPage = val
+      this.getEventList()
       // 切换页码时，要获取每页显示的条数
       // this.getData(this.PageSize, (val) * (this.pageSize))
     },
-    formatDate(value, format) {
-      return moment(value).format(format);
+    formatDate (value, format) {
+      return moment(value).format(format)
     },
-    getSelectLabel(
+    getSelectLabel (
       value,
       list,
-      valueProp = "detail_code",
-      labelField = "detail_name"
+      valueProp = 'detail_code',
+      labelField = 'detail_name'
     ) {
-      const item = XEUtils.find(list, (item) => item[valueProp] === value);
-      return item ? item[labelField] : null;
+      const item = XEUtils.find(list, (item) => item[valueProp] === value)
+      return item ? item[labelField] : null
     },
-    currentChangeEvent({ row }) {
-      this.currentRow = row;
-      console.log(row);
+    currentChangeEvent ({ row }) {
+      this.currentRow = row
+      console.log(row)
     },
-    async handleAddAnesthetic(item, index) {
-      let dose = null;
+    async handleAddAnesthetic (item, index) {
+      let dose = null
       if (index) {
         switch (index) {
           case 1:
-            dose = item.usualDose1;
-            break;
+            dose = item.usualDose1
+            break
           case 2:
-            dose = item.usualDose2;
-            break;
+            dose = item.usualDose2
+            break
           case 3:
-            dose = item.usualDose3;
-            break;
+            dose = item.usualDose3
+            break
           case 4:
-            dose = item.usualDose4;
-            break;
+            dose = item.usualDose4
+            break
         }
       } else {
-        dose = item.dose;
+        dose = item.dose
       }
       const record = {
         approach: item.way,
@@ -439,7 +548,7 @@ export default {
         concentrationUnit: item.conUnit,
         dosageUnit: item.doseUnit,
         dosage: dose,
-        eventEndTime: moment(new Date()).format("yyyy-MM-DD HH:mm"),
+        eventEndTime: moment(new Date()).format('yyyy-MM-DD HH:mm'),
         eventName: item.detailName,
         // eventType: this.eventType.eventName, // 此处需要写活
         // eventType: '麻药', // 此处需要写活
@@ -448,195 +557,195 @@ export default {
         isHolding: item.isContinue,
         speed: item.speed,
         speedUnit: item.speedUnit,
-        eventStartTime: moment(new Date()).format("yyyy-MM-DD HH:mm"),
+        eventStartTime: moment(new Date()).format('yyyy-MM-DD HH:mm'),
         // operationId: 'b0f9d8bda9244397a44cb8ff278937d9', // 写活
         operationId: this.operationId, // 写活
         id: item.id,
         eventId: item.eventCode,
         detailId: item.detailCode,
-        checked: false,
-      };
+        checked: false
+      }
       // this.insertData = record
-      const { row: newRow } = await this.$refs.xTable.insertAt(record, -1);
-      console.log(newRow);
-      this.saveVisible = false;
+      const { row: newRow } = await this.$refs.xTable.insertAt(record, -1)
+      console.log(newRow)
+      this.saveVisible = false
     },
-    handleUpdate() {
-      const { updateRecords } = this.$refs.xTable.getRecordset();
-      const obj = {};
-      obj.mode = 1;
-      obj.list = updateRecords;
+    handleUpdate () {
+      const { updateRecords } = this.$refs.xTable.getRecordset()
+      const obj = {}
+      obj.mode = 1
+      obj.list = updateRecords
       request({
         url: optionEvent,
-        method: "POST",
-        data: obj,
+        method: 'POST',
+        data: obj
       }).then((res) => {
         if (res.data.code === 200) {
-          this.getEventDetail();
-          this.saveVisible = true;
+          this.getEventDetail()
+          this.saveVisible = true
         } else {
         }
-      });
+      })
     },
-    handleDelete() {
-      const selectRecords = this.$refs.xTable.getCheckboxRecords();
-      const { insertRecords, updateRecords } = this.$refs.xTable.getRecordset();
+    handleDelete () {
+      const selectRecords = this.$refs.xTable.getCheckboxRecords()
+      const { insertRecords, updateRecords } = this.$refs.xTable.getRecordset()
       if (insertRecords.length > 0 || updateRecords.length > 0) {
-        this.saveVisible = true;
-        this.resertData();
+        this.saveVisible = true
+        this.resertData()
       }
       selectRecords.forEach((item) => {
         for (var k in item) {
-          if (k === "_XID" || k === "checked") {
-            delete item[k];
+          if (k === '_XID' || k === 'checked') {
+            delete item[k]
           }
         }
-      });
-      const obj = {};
-      obj.mode = 2;
-      obj.list = selectRecords;
+      })
+      const obj = {}
+      obj.mode = 2
+      obj.list = selectRecords
       request({
         url: optionEvent,
-        method: "POST",
-        data: obj,
+        method: 'POST',
+        data: obj
       }).then((res) => {
         if (res.data.code === 200) {
-          this.$message({ type: "success", message: "删除成功" });
-          this.getEventDetail();
+          this.$message({ type: 'success', message: '删除成功' })
+          this.getEventDetail()
         }
-      });
+      })
       // }
     },
     // 新增事件
-    handleAdd(param) {
-      const { insertRecords } = this.$refs.xTable.getRecordset();
-      const obj = {};
-      obj.mode = 0;
-      obj.list = insertRecords;
+    handleAdd (param) {
+      const { insertRecords } = this.$refs.xTable.getRecordset()
+      const obj = {}
+      obj.mode = 0
+      obj.list = insertRecords
       request({
         url: optionEvent,
-        method: "POST",
-        data: obj,
+        method: 'POST',
+        data: obj
       }).then((res) => {
         if (res.data.code === 200) {
-          this.getEventDetail();
-          this.saveVisible = true;
+          this.getEventDetail()
+          this.saveVisible = true
         } else {
         }
-      });
+      })
     },
-    handleSave() {
-      const { insertRecords, updateRecords } = this.$refs.xTable.getRecordset();
-      console.log(insertRecords, updateRecords);
+    handleSave () {
+      const { insertRecords, updateRecords } = this.$refs.xTable.getRecordset()
+      console.log(insertRecords, updateRecords)
       if (insertRecords.length > 0) {
-        this.handleAdd();
+        this.handleAdd()
       } else {
         if (updateRecords.length > 0) {
-          this.handleUpdate();
+          this.handleUpdate()
         }
       }
     },
-    handleRefresh() {
-      const { insertRecords, updateRecords } = this.$refs.xTable.getRecordset();
-      console.log(insertRecords, updateRecords);
+    handleRefresh () {
+      const { insertRecords, updateRecords } = this.$refs.xTable.getRecordset()
+      console.log(insertRecords, updateRecords)
       if (insertRecords.length > 0 || updateRecords.length > 0) {
         this.$confirm(
-          "检测到未保存的内容，是否在刷新前保存修改？",
-          "确认信息",
+          '检测到未保存的内容，是否在刷新前保存修改？',
+          '确认信息',
           {
             distinguishCancelAndClose: true,
-            confirmButtonText: "保存",
-            cancelButtonText: "放弃修改",
+            confirmButtonText: '保存',
+            cancelButtonText: '放弃修改'
           }
         )
           .then(() => {
-            this.handleSave();
+            this.handleSave()
           })
           .catch((action) => {
-            this.getEventDetail();
-            this.saveVisible = true;
+            this.getEventDetail()
+            this.saveVisible = true
             this.$message({
-              type: "info",
-              message: action === "cancel" ? "放弃保存" : "停留在当前",
-            });
-          });
+              type: 'info',
+              message: action === 'cancel' ? '放弃保存' : '停留在当前'
+            })
+          })
       }
     },
-    onCellDblClick(row, column, cell, event) {
-      this.activeRow = row;
-      this.activeColumnId = column.id;
+    onCellDblClick (row, column, cell, event) {
+      this.activeRow = row
+      this.activeColumnId = column.id
       setTimeout(() => {
-        const input = event.target.querySelector("input");
-        input && input.select();
-      });
+        const input = event.target.querySelector('input')
+        input && input.select()
+      })
     },
-    getEventList() {
+    getEventList () {
       request({
         url: getEventList,
         params: {
           eventCode: this.eventType.eventCode,
           pageIndex: this.currentPage,
-          pageSize: this.pageSize,
-        },
+          pageSize: this.pageSize
+        }
       }).then((res) => {
         // console.log(res.data.data)
-        this.fromList = res.data.data.list;
-        this.total = res.data.data.total;
-      });
+        this.fromList = res.data.data.list
+        this.total = res.data.data.total
+      })
     },
-    onCellBlur() {
-      this.activeRow = null;
-      this.activeColumnId = null;
+    onCellBlur () {
+      this.activeRow = null
+      this.activeColumnId = null
     },
-    handleOptionEvent() {
+    handleOptionEvent () {
       request({
-        url: optionEvent,
+        url: optionEvent
       }).then((res) => {
-        console.log(res);
-      });
+        console.log(res)
+      })
     },
-    getDoseUnit() {
+    getDoseUnit () {
       request({
-        url: getDoseUnit,
+        url: getDoseUnit
       }).then((res) => {
-        this.doseUnitList = res.data.data;
-      });
+        this.doseUnitList = res.data.data
+      })
     },
-    getConUnit() {
+    getConUnit () {
       request({
-        url: getConUnit,
+        url: getConUnit
       }).then((res) => {
-        this.conUnitList = res.data.data;
-      });
+        this.conUnitList = res.data.data
+      })
     },
-    getSpeedUnit() {
+    getSpeedUnit () {
       request({
-        url: getSpeedUnit,
+        url: getSpeedUnit
       }).then((res) => {
-        this.speedUnitList = res.data.data;
-      });
+        this.speedUnitList = res.data.data
+      })
     },
-    getDrugChannel() {
+    getDrugChannel () {
       request({
-        url: getDrugChannel,
+        url: getDrugChannel
       }).then((res) => {
-        this.channelList = res.data.data;
-      });
+        this.channelList = res.data.data
+      })
     },
-    resertData() {
-      this.$refs.xTable.revertData();
-    },
+    resertData () {
+      this.$refs.xTable.revertData()
+    }
   },
-  created() {
-    this.getDrugChannel();
-    this.getDoseUnit();
-    this.getSpeedUnit();
-    this.getConUnit();
+  created () {
+    this.getDrugChannel()
+    this.getDoseUnit()
+    this.getSpeedUnit()
+    this.getConUnit()
     // this.getEventList()
     // this.getEventDetail()
   },
-  mounted() {},
-};
+  mounted () {}
+}
 </script>
 <style>
 .el-picker-panel .el-time-panel {

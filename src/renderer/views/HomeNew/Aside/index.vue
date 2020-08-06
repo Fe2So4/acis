@@ -4,17 +4,40 @@
       Dandelion 智慧手术中心
       <i />临床麻醉
     </div>
-    <div class="img" @click="jumpLogin">
-      <img src="../../../assets/tq.png" alt />
+    <div
+      class="img"
+      @click="jumpLogin"
+    >
+      <img
+        src="../../../assets/tq.png"
+        alt
+      >
     </div>
     <div class="nav-list">
-      <el-scrollbar style="height:100%;" class="scrollbar">
-        <el-collapse accordion :value="activesNames" @change="handleChange">
-          <el-collapse-item v-for="item in navs" :key="item.mainNav" :name="item.mainNav">
+      <el-scrollbar
+        style="height:100%;"
+        class="scrollbar"
+      >
+        <el-collapse
+          accordion
+          :value="activesNames"
+          @change="handleChange"
+        >
+          <el-collapse-item
+            v-for="item in navs"
+            :key="item.mainNav"
+            :name="item.mainNav"
+          >
             <template slot="title">
-              <i class="header-icon" :class="item.icon" />
+              <i
+                class="header-icon"
+                :class="item.icon"
+              />
               {{ item.name }}
-              <div class="active" v-show="item.mainNav === activesNames" />
+              <div
+                class="active"
+                v-show="item.mainNav === activesNames"
+              />
             </template>
             <div class="menu">
               <span
@@ -38,300 +61,300 @@
   </div>
 </template>
 <script>
-import Dialog from "@/components/DialogNav/index";
-import { getNavs } from "@/api/nav";
-import { mapActions, mapGetters } from "vuex";
-import request from "@/utils/requestForMock";
+import Dialog from '@/components/DialogNav/index'
+import { getNavs } from '@/api/nav'
+import { mapActions, mapGetters } from 'vuex'
+import request from '@/utils/requestForMock'
 // import Overview from '../../../components/OperationOverview/index'
 export default {
-  name: "Aside",
-  data() {
+  name: 'Aside',
+  data () {
     return {
-      dialogTitle: "标题",
-      activesNames: "M001",
+      dialogTitle: '标题',
+      activesNames: 'M001',
       isCollapse: false,
       showOverflow: false,
       showDialog: false, // 开启弹窗
-      componentName: "",
+      componentName: '',
       navList: [
         {
-          name: "大事件",
-          index: "M001",
-          icon: "el-icon-star-on",
+          name: '大事件',
+          index: 'M001',
+          icon: 'el-icon-star-on'
         },
         {
-          name: "系统集成",
-          index: "M002",
-          icon: "el-icon-location",
+          name: '系统集成',
+          index: 'M002',
+          icon: 'el-icon-location'
         },
         {
-          name: "患者操作",
-          index: "M003",
-          icon: "el-icon-s-data",
+          name: '患者操作',
+          index: 'M003',
+          icon: 'el-icon-s-data'
         },
         {
-          name: "常用功能",
-          index: "M004",
-          icon: "el-icon-monitor",
+          name: '常用功能',
+          index: 'M004',
+          icon: 'el-icon-monitor'
         },
         {
-          name: "其他",
-          index: "M005",
-          icon: "el-icon-s-tools",
-        },
+          name: '其他',
+          index: 'M005',
+          icon: 'el-icon-s-tools'
+        }
       ],
       subNavList: [
-        { name: "麻药", componentName: "Event", necessary: true },
-        { name: "用药", componentName: "Event", necessary: true },
-        { name: "事件", componentName: "Event", necessary: true },
-        { name: "输液", componentName: "Event", necessary: true },
-        { name: "出量", componentName: "Event", necessary: true },
-        { name: "插管", componentName: "Event", necessary: true },
-        { name: "拔管", componentName: "Event", necessary: true },
-        { name: "输血", componentName: "Event", necessary: true },
-        { name: "输氧", componentName: "Event", necessary: true },
-        { name: "呼吸", componentName: "Event", necessary: true },
-        { name: "其他", componentName: "Event", necessary: true },
+        { name: '麻药', componentName: 'Event', necessary: true },
+        { name: '用药', componentName: 'Event', necessary: true },
+        { name: '事件', componentName: 'Event', necessary: true },
+        { name: '输液', componentName: 'Event', necessary: true },
+        { name: '出量', componentName: 'Event', necessary: true },
+        { name: '插管', componentName: 'Event', necessary: true },
+        { name: '拔管', componentName: 'Event', necessary: true },
+        { name: '输血', componentName: 'Event', necessary: true },
+        { name: '输氧', componentName: 'Event', necessary: true },
+        { name: '呼吸', componentName: 'Event', necessary: true },
+        { name: '其他', componentName: 'Event', necessary: true },
         {
-          name: "系统配置",
-          componentName: "ConfigurationSystem",
-          necessary: false,
+          name: '系统配置',
+          componentName: 'ConfigurationSystem',
+          necessary: false
         },
         {
-          name: "模板设计器",
-          componentName: "TemplateDesigner",
-          necessary: false,
+          name: '模板设计器',
+          componentName: 'TemplateDesigner',
+          necessary: false
         },
         {
-          name: "模板展示",
-          componentName: "TemplateDisplayer",
-          necessary: false,
+          name: '模板展示',
+          componentName: 'TemplateDisplayer',
+          necessary: false
         },
-        { name: "修改密码", componentName: "ChangePass", necessary: false },
-        { name: "关于", componentName: "About", necessary: false },
-        { name: "血流动力", componentName: "Hemodynamics", necessary: false },
+        { name: '修改密码', componentName: 'ChangePass', necessary: false },
+        { name: '关于', componentName: 'About', necessary: false },
+        { name: '血流动力', componentName: 'Hemodynamics', necessary: false },
         {
-          name: "模板管理",
-          componentName: "ManagementEventTemplate",
-          necessary: false,
-        },
-        {
-          name: "手术交班",
-          componentName: "OperationHandover",
-          necessary: true,
-        },
-        { name: "PACU状态", componentName: "PacuStatus", necessary: false },
-        { name: "设备采集", componentName: "DeviceGather", necessary: true },
-        { name: "字典", componentName: "Dictionary", necessary: false },
-        { name: "患者预警", componentName: "PatientWarning", necessary: false },
-        {
-          name: "手术概览",
-          componentName: "OperationOverview",
-          necessary: false,
+          name: '模板管理',
+          componentName: 'ManagementEventTemplate',
+          necessary: false
         },
         {
-          name: "术中患者列表",
-          componentName: "IntraoperativePatients",
-          necessary: false,
+          name: '手术交班',
+          componentName: 'OperationHandover',
+          necessary: true
+        },
+        { name: 'PACU状态', componentName: 'PacuStatus', necessary: false },
+        { name: '设备采集', componentName: 'DeviceGather', necessary: true },
+        { name: '字典', componentName: 'Dictionary', necessary: false },
+        { name: '患者预警', componentName: 'PatientWarning', necessary: false },
+        {
+          name: '手术概览',
+          componentName: 'OperationOverview',
+          necessary: false
         },
         {
-          name: "术中登记",
-          componentName: "IntraoperativeRegistration",
-          necessary: true,
-        },
-        { name: "患者详情", componentName: "PatientDetail", necessary: true },
-        {
-          name: "取消手术",
-          componentName: "OperationCancel",
-          necessary: true,
+          name: '术中患者列表',
+          componentName: 'IntraoperativePatients',
+          necessary: false
         },
         {
-          name: "复苏进程",
-          componentName: "OperationCancel",
-          necessary: true,
+          name: '术中登记',
+          componentName: 'IntraoperativeRegistration',
+          necessary: true
+        },
+        { name: '患者详情', componentName: 'PatientDetail', necessary: true },
+        {
+          name: '取消手术',
+          componentName: 'OperationCancel',
+          necessary: true
         },
         {
-          name: "复苏床位",
-          componentName: "ResuscitationBed",
-          necessary: false,
-        },
-        { name: "实时状态", componentName: "RealtimeStatus", necessary: false },
-        { name: "麻醉评分", componentName: "AnaesScore", necessary: false },
-        {
-          name: "检验信息",
-          componentName: "InspectionInformation",
-          necessary: false,
+          name: '复苏进程',
+          componentName: 'OperationCancel',
+          necessary: true
         },
         {
-          name: "医嘱信息",
-          componentName: "MedicalOrderInformation",
-          necessary: false,
+          name: '复苏床位',
+          componentName: 'ResuscitationBed',
+          necessary: false
+        },
+        { name: '实时状态', componentName: 'RealtimeStatus', necessary: false },
+        { name: '麻醉评分', componentName: 'AnaesScore', necessary: false },
+        {
+          name: '检验信息',
+          componentName: 'InspectionInformation',
+          necessary: false
         },
         {
-          name: "检查结果",
-          componentName: "InspectionResult",
-          necessary: false,
+          name: '医嘱信息',
+          componentName: 'MedicalOrderInformation',
+          necessary: false
         },
         {
-          name: "病历病程",
-          componentName: "MedicalRecordCourse",
-          necessary: false,
-        },
-        { name: "状态维护", componentName: "StateMaintain", necessary: false },
-        {
-          name: "手术等级",
-          componentName: "OperationLevel",
-          necessary: false,
+          name: '检查结果',
+          componentName: 'InspectionResult',
+          necessary: false
         },
         {
-          name: "术后登记",
-          componentName: "PostoperativeRegistration",
-          necessary: true,
+          name: '病历病程',
+          componentName: 'MedicalRecordCourse',
+          necessary: false
+        },
+        { name: '状态维护', componentName: 'StateMaintain', necessary: false },
+        {
+          name: '手术等级',
+          componentName: 'OperationLevel',
+          necessary: false
         },
         {
-          name: "手术信息",
-          componentName: "OperationInfo",
-          necessary: true,
+          name: '术后登记',
+          componentName: 'PostoperativeRegistration',
+          necessary: true
         },
         {
-          name: "手术登记",
-          componentName: "OperationRegisteration",
-          necessary: true,
+          name: '手术信息',
+          componentName: 'OperationInfo',
+          necessary: true
         },
         {
-          name: "镇痛评分",
-          componentName: "AnalgesicScore",
-          necessary: false,
+          name: '手术登记',
+          componentName: 'OperationRegisteration',
+          necessary: true
         },
         {
-          name: "复苏登记",
-          componentName: "RecoveryRegistration",
-          necessary: true,
+          name: '镇痛评分',
+          componentName: 'AnalgesicScore',
+          necessary: false
         },
+        {
+          name: '复苏登记',
+          componentName: 'RecoveryRegistration',
+          necessary: true
+        }
       ],
       overviewList: [],
       activeIndex: null,
-      path: "",
-      navs: [],
-    };
+      path: '',
+      navs: []
+    }
   },
   components: {
     // Overview
-    Dialog,
+    Dialog
     // ChangePass
     // Hemodynamics
   },
   computed: {
-    ...mapGetters("Base", ["operationId"]),
-    oddEven(index) {
+    ...mapGetters('Base', ['operationId']),
+    oddEven (index) {
       return function (index) {
         if ((index + 1) % 2 === 0) {
-          return true;
+          return true
         } else {
-          return false;
+          return false
         }
-      };
-    },
+      }
+    }
   },
   methods: {
-    ...mapActions("Anaes", ["setEventType"]),
-    jumpLogin() {
-      this.$router.push("/login");
+    ...mapActions('Anaes', ['setEventType']),
+    jumpLogin () {
+      this.$router.push('/login')
     },
-    handleDialogClose() {
-      this.showDialog = false;
-      this.activeIndex = false;
+    handleDialogClose () {
+      this.showDialog = false
+      this.activeIndex = false
     },
-    handleClose(done) {
-      done();
+    handleClose (done) {
+      done()
     },
-    handleChangeButton(item, index) {
-      if (this.operationId === "" && item.necessary) {
-        this.$confirm("当前操作需先选择患者", "提示", {
-          confirmButtonText: "确定",
-          type: "warning",
+    handleChangeButton (item, index) {
+      if (this.operationId === '' && item.necessary) {
+        this.$confirm('当前操作需先选择患者', '提示', {
+          confirmButtonText: '确定',
+          type: 'warning',
           showCancelButton: false,
-          customClass: "messageBox",
-        }).then(() => {});
-        return;
+          customClass: 'messageBox'
+        }).then(() => {})
+        return
       }
-      this.activeIndex = index;
-      if (item.componentName === "Event") {
-        this.setEventType(item);
+      this.activeIndex = index
+      if (item.componentName === 'Event') {
+        this.setEventType(item)
       }
-      this.dialogTitle = item.perName;
-      this.componentName = item.componentName;
-      this.showDialog = true;
+      this.dialogTitle = item.perName
+      this.componentName = item.componentName
+      this.showDialog = true
     },
-    handleShowOverview() {
+    handleShowOverview () {
       if (this.isCollapse === true) {
-        this.showOverflow = !this.showOverflow;
+        this.showOverflow = !this.showOverflow
       }
     },
-    handleChange(active) {
-      this.activeIndex = null;
-      this.activesNames = active;
+    handleChange (active) {
+      this.activeIndex = null
+      this.activesNames = active
     },
-    handleOpen(key, keyPath) {
+    handleOpen (key, keyPath) {
       // console.log(key, keyPath)
     },
-    handleCloseMenu() {
+    handleCloseMenu () {
       if (this.showOverflow === false) {
-        this.isCollapse = !this.isCollapse;
+        this.isCollapse = !this.isCollapse
       }
     },
-    openConfiguration(route, name) {
-      this.$electron.ipcRenderer.send("open-new-window", route, name);
+    openConfiguration (route, name) {
+      this.$electron.ipcRenderer.send('open-new-window', route, name)
     },
-    getNavList() {
+    getNavList () {
       request({
-        url: getNavs + "/" + 3,
+        url: getNavs + '/' + 3
       }).then((res) => {
-        const data = res.data.data;
-        console.log(data);
-        const empty = [];
+        const data = res.data.data
+        console.log(data)
+        const empty = []
         for (var item in data) {
-          if (item === "notUse") {
+          if (item === 'notUse') {
           } else {
             empty.push({
               mainNav: item,
-              subNav: data[item],
-            });
+              subNav: data[item]
+            })
           }
         }
-        console.log(empty, "empty");
+        console.log(empty, 'empty')
         empty.forEach((_item) => {
           this.navList.forEach((item) => {
             if (item.index === _item.mainNav) {
-              _item.name = item.name;
-              _item.icon = item.icon;
+              _item.name = item.name
+              _item.icon = item.icon
               _item.subNav.forEach((value2) => {
                 this.subNavList.forEach((value1) => {
                   if (value2.perName === value1.name) {
-                    value2.componentName = value1.componentName;
-                    value2.necessary = value1.necessary;
+                    value2.componentName = value1.componentName
+                    value2.necessary = value1.necessary
                   }
-                });
-              });
+                })
+              })
             }
-          });
-        });
-        this.navs = empty;
-      });
-    },
+          })
+        })
+        this.navs = empty
+      })
+    }
   },
-  mounted() {
-    this.$eventHub.$on("show-dialog", (item) => {
+  mounted () {
+    this.$eventHub.$on('show-dialog', (item) => {
       // 激活弹窗
-      this.handleChangeButton(item);
-    });
-    this.$eventHub.$on("close-dialog", () => {
+      this.handleChangeButton(item)
+    })
+    this.$eventHub.$on('close-dialog', () => {
       // 关闭弹窗
-      this.handleDialogClose();
-    });
-    this.getNavList();
-  },
-};
+      this.handleDialogClose()
+    })
+    this.getNavList()
+  }
+}
 </script>
 <style lang="scss" scoped>
 .aside {
