@@ -282,6 +282,7 @@
                 type="datetime"
                 popper-class="dateTimePicker"
                 size="mini"
+                :clearable="false"
                 format="MM-dd HH:mm"
                 value-format="yyyy-MM-dd HH:mm"
                 @change="handleBlur"
@@ -331,6 +332,7 @@
                 size="mini"
                 popper-class="dateTimePicker"
                 type="datetime"
+                :disabled="row.isHolding === '0'"
                 @change="handleBlur"
                 format="MM-dd HH:mm"
                 value-format="yyyy-MM-dd HH:mm"
@@ -512,6 +514,9 @@ export default {
       // this.getData(this.PageSize, (val) * (this.pageSize))
     },
     formatDate (value, format) {
+      if (value === '') {
+        return ''
+      }
       return moment(value).format(format)
     },
     getSelectLabel (
@@ -553,17 +558,14 @@ export default {
         concentrationUnit: item.conUnit,
         dosageUnit: item.doseUnit,
         dosage: dose,
-        eventEndTime: moment(new Date()).format('yyyy-mm-DD HH:MM'),
+        eventEndTime: item.isHolding === '1' ? moment(new Date()) : '',
         eventName: item.detailName,
-        // eventType: this.eventType.eventName, // 此处需要写活
-        // eventType: '麻药', // 此处需要写活
         eventType: this.eventType.eventName, // 此处需要写活
-        holdingTime: 0,
+        holdingTime: item.isHolding === '1' ? moment(new Date()).diff(moment(new Date()), 'minute') : '',
         isHolding: item.isContinue,
         speed: item.speed,
         speedUnit: item.speedUnit,
-        eventStartTime: moment(new Date()).format('yyyy-mm-DD HH:MM'),
-        // operationId: 'b0f9d8bda9244397a44cb8ff278937d9', // 写活
+        eventStartTime: moment(new Date()),
         operationId: this.operationId, // 写活
         id: item.id,
         eventId: item.eventCode,

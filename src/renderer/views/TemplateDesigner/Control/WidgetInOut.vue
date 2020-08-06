@@ -1442,7 +1442,9 @@ export default {
       }
     },
     setDrug () {
-      const drugList = this.layer.getElementsByClassName('drugList')[0]
+      const leftPart = this.layer.getElementsByClassName('leftPart')[0]
+      const drugList = leftPart.getElementsByClassName('drugList')[0]
+
       const infusion = drugList.getElementsByClassName('infusion')[0]
       const bloodTransfusion = drugList.getElementsByClassName(
         'bloodTransfusion'

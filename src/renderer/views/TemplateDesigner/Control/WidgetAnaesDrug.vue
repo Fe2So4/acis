@@ -450,7 +450,9 @@ export default {
       const leftPart = this.layer.getElementsByClassName('leftPart')[0]
       const drugList = leftPart.getElementsByClassName('drugList')[0]
       const labels = drugList.querySelectorAll('.drug')
-      labels.forEach((el) => drugList.removeChild(el))
+      if (labels.length > 0) {
+        labels.forEach((el) => drugList.removeChild(el))
+      }
       const width = Math.round(drugList.attr('width'))
       const lineHeight = Math.round(
         drugList.attr('height') / this.configuration.drugNumber
@@ -506,6 +508,7 @@ export default {
     },
     setTimeTitle () {
       const timeTitle = this.layer.getElementsByClassName('timeTitle')[0]
+      if (!timeTitle) return
       const text = new Label(this.configuration.timeTitle.text)
       text.attr({
         fontSize: 12,
@@ -519,7 +522,8 @@ export default {
       timeTitle.append(text)
     },
     setTotalTitle () {
-      const totalTitle = this.layer.getElementsByClassName('totalTitle')[0]
+      const totalTitle = this.layer.querySelector('.totalTitle')
+      if (!totalTitle) return
       const text = new Label(this.configuration.totalTitle.text)
       text.attr({
         fontSize: 12,
@@ -585,7 +589,8 @@ export default {
       })
     },
     setGrid () {
-      const grid = this.layer.getElementsByClassName('grid')[0]
+      const grid = this.layer.querySelector('.grid')
+      if (!grid) return
       const width = grid.attr('width')
       const height = grid.attr('height')
       const xAxislist = this.xAxisList
@@ -714,9 +719,11 @@ export default {
     // 绘制用药线段
     setDrugLine () {
       // 清空子元素
-      this.layer.getElementsByClassName('col').forEach((ref) => {
-        ref.removeAllChildren()
-      })
+      if (this.layer.getElementsByClassName('col').length > 0) {
+        this.layer.getElementsByClassName('col').forEach((ref) => {
+          ref.removeAllChildren()
+        })
+      }
       const grid = this.layer.getElementsByClassName('grid')[0]
       const height = grid.attr('height')
       const yScale = height / this.configuration.drugNumber
