@@ -42,6 +42,13 @@ export default {
   components: {
     Header,
     Aside
+  },
+  beforeRouteEnter (to, from, next) {
+    if (from.path === '/login') {
+      const { BrowserWindow } = require('electron').remote
+      BrowserWindow.getFocusedWindow().maximize()
+    }
+    next()
   }
 }
 </script>
