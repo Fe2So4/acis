@@ -13,7 +13,6 @@ import { addListener, removeListener } from 'resize-detector'
 import debounce from 'lodash/debounce'
 import moment from 'moment'
 import {
-  getSocketData,
   getSignData,
   getEventData,
   getEventDictData
@@ -24,8 +23,7 @@ import {
   PhysicalSignLegends,
   PhysicalSignEventTags
 } from '@/model/PhysicalSign'
-import io from 'socket.io-client'
-
+import { Socket } from '@/model/Socket'
 const { Scene, Group, Label, Polyline } = spritejs
 export default {
   props: {
@@ -141,7 +139,6 @@ export default {
       this.layer.removeEventListener('mousedown', this.setSelectedPoint)
       document.removeEventListener('mouseup', this.getChangedPoint)
       if (this.socket) {
-        this.socket.close()
         this.socket = null
       }
     }
@@ -910,27 +907,11 @@ export default {
       // 与当前时间对比，如果结束时间为当前时间之前，则不需要建立连接
       const now = new Date()
       if (+moment(this.endTime) < now) {
-        if (this.socket) {
-          this.socket.close()
-        }
         return
       }
-      // const loginUserNum = 'as6d54f6a5sd4f6a54df6a5sd4f'
       const loginUserNum = this.operationId
-      this.socket = io(getSocketData, {
-        query: {
-          loginUserNum
-        }
-      })
-      this.socket.on('connect', () => {
-        console.log('socket.io connected')
-      })
-      this.socket.on('reconnect_error', e => {
-        console.error(e)
-      })
-      this.socket.on('disconnect', () => {
-        console.log('socket.io disconnect')
-      })
+      this.socket = Socket.getInstance()
+      if (!this.socket) return
       // 体征曲线
       const that = this
       this.socket.on('push_sign_event', res => {
@@ -960,9 +941,9 @@ export default {
             this.$tooltip({
               dangerouslyUseHTMLString: true,
               message: `
-                <p style="color:white">名称：${e.target.attr('signName')}</p>
-                <p style="color:white">时间：${e.target.attr('timePoint')}</p>
-                <p style="color:white">值：${e.target.attr('pointValue')}</p>
+                名称：${e.target.attr('signName')}<br>
+                时间：${e.target.attr('timePoint')}<br>
+                值：${e.target.attr('pointValue')}
               `,
               positionX: e.originalEvent.pageX,
               positionY: e.originalEvent.pageY

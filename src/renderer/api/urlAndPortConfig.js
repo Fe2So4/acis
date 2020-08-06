@@ -3,47 +3,48 @@ const mock =
     ? !(process.env.MOCK === 'none')
     : false
 
-// const URL_BASE = 'localhost'
-const URL_BASE = '47.103.105.200'
-// const URL_LI = '192.168.1.177'
-// const URL_LI1 = '106.15.197.99'
-// const URL_XIE = '192.168.1.198'
-// const URL_ZHONG = '192.168.1.157'
-const URL_LI = '47.103.105.200'
-// const URL_LI1 = '47.103.105.200'
-// const URL_XIE = '47.103.105.200'
-const URL_XIE = '192.168.1.196'
-const URL_ZHONG = '47.103.105.200'
-const PORT_BASE = '8090'
-const PORT_SOCKET = '9099'
+const IP = {
+  SERVER: '47.103.105.200',
+  LOCAL: 'localhost',
+  XIE: '192.168.1.196',
+  LI: '192.168.1.177',
+  ZHONG: '192.168.1.157'
+}
+const PORT = {
+  BASE: '8090',
+  SCOKET: '9099'
+}
+const productIpType = 'SERVER' // 'SERVER' / 'LOCAL'
+const devlopmentIpType = 'SERVER' // 'SERVER' / 'LOCAL' / ''
 
-const base = `http://${URL_BASE}:${PORT_BASE}/`
+const IP_BASE = IP[productIpType]
+const IP_LI = devlopmentIpType ? IP[devlopmentIpType] : IP.LI
+const IP_XIE = devlopmentIpType ? IP[devlopmentIpType] : IP.XIE
+const IP_ZHONG = devlopmentIpType ? IP[devlopmentIpType] : IP.ZHONG
+
+// 用于打包
+const URL_PRODUCT = `http://${IP_BASE}:${PORT.BASE}/`
+
 // 李
 const baseLi =
   process.env.NODE_ENV === 'development'
-    ? `http://${URL_LI}:${PORT_BASE}/`
-    : base
+    ? `http://${IP_LI}:${PORT.BASE}/`
+    : URL_PRODUCT
 const socketLi =
   process.env.NODE_ENV === 'development'
-    ? `http://${URL_LI}:${PORT_SOCKET}/`
-    : `http://${URL_BASE}:${PORT_SOCKET}/`
+    ? `http://${IP_LI}:${PORT.SCOKET}/`
+    : `http://${IP_BASE}:${PORT.SCOKET}/`
 
 // 谢
 const baseXie =
   process.env.NODE_ENV === 'development'
-    ? `http://${URL_XIE}:${PORT_BASE}/`
-    : base
+    ? `http://${IP_XIE}:${PORT.BASE}/`
+    : URL_PRODUCT
 
 // 钟
 const baseZhong =
   process.env.NODE_ENV === 'development'
-    ? `http://${URL_ZHONG}:${PORT_BASE}/`
-    : base
+    ? `http://${IP_ZHONG}:${PORT.BASE}/`
+    : URL_PRODUCT
 
-export {
-  mock,
-  baseLi,
-  socketLi,
-  baseXie,
-  baseZhong
-}
+export { mock, baseLi, socketLi, baseXie, baseZhong }

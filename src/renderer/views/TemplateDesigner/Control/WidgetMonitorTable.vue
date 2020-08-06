@@ -18,12 +18,10 @@
 <script>
 import {
   getMonitorData,
-  getSocketData,
   updateMonitorData
 } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
-// import moment from 'moment'
-import io from 'socket.io-client'
+import { Socket } from '@/model/Socket'
 import moment from 'moment'
 export default {
   data () {
@@ -196,7 +194,6 @@ export default {
   },
   beforeCreate () {
     if (this.socket) {
-      this.socket.close()
       this.socket = null
     }
   },
@@ -303,21 +300,7 @@ export default {
       }
       // const loginUserNum = 'as6d54f6a5sd4f6a54df6a5sd4f'
       const loginUserNum = this.operationId
-      // const loginUserNum = 'b0f9d8bda9244397a44cb8ff278937d9'
-      this.socket = io(getSocketData, {
-        query: {
-          loginUserNum
-        }
-      })
-      this.socket.on('connect', () => {
-        console.log('socket.io connected')
-      })
-      this.socket.on('reconnect_error', e => {
-        console.error(e)
-      })
-      this.socket.on('disconnect', () => {
-        console.log('socket.io disconnect')
-      })
+      this.socket = Socket.getInstance()
       // 监测数据
       const that = this
       this.socket.on('push_monitor_event', res => {
