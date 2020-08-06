@@ -214,10 +214,7 @@ export default {
         data: {
           startTime: this.startTime,
           endTime: this.endTime,
-          // startTime: '2020-07-27 19:20:00',
-          // endTime: '2020-07-27 19:30:00',
           operationId: this.operationId
-          // operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
         },
         url: getMonitorData
       }).then(res => {
@@ -358,13 +355,18 @@ export default {
     }
   },
   mounted () {
-    // if (!this.editMode) {
-    // this.getMonitorData()
     this.getDataBySocketIO()
     // }
-    // this.getDataList()
-    this.$eventHub.$on('update-monitor', () => {
-      this.updateMonitorData()
+    this.$eventHub.$on('document-refresh', () => {
+      // 获取数据
+      // this.updateMonitorData()
+      this.getMonitorData()
+    })
+    // 注册刷新事件
+    this.$eventHub.$on('document-redraw', () => {
+      // 获取数据
+      this.getMonitorData()
+      // this.updateMonitorData()
     })
   }
 }

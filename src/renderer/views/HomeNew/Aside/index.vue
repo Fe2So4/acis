@@ -259,7 +259,7 @@ export default {
   methods: {
     ...mapActions('Anaes', ['setEventType']),
     jumpLogin () {
-      this.$router.push('/login')
+      // this.$router.push('/login') ----login页测试
     },
     handleDialogClose () {
       this.showDialog = false

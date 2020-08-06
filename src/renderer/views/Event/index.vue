@@ -282,11 +282,10 @@
                 type="datetime"
                 popper-class="dateTimePicker"
                 size="mini"
-                :clearable="false"
                 format="MM-dd HH:mm"
                 value-format="yyyy-MM-dd HH:mm"
-                @change="handleBlur"
               />
+              <!-- @change="handleBlur" -->
             </template>
             <template v-slot="{ row }">
               {{ formatDate(row.eventStartTime, 'MM-DD HH:mm') }}
@@ -332,7 +331,6 @@
                 size="mini"
                 popper-class="dateTimePicker"
                 type="datetime"
-                :disabled="row.isHolding === '0'"
                 @change="handleBlur"
                 format="MM-dd HH:mm"
                 value-format="yyyy-MM-dd HH:mm"
@@ -516,8 +514,9 @@ export default {
     formatDate (value, format) {
       if (value === '') {
         return ''
+      } else {
+        return moment(value).format(format)
       }
-      return moment(value).format(format)
     },
     getSelectLabel (
       value,
@@ -558,14 +557,14 @@ export default {
         concentrationUnit: item.conUnit,
         dosageUnit: item.doseUnit,
         dosage: dose,
-        eventEndTime: item.isHolding === '1' ? moment(new Date()) : '',
+        eventEndTime: item.isHolding === '1' ? moment(new Date()).format('YYYY-MM-DD HH:mm') : '',
         eventName: item.detailName,
         eventType: this.eventType.eventName, // 此处需要写活
         holdingTime: item.isHolding === '1' ? moment(new Date()).diff(moment(new Date()), 'minute') : '',
         isHolding: item.isContinue,
         speed: item.speed,
         speedUnit: item.speedUnit,
-        eventStartTime: moment(new Date()),
+        eventStartTime: moment(new Date()).format('YYYY-MM-DD HH:mm'),
         operationId: this.operationId, // 写活
         id: item.id,
         eventId: item.eventCode,
