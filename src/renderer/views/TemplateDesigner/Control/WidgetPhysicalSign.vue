@@ -911,6 +911,7 @@ export default {
       }
       const loginUserNum = this.operationId
       this.socket = Socket.getInstance()
+      if (!this.socket) return
       // 体征曲线
       const that = this
       this.socket.on('push_sign_event', res => {
