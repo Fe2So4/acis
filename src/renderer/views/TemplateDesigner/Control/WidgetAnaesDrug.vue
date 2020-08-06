@@ -249,7 +249,7 @@ export default {
     },
     setLayout () {
       // 清空子元素
-      this.layer.getElementsByClassName('content').forEach((ref) => {
+      this.layer.getElementsByClassName('content').forEach(ref => {
         ref.removeAllChildren()
       })
       // leftPart
@@ -888,7 +888,9 @@ export default {
             strokeWidth: 1,
             className: 'total'
           })
-          legend.append(label)
+          if (index < this.configuration.drugNumber) {
+            legend.append(label)
+          }
         })
       }
     },

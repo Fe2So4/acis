@@ -311,7 +311,6 @@ export default {
         url: getNavs + '/' + 3
       }).then((res) => {
         const data = res.data.data
-        console.log(data)
         const empty = []
         for (var item in data) {
           if (item === 'notUse') {
@@ -322,7 +321,6 @@ export default {
             })
           }
         }
-        console.log(empty, 'empty')
         empty.forEach((_item) => {
           this.navList.forEach((item) => {
             if (item.index === _item.mainNav) {

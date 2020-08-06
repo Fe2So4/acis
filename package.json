@@ -55,7 +55,7 @@
     "linux": {
       "icon": "build/icons"
     },
-    "asar": false
+    "asar": true
   },
   "dependencies": {
     "axios": "^0.18.0",

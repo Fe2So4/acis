@@ -57,6 +57,7 @@
       <div class="pagination">
         <el-pagination
           background
+          :pager-count="5"
           layout="prev, pager, next"
           :total="total"
           :current-page="currentPage"
@@ -119,7 +120,9 @@
             width="120"
             v-if="showColumn"
           >
-            <template v-slot:edit="{ row }">
+            <template
+              v-slot:edit="{ row }"
+            >
               <el-select
                 size="mini"
                 v-model="row.approach"
@@ -173,7 +176,7 @@
             <template v-slot="{ row }">
               {{ getSelectLabel(row.concentrationUnit, conUnitList) }}
             </template>
-          </vxe-table-column>
+          </vxe-table-column> -->
           <vxe-table-column
             field="speed"
             title="速度"
@@ -238,6 +241,7 @@
             <template v-slot:edit="{ row }">
               <el-input
                 v-model="row.dosage"
+                @blur="handleBlur"
                 size="mini"
               />
             </template>
@@ -276,6 +280,7 @@
               <el-date-picker
                 v-model="row.eventStartTime"
                 type="datetime"
+                popper-class="dateTimePicker"
                 size="mini"
                 format="MM-dd HH:mm"
                 value-format="yyyy-MM-dd HH:mm"
@@ -289,7 +294,7 @@
           <vxe-table-column
             field="isHolding"
             title="是否持续"
-            width="80"
+            width="100"
           >
             <template v-slot="{ row }">
               <el-switch
@@ -305,7 +310,6 @@
             title="持续时间"
             :edit-render="{}"
             width="100"
-            v-if="showColumn"
           >
             <template v-slot:edit="{ row }">
               <el-input
@@ -325,6 +329,7 @@
               <el-date-picker
                 v-model="row.eventEndTime"
                 size="mini"
+                popper-class="dateTimePicker"
                 type="datetime"
                 @change="handleBlur"
                 format="MM-dd HH:mm"
@@ -548,16 +553,16 @@ export default {
         concentrationUnit: item.conUnit,
         dosageUnit: item.doseUnit,
         dosage: dose,
-        eventEndTime: moment(new Date()).format('yyyy-MM-DD HH:mm'),
+        eventEndTime: moment(new Date()).format('yyyy-mm-DD HH:MM'),
         eventName: item.detailName,
         // eventType: this.eventType.eventName, // 此处需要写活
         // eventType: '麻药', // 此处需要写活
         eventType: this.eventType.eventName, // 此处需要写活
-        holdingTime: item.holdingTime,
+        holdingTime: 0,
         isHolding: item.isContinue,
         speed: item.speed,
         speedUnit: item.speedUnit,
-        eventStartTime: moment(new Date()).format('yyyy-MM-DD HH:mm'),
+        eventStartTime: moment(new Date()).format('yyyy-mm-DD HH:MM'),
         // operationId: 'b0f9d8bda9244397a44cb8ff278937d9', // 写活
         operationId: this.operationId, // 写活
         id: item.id,

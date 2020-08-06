@@ -219,7 +219,7 @@ export default {
           fontFamily: '宋体',
           textAlign: 'center',
           fillColor: 'black',
-          width: middlePart.attr('width'),
+          width: middlePart.attr('width') - 1,
           lineHeight: lineHeight
           // bgcolor: 'red'
         })
