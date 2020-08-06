@@ -1,6 +1,6 @@
 {
   "name": "acis",
-  "version": "0.0.20",
+  "version": "0.0.22",
   "author": "dyw-design <1875742887@qq.com>",
   "description": "acis",
   "main": "./dist/electron/main.js",

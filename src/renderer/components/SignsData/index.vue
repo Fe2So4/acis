@@ -26,12 +26,13 @@
 </template>
 <script>
 import { getSignItemList } from '@/api/signData'
-import {
-  getSocketData
-} from '@/api/medicalDocument'
+// import {
+//   getSocketData
+// } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
-import io from 'socket.io-client'
+// import io from 'socket.io-client'
 import { mapGetters } from 'vuex'
+import { Socket } from '@/model/Socket'
 export default {
   data () {
     return {
@@ -58,9 +59,7 @@ export default {
     ...mapGetters('Base', ['operationId'])
   },
   beforeDestroy () {
-    console.log('socket close')
     if (this.socket) {
-      this.socket.close()
       this.socket = null
     }
   },
@@ -77,23 +76,8 @@ export default {
       })
     },
     getSocket () {
-      // const loginUserNum = 'b0f9d8bda9244397a44cb8ff278937d9'
-      // console.log(getSocketData)
       const loginUserNum = this.operationId
-      this.socket = io(getSocketData, {
-        query: {
-          loginUserNum
-        }
-      })
-      this.socket.on('connect', () => {
-        console.log('socket.io connected')
-      })
-      this.socket.on('reconnect_error', e => {
-        console.error(e)
-      })
-      this.socket.on('disconnect', () => {
-        console.log('socket.io disconnect')
-      })
+      this.socket = Socket.getInstance()
       // 体征数据
       const that = this
       this.socket.on('push_monitor_event_realtime', res => {

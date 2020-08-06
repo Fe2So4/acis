@@ -328,6 +328,7 @@ import moment from 'moment'
 import request from '../../utils/requestForMock'
 import { opeList, roomList } from '@/api/patientList'
 import { mapActions } from 'vuex'
+import { Socket } from '@/model/Socket'
 import {
   anaesMethodDetail,
   doctorData,
@@ -515,6 +516,8 @@ export default {
       this.setOperationId(item.operationId)
       this.setProcedureState(item.state)
       this.setRoomNo(item.roomNo)
+      // eslint-disable-next-line no-new
+      Socket.create(item.operationId)
       // if (item.state === 6) {
       //   this.$eventHub.$emit('show-dialog', {
       //     perName: '设备采集', componentName: 'DeviceGather', necessary: true

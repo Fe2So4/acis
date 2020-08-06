@@ -68,6 +68,7 @@ import request from '@/utils/requestForMock'
 import { patientStatus, addStatus } from '@/api/patientList'
 import { mapGetters, mapActions } from 'vuex'
 import DialogResuscitationBed from './DialogResuscitationBed'
+import { Socket } from '@/model/Socket'
 export default {
   name: 'OperationStatus',
   components: {
@@ -132,6 +133,9 @@ export default {
     back () {
       this.$router.push('/home')
       this.clearBaseInfo()
+      if (Socket.instance) {
+        Socket.close()
+      }
     },
     handleChangeNav (nav) {
       const scrollbarEl = this.$refs.scrollbar.wrap
