@@ -22,6 +22,7 @@ el-dialog(
         placeholder="选择开始时间",
         format="yyyy-MM-dd HH:mm",
         value-format="yyyy-MM-dd HH:mm"
+        popper-class="dateTimePicker"
       )
     el-form-item(label="结束时间", prop="endTime")
       el-date-picker(
@@ -30,6 +31,7 @@ el-dialog(
         placeholder="选择结束时间",
         :disabled="!form.continue",
         format="yyyy-MM-dd HH:mm",
+        popper-class="dateTimePicker"
         value-format="yyyy-MM-dd HH:mm"
       )
     el-form-item(label="持续用药")

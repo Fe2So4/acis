@@ -313,12 +313,12 @@
         >
           加载中...
         </p>
-        <p
+        <!-- <p
           v-if="noMore&&cardList.length>0"
           class="loading"
         >
           没有更多了
-        </p>
+        </p> -->
       </el-scrollbar>
     </div>
   </div>

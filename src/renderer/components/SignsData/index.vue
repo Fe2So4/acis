@@ -81,6 +81,7 @@ export default {
       // 体征数据
       const that = this
       this.socket.on('push_monitor_event_realtime', res => {
+        console.log(res)
         if (Array.isArray(res)) {
           // 回应socket.io
           that.socket.emit('push_monitor_event_realtime', {

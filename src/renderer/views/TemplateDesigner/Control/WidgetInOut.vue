@@ -162,17 +162,15 @@ export default {
         this.infusionList = infusionList
       })
     },
-    getDrawLineList () {
+    async getDrawLineList () {
       if (this.startTime && this.endTime) {
         request({
           method: 'post',
           url: getBloodInfusionData,
           data: {
             startTime: this.startTime,
-            // startTime: '2020-07-21 09:00:00',
             endTime: this.endTime,
             operationId: this.operationId
-            // operationId: 'b0f9d8bda9244397a44cb8ff278937d9'
           }
         }).then((res) => {
           const data = res.data.data
@@ -206,14 +204,6 @@ export default {
           // 通知渲染完成----通知打印
           this.$emit('finish')
         })
-        // this.infusionDataList = infusionDataList
-        // this.bloodTransfusionDataList = bloodTransfusionDataList
-        // this.setDrug()
-        // this.setInfusionLine()
-        // this.setTransfusionLine()
-        // // this.setDrugLine()
-        // this.setDrugTotal()
-        // })
       }
     },
     setStyle () {
@@ -799,11 +789,6 @@ export default {
           const grid = this.layer.getElementsByClassName('grid')[0]
           const leftPart = this.layer.getElementsByClassName('leftPart')[0]
           const width = grid.attr('width')
-          // const xAxislist = this.xAxisList
-          // const xScale = Math.floor(width / xAxislist.length)
-          // const interval = Math.floor(
-          //   (this.configuration.xAxis.timeInterval * 60 * 1000) / xScale
-          // )
           grid.addEventListener('mousedown', (evt) => {
             if (evt.originalEvent.button === 2) {
               if (evt.target.attr('className').indexOf('row') !== -1) {
@@ -1093,7 +1078,9 @@ export default {
               })
               group.append(dose)
             }
+            // if(row[index]&&index<this.configuration.){
             row[index].append(group)
+            // }
           })
         })
       }
@@ -1244,7 +1231,9 @@ export default {
               })
               group.append(dose)
             }
-            row[this.configuration.infusion.num + index - 1].append(group)
+            if (row[this.configuration.infusion.num + index - 1]) {
+              row[this.configuration.infusion.num + index - 1].append(group)
+            }
           })
         })
       }
@@ -1482,11 +1471,13 @@ export default {
               height: lineHeight,
               lineHeight: lineHeight
             })
-            infusion.append(text)
+            if (i < this.configuration.infusion.num) {
+              infusion.append(text)
+            }
           }
         }
         for (let i = 0; i < this.bloodTransfusionDataList.length; i++) {
-          if (this.infusionDataList[i]) {
+          if (this.bloodTransfusionDataList[i]) {
             const text = new Label(this.bloodTransfusionDataList[i].eventName)
             text.attr({
               pos: [30, lineHeight * i],
@@ -1499,7 +1490,9 @@ export default {
               height: lineHeight,
               lineHeight: lineHeight
             })
-            bloodTransfusion.append(text)
+            if (i < this.configuration.bloodTransfusion.num) {
+              bloodTransfusion.append(text)
+            }
           }
         }
       }
