@@ -26,32 +26,19 @@
 </template>
 <script>
 import { getSignItemList } from '@/api/signData'
-// import {
-//   getSocketData
-// } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
-// import io from 'socket.io-client'
 import { mapGetters } from 'vuex'
 import { Socket } from '@/model/Socket'
 export default {
   data () {
+    const wrapStyle = Object.freeze([
+      {
+        'overflow-x': 'hidden'
+      }
+    ])
     return {
       signsList: [],
-      // signsList: [{ itemName: '心率', unit: 'bpm', value: '87', color: '#18B24E' },
-      //   { itemName: 'PULSE', unit: 'bpm', value: '70', color: '#18B24E' },
-      //   { itemName: '动脉平均压', unit: 'bpm', value: '70', color: '#18B24E' },
-      //   { itemName: '呼吸', unit: '次/分', value: '18', color: '#5BB9F5' },
-      //   { itemName: '动脉压', unit: 'mmHg', value: '114/56', color: '#F0E34E' },
-      //   { itemName: '无创压', unit: 'mmHg', value: '90/63', color: '#F0E34E' },
-      //   { itemName: '体温', unit: '℃', value: '36.3', color: '#5BB9F5' },
-      //   { itemName: 'ETCO2', unit: '次/分', value: '33', color: '#F0E34E' },
-      //   { itemName: 'FiO2', unit: 'L/min', value: '26', color: '#F73D3D' }
-      // ],
-      wrapStyle: [
-        {
-          'overflow-x': 'hidden'
-        }
-      ],
+      wrapStyle,
       socket: null
     }
   },
@@ -81,7 +68,6 @@ export default {
       // 体征数据
       const that = this
       this.socket.on('push_monitor_event_realtime', res => {
-        console.log(res)
         if (Array.isArray(res)) {
           // 回应socket.io
           that.socket.emit('push_monitor_event_realtime', {

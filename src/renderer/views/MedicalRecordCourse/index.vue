@@ -40,13 +40,19 @@ import request from '@/utils/requestForMock'
 import { getEmrInfo, syncEmrInfo } from '@/api/systemIntegration'
 import { createNamespacedHelpers } from 'vuex'
 import displayEMR from '@/utils/displayEMR'
+import moment from 'moment'
 const { mapState } = createNamespacedHelpers('Base')
 export default {
   name: 'MedicalRecordCourse',
   data () {
+    let _moment = moment()
+    const endTime = _moment.format('YYYY-MM-DD HH:mm:ss')
+    _moment.subtract(1, 'months')
+    const startTime = _moment.format('YYYY-MM-DD HH:mm:ss')
+    _moment = null
     return {
       title: '',
-      date: [],
+      date: [startTime, endTime],
       emrList: []
     }
   },
@@ -66,6 +72,9 @@ export default {
       }
       return ''
     }
+  },
+  created () {
+    this.onSearch()
   },
   methods: {
     onSearch () {

@@ -44,3 +44,50 @@ request.interceptors.response.use(function (response) {
   return Promise.reject(error)
 })
 export default request
+
+// const showErrorMessage = (error) => {
+//   if (process.env.NODE_ENV === 'development') {
+//     Message({
+//       type: 'error',
+//       showClose: true,
+//       message: JSON.stringify(error, null, 2)
+//     })
+//   }
+// }
+
+// const instance = axios.create()
+// // 增加token
+// const token = getUserToken()
+// if (token) {
+//   instance.defaults.headers.common.Authorization = token
+// }
+
+// export const _request = (options) => {
+//   return instance(options)
+//     .then(
+//       res => {
+//         if (res.data && res.data.success) {
+//           return res.data.data
+//         } else {
+//           return Promise.reject(new Error('响应数据错误'))
+//         }
+//       }
+//     )
+//     .catch(function (error) {
+//       console.log(error)
+//       if (error.response) {
+//         // The request was made and the server responded with a status code
+//         // that falls out of the range of 2xx
+//         showErrorMessage(error.response, 'response')
+//       } else if (error.request) {
+//         // The request was made but no response was received
+//         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+//         // http.ClientRequest in node.js
+//         showErrorMessage(error.request, 'request')
+//       } else {
+//         // Something happened in setting up the request that triggered an Error
+//         showErrorMessage(error.message, 'setting up')
+//       }
+//       showErrorMessage(error.config, 'config')
+//     })
+// }
