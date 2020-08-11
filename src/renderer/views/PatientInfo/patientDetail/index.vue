@@ -3,7 +3,7 @@
     <div class="content">
       <el-scrollbar
         style="height:100%;"
-        class="scrollbar"
+        :wrap-style="wrapStyle"
       >
         <basic-info :basic-info="basicInfo" />
         <operation-info :ope-info="opeInfo" />
@@ -22,17 +22,23 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'PatientDetail',
   data () {
+    const wrapStyle = Object.freeze([
+      {
+        'overflow-x': 'hidden'
+      }
+    ])
     return {
       basicInfo: {},
       opeInfo: {},
-      docInfo: {}
+      docInfo: {},
+      wrapStyle
     }
   },
-  watch: {
-
-  },
+  watch: {},
   components: {
-    BasicInfo, OperationInfo, OperationPersonnel
+    BasicInfo,
+    OperationInfo,
+    OperationPersonnel
   },
   computed: {
     ...mapGetters('Base', ['operationId'])
@@ -48,7 +54,7 @@ export default {
       request({
         method: 'GET',
         url: patientDetail + '/' + this.operationId
-      }).then(res => {
+      }).then((res) => {
         const data = res.data.data
         this.basicInfo = data.basicInfo
         this.opeInfo = data.opeInfo
@@ -59,29 +65,24 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-    .patient-detail{
-      margin-top:20px;
-      width: 100%;
-      color:#9BA3D5;
-      height: calc(100% - 192px);
-      // display: flex;
-      padding:20px;
-      background:#181C27;
-      box-shadow:0px 0px 12px 3px rgba(0, 0, 0, 0.4);
-      border-radius:5px;
-        .title{
-            color:#15428b;
-            font-size:14px;
-            line-height:30px;
-            padding-left:10px;
-        }
-        .content{
-          height:calc(100% - 30px);
-        }
-    }
-</style>
-<style lang="scss">
-  .patient-detail .scrollbar .el-scrollbar__wrap {
-      overflow-x: hidden;
+.patient-detail {
+  margin-top: 20px;
+  width: 100%;
+  color: #9ba3d5;
+  height: calc(100% - 192px);
+  // display: flex;
+  padding: 20px;
+  background: #181c27;
+  box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+  border-radius: 5px;
+  .title {
+    color: #15428b;
+    font-size: 14px;
+    line-height: 30px;
+    padding-left: 10px;
   }
+  .content {
+    height: 100%;
+  }
+}
 </style>

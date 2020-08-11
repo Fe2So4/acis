@@ -1,12 +1,5 @@
 <template>
   <div class="normalSetting">
-    <el-breadcrumb
-      separator="/"
-      class="title"
-    >
-      <el-breadcrumb-item>基础配置</el-breadcrumb-item>
-      <el-breadcrumb-item>常规</el-breadcrumb-item>
-    </el-breadcrumb>
     <el-form
       ref="form"
       :model="form"
@@ -308,12 +301,7 @@ export default {
 <style lang="scss" scoped>
 .normalSetting {
   padding: 10px;
-  .title {
-    height: 40px;
-    line-height: 30px;
-    border-bottom: solid 1px #e6e6e6;
-    padding-left: 10px;
-  }
+
   .form {
     padding: 20px 10px 10px;
     .input {

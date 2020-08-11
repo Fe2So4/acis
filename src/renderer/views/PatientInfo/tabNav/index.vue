@@ -113,7 +113,7 @@ export default {
     li {
       line-height: 40px;
       cursor: pointer;
-      padding: 5px;
+      padding: 5px 15px;
       font-size: 14px;
 
       // float left
@@ -121,10 +121,12 @@ export default {
         line-height: 30px;
         height: 30px;
         white-space: nowrap;
+        padding: 0 5px;
 
         &.isActive {
           color: #0094ff;
           border-bottom: 2px solid #0094ff;
+          font-weight: bold;
         }
       }
     }

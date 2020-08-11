@@ -8,47 +8,59 @@
       <div>共{{ totalPage }}页</div>
       <div
         class="button"
-        @click="$emit('changePage', 0)"
+        @click="$emit('change-page', 0)"
       >
-        <span class="iconfont icon-shouye" />首页
+        <div class="iconfont icon-shouye" />
+        <div class="text">
+          首页
+        </div>
       </div>
       <div
         class="button"
         @click="pageUp"
       >
-        <span class="iconfont icon-shangyiye" />上一页
+        <div class="iconfont icon-shangyiye rotate" />
+        <div class="text">
+          上一页
+        </div>
       </div>
       <div
         class="button"
         @click="pageDown"
       >
-        <span class="iconfont icon-xiayiye" />下一页
+        <div class="iconfont icon-xiayiye rotate" />
+        <div class="text">
+          下一页
+        </div>
       </div>
       <div
         class="button"
-        @click="$emit('changePage', totalPage - 1)"
+        @click="$emit('change-page', totalPage - 1)"
       >
-        <span class="iconfont icon-last" />末页
+        <div class="iconfont icon-last rotate" />
+        <div class="text">
+          末页
+        </div>
       </div>
     </div>
     <div class="buttons rightButtons">
       <div
         class="button red"
         v-if="hasSwitchRescueModeButton && !isRescueMode"
-        @click="$emit('changeRescueMode', true)"
+        @click="$emit('change-rescue-mode', true)"
       >
         抢救模式
       </div>
       <div
         class="button"
         v-if="hasSwitchRescueModeButton && isRescueMode"
-        @click="$emit('changeRescueMode', false)"
+        @click="$emit('change-rescue-mode', false)"
       >
         普通模式
       </div>
       <!-- <div
         class="button"
-        @click="$emit('printAll')"
+        @click="$emit('print-all')"
       >
         集中打印
       </div> -->
@@ -128,13 +140,13 @@ export default {
     pageUp () {
       const pageIndex = +this.pageIndex
       if (pageIndex > 0) {
-        this.$emit('changePage', pageIndex - 1)
+        this.$emit('change-page', pageIndex - 1)
       }
     },
     pageDown () {
       const pageIndex = +this.pageIndex
       if (pageIndex < this.totalPage - 1) {
-        this.$emit('changePage', pageIndex + 1)
+        this.$emit('change-page', pageIndex + 1)
       }
     }
   }
@@ -145,19 +157,19 @@ export default {
 .bottomButtons {
   position: absolute;
   bottom: 0;
-  left: 0;
-  right: 0;
+  left: -20px;
+  right: -20px;
   height: 36px;
+
   padding: 4px 0;
   background: rgba(23, 27, 39, 1);
   box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
-  // display: flex;
-  // justify-content: space-between;
   color: rgba(154, 163, 212, 1);
   font-size: 14px;
   font-weight: 400;
   overflow: hidden;
-  // flex-direction: row-reverse;
+  vertical-align: baseline;
+
   .buttons {
     display: flex;
     & > div {
@@ -191,7 +203,15 @@ export default {
     }
   }
   .iconfont {
-    margin-right: 4px;
+    display: inline-block;
+    position: relative;
+    top: 2px;
+    &.rotate {
+      transform: rotate(90deg);
+    }
+  }
+  .text {
+    display: inline-block;
   }
 }
 </style>

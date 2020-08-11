@@ -9,7 +9,7 @@
     <div class="content">
       <el-scrollbar
         style="height:100%;"
-        class="scrollbar"
+        :wrap-style="wrapStyle"
       >
         <basic-info />
         <operation-info />
@@ -25,8 +25,12 @@ import OperationPersonnel from './OperationPersonnel/index'
 export default {
   name: 'PatientDetail',
   data () {
+    const wrapStyle = Object.freeze([{
+      'overflow-x': 'hidden'
+    }])
     return {
-      tableData: []
+      tableData: [],
+      wrapStyle
     }
   },
   watch: {
@@ -39,31 +43,27 @@ export default {
     }
   },
   components: {
-    BasicInfo, OperationInfo, OperationPersonnel
+    BasicInfo,
+    OperationInfo,
+    OperationPersonnel
   },
-  mounted () {
-  }
+  mounted () {}
 }
 </script>
 <style lang="scss" scoped>
-    .patient-detail{
-        height: 100%;
-        flex: 1;
-        // background:#f8f9fa;
-        .title{
-            color:#15428b;
-            font-size:14px;
-            line-height:30px;
-            // line-height: 30px;
-            padding-left:10px;
-        }
-        .content{
-          height:calc(100% - 30px);
-        }
-    }
-</style>
-<style lang="scss">
-  .patient-detail .scrollbar .el-scrollbar__wrap {
-      overflow-x: hidden;
+.patient-detail {
+  height: 100%;
+  flex: 1;
+  // background:#f8f9fa;
+  .title {
+    color: #15428b;
+    font-size: 14px;
+    line-height: 30px;
+    // line-height: 30px;
+    padding-left: 10px;
   }
+  .content {
+    height: 100%;
+  }
+}
 </style>

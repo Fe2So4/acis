@@ -1,192 +1,272 @@
 <template>
   <div class="physicalAlarm">
-    <el-breadcrumb
-      separator="/"
-      class="title"
+    <vxe-table
+      border="inner"
+      ref="table"
+      resizable
+      highlight-hover-row
+      :data="tableData"
+      :edit-config="{trigger: 'click', mode: 'cell'}"
+      height="600px"
+      class="scroll"
+      size="mini"
     >
-      <el-breadcrumb-item>基础配置</el-breadcrumb-item>
-      <el-breadcrumb-item>体征报警选项</el-breadcrumb-item>
-    </el-breadcrumb>
-    <div class="mainContent">
-      <div class="leftPart">
-        <el-table
-          size="mini"
-          border
-          :data="tableData"
-          class="table"
-          @cell-dblclick="onCellDblClick"
-          :cell-style="cellStyle"
-          highlight-current-row
-          @current-change="onCurrentChange"
+      <vxe-table-column
+        type="checkbox"
+        width="80"
+      />
+      <vxe-table-column
+        field="alarmCode"
+        title="体征代码"
+        width="100"
+      />
+      <vxe-table-column
+        field="alarmName"
+        title="体征名称"
+        width="100"
+      />
+      <vxe-table-column
+        field="lower"
+        title="预警阀值下限（含）"
+        :edit-render="{
+          name: '$input',
+          events:{change: onInputChange}
+        }"
+      />
+      <vxe-table-column
+        field="upper"
+        title="预警阀值上限（含）"
+        :edit-render="{
+          name: '$input',
+          events:{change: onInputChange}
+        }"
+      />
+    </vxe-table>
+    <div class="buttons">
+      <el-select
+        placeholder="新增"
+        size="mini"
+        @change="onSelectChange"
+        :value="sign"
+        style="width: 74px;margin-right:10px"
+      >
+        <el-option
+          v-for="item in signList"
+          :key="item.itemCode"
+          :label="item.itemName"
+          :value="item"
         >
-          <el-table-column
-            prop="code"
-            label="体征代码"
-          />
-          <el-table-column
-            prop="name"
-            label="体征名称"
-          />
-          <el-table-column
-            prop="lowerLimit"
-            label="预警阀值下限（含）"
-          >
-            <template slot-scope="scope">
-              <input
-                class="cellInput"
-                type="text"
-                v-if="scope.row === activeRow && scope.column.id === activeColumnId"
-                v-model="scope.row.lowerLimit"
-                @blur="onCellBlur"
-              >
-              <span v-else>{{ scope.row.lowerLimit }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="upperLimit"
-            label="预警阀值上限（含）"
-          >
-            <template slot-scope="scope">
-              <input
-                class="cellInput"
-                type="text"
-                v-if="scope.row === activeRow && scope.column.id === activeColumnId"
-                v-model="scope.row.upperLimit"
-                @blur="onCellBlur"
-              >
-              <span v-else>{{ scope.row.upperLimit }}</span>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-      <div class="rightPart">
-        <el-form
-          ref="form"
-          label-width="180px"
-          size="mini"
-          label-position="top"
-        >
-          <el-form-item label="新增">
-            <el-select
-              v-model="physicalItem"
-              placeholder="请选择"
-            >
-              <el-option
-                v-for="item in physicalItemOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-                <span style="float: left">{{ item.label }}</span>
-                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <div style="text-align:center;margin-bottom:18px">
-            <el-button
-              type="primary"
-              size="small"
-            >
-              确认新增
-            </el-button>
-          </div>
-          <div style="text-align:center">
-            <el-button
-              type="danger"
-              size="small"
-            >
-              删除选中
-            </el-button>
-          </div>
-        </el-form>
-      </div>
+          <span style="float: left">{{ item.itemName }}</span>
+          <span style="float: right; color: #8492a6; font-size: 13px">{{ item.itemCode }}</span>
+        </el-option>
+      </el-select>
+      <el-button
+        size="mini"
+        @click="onDelete"
+      >
+        删除
+      </el-button>
+      <el-button
+        type="primary"
+        size="mini"
+        @click="onSave"
+      >
+        保存
+      </el-button>
     </div>
   </div>
 </template>
 <script>
+import {
+  getAlarmConfig,
+  getSignList,
+  addAlarmConfig,
+  updateAlarmConfig,
+  deleteAlarmConfig
+} from '@/api/generalConfig'
+import request from '@/utils/requestForMock'
 export default {
   name: 'PhysicalAlarm',
   data () {
     return {
-      tableData: [
-        {
-          code: 100,
-          name: '体温',
-          lowerLimit: '35.00',
-          upperLimit: '38.00'
-        }
-      ],
-      activeRow: null,
-      activeColumnId: null,
-      cellStyle: {
-        position: 'relative'
-      },
-      physicalItemOptions: [
-        {
-          label: '体温',
-          value: 1200
-        }
-      ],
-      physicalItem: null,
-      currentRow: null
+      tableData: [],
+      signList: [],
+      sign: '',
+      modifiedMap: {},
+      addedMap: {},
+      deletedMap: {}
     }
   },
+  created () {
+    this.getAlarmConfig()
+    this.getSignList()
+  },
   methods: {
-    onCellDblClick (row, column, cell, event) {
-      this.activeRow = row
-      this.activeColumnId = column.id
-      setTimeout(() => {
-        const input = event.target.querySelector('input')
-        input && input.select()
+    onInputChange ({ row }) {
+      // 判断当前修改的是否为新增项
+      if (Object.hasOwnProperty.call(this.addedMap, row.alarmCode)) {
+        this.addedMap[row.alarmCode] = row
+      } else {
+        this.modifiedMap[row.alarmCode] = row
+      }
+    },
+    onSelectChange ({ itemCode, itemName }) {
+      const exist = this.tableData.some((item) => item.alarmCode === itemCode)
+      if (!exist) {
+        const item = {
+          alarmCode: itemCode,
+          alarmName: itemName,
+          upper: '',
+          lower: ''
+        }
+        this.tableData.push(item)
+        this.addedMap[item.alarmCode] = item
+      }
+    },
+    onDelete () {
+      const selectedArr = this.$refs.table.getCheckboxRecords()
+      if (selectedArr.length) {
+        selectedArr.forEach((row) => {
+          // 删除修改缓存
+          if (Object.hasOwnProperty.call(this.modifiedMap, row.alarmCode)) {
+            delete this.modifiedMap[row.alarmCode]
+          }
+          // 判断是否为新增
+          if (Object.hasOwnProperty.call(this.addedMap, row.alarmCode)) {
+            // 删除新增缓存
+            delete this.addedMap[row.alarmCode]
+          } else {
+            // 如果不是新增的，需要存入待删除缓存
+            this.deletedMap[row.alarmCode] = row
+          }
+          const index = this.tableData.findIndex(
+            (item) => item.alarmCode === row.alarmCode
+          )
+          this.tableData.splice(index, 1)
+        })
+      }
+    },
+    onSave () {
+      const requestArr = []
+      const modifiedList = Object.values(this.modifiedMap).map(
+        ({ alarmCode, alarmName, upper, lower }) => {
+          return {
+            alarmCode,
+            alarmName,
+            upper,
+            lower
+          }
+        }
+      )
+      if (modifiedList.length) {
+        requestArr.push(this.updateAlarmConfig(modifiedList))
+      }
+      const addedList = Object.values(this.addedMap).map(
+        ({ alarmCode, alarmName, upper, lower }) => {
+          return {
+            alarmCode,
+            alarmName,
+            upper,
+            lower
+          }
+        }
+      )
+      if (addedList.length) {
+        requestArr.push(this.addAlarmConfig(addedList))
+      }
+      const deletedList = Object.values(this.deletedMap).map(
+        ({ alarmCode, alarmName, upper, lower }) => {
+          return alarmCode
+        }
+      )
+      if (deletedList.length) {
+        requestArr.push(this.deleteAlarmConfig(deletedList))
+      }
+      if (!requestArr.length) {
+        this.$message({
+          type: 'info',
+          message: '无待保存项'
+        })
+        return
+      }
+      return Promise.all(requestArr)
+        .then((responses) => {
+          const success = responses.every(
+            (res) => res.data && res.data.success
+          )
+          if (success) {
+            this.$message({
+              type: 'success',
+              message: '保存成功'
+            })
+            // 重置缓存
+            this.modifiedMap = {}
+            this.addedMap = {}
+            this.deletedMap = {}
+          } else {
+            return Promise.reject(new Error())
+          }
+        })
+        .catch((e) => {
+          this.$message({
+            type: 'error',
+            message: '保存失败'
+          })
+        })
+    },
+    getAlarmConfig () {
+      return request({
+        method: 'get',
+        url: getAlarmConfig
+      })
+        .then((res) => {
+          if (res.data && res.data.success) {
+            this.tableData = res.data.data
+          } else {
+            return Promise.reject(new Error())
+          }
+        })
+        .catch((e) => {})
+    },
+    getSignList () {
+      return request({
+        method: 'get',
+        url: getSignList
+      }).then((res) => {
+        if (res.data && res.data.success) {
+          this.signList = res.data.data
+        }
       })
     },
-    onCellBlur () {
-      this.activeRow = null
-      this.activeColumnId = null
+    addAlarmConfig (list) {
+      return request({
+        method: 'post',
+        url: addAlarmConfig,
+        data: list
+      })
     },
-    onCurrentChange (currentRow) {
-      this.currentRow = currentRow
+    updateAlarmConfig (list) {
+      return request({
+        method: 'put',
+        url: updateAlarmConfig,
+        data: list
+      })
+    },
+    deleteAlarmConfig (list) {
+      return request({
+        method: 'delete',
+        url: deleteAlarmConfig,
+        data: list
+      })
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .physicalAlarm {
-  padding: 10px;
-  .title {
-    height: 40px;
-    line-height: 30px;
-    border-bottom: solid 1px #e6e6e6;
-    padding-left: 10px;
-  }
-  .mainContent {
-    padding: 20px 10px 10px;
-    display: flex;
-    .leftPart {
-      flex: 1 1 200px;
-
-      .table {
-        width: 100%;
-        min-height: 400px;
-
-        .cellInput {
-          position: absolute;
-          left: 0;
-          top: 0;
-          width: 100%;
-          height: 100%;
-          font-size: 12px;
-          line-height: 100%;
-          text-indent: 10px;
-          border: none;
-          outline: none;
-        }
-      }
-    }
-    .rightPart {
-      padding-left: 20px;
-      flex: 0 0 210px;
-    }
+  .buttons {
+    margin-top: 20px;
+    text-align: right;
   }
 }
 </style>

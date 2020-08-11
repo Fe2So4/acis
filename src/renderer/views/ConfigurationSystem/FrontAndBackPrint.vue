@@ -151,7 +151,7 @@ export default {
   .title {
     height: 40px;
     line-height: 30px;
-    border-bottom: solid 1px #e6e6e6;
+    border-bottom: solid 1px #0094ff;
     padding-left: 10px;
   }
   .mainContent {

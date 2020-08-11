@@ -287,7 +287,7 @@ export default {
   },
   methods: {
     onClick () {
-      this.$electron.ipcRenderer.send('open-new-window', 'IntraoperativeRegisterSignDisplaySetting', '术中登记体征项显示配置')
+      // this.$electron.ipcRenderer.send('open-new-window', 'IntraoperativeRegisterSignDisplaySetting', '术中登记体征项显示配置')
     }
   }
 }
@@ -298,7 +298,7 @@ export default {
   .title {
     height: 40px;
     line-height: 30px;
-    border-bottom: solid 1px #e6e6e6;
+    border-bottom: solid 1px #0094ff;
     padding-left: 10px;
   }
 
