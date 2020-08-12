@@ -52,9 +52,9 @@ export const updateDocNurseConfig = `${config.default.api.baseURL}/acis/operatio
 export const getSwitchList = `${config.default.api.baseURL}/acis/operation/getOpeInfoInArrange`
 
 // 查询详情页护士列表
-export const getDetailDocList = `${config.default.api.baseURL}/acis/operation/getNurseList1`
+export const getDetailNurseList = `${config.default.api.baseURL}/acis/operation/getNurseList1`
 // 查询详情页医师列表
-export const getDetailNurseList = `${config.default.api.baseURL}/acis/operation/getAnesDocList1`
+export const getDetailDocList = `${config.default.api.baseURL}/acis/operation/getAnesDocList1`
 
 // 更改单条手术申请
 export const updateSimpleApply = `${config.default.api.baseURL}/acis/operation/updateOpeArrangeInfo`

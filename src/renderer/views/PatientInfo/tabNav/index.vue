@@ -115,6 +115,7 @@ export default {
       cursor: pointer;
       padding: 5px 15px;
       font-size: 14px;
+      margin-right:30px;
 
       // float left
       &>div {

@@ -3,18 +3,18 @@
     .title {{titleDate}}手术排台
     el-form(:inline="true" size="mini" :model="form")
       el-form-item
-        el-radio-group(v-model="form.radio")
+        el-radio-group(v-model="form.radio" @change="getData")
           el-radio(:label="1") 全部
           el-radio(:label="2") 本人的
-      el-form-item(label="其他人")
-        el-select(v-model="form.select")
-          el-option(v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+          el-radio(:label="3") 其他人
+        el-select(v-model="form.select" :disabled="form.radio !== 3" style="margin-left:12px;" @change="getData")
+          el-option(v-for="item in docList"
+            :key="item.userId"
+            :label="item.userName"
+            :value="item.userId"
             :disabled="item.disabled")
       el-form-item(label="时间")
-        el-date-picker(type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="form.date")
+        el-date-picker(type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="form.date" @change="getData")
     .content
       vxe-table(
         border
@@ -30,61 +30,83 @@
         :checkbox-config="{checkStrictly: true}"
         :edit-config="{trigger: 'click', mode: 'cell', showStatus: true}"
       )
-        vxe-table-column(field="ptId" title="排序")
-        vxe-table-column(field="name" title="术间")
-        vxe-table-column(field="bedNo" title="台次")
-        vxe-table-column(field="sex" title="麻醉医生")
-        vxe-table-column(field="sex" title="麻醉医生2")
-        vxe-table-column(field="sex" title="科室")
-        vxe-table-column(field="sex" title="床号")
-        vxe-table-column(field="sex" title="患者姓名")
-        vxe-table-column(field="sex" title="性别")
-        vxe-table-column(field="sex" title="年龄")
-        vxe-table-column(field="sex" title="患者ID")
-        vxe-table-column(field="sex" title="住院号")
-        vxe-table-column(field="sex" title="诊断")
-        vxe-table-column(field="sex" title="手术名称")
-        vxe-table-column(field="sex" title="备注")
-        vxe-table-column(field="sex" title="麻醉方式")
-        vxe-table-column(field="sex" title="洗手护士")
-        vxe-table-column(field="sex" title="巡回护士")
-        vxe-table-column(field="sex" title="手术医师")
-        vxe-table-column(field="sex" title="手术助手")
+        vxe-table-column(type="seq" width="60" title="排序")
+        vxe-table-column(field="opeRoom" title="术间")
+        vxe-table-column(field="sequence" title="台次")
+        vxe-table-column(field="anesDoc" title="麻醉医生")
+        vxe-table-column(field="deptName" title="科室")
+        vxe-table-column(field="bedId" title="床号")
+        vxe-table-column(field="patientName" title="患者姓名")
+        vxe-table-column(field="gender" title="性别")
+        vxe-table-column(field="age" title="年龄")
+        vxe-table-column(field="patientId" title="患者ID")
+        vxe-table-column(field="visitId" title="住院号")
+        vxe-table-column(field="diagnose" title="诊断")
+        vxe-table-column(field="operationName" title="手术名称")
+        vxe-table-column(field="memo" title="备注")
+        vxe-table-column(field="anesMethod" title="麻醉方式")
+        vxe-table-column(field="opeNurse" title="洗手护士")
+        vxe-table-column(field="supplyNurse" title="巡回护士")
+        vxe-table-column(field="surgeon" title="手术医师")
+        vxe-table-column(field="assist" title="手术助手")
 </template>
 <script>
 import moment from 'moment'
+import { opeSchedule } from '@/api/patientList'
+import { getDetailDocList } from '@/api/schedule'
+import request from '@/utils/requestForMock'
+import { getCurrentAccount } from '@/utils/storage'
 export default {
   name: 'OperationArrangement',
   data () {
     return {
       tableData: [],
       form: {
-        radio: '1',
+        radio: 1,
         select: '',
-        date: new Date()
+        date: moment(new Date()).format('YYYY-MM-DD')
       },
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶',
-        disabled: true
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }]
+      options: [],
+      docList: []
     }
   },
   computed: {
     titleDate () {
-      return moment(this.form.date).format('yyyy-MM-DD')
+      return moment(this.form.date).format('YYYY-MM-DD')
+    }
+  },
+  mounted () {
+    this.getDocList()
+    this.getData()
+  },
+  methods: {
+    getData () {
+      let surgeon = ''
+      if (this.form.radio === 1) {
+        surgeon = ''
+      } else if (this.form.radio === 2) {
+        surgeon = getCurrentAccount()
+      } else {
+        surgeon = this.form.select
+      }
+      request({
+        url: opeSchedule,
+        params: {
+          date: this.form.date,
+          surgeon: surgeon
+        }
+      }).then(res => {
+        const data = res.data.data
+        this.tableData = data
+      })
+    },
+    getDocList () {
+      request({
+        url: getDetailDocList
+      }).then(res => {
+        const data = res.data.data
+        this.docList = data
+      })
     }
   }
 }
@@ -99,6 +121,7 @@ export default {
       font-size 18px
       line-height 28px
       font-weight bold
+      margin-bottom 16px
     .content
-      height calc(100% - 74px)
+      height calc(100% - 90px)
 </style>

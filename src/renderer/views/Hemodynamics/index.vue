@@ -159,7 +159,10 @@
       >
         计算结果（R）
       </el-button>
-      <el-button size="mini">
+      <el-button
+        size="mini"
+        @click="handleClose"
+      >
         关闭（C）
       </el-button>
     </div>
@@ -236,6 +239,11 @@ export default {
         }
       ],
       list: [{ name: 'RCW', value: '' }, { name: 'RCWI', value: '' }, { name: 'RVSW', value: '' }, { name: 'RVSWI', value: '' }]
+    }
+  },
+  methods: {
+    handleClose () {
+      this.$eventHub.$emit('close-dialog')
     }
   },
   mounted () {

@@ -2,40 +2,110 @@
   .pass
     h2 密码修改
     .form-box
-      el-form(ref="form" :model="form" label-width="100px" :label-position="position" size="mini")
+      el-form(ref="form" :model="form" label-width="100px" :label-position="position" size="mini" :rules="rules")
         el-form-item(label="用户名称")
-          el-input(v-model="userinfo.userName" disabled)
+          el-input(v-model="form.userName" disabled)
         el-form-item(label="登录名称")
-          el-input(v-model="userinfo.loginName" disabled)
+          el-input(v-model="form.loginName" disabled)
         el-form-item(label="当前密码")
-          el-input(v-model="form.currentPWD" type="password")
-        el-form-item(label="新密码")
-          el-input(v-model="form.newPWD" type="password")
-        el-form-item(label="确认新密码")
-          el-input(v-model="form.confirmPWD" type="pasword")
+          el-input(v-model="form.currentPWD" type="password" )
+        el-form-item(label="新密码" prop="newPWD")
+          el-input(v-model="form.newPWD" type="password" )
+        el-form-item(label="确认新密码" prop="confirmPWD")
+          el-input(v-model="form.confirmPWD" type="pasword" )
         el-form-item
-          el-button(type="primary" @click="onSubmit") 确定
-          el-button 取消
+          el-button(type="primary" @click="onSubmit('form')") 确定
+          el-button(@click="handleClose") 取消
 </template>
 <script>
+import { changePass, getUserInfo } from '@/api/login'
+import request from '@/utils/requestForMock'
+import { getCurrentAccount } from '@/utils/storage'
 export default {
   data () {
+    var validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'))
+      } else {
+        if (this.form.newPWD !== '') {
+          this.$refs.form.validateField('confirmPWD')
+        }
+        callback()
+      }
+    }
+    var validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
+      } else if (value !== this.form.newPWD) {
+        callback(new Error('两次输入密码不一致!'))
+      } else {
+        callback()
+      }
+    }
+    var user = getCurrentAccount()
     return {
       position: 'left',
       form: {
         currentPWD: '',
         newPWD: '',
-        confirmPWD: ''
-      },
-      userinfo: {
+        confirmPWD: '',
         userName: '',
-        loginName: ''
+        loginName: user
+      },
+      rules: {
+        newPWD: [
+          { validator: validatePass, trigger: 'blur' }
+        ],
+        confirmPWD: [
+          { validator: validatePass2, trigger: 'blur' }
+        ]
       }
     }
   },
+  created () {
+    this.getUserInfo()
+  },
   methods: {
-    onSubmit () {
-      console.log(123)
+    handleClose () {
+      this.$eventHub.$emit('close-dialog')
+    },
+    getUserInfo () {
+      request({
+        url: getUserInfo
+      }).then(res => {
+        this.form.userName = res.data.data.userName
+      })
+    },
+    onSubmit (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          request({
+            url: changePass,
+            method: 'POST',
+            data: {
+              loginName: this.form.loginName,
+              newPwd: this.form.newPWD,
+              oldPwd: this.form.currentPWD
+            }
+          }).then(res => {
+            if (res.data.code === 200) {
+              this.$message({
+                type: 'success',
+                message: '修改成功'
+              })
+              this.$router.push('/login')
+            } else {
+              this.$message({
+                type: 'error',
+                message: res.data.msg
+              })
+            }
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }

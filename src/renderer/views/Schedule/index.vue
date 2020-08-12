@@ -29,7 +29,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :sapn="24">
+          <el-col :span="24">
             <el-input
               size="mini"
               placeholder="请输入内容"
@@ -338,12 +338,9 @@ export default {
       switchList: [], // 交换列表信息
       detail: {},
       select: '1',
-      input3: '',
       showSwitch: false,
-      labelPosition: 'left',
       defaultCollapse: 'A', // collapse默认展开项
       doctorVisible: false, // 分配医生弹窗
-      transferIndex1: null,
       contextMenuData7: {
         menuName: 'demo7',
         axis: {
@@ -414,24 +411,16 @@ export default {
           }
         ]
       },
-      operationDocList: [],
       recordsList: [], // 分配操作记录列表
       currentId: null, // 当前手术间
-      // detail: {},
       roomList: [], // 房态图列表数据
-      activeIndex: 1,
-      roomIndex: 0,
-      activeName: 'first',
       form: {
         name: '',
         region: '',
         date: ''
       },
       date: '',
-      value1: '',
-      floor: '',
       type: '',
-      showTable: true,
       h: 0,
       previewVisible: false, // 控制预览弹窗显示隐藏
       currentApplyDoc: '', // 当前待分配医生的手术申请,
@@ -445,16 +434,6 @@ export default {
       tableData: [],
       searchContent: '', // 待分配区搜索内容,
       detailForm: {},
-      selectAnaesMethod: '',
-      selectMainDoc: '',
-      selectSubDoc1: '',
-      selectSubDoc2: '',
-      selectSubDoc3: '',
-      selectWashNurse1: '',
-      selectWashNurse2: '',
-      selectHangNurse1: '',
-      selectHangNurse2: '',
-      remarks: '', // 备注
       currentDocOrNur: {}, // 单击选中当前医护
       contextMenuData3: {
         menuName: 'demo3',
@@ -510,16 +489,12 @@ export default {
       },
       selectAllocated: {},
       configTitle: '医生配置',
-      roomNoList: [],
       userId: '',
-      arrangeRoom: '',
       changeType: '1',
-      // changeTitle: '更换手术间',
       currentPage: 1,
       maxCount: null, // 最大
       deptList: [],
       detailTime: '',
-      unsubmitList: [],
       list: [],
       patientBasBasicInfo: {} // 患者基本信息--new
     }
@@ -716,53 +691,21 @@ export default {
         y
       }
     },
-    // // 实现补零操作
-    // addzero (time) {
-    //   if (time >= 0 && time <= 9) {
-    //     time = '0' + time
-    //   }
-    //   return time
-    // },
-    // getCurrentTime () {
-    //   const d = new Date()
-    //   const year = d.getFullYear()
-    //   const month = d.getMonth() + 1
-    //   const hour = d.getHours()
-    //   const day = d.getDate()
-    //   const minute = d.getMinutes()
-    //   const second = d.getSeconds()
-    //   const s =
-    //     year +
-    //     '/' +
-    //     month +
-    //     '/' +
-    //     this.addzero(day) +
-    //     ' ' +
-    //     this.addzero(hour) +
-    //     ':' +
-    //     this.addzero(minute) +
-    //     ':' +
-    //     this.addzero(second)
-    //   return s
-    // },
+
     // 双击分配护士，麻醉医生等信息 --new
     handleDistributeDoctor (item, i) {
       switch (this.defaultCollapse) {
         case 'B':
           this.arrangeOpeMainDoc(item.userId, item.result)
-          // this.getDoctorList();
           break
         case 'C':
           this.arrangeOpeSubDoc(item.userId, item.result)
-          // this.getDoctorList();
           break
         case 'D':
           this.arrangeWashNurse(item.userId, item.result)
-          // this.getNurseList();
           break
         case 'E':
           this.arrangeHangNurse(item.userId, item.result)
-        // this.getNurseList();
       }
     },
     // 分配主麻医生--new
@@ -968,15 +911,12 @@ export default {
       } else {
         this.$message({ type: 'warning', message: '当前手术间无待提交申请' })
       }
-      // obj.opeScheduleTime = this.timeDate
-      // obj.opeRoom = this.currentRoom.roomNo
     },
     // 开启医生配置弹框--new
     handleDocConfig (param) {
       this.configVisible = true
       this.configForm.userId = param.userId
       this.configForm.name = param.result
-      // this.configForm.no = param.orderNumber
       if (param.defaultOperoomNo === '') {
         this.configForm.room = []
       } else {

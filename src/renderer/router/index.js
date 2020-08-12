@@ -7,6 +7,10 @@ if (process.env.BUILD_TARGET === 'schedule') {
   router = new Router({
     routes: [
       {
+        path: '/',
+        redirect: '/schedule-home'
+      },
+      {
         path: '/login',
         name: 'Login',
         component: () => import('@/views/Login/index')
