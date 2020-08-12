@@ -205,7 +205,7 @@
     <div class="patient-card">
       <el-scrollbar
         style="height:100%;"
-        class="scrollbar"
+        :wrap-style="wrapStyle"
       >
         <ul
           v-infinite-scroll="loadMore"
@@ -338,12 +338,16 @@ import {
 export default {
   name: 'PatientList',
   data () {
+    const wrapStyle = Object.freeze([{
+      'overflow-x': 'hidden'
+    }])
     return {
+      wrapStyle,
       loading: false,
       searchForm: {
         id: '',
         name: '',
-        date: moment(new Date()).format('yyyy-MM-DD'),
+        date: moment().format('yyyy-MM-DD'),
         endDate: '',
         anaesDoc: '',
         anaesMethod: '',
@@ -516,8 +520,10 @@ export default {
       this.setOperationId(item.operationId)
       this.setProcedureState(item.state)
       this.setRoomNo(item.roomNo)
-      // eslint-disable-next-line no-new
-      Socket.create(item.operationId)
+      const noNeedSocketState = [10, 11, 14, 15, 16, 17]
+      if (!noNeedSocketState.includes(+item.state)) {
+        Socket.create(item.operationId)
+      }
       // if (item.state === 6) {
       //   this.$eventHub.$emit('show-dialog', {
       //     perName: '设备采集', componentName: 'DeviceGather', necessary: true
@@ -806,12 +812,7 @@ export default {
 .el-picker-panel {
   background: #252c40 !important;
 }
-.scrollbar .el-scrollbar__wrap {
-  overflow-x: hidden;
-}
-.scrollbar .el-scrollbar__wrap .el-scrollbar__view {
-  /* height:100%; */
-}
+
 .rowScrollbar .el-scrollbar__wrap .el-scrollbar__view {
   white-space: nowrap;
 }

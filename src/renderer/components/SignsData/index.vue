@@ -65,6 +65,7 @@ export default {
     getSocket () {
       const loginUserNum = this.operationId
       this.socket = Socket.getInstance()
+      if (!this.socket) return
       // 体征数据
       const that = this
       this.socket.on('push_monitor_event_realtime', res => {

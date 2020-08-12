@@ -155,6 +155,17 @@ export default {
           if (+param.conCode === 12) {
             this.showResuscitationBed()
           }
+          // 建立socket连接
+          const noNeedSocketState = [10, 11, 14, 15, 16, 17]
+          if (Socket.instance) {
+            if (noNeedSocketState.includes(+res.data.data)) {
+              Socket.close()
+            }
+          } else {
+            if (!noNeedSocketState.includes(+res.data.data)) {
+              Socket.create(this.operationId)
+            }
+          }
         }
       })
     },
