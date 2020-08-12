@@ -14,11 +14,11 @@
           class="menu"
           background-color="#181c27"
           text-color="#9ba3d5"
-          active-text-color="#fff"
+          active-text-color="#ffffff"
         >
           <el-submenu index="basic">
             <template slot="title">
-              <i class="el-icon-location" />
+              <i class="el-icon-setting" />
               <span>基础配置</span>
             </template>
             <el-menu-item
@@ -191,27 +191,33 @@ export default {
 <style lang="scss" scoped>
 .configurationSystem {
   width: 70vw;
-  height: 70vh;
+  height: 75vh;
+  padding-right: 20px;
+  padding-bottom: 20px;
   display: flex;
   flex-direction: row;
   .aside {
     flex: 220px 0 0;
-    border-right: 1px solid #005999;
     .menu {
       border-right: none;
     }
   }
   .container {
+    background: #1e222e;
+    border-radius: 10px;
     flex: auto;
     overflow: auto;
-    padding-left: 10px;
+    padding: 0 20px;
     .title {
-      height: 40px;
-      line-height: 30px;
-      border-bottom: solid 1px #005999;
+      height: 54px;
+      line-height: 54px;
+      color: #9ba3d5;
+    }
+    .title ::v-deep .el-breadcrumb__separator {
+      color: #9ba3d5;
     }
     .main {
-      height: calc(100% - 40px);
+      height: calc(100% - 54px);
     }
   }
 }

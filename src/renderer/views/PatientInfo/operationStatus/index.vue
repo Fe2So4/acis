@@ -97,16 +97,6 @@ export default {
       }
     }
   },
-  watch: {
-    // operationId: {
-    //   handler: function (val) {
-    //     if (val === '') {
-    //       this.$router.push('/home')
-    //     }
-    //   },
-    //   immediate: true
-    // }
-  },
   mounted () {
     this.getStatusList()
   },
@@ -139,11 +129,10 @@ export default {
     },
     handleChangeNav (nav) {
       const scrollbarEl = this.$refs.scrollbar.wrap
-      // const scrollContent = this.$refs.scrollContent
       if (nav === 1) {
-        scrollbarEl.scrollLeft -= 130
+        this.scrollEffect(scrollbarEl, -168)
       } else {
-        scrollbarEl.scrollLeft += 130
+        this.scrollEffect(scrollbarEl, 168)
       }
     },
     // 修改状态
@@ -158,6 +147,7 @@ export default {
         data: formData
       }).then((res) => {
         if (res.data && res.data.success) {
+          this.scrollEffect(this.$refs.scrollbar.wrap, 168)
           this.setProcedureState(res.data.data)
           this.getStatusList()
           this.$eventHub.$emit('refresh-ptlist')
@@ -174,6 +164,29 @@ export default {
     // 展示复苏床位
     showResuscitationBed () {
       this.dialogResuscitationBedVisible = true
+    },
+    // 移动效果
+    scrollEffect (el, distance) {
+      const hiddenWidth = el.scrollWidth - el.clientWidth
+      let timer = null
+      const step = Math.round(distance / (300 / 16))
+      let current = 0
+      const scrollTimer = () => {
+        timer = setTimeout(() => {
+          el.scrollLeft += step
+          current += step
+          if (
+            Math.abs(current) < Math.abs(distance) &&
+            el.scrollLeft > 0 &&
+            el.scrollLeft < hiddenWidth
+          ) {
+            scrollTimer()
+          } else {
+            if (timer) clearTimeout(timer)
+          }
+        }, 16)
+      }
+      scrollTimer()
     }
   }
 }

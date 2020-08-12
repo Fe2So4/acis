@@ -15,7 +15,7 @@ const PORT = {
   SCOKET: '9099'
 }
 const productIpType = 'LOCAL' // 'SERVER' / 'LOCAL'
-const developmentIpType = '' // 'SERVER' / ''
+const developmentIpType = 'SERVER' // 'SERVER' / ''
 
 const IP_BASE = IP[productIpType]
 const IP_LI = developmentIpType ? IP[developmentIpType] : IP.LI

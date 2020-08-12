@@ -28,7 +28,7 @@ const state = {
   // 15 转入病房
   // 16 转入ICU
   // 17 病案归档
-  procedureState: '3',
+  procedureState: '',
   ptCardInfo: {
     roomNo: '',
     ptName: '',
