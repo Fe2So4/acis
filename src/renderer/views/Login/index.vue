@@ -83,8 +83,7 @@
 <script>
 import { login } from '@/api/login'
 import request from '@/utils/requestForMock'
-// import { setUserToken, setCurrentAccount } from '../../utils/storage'
-import { setUserToken } from '../../utils/storage'
+import { setUserToken, setCurrentAccount } from '../../utils/storage'
 
 const { BrowserWindow } = require('electron').remote
 
@@ -107,8 +106,6 @@ export default {
     }
   },
   created () {
-    // win.setSize(1366, 768)
-    // win.setBounds({ width: 1366, height: 768 })
     const win = BrowserWindow.getFocusedWindow()
     if (win) {
       win.unmaximize()
@@ -119,13 +116,6 @@ export default {
     login () {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          // login({
-          //   loginName: this.form.username,
-          //   loginPwd: this.form.password
-          // }).then(res => {
-          //   setCurrentAccount(this.form.username)
-          //   // this.$router.push('/statistics/operation-quantity')
-          //   this.$router.push('/apply/index')
           request({
             method: 'post',
             url: login,
@@ -136,9 +126,10 @@ export default {
           }).then((res) => {
             if (res.data.code === '0') {
               setUserToken(res.data.data)
+              setCurrentAccount(this.form.username)
               this.$router.push('/home')
             } else {
-              this.$message({ type: 'error', message: '登录失败' })
+              this.$message({ type: 'error', message: res.data.message })
             }
           })
         } else {

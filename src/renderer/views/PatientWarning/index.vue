@@ -14,9 +14,9 @@
       vxe-table-column(field="itemName" title="已读")
       vxe-table-column(field="result" title="时间")
       vxe-table-column(field="unit" title="消息")
-      vxe-table-column(field="value" title="record_time")
-      vxe-table-column(field="value" title="alarm_item")
-      vxe-table-column(field="value" title="read_time")
+      vxe-table-column(field="value" title="记录时间")
+      vxe-table-column(field="value" title="报警类型")
+      vxe-table-column(field="value" title="读取时间")
     .option
       .message 您共有0条未读消息
       .buttons

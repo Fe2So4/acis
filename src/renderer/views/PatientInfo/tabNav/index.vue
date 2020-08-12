@@ -109,6 +109,7 @@ export default {
       cursor: pointer;
       padding: 5px;
       font-size: 14px;
+      margin-right:30px;
       // float left
       &>div {
         line-height: 30px;

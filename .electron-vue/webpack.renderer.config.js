@@ -19,12 +19,16 @@ const { VueLoaderPlugin } = require('vue-loader')
  * that provide pure *.vue files that need compiling
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/webpack-configurations.html#white-listing-externals
  */
+let entry = null
 let whiteListedModules = ['vue', 'element-ui']
+
+if (process.env.BUILD_TARGET === 'schedule') entry = path.join(__dirname,'../src/renderer/scheduleMain.js')
+else entry = path.join(__dirname, '../src/renderer/main.js')
 
 let rendererConfig = {
   devtool: '#cheap-module-eval-source-map',
   entry: {
-    renderer: path.join(__dirname, '../src/renderer/main.js')
+    renderer: entry
   },
   externals: [
     ...Object.keys(dependencies || {}).filter(d => !whiteListedModules.includes(d))

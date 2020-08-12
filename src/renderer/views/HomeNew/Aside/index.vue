@@ -58,10 +58,16 @@
       :component-name="componentName"
       v-if="showDialog"
     />
+    <lock-screen
+      v-if="lockVisible"
+      :lock-visible="lockVisible"
+      @handleLock="handleLock"
+    />
   </div>
 </template>
 <script>
 import Dialog from '@/components/DialogNav/index'
+import LockScreen from '../../LockScreen/index'
 import { getNavs } from '@/api/nav'
 import { mapActions, mapGetters } from 'vuex'
 import request from '@/utils/requestForMock'
@@ -104,6 +110,7 @@ export default {
         }
       ],
       subNavList: [
+        // necessary 字段代表是否需要先选中患者
         { name: '麻药', componentName: 'Event', necessary: true },
         { name: '用药', componentName: 'Event', necessary: true },
         { name: '事件', componentName: 'Event', necessary: true },
@@ -230,17 +237,24 @@ export default {
           name: '复苏登记',
           componentName: 'RecoveryRegistration',
           necessary: true
+        },
+        {
+          name: '锁定屏幕',
+          componentName: 'LockScreen',
+          necessary: false
         }
       ],
       overviewList: [],
       activeIndex: null,
       path: '',
-      navs: []
+      navs: [],
+      lockVisible: false
     }
   },
   components: {
     // Overview
-    Dialog
+    Dialog,
+    LockScreen
     // ChangePass
     // Hemodynamics
   },
@@ -261,6 +275,9 @@ export default {
     jumpLogin () {
       // this.$router.push('/login') ----login页测试
     },
+    handleLock () {
+      this.lockVisible = false
+    },
     handleDialogClose () {
       this.showDialog = false
       this.activeIndex = false
@@ -269,6 +286,10 @@ export default {
       done()
     },
     handleChangeButton (item, index) {
+      if (item.componentName === 'lockScreen') {
+        this.lockVisible = true
+        return
+      }
       if (this.operationId === '' && item.necessary) {
         this.$confirm('当前操作需先选择患者', '提示', {
           confirmButtonText: '确定',
@@ -396,6 +417,7 @@ export default {
     grid-template-columns: repeat(2, 50%);
     span {
       text-align: center;
+      margin-bottom:26px;
       line-height: 30px;
       color: #9ba3d5;
       font-size: 14px;
@@ -463,7 +485,7 @@ export default {
 .aside /deep/ .el-collapse-item__content {
   background: #121421;
   border: unset;
-  padding: 30px 0;
+  padding: 30px 0 4px 0;
 }
 .aside /deep/ .el-collapse-item__header.is-active {
   background: rgba(28, 31, 50, 1);

@@ -7,6 +7,7 @@
       i.el-icon-close(@click="handleClose")
     .dialog-body
       component(:is="componentName")
+      //- LockScreen
       //- OperationOverview
       //- Event
       //- <operation-handover/>
@@ -70,6 +71,7 @@ import OperationInfo from '@/views/OperationInfo/index'
 import OperationRegisteration from '@/views/OperationRegisteration/index'
 import RecoveryRegistration from '@/views/RecoveryRegistration/index'
 import AnalgesicScore from '@/views/AnalgesicScore/index'
+import LockScreen from '@/views/LockScreen/index'
 export default {
   name: 'DialogNav',
   data () {
@@ -122,7 +124,8 @@ export default {
     OperationInfo,
     OperationRegisteration,
     RecoveryRegistration,
-    AnalgesicScore
+    AnalgesicScore,
+    LockScreen
   },
   methods: {
     handleClose () {

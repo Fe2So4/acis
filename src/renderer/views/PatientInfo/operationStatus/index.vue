@@ -431,7 +431,7 @@ export default {
                   width: 10px;
                   height: 2px;
                   margin-right: 5px;
-                  background: #E3E7ED;
+                  background: #4262b2;
                   border-radius: 1px;
                 }
               }

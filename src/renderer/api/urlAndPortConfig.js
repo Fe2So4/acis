@@ -14,6 +14,7 @@ const PORT = {
   BASE: '8090',
   SCOKET: '9099'
 }
+// const productIpType = 'SERVER' // 'SERVER' / 'LOCAL'
 const productIpType = 'SERVER' // 'SERVER' / 'LOCAL'
 const devlopmentIpType = 'SERVER' // 'SERVER' / 'LOCAL' / ''
 

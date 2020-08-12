@@ -275,7 +275,7 @@
                       alt
                     >
                   </div>
-                  <div :style="{color:'red',fontSize:'14px',textAlign:'center'}">
+                  <div :style="{color:'#FF2C2C',fontSize:'14px',textAlign:'center'}">
                     急诊
                   </div>
                 </div>
@@ -287,7 +287,7 @@
                       alt
                     >
                   </div>
-                  <div :style="{color:'orange',fontSize:'14px',textAlign:'center'}">
+                  <div :style="{color:'#FE6D2E',fontSize:'14px',textAlign:'center'}">
                     隔离
                   </div>
                 </div>
@@ -299,7 +299,7 @@
                       alt
                     >
                   </div>
-                  <div :style="{color:'yellow',fontSize:'14px',textAlign:'center'}">
+                  <div :style="{color:'#FFCC03',fontSize:'14px',textAlign:'center'}">
                     放射
                   </div>
                 </div>
@@ -647,6 +647,9 @@ export default {
       top: 120px;
       left: 0;
       z-index: 1;
+    }
+    .el-checkbox{
+      margin-right: 10px;
     }
   }
   .el-radio-group {

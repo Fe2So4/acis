@@ -40,10 +40,11 @@ npm run lint
 #  -Schedule 手术排班
 #  -ScheduleReport 手术排班表
 #  -AnaesScore 麻醉评分
+#  -AnalgesicScore 镇痛评分
 #  -InspectionInformation 检验信息
 #  -MedicalOrderInformation 医嘱信息
 #  -InspectionResult 检查结果
-#  -Dictiona 字典
+#  -Dictionary 字典
 #  -TemplateDesigner 文书设计
 #  -TemplateDisplayer 文书展示
 #  -medicalDocument 医疗文书

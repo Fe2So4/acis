@@ -1,3 +1,11 @@
+// 实现补零操作
+export function addzero (time) {
+  if (time >= 0 && time <= 9) {
+    time = '0' + time
+  }
+  return time
+}
+
 // 时间类型
 export function formatTime (timestamp = 0) {
   if (timestamp === 0 || !timestamp) {

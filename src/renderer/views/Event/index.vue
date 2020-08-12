@@ -22,10 +22,6 @@
               v-for="item in fromList"
               :key="item.id"
             >
-              <!-- <el-button
-                size="mini"
-                @dblclick.native="handleAddAnesthetic"
-              />-->
               <div class="event-button">
                 <span
                   class="button"
