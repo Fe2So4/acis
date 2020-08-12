@@ -273,7 +273,8 @@ export default {
   methods: {
     ...mapActions('Anaes', ['setEventType']),
     jumpLogin () {
-      // this.$router.push('/login') ----login页测试
+      //  ----login页测试
+      this.$router.push('/login')
     },
     handleLock () {
       this.lockVisible = false

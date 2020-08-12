@@ -14,14 +14,13 @@ const PORT = {
   BASE: '8090',
   SCOKET: '9099'
 }
-// const productIpType = 'SERVER' // 'SERVER' / 'LOCAL'
-const productIpType = 'SERVER' // 'SERVER' / 'LOCAL'
-const devlopmentIpType = 'SERVER' // 'SERVER' / 'LOCAL' / ''
+const productIpType = 'LOCAL' // 'SERVER' / 'LOCAL'
+const developmentIpType = '' // 'SERVER' / ''
 
 const IP_BASE = IP[productIpType]
-const IP_LI = devlopmentIpType ? IP[devlopmentIpType] : IP.LI
-const IP_XIE = devlopmentIpType ? IP[devlopmentIpType] : IP.XIE
-const IP_ZHONG = devlopmentIpType ? IP[devlopmentIpType] : IP.ZHONG
+const IP_LI = developmentIpType ? IP[developmentIpType] : IP.LI
+const IP_XIE = developmentIpType ? IP[developmentIpType] : IP.XIE
+const IP_ZHONG = developmentIpType ? IP[developmentIpType] : IP.ZHONG
 
 // 用于打包
 const URL_PRODUCT = `http://${IP_BASE}:${PORT.BASE}/`

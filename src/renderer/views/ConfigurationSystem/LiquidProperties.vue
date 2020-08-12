@@ -1,109 +1,119 @@
 <template>
   <div class="liquidProperties">
-    <el-breadcrumb
-      separator="/"
-      class="title"
+    <vxe-table
+      border="inner"
+      ref="table"
+      resizable
+      highlight-hover-row
+      :data="tableData"
+      :edit-config="{trigger: 'click', mode: 'cell'}"
+      height="600px"
+      class="scroll"
+      size="mini"
     >
-      <el-breadcrumb-item>基础配置</el-breadcrumb-item>
-      <el-breadcrumb-item>液体属性选项</el-breadcrumb-item>
-    </el-breadcrumb>
-    <div class="mainContent">
-      <el-table
+      <vxe-table-column
+        field="liquidName"
+        title="名称"
+        :edit-render="{
+          name: '$input',
+          events:{change: onInputChange}
+        }"
+      />
+    </vxe-table>
+    <div class="buttons">
+      <el-button
+        type="primary"
         size="mini"
-        border
-        :data="tableData"
-        class="table"
-        @cell-dblclick="onCellDblClick"
-        :cell-style="cellStyle"
+        @click="onSave"
       >
-        <el-table-column
-          prop="propertyName"
-          label="属性名称"
-        >
-          <template slot-scope="scope">
-            <input
-              class="cellInput"
-              type="text"
-              v-if="scope.row === activeRow && scope.column.id === activeColumnId"
-              v-model="scope.row.propertyName"
-              @blur="onCellBlur"
-            >
-            <span v-else>{{ scope.row.propertyName }}</span>
-          </template>
-        </el-table-column>
-      </el-table>
+        保存
+      </el-button>
     </div>
   </div>
 </template>
 <script>
+import { getLiquidProperty, saveLiquidProperty } from '@/api/generalConfig'
+import request from '@/utils/requestForMock'
 export default {
   name: 'LiquidProperties',
   data () {
     return {
-      tableData: [
-        {
-          propertyName: '晶体'
-        },
-        {
-          propertyName: '胶体'
-        }
-      ],
-      activeRow: null,
-      activeColumnId: null,
-      cellStyle: {
-        position: 'relative',
-        height: '36px'
-      }
+      tableData: [],
+      modifiedMap: {}
     }
   },
-  mounted () {
-    // this.$electron.ipcRenderer.send('show-window')
+  created () {
+    this.getLiquidProperty()
   },
   methods: {
-    onCellDblClick (row, column, cell, event) {
-      this.activeRow = row
-      this.activeColumnId = column.id
-      setTimeout(() => {
-        const input = event.target.querySelector('input')
-        input && input.select()
-      })
+    onSave () {
+      const list = Object.values(this.modifiedMap).map(
+        ({ liquidCode, liquidName }) => {
+          return {
+            liquidCode,
+            liquidName
+          }
+        }
+      )
+      if (!list.length) {
+        this.$message({
+          type: 'info',
+          message: '未更改任何项目'
+        })
+        return
+      }
+      this.saveLiquidProperty(list)
     },
-    onCellBlur () {
-      this.activeRow = null
-      this.activeColumnId = null
+    onInputChange ({ row }) {
+      this.modifiedMap[row.inputCode] = row
+    },
+    getLiquidProperty () {
+      return request({
+        method: 'get',
+        url: getLiquidProperty
+      })
+        .then((res) => {
+          if (res.data && res.data.success) {
+            this.tableData = res.data.data
+          } else {
+            return Promise.reject(new Error())
+          }
+        })
+        .catch((e) => {})
+    },
+    saveLiquidProperty (list) {
+      return request({
+        method: 'put',
+        url: saveLiquidProperty,
+        data: list
+      })
+        .then((res) => {
+          if (res.data && res.data.success) {
+            this.$message({
+              type: 'success',
+              message: '保存成功'
+            })
+            // 重置缓存
+            this.modifiedMap = {}
+          } else {
+            return Promise.reject(new Error())
+          }
+        })
+        .catch((e) => {
+          this.$message({
+            type: 'error',
+            message: '保存失败'
+          })
+        })
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .liquidProperties {
-  padding: 10px;
-  .title {
-    height: 40px;
-    line-height: 30px;
-    border-bottom: solid 1px #e6e6e6;
-    padding-left: 10px;
-  }
-  .mainContent {
-    padding: 20px 10px 10px;
-
-    .table {
-      width: 100%;
-      min-height: 400px;
-
-      .cellInput {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        font-size: 12px;
-        line-height: 100%;
-        text-indent: 10px;
-        border: none;
-        outline: none;
-      }
-    }
+  .buttons {
+    margin-top: 20px;
+    text-align: right;
   }
 }
 </style>

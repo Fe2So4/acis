@@ -1,9 +1,13 @@
 <template lang="pug">
-  .tab-nav
-    el-scrollbar(class="rowScrollbar")
-      ul
-        li(v-for="item in navList" :key="item.index" @click="handleClick(item)")
-          div(:class="{'isActive': item.index === navIndex}") {{item.label}}
+.tab-nav
+  el-scrollbar.rowScrollbar
+    ul
+      li(
+        v-for="item in navList",
+        :key="item.index",
+        @click="handleClick(item)"
+      )
+        div(:class="{ isActive: item.index === navIndex }") {{ item.label }}
 </template>
 <script>
 import request from '@/utils/requestForMock'
@@ -66,13 +70,14 @@ export default {
       this.$router.push(item.path)
     },
     getDocumentsList () {
+      if (this.procedureState === '') return
       return request({
         method: 'get',
         url: `${getDocumentsList}/${this.procedureState}`
-      }).then(
-        res => {
+      })
+        .then((res) => {
           if (res.data && res.data.success) {
-            this.documentsList = res.data.data.isUse.map(item => {
+            this.documentsList = res.data.data.isUse.map((item) => {
               return {
                 label: item.templateName,
                 templateId: item.templateCode,
@@ -84,15 +89,15 @@ export default {
               }
             })
           }
-        }
-      )
+        })
+        .catch((e) => {})
     }
   }
 }
 </script>
 <style lang="stylus" scoped>
 .tab-nav {
-  width 100%
+  width: 100%;
   margin-top: 18px;
   box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
   border-radius: 5px;
@@ -103,23 +108,27 @@ export default {
   ul {
     // width 100%
     display: flex;
-    flex-wrap nowrap
+    flex-wrap: nowrap;
+
     li {
       line-height: 40px;
       cursor: pointer;
-      padding: 5px;
+      padding: 5px 15px;
       font-size: 14px;
       margin-right:30px;
+
       // float left
       &>div {
         line-height: 30px;
         height: 30px;
         white-space: nowrap;
+        padding: 0 5px;
 
         &.isActive {
-        color: #0094ff;
-        border-bottom: 2px solid #0094ff;
-      }
+          color: #0094ff;
+          border-bottom: 2px solid #0094ff;
+          font-weight: bold;
+        }
       }
     }
   }

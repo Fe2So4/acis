@@ -44,13 +44,19 @@
 import request from '@/utils/requestForMock'
 import { getExamInfo, syncExamInfo } from '@/api/systemIntegration'
 import { createNamespacedHelpers } from 'vuex'
+import moment from 'moment'
 const { mapState } = createNamespacedHelpers('Base')
 export default {
   name: 'InspectionResult',
   data () {
+    let _moment = moment()
+    const endTime = _moment.format('YYYY-MM-DD HH:mm:ss')
+    _moment.subtract(1, 'months')
+    const startTime = _moment.format('YYYY-MM-DD HH:mm:ss')
+    _moment = null
     return {
       title: '',
-      date: [],
+      date: [startTime, endTime],
       examList: []
     }
   },
@@ -70,6 +76,9 @@ export default {
       }
       return ''
     }
+  },
+  created () {
+    this.onSearch()
   },
   methods: {
     onSearch () {

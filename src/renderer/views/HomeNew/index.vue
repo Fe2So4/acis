@@ -4,7 +4,7 @@
       <el-aside width="220px">
         <Aside />
       </el-aside>
-      <el-container style="padding-left:8px;">
+      <el-container>
         <el-header height="32px">
           <Header />
         </el-header>

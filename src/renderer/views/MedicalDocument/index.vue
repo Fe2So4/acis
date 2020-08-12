@@ -28,10 +28,10 @@
       :total-page="totalPage"
       :page-index="pageIndex"
       :displayed-buttons="displayedButtons"
-      @changePage="onChangePage"
-      @changeRescueMode="onChangeRescueMode"
+      @change-page="onChangePage"
+      @change-rescue-mode="onChangeRescueMode"
       @print="onPrint"
-      @printAll="onPrintAll"
+      @print-all="onPrintAll"
       @refresh="onRefresh"
       @save="onSave"
       @configure="onConfigure"
@@ -260,6 +260,7 @@ export default {
       this.dialogEventTimeRangeVisible = true
     },
     async onChangePage (pageIndex) {
+      console.log(pageIndex)
       await this.getIntraoperativeData(pageIndex)
       this.$eventHub.$emit('document-redraw')
     },

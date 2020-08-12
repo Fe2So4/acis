@@ -51,7 +51,7 @@ export default {
 <style lang="scss" scoped>
 .patient-info {
   height: 100%;
-  padding-left:12px;
+  padding-left:20px;
   // display: flex;
   .left{
     float:left;

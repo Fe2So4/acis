@@ -72,6 +72,7 @@ import DialogChart from './DialogChart'
 import request from '@/utils/requestForMock'
 import { getTestInfo, syncTestInfo } from '@/api/systemIntegration'
 import { createNamespacedHelpers } from 'vuex'
+import moment from 'moment'
 const { mapState } = createNamespacedHelpers('Base')
 export default {
   name: 'InspectionInformation',
@@ -79,10 +80,15 @@ export default {
     DialogChart
   },
   data () {
+    let _moment = moment()
+    const endTime = _moment.format('YYYY-MM-DD HH:mm:ss')
+    _moment.subtract(1, 'months')
+    const startTime = _moment.format('YYYY-MM-DD HH:mm:ss')
+    _moment = null
     return {
       dialogVisible: false,
       title: '',
-      date: [],
+      date: [startTime, endTime],
       testList: [],
       testItemList: [],
       itemCode: ''
@@ -104,6 +110,9 @@ export default {
       }
       return ''
     }
+  },
+  created () {
+    this.onSearch()
   },
   methods: {
     handleClose () {
