@@ -8,14 +8,14 @@ const IP = {
   LOCAL: 'localhost',
   XIE: '192.168.1.196',
   LI: '192.168.1.177',
-  ZHONG: '192.168.1.157'
+  ZHONG: '192.168.1.108'
 }
 const PORT = {
   BASE: '8090',
   SCOKET: '9099'
 }
 const productIpType = 'LOCAL' // 'SERVER' / 'LOCAL'
-const developmentIpType = 'SERVER' // 'SERVER' / ''
+const developmentIpType = '' // 'SERVER' / ''
 
 const IP_BASE = IP[productIpType]
 const IP_LI = developmentIpType ? IP[developmentIpType] : IP.LI
