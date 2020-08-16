@@ -12,6 +12,7 @@
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
     "dev_local": "concurrently \"nodemon ./mock/server.js\" \"node .electron-vue/dev-runner.js\"",
     "dev:schedule": "cross-env BUILD_TARGET=schedule node .electron-vue/dev-runner.js",
+    "dev:statistics": "cross-env BUILD_TARGET=statistics node .electron-vue/dev-runner.js",
     "dev": "node .electron-vue/dev-runner.js",
     "dev:no-mock": "cross-env MOCK=none node .electron-vue/dev-runner.js",
     "lint": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter src",

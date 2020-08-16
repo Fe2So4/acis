@@ -40,6 +40,47 @@ if (process.env.BUILD_TARGET === 'schedule') {
       }
     ]
   })
+} else if (process.env.BUILD_TARGET === 'statistics') {
+  router = new Router({
+    routes: [
+      {
+        path: '/',
+        redirect: '/statistics-home'
+      },
+      {
+        path: '/login',
+        name: 'Login',
+        component: () => import('@/views/Login/index')
+      },
+      {
+        path: '/statistics-home',
+        name: 'HomeStatistics',
+        component: () => import('@/views/HomeStatistics/index'),
+        // redirect: '/statistics-home/report',
+        children: [
+          {
+            path: 'search-statistics',
+            name: 'SearchStatistics',
+            component: () => import('@/views/SearchStatistics/index')
+          },
+          {
+            path: 'quantity-statistics',
+            name: 'QuantityStatistics',
+            component: () => import('@/views/QuantityStatistics/index')
+          },
+          {
+            path: 'recover-statistics',
+            name: 'RecoverStatistics',
+            component: () => import('@/views/RecoverRoomPatientStatistics/index')
+          }
+        ]
+      },
+      {
+        path: '*',
+        redirect: '/'
+      }
+    ]
+  })
 } else {
   router = new Router({
     routes: [
@@ -100,7 +141,7 @@ if (process.env.BUILD_TARGET === 'schedule') {
 }
 // 解决重复点击导航路由报错
 const originalPush = Router.prototype.push
-Router.prototype.push = function push (location) {
+Router.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
 }
 

@@ -8,9 +8,9 @@
 <script>
 // import '@/mock/dataSource'
 export default {
-  name: 'Schedule',
+  name: 'Statistics',
   mounted () {
-    this.$router.push({ name: 'HomeSchedule' })
+    // this.$router.push({ name: "HomeSchedule" });
   }
 }
 </script>

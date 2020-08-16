@@ -22,7 +22,8 @@ const { VueLoaderPlugin } = require('vue-loader')
 let entry = null
 let whiteListedModules = ['vue', 'element-ui']
 
-if (process.env.BUILD_TARGET === 'schedule') entry = path.join(__dirname,'../src/renderer/scheduleMain.js')
+if (process.env.BUILD_TARGET === 'schedule') entry = path.join(__dirname, '../src/renderer/scheduleMain.js')
+else if (process.env.BUILD_TARGET === 'statistics') entry = path.join(__dirname, '../src/renderer/statisticsMain.js')
 else entry = path.join(__dirname, '../src/renderer/main.js')
 
 let rendererConfig = {
