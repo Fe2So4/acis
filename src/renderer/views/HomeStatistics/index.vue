@@ -10,7 +10,10 @@
         </el-header>
         <el-main>
           <!-- <router-view :key="key" /> -->
-          <transition name="fade" mode="out-in">
+          <transition
+            name="fade"
+            mode="out-in"
+          >
             <keep-alive include="PatientList">
               <router-view />
             </keep-alive>
@@ -21,12 +24,12 @@
   </div>
 </template>
 <script>
-import Header from "./Header/index";
-import Aside from "./Aside/index";
+import Header from './Header/index'
+import Aside from './Aside/index'
 export default {
-  name: "Home",
-  data() {
-    return {};
+  name: 'Home',
+  data () {
+    return {}
   },
   computed: {
     // key () {
@@ -36,16 +39,16 @@ export default {
   },
   components: {
     Header,
-    Aside,
+    Aside
   },
-  beforeRouteEnter(to, from, next) {
-    if (from.path === "/login") {
-      const { BrowserWindow } = require("electron").remote;
-      BrowserWindow.getFocusedWindow().maximize();
+  beforeRouteEnter (to, from, next) {
+    if (from.path === '/login') {
+      const { BrowserWindow } = require('electron').remote
+      BrowserWindow.getFocusedWindow().maximize()
     }
-    next();
-  },
-};
+    next()
+  }
+}
 </script>
 <style lang="scss" scoped>
 .home {

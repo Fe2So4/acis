@@ -3,28 +3,48 @@
     <div class="leftButtons">
       <div>
         每页显示
-        <el-input style="width:34px" :value="10" size="mini"></el-input>条数据
+        <el-input
+          style="width:34px"
+          :value="10"
+          size="mini"
+        />条数据
       </div>
     </div>
     <div class="buttons rightButtons">
       <div class="button">
-        <div class="text">共100条记录 1/8</div>
+        <div class="text">
+          共100条记录 1/8
+        </div>
       </div>
       <div class="button">
         <div class="iconfont icon-shouye" />
-        <div class="text">首页</div>
+        <div class="text">
+          首页
+        </div>
       </div>
-      <div class="button" @click="pageUp">
+      <div
+        class="button"
+        @click="pageUp"
+      >
         <div class="iconfont icon-shangyiye rotate" />
-        <div class="text">上一页</div>
+        <div class="text">
+          上一页
+        </div>
       </div>
-      <div class="button" @click="pageDown">
+      <div
+        class="button"
+        @click="pageDown"
+      >
         <div class="iconfont icon-xiayiye rotate" />
-        <div class="text">下一页</div>
+        <div class="text">
+          下一页
+        </div>
       </div>
       <div class="button">
         <div class="iconfont icon-last rotate" />
-        <div class="text">末页</div>
+        <div class="text">
+          末页
+        </div>
       </div>
     </div>
   </div>
@@ -32,17 +52,17 @@
 
 <script>
 export default {
-  name: "BottomButtons",
+  name: 'BottomButtons',
   props: {},
-  data() {
-    return {};
+  data () {
+    return {}
   },
   computed: {},
   methods: {
-    pageUp() {},
-    pageDown() {},
-  },
-};
+    pageUp () {},
+    pageDown () {}
+  }
+}
 </script>
 <style lang='scss' scoped>
 @import url("./iconfont/iconfont.css");

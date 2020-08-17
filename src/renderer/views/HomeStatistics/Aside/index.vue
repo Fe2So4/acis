@@ -4,11 +4,20 @@
       Dandelion 智慧手术中心
       <i />查询统计
     </div>
-    <div class="img" @click="jumpLogin">
-      <img src="../../../assets/tq.png" alt />
+    <div
+      class="img"
+      @click="jumpLogin"
+    >
+      <img
+        src="../../../assets/tq.png"
+        alt
+      >
     </div>
     <div class="nav-list">
-      <el-scrollbar style="height:100%;" class="scrollbar">
+      <el-scrollbar
+        style="height:100%;"
+        class="scrollbar"
+      >
         <el-menu
           default-active="/statistics-home/search-statistics"
           router
@@ -19,16 +28,22 @@
           text-color="#9BA3D5"
           active-text-color="#FFFFFF"
         >
-          <el-submenu v-for="item in navList" :index="item.index" :key="item.index">
+          <el-submenu
+            v-for="item in navList"
+            :index="item.index"
+            :key="item.index"
+          >
             <template slot="title">
-              <i :class="item.icon"></i>
-              <span>{{item.name}}</span>
+              <i :class="item.icon" />
+              <span>{{ item.name }}</span>
             </template>
             <el-menu-item
               v-for="_item in item.subNav"
               :key="_item.index"
               :index="_item.index"
-            >{{_item.name}}</el-menu-item>
+            >
+              {{ _item.name }}
+            </el-menu-item>
           </el-submenu>
         </el-menu>
       </el-scrollbar>
@@ -37,159 +52,162 @@
       <span>MDSDSS(ADMIN)</span>
       <span>注销</span>
     </div>
-    <lock-screen v-if="lockVisible" :lock-visible="lockVisible" @handleLock="handleLock" />
+    <lock-screen
+      v-if="lockVisible"
+      :lock-visible="lockVisible"
+      @handleLock="handleLock"
+    />
   </div>
 </template>
 <script>
-import Dialog from "@/components/DialogNav/index";
-import LockScreen from "../../LockScreen/index";
-import { getNavs } from "@/api/nav";
-import { mapActions, mapGetters } from "vuex";
-import request from "@/utils/requestForMock";
+// import Dialog from '@/components/DialogNav/index'
+import LockScreen from '../../LockScreen/index'
+// import { getNavs } from '@/api/nav'
+import { mapActions, mapGetters } from 'vuex'
+// import request from '@/utils/requestForMock'
 // import Overview from '../../../components/OperationOverview/index'
 export default {
-  name: "Aside",
-  data() {
+  name: 'Aside',
+  data () {
     return {
-      dialogTitle: "标题",
-      activesNames: "M001",
+      dialogTitle: '标题',
+      activesNames: 'M001',
       isCollapse: false,
       showOverflow: false,
       showDialog: false, // 开启弹窗
-      componentName: "",
+      componentName: '',
       navList: [
         {
-          name: "查询统计",
-          index: "/statistics-home/search-statistics",
-          icon: "el-icon-star-on",
-          subNav: [],
+          name: '查询统计',
+          index: '/statistics-home/search-statistics',
+          icon: 'el-icon-star-on',
+          subNav: []
         },
         {
-          name: "综合信息查询",
-          index: "/statistics-home/quantity-statistics",
-          icon: "el-icon-location",
+          name: '综合信息查询',
+          index: '/statistics-home/quantity-statistics',
+          icon: 'el-icon-location',
           subNav: [
-            { name: "手术查询", index: "/statistics-home/quantity-statistics" },
-            { name: "取消手术查询", index: "2-2" },
+            { name: '手术查询', index: '/statistics-home/quantity-statistics' },
+            { name: '取消手术查询', index: '2-2' },
             {
-              name: "恢复室病人统计",
-              index: "/statistics-home/recover-statistics",
+              name: '恢复室病人统计',
+              index: '/statistics-home/recover-statistics'
             },
-            { name: "麻醉方法统计", index: "2-4" },
-            { name: "ASA分级统计", index: "2-5" },
-            { name: "输血统计", index: "2-6" },
-          ],
+            { name: '麻醉方法统计', index: '2-4' },
+            { name: 'ASA分级统计', index: '2-5' },
+            { name: '输血统计', index: '2-6' }
+          ]
         },
         {
-          name: "工作量查询",
-          index: "3",
-          icon: "el-icon-s-data",
-          subNav: [],
+          name: '工作量查询',
+          index: '3',
+          icon: 'el-icon-s-data',
+          subNav: []
         },
         {
-          name: "分析决策",
-          index: "4",
-          icon: "el-icon-monitor",
-          subNav: [],
-        },
+          name: '分析决策',
+          index: '4',
+          icon: 'el-icon-monitor',
+          subNav: []
+        }
       ],
       overviewList: [],
       activeIndex: null,
-      path: "",
+      path: '',
       navs: [],
-      lockVisible: false,
-    };
+      lockVisible: false
+    }
   },
   components: {
     // Overview
-    Dialog,
-    LockScreen,
+    LockScreen
     // ChangePass
     // Hemodynamics
   },
   computed: {
-    ...mapGetters("Base", ["operationId"]),
-    oddEven(index) {
+    ...mapGetters('Base', ['operationId']),
+    oddEven (index) {
       return function (index) {
         if ((index + 1) % 2 === 0) {
-          return true;
+          return true
         } else {
-          return false;
+          return false
         }
-      };
-    },
+      }
+    }
   },
   methods: {
-    ...mapActions("Anaes", ["setEventType"]),
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
-      this.$router.push(key);
+    ...mapActions('Anaes', ['setEventType']),
+    handleOpen (key, keyPath) {
+      console.log(key, keyPath)
+      this.$router.push(key)
     },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
+    handleClose (key, keyPath) {
+      console.log(key, keyPath)
     },
-    jumpLogin() {
+    jumpLogin () {
       //  ----login页测试
-      this.$router.push("/login");
+      this.$router.push('/login')
     },
-    handleLock() {
-      this.lockVisible = false;
+    handleLock () {
+      this.lockVisible = false
     },
-    handleDialogClose() {
-      this.showDialog = false;
-      this.activeIndex = false;
+    handleDialogClose () {
+      this.showDialog = false
+      this.activeIndex = false
     },
-    handleChangeButton(item, index) {
-      if (item.componentName === "lockScreen") {
-        this.lockVisible = true;
-        return;
+    handleChangeButton (item, index) {
+      if (item.componentName === 'lockScreen') {
+        this.lockVisible = true
+        return
       }
-      if (this.operationId === "" && item.necessary) {
-        this.$confirm("当前操作需先选择患者", "提示", {
-          confirmButtonText: "确定",
-          type: "warning",
+      if (this.operationId === '' && item.necessary) {
+        this.$confirm('当前操作需先选择患者', '提示', {
+          confirmButtonText: '确定',
+          type: 'warning',
           showCancelButton: false,
-          customClass: "messageBox",
-        }).then(() => {});
-        return;
+          customClass: 'messageBox'
+        }).then(() => {})
+        return
       }
-      this.activeIndex = index;
-      if (item.componentName === "Event") {
-        this.setEventType(item);
+      this.activeIndex = index
+      if (item.componentName === 'Event') {
+        this.setEventType(item)
       }
-      this.dialogTitle = item.perName;
-      this.componentName = item.componentName;
-      this.showDialog = true;
+      this.dialogTitle = item.perName
+      this.componentName = item.componentName
+      this.showDialog = true
     },
-    handleShowOverview() {
+    handleShowOverview () {
       if (this.isCollapse === true) {
-        this.showOverflow = !this.showOverflow;
+        this.showOverflow = !this.showOverflow
       }
     },
-    handleChange(active) {
-      this.activeIndex = null;
-      this.activesNames = active;
+    handleChange (active) {
+      this.activeIndex = null
+      this.activesNames = active
     },
-    handleCloseMenu() {
+    handleCloseMenu () {
       if (this.showOverflow === false) {
-        this.isCollapse = !this.isCollapse;
+        this.isCollapse = !this.isCollapse
       }
     },
-    openConfiguration(route, name) {
-      this.$electron.ipcRenderer.send("open-new-window", route, name);
-    },
+    openConfiguration (route, name) {
+      this.$electron.ipcRenderer.send('open-new-window', route, name)
+    }
   },
-  mounted() {
-    this.$eventHub.$on("show-dialog", (item) => {
+  mounted () {
+    this.$eventHub.$on('show-dialog', (item) => {
       // 激活弹窗
-      this.handleChangeButton(item);
-    });
-    this.$eventHub.$on("close-dialog", () => {
+      this.handleChangeButton(item)
+    })
+    this.$eventHub.$on('close-dialog', () => {
       // 关闭弹窗
-      this.handleDialogClose();
-    });
-  },
-};
+      this.handleDialogClose()
+    })
+  }
+}
 </script>
 <style lang="scss" scoped>
 .aside {

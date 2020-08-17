@@ -1,40 +1,72 @@
 <template>
   <div class="search-statistics">
     <div class="top">
-      <el-form size="mini" :inline="true">
+      <el-form
+        size="mini"
+        :inline="true"
+      >
         <el-form-item>
-          <el-select v-model="value" placeholder="请选择" style="width:110px">
+          <el-select
+            v-model="value"
+            placeholder="请选择"
+            style="width:110px"
+          >
             <el-option
               v-for="item in options"
               :key="item.value"
               :label="item.label"
               :value="item.value"
-            ></el-option>
+            />
           </el-select>
-          <el-date-picker v-model="value" type="date" placeholder="选择日期" style="width:165px"></el-date-picker>
+          <el-date-picker
+            v-model="value"
+            type="date"
+            placeholder="选择日期"
+            style="width:165px"
+          />
         </el-form-item>
         <el-form-item>
-          <el-select v-model="value" placeholder="请选择" style="width:110px">
+          <el-select
+            v-model="value"
+            placeholder="请选择"
+            style="width:110px"
+          >
             <el-option
               v-for="item in options"
               :key="item.value"
               :label="item.label"
               :value="item.value"
-            ></el-option>
+            />
           </el-select>
-          <el-date-picker v-model="value" type="date" placeholder="选择日期" style="width:165px"></el-date-picker>
+          <el-date-picker
+            v-model="value"
+            type="date"
+            placeholder="选择日期"
+            style="width:165px"
+          />
         </el-form-item>
         <el-form-item label="病人住院号">
-          <el-input v-model="value" style="width:90px;"></el-input>
+          <el-input
+            v-model="value"
+            style="width:90px;"
+          />
         </el-form-item>
         <el-form-item label="PACU护士">
-          <el-input v-model="value" style="width:90px;"></el-input>
+          <el-input
+            v-model="value"
+            style="width:90px;"
+          />
         </el-form-item>
         <el-form-item label="复苏室床位">
-          <el-input v-model="value" style="width:110px;"></el-input>
+          <el-input
+            v-model="value"
+            style="width:110px;"
+          />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">查询</el-button>
+          <el-button type="primary">
+            查询
+          </el-button>
           <el-button>导出配置</el-button>
           <el-button>导出</el-button>
         </el-form-item>
@@ -51,20 +83,62 @@
         :data="tableData"
         align="center"
       >
-        <vxe-table-column field="opeRoom" title="术间" />
-        <vxe-table-column field="sequence" title="序号" />
-        <vxe-table-column field="ptName" title="病人信息" />
-        <vxe-table-column field="inpatientWard" title="病区" />
-        <vxe-table-column field="bedId" title="床号" />
-        <vxe-table-column field="visitId" title="住院号" />
-        <vxe-table-column field="diagnoseBefore" title="诊断" />
-        <vxe-table-column field="operationName" title="手术名称" />
-        <vxe-table-column field="surgeonName" title="手术医师" />
-        <vxe-table-column field="anesMethod" title="麻醉方法" />
-        <vxe-table-column field="anesDoc" title="麻醉医师" />
-        <vxe-table-column field="opeNurse" title="洗手护士" />
-        <vxe-table-column field="supplyNurse" title="巡回护士" />
-        <vxe-table-column field="memo" title="备注" />
+        <vxe-table-column
+          field="opeRoom"
+          title="术间"
+        />
+        <vxe-table-column
+          field="sequence"
+          title="序号"
+        />
+        <vxe-table-column
+          field="ptName"
+          title="病人信息"
+        />
+        <vxe-table-column
+          field="inpatientWard"
+          title="病区"
+        />
+        <vxe-table-column
+          field="bedId"
+          title="床号"
+        />
+        <vxe-table-column
+          field="visitId"
+          title="住院号"
+        />
+        <vxe-table-column
+          field="diagnoseBefore"
+          title="诊断"
+        />
+        <vxe-table-column
+          field="operationName"
+          title="手术名称"
+        />
+        <vxe-table-column
+          field="surgeonName"
+          title="手术医师"
+        />
+        <vxe-table-column
+          field="anesMethod"
+          title="麻醉方法"
+        />
+        <vxe-table-column
+          field="anesDoc"
+          title="麻醉医师"
+        />
+        <vxe-table-column
+          field="opeNurse"
+          title="洗手护士"
+        />
+        <vxe-table-column
+          field="supplyNurse"
+          title="巡回护士"
+        />
+        <vxe-table-column
+          field="memo"
+          title="备注"
+        />
       </vxe-table>
     </div>
     <bottom-buttons />
@@ -72,67 +146,67 @@
 </template>
 
 <script>
-import BottomButtons from "./components/BottomButtons";
+import BottomButtons from './components/BottomButtons'
 export default {
-  data() {
+  data () {
     return {
       tableData: [],
       options: [
         {
-          value: "选项1",
-          label: "黄金糕",
+          value: '选项1',
+          label: '黄金糕'
         },
         {
-          value: "选项2",
-          label: "双皮奶",
+          value: '选项2',
+          label: '双皮奶'
         },
         {
-          value: "选项3",
-          label: "蚵仔煎",
+          value: '选项3',
+          label: '蚵仔煎'
         },
         {
-          value: "选项4",
-          label: "龙须面",
+          value: '选项4',
+          label: '龙须面'
         },
         {
-          value: "选项5",
-          label: "北京烤鸭",
-        },
+          value: '选项5',
+          label: '北京烤鸭'
+        }
       ],
-      value: "",
+      value: '',
       filterOptions: [
-        { name: "全部", value: "1" },
-        { name: "术前", value: "2" },
-        { name: "术中", value: "3" },
+        { name: '全部', value: '1' },
+        { name: '术前', value: '2' },
+        { name: '术中', value: '3' },
         {
-          name: "术后",
-          value: "4",
-        },
+          name: '术后',
+          value: '4'
+        }
       ],
       radioOptions: [
         {
-          name: "全部",
-          value: "1",
+          name: '全部',
+          value: '1'
         },
         {
-          name: "急诊",
-          value: "2",
+          name: '急诊',
+          value: '2'
         },
         {
-          name: "择期",
-          value: "3",
+          name: '择期',
+          value: '3'
         },
         {
-          name: "未填",
-          value: "4",
-        },
-      ],
-    };
+          name: '未填',
+          value: '4'
+        }
+      ]
+    }
   },
   components: {
-    BottomButtons,
-  },
-};
+    BottomButtons
+  }
+}
 </script>
 
 <style lang="scss" scoped>
