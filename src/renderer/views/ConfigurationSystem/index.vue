@@ -33,7 +33,7 @@
           <el-submenu index="super">
             <template slot="title">
               <i class="el-icon-menu" />
-              <span>高级配置</span>
+              <span>超级配置</span>
             </template>
             <el-menu-item
               v-for="item in superList"
@@ -102,11 +102,11 @@ export default {
       {
         text: '文书打印及上传设置',
         path: 'PrintAndUpload'
-      },
-      {
-        text: '医疗文书完整性检查',
-        path: 'DocumentIntegrity'
       }
+      // {
+      //   text: '医疗文书完整性检查',
+      //   path: 'DocumentIntegrity'
+      // }
     ])
     const superList = Object.freeze([
       {

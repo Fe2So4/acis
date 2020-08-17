@@ -21,7 +21,7 @@
           style="margin-right:10px;"
         )
           span(
-            :class="[item.type === 'circle' ? 'circle' : 'rectangle']",
+            :class="[item.type]",
             :style="{ background: item.color }"
           )
           span {{ item.label }}

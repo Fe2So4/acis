@@ -6,7 +6,6 @@
       width: elementWidth + 'px',
       left: elementLeft + 'px'
     }"
-    :class="{hasEnd:this.info.outOperTime}"
     @mousemove="onMouseover"
     @mouseleave="onMouseLeave"
   >
@@ -180,21 +179,10 @@ export default {
 <style lang="scss" scoped>
 .patientDetail {
   position: absolute;
-  border-style: solid;
-  border-color: #cddaff;
-  border-left-width: 1px;
-  border-top-width: 1px;
-  border-bottom-width: 1px;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
+  border: 1px solid #cddaff;
+  border-radius: 5px;
   height: 56px;
   overflow: hidden;
-  &.hasEnd {
-    border-right-width: 1px;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-  }
-
   .background,
   .content {
     display: flex;
