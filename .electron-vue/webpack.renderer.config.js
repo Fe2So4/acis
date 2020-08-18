@@ -21,10 +21,14 @@ const { VueLoaderPlugin } = require('vue-loader')
  */
 let entry = null
 let whiteListedModules = ['vue', 'element-ui']
-
-if (process.env.BUILD_TARGET === 'schedule') entry = path.join(__dirname,'../src/renderer_schedule/scheduleMain.js')
-else entry = path.join(__dirname, '../src/renderer/main.js')
-
+let alias = null
+if (process.env.BUILD_TARGET === 'schedule') {
+  entry = path.join(__dirname,'../src/renderer_schedule/scheduleMain.js');
+  alias = '../src/renderer_schedule'
+}else {
+  entry = path.join(__dirname, '../src/renderer/main.js');
+  alias = '../src/renderer'
+}
 let rendererConfig = {
   devtool: '#cheap-module-eval-source-map',
   entry: {
@@ -171,7 +175,7 @@ let rendererConfig = {
   resolve: {
     alias: {
       'src': path.join(__dirname, '../src/'),
-      '@': path.join(__dirname, '../src/renderer_schedule'),
+      '@': path.join(__dirname, alias),
       'vue$': 'vue/dist/vue.esm.js'
     },
     extensions: ['.js', '.vue', '.json', '.css', '.node']

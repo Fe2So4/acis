@@ -56,6 +56,12 @@ export default {
 .home {
   height: 100%;
   background:#121421;
+  // @media all and (orientation: portrait) {
+  //   background: green;
+  // }
+  // @media all and (orientation: landscape) {
+  //   background: red;
+  // }
   .el-header{
     margin: 0 0 0 12px;
   }
