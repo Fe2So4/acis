@@ -5,71 +5,75 @@
         size="mini"
         :inline="true"
       >
-        <el-form-item>
-          <el-select
-            v-model="value"
-            placeholder="请选择"
-            style="width:110px"
-          >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+        <span>
+          <el-form-item style="margin-right:21px;margin-left:46px;">
+            <el-select
+              v-model="value"
+              placeholder="请选择"
+              style="width:110px;margin-right:4px;"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+            <el-date-picker
+              v-model="value"
+              type="date"
+              placeholder="选择日期"
+              style="width:165px"
             />
-          </el-select>
-          <el-date-picker
-            v-model="value"
-            type="date"
-            placeholder="选择日期"
-            style="width:165px"
-          />
-        </el-form-item>
-        <el-form-item>
-          <el-select
-            v-model="value"
-            placeholder="请选择"
-            style="width:110px"
-          >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+          </el-form-item>
+          <el-form-item style="margin-right:21px;">
+            <el-select
+              v-model="value"
+              placeholder="请选择"
+              style="width:110px;margin-right:4px;"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+            <el-date-picker
+              v-model="value"
+              type="date"
+              placeholder="选择日期"
+              style="width:165px"
             />
-          </el-select>
-          <el-date-picker
-            v-model="value"
-            type="date"
-            placeholder="选择日期"
-            style="width:165px"
-          />
-        </el-form-item>
-        <el-form-item>
-          <el-select
-            v-model="value"
-            placeholder="请选择"
-            style="width:110px"
-          >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+          </el-form-item>
+          <el-form-item>
+            <el-select
+              v-model="value"
+              placeholder="请选择"
+              style="width:110px;margin-right:4px;"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+            <el-input
+              v-model="value"
+              style="width:165px"
             />
-          </el-select>
-          <el-input
-            v-model="value"
-            style="width:165px"
-          />
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary">
-            查询
-          </el-button>
-          <el-button>导出配置</el-button>
-          <el-button>导出</el-button>
-        </el-form-item>
+          </el-form-item>
+        </span>
+        <span>
+          <el-form-item>
+            <el-button type="primary">
+              查询
+            </el-button>
+            <el-button>导出配置</el-button>
+            <el-button>导出</el-button>
+          </el-form-item>
+        </span>
       </el-form>
       <el-form
         size="mini"
@@ -116,7 +120,10 @@
         size="mini"
         :inline="true"
       >
-        <el-form-item label="病人ID">
+        <el-form-item
+          label="病人ID"
+          label-width="68px"
+        >
           <el-input
             v-model="value"
             style="width:90px;"
@@ -134,17 +141,24 @@
             style="width:90px;"
           />
         </el-form-item>
-        <el-form-item label="年龄">
+        <el-form-item
+          label="年龄"
+          label-width="68px"
+        >
           <el-input
             v-model="value"
             style="width:50px;"
-          />至
+          />
+          <span style="margin:0 3px;">至</span>
           <el-input
             v-model="value"
             style="width:50px;"
           />
         </el-form-item>
-        <el-form-item label="手术体位">
+        <el-form-item
+          label="手术体位"
+          style="margin-left:71px;"
+        >
           <el-input
             v-model="value"
             style="width:200px;"
@@ -161,7 +175,7 @@
         size="mini"
         :inline="true"
       >
-        <el-form-item>
+        <el-form-item style="margin-left:68px;">
           <el-checkbox-group v-model="value">
             <el-checkbox
               v-for="item in filterOptions"
@@ -200,7 +214,11 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="手术间">
+        <el-form-item
+          label="手术间"
+          label-width="68px"
+          style="margin-left:112px;"
+        >
           <el-select
             v-model="value"
             placeholder="请选择"
@@ -230,10 +248,12 @@
     <div class="table">
       <vxe-table
         border
+        round
         show-footer
         export-config
         size="mini"
         ref="xTable"
+        class="xTable"
         height="100%"
         :data="tableData"
         align="center"
@@ -295,13 +315,13 @@
           title="备注"
         />
       </vxe-table>
+      <bottom-buttons />
     </div>
-    <bottom-buttons />
   </div>
 </template>
 
 <script>
-import BottomButtons from './components/BottomButtons'
+import BottomButtons from '@/components/StatisticsBottomButtons/BottomButtons'
 export default {
   data () {
     return {
@@ -369,21 +389,53 @@ export default {
   position: relative;
   color: #9ba3d5;
   font-size: 14px;
+  height: 100%;
   .top {
+    padding: 20px 0 0 20px;
+    .el-form{
+      &:first-child{
+        display: flex;
+        justify-content: space-between;
+      }
+    }
     .el-checkbox {
       margin-right: 10px;
+      /deep/ .el-checkbox__label{
+        padding-left: 6px;
+      }
+    }
+    .el-radio{
+      margin-right: 10px;
+      /deep/ .el-radio__label{
+        padding-left:6px;
+      }
     }
     height: 220px;
     background: rgba(24, 28, 39, 1);
     box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
     border-radius: 5px;
+    box-sizing: border-box;
   }
   .table {
     margin-top: 20px;
+    padding: 20px 10px 0;
+    padding-top: unset;
     background: rgba(24, 28, 39, 1);
     box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+    box-sizing: border-box;
     border-radius: 5px;
-    height: 300px;
+    height: calc(100% - 240px);
+    overflow: hidden;
+    .xTable{
+      margin-top: 20px;
+      height: calc(100% - 76px);
+    }
   }
 }
 </style>
+<style>
+  .el-picker-panel {
+    background: #252c40 !important;
+  }
+</style>
+}

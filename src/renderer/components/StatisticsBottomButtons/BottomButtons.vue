@@ -4,10 +4,11 @@
       <div>
         每页显示
         <el-input
-          style="width:34px"
-          :value="10"
+          style="width:54px"
+          v-model="count"
           size="mini"
-        />条数据
+        />
+        条数据
       </div>
     </div>
     <div class="buttons rightButtons">
@@ -55,7 +56,9 @@ export default {
   name: 'BottomButtons',
   props: {},
   data () {
-    return {}
+    return {
+      count: '10'
+    }
   },
   computed: {},
   methods: {
@@ -72,7 +75,7 @@ export default {
   left: 0;
   right: 0;
   height: 36px;
-  padding: 4px 0;
+  padding: 4px 20px;
   background: rgba(23, 27, 39, 1);
   box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
   color: rgba(154, 163, 212, 1);

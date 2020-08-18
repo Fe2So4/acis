@@ -1,5 +1,5 @@
 <template>
-  <div class="search-statistics">
+  <div class="quantity-control-statistics">
     <div class="top">
       <el-form
         size="mini"
@@ -7,62 +7,36 @@
       >
         <span>
           <el-form-item>
-            <el-select
+            <el-date-picker
               v-model="value"
-              placeholder="请选择"
-              style="width:110px;margin-right:4px;"
-            >
+              type="daterange"
+              align="right"
+              unlink-panels
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              :picker-options="pickerOptions"
+            />
+          </el-form-item>
+          <el-form-item label="介入手术室手术">
+            <el-select v-model="value">
               <el-option
                 v-for="item in options"
                 :key="item.value"
-                :label="item.label"
                 :value="item.value"
+                :label="item.label"
               />
             </el-select>
-            <el-date-picker
-              v-model="value"
-              type="date"
-              placeholder="选择日期"
-              style="width:165px"
-            />
           </el-form-item>
-          <el-form-item>
-            <el-select
-              v-model="value"
-              placeholder="请选择"
-              style="width:110px;margin-right:4px;"
-            >
+          <el-form-item label="新生儿麻醉">
+            <el-select v-model="value">
               <el-option
                 v-for="item in options"
                 :key="item.value"
-                :label="item.label"
                 :value="item.value"
+                :label="item.label"
               />
             </el-select>
-            <el-date-picker
-              v-model="value"
-              type="date"
-              placeholder="选择日期"
-              style="width:165px"
-            />
-          </el-form-item>
-          <el-form-item label="病人住院号">
-            <el-input
-              v-model="value"
-              style="width:90px;"
-            />
-          </el-form-item>
-          <el-form-item label="PACU护士">
-            <el-input
-              v-model="value"
-              style="width:90px;"
-            />
-          </el-form-item>
-          <el-form-item label="复苏室床位">
-            <el-input
-              v-model="value"
-              style="width:110px;"
-            />
           </el-form-item>
         </span>
         <span>
@@ -74,6 +48,89 @@
             <el-button>导出</el-button>
           </el-form-item>
         </span>
+      </el-form>
+      <el-form
+        :inline="true"
+        size="mini"
+      >
+        <el-form-item label="腔镜手术">
+          <el-select v-model="value">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :value="item.value"
+              :label="item.label"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="超声手术">
+          <el-select v-model="value">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :value="item.value"
+              :label="item.label"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="控制性降压">
+          <el-select v-model="value">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :value="item.value"
+              :label="item.label"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="可视喉镜">
+          <el-select v-model="value">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :value="item.value"
+              :label="item.label"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <el-form
+        :inline="true"
+        size="mini"
+      >
+        <el-form-item label="肌松监测">
+          <el-select v-model="value">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :value="item.value"
+              :label="item.label"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          label="封堵器"
+          label-width="68px"
+        >
+          <el-select v-model="value">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :value="item.value"
+              :label="item.label"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="心排量监测">
+          <el-select v-model="value">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :value="item.value"
+              :label="item.label"
+            />
+          </el-select>
+        </el-form-item>
       </el-form>
     </div>
     <div class="table">
@@ -156,6 +213,33 @@ import BottomButtons from '@/components/StatisticsBottomButtons/BottomButtons'
 export default {
   data () {
     return {
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近一个月',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近三个月',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+            picker.$emit('pick', [start, end])
+          }
+        }]
+      },
       tableData: [],
       options: [
         {
@@ -216,17 +300,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.search-statistics {
+.quantity-control-statistics {
   position: relative;
   color: #9ba3d5;
   font-size: 14px;
   height: 100%;
   .top {
-    padding: 20px 0 0 66px;
+    padding: 20px 0 0 20px;
+    /deep/ .el-range-input{
+      background: transparent
+    }
     .el-checkbox {
       margin-right: 10px;
     }
-    height: 70px;
+    // height: 70px;
     background: rgba(24, 28, 39, 1);
     box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
     border-radius: 5px;
@@ -242,7 +329,7 @@ export default {
     background: rgba(24, 28, 39, 1);
     box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
     border-radius: 5px;
-    height: calc(100% - 90px);
+    height: calc(100% - 178px);
     padding: 20px;
     padding-top: unset;
     overflow: hidden;

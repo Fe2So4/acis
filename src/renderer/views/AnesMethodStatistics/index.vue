@@ -1,67 +1,62 @@
 <template>
-  <div class="search-statistics">
+  <div class="cancel-statistics">
     <div class="top">
       <el-form
         size="mini"
         :inline="true"
       >
-        <el-form-item>
-          <el-select
-            v-model="value"
-            placeholder="请选择"
-            style="width:110px"
-          >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+        <span>
+          <el-form-item label="麻醉开始时间">
+            <el-date-picker
+              v-model="value"
+              type="date"
+              style="width:165px;"
+              align="right"
+              unlink-panels
+              :picker-options="pickerOptions"
             />
-          </el-select>
-          <el-date-picker
-            v-model="value"
-            type="date"
-            placeholder="选择日期"
-            style="width:165px"
-          />
-        </el-form-item>
-        <el-form-item>
-          <el-select
-            v-model="value"
-            placeholder="请选择"
-            style="width:110px"
-          >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+          </el-form-item>
+          <el-form-item label="麻醉结束时间">
+            <el-date-picker
+              v-model="value"
+              type="date"
+              style="width:165px;"
+              align="right"
+              unlink-panels
+              :picker-options="pickerOptions"
             />
-          </el-select>
-          <el-date-picker
-            v-model="value"
-            type="date"
-            placeholder="选择日期"
-            style="width:165px"
-          />
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary">
-            查询
-          </el-button>
-          <el-button>导出配置</el-button>
-          <el-button>导出</el-button>
-        </el-form-item>
+          </el-form-item>
+          <el-form-item label="麻醉医生">
+            <el-input v-model="value" />
+          </el-form-item>
+          <el-form-item label="麻醉方法">
+            <el-input v-model="value" />
+          </el-form-item>
+          <el-form-item label="手术科室">
+            <el-input v-model="value" />
+          </el-form-item>
+        </span>
+        <span>
+          <el-form-item>
+            <el-button type="primary">
+              查询
+            </el-button>
+            <el-button>导出配置</el-button>
+            <el-button>导出</el-button>
+          </el-form-item>
+        </span>
       </el-form>
     </div>
     <div class="table">
       <vxe-table
         border
+        round
         show-footer
         export-config
         size="mini"
         ref="xTable"
-        height="200px"
+        class="xTable"
+        height="100%"
         :data="tableData"
         align="center"
       >
@@ -130,8 +125,36 @@
 <script>
 import BottomButtons from '@/components/StatisticsBottomButtons/BottomButtons'
 export default {
+  name: 'CancelOperationStatistics',
   data () {
     return {
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近一个月',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近三个月',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+            picker.$emit('pick', [start, end])
+          }
+        }]
+      },
       tableData: [],
       options: [
         {
@@ -192,10 +215,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.search-statistics {
+.cancel-statistics {
   position: relative;
   color: #9ba3d5;
   font-size: 14px;
+  height: 100%;
   .top {
     padding: 20px 0 0 66px;
     .el-checkbox {
@@ -205,15 +229,27 @@ export default {
     background: rgba(24, 28, 39, 1);
     box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
     border-radius: 5px;
+    .el-form{
+      &:first-child{
+        display: flex;
+        justify-content: space-between;
+      }
+    }
   }
   .table {
     margin-top: 20px;
     background: rgba(24, 28, 39, 1);
     box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
     border-radius: 5px;
-    height: 300px;
+    height: calc(100% - 90px);
     padding: 20px;
+    padding-top: unset;
+    overflow: hidden;
     box-sizing: border-box;
+    .xTable{
+      margin-top: 20px;
+      height: calc(100% - 56px);
+    }
   }
 }
 </style>

@@ -19,7 +19,7 @@
         class="scrollbar"
       >
         <el-menu
-          default-active="/statistics-home/search-statistics"
+          default-active="/statistics-home/default"
           router
           class="el-menu-vertical-demo"
           @open="handleOpen"
@@ -27,6 +27,7 @@
           background-color="#121421"
           text-color="#9BA3D5"
           active-text-color="#FFFFFF"
+          @select="handleSelectMenu"
         >
           <el-submenu
             v-for="item in navList"
@@ -42,6 +43,7 @@
               :key="_item.index"
               :index="_item.index"
             >
+              <div :class="{'menuActive':activeIndex === _item.index}" />
               {{ _item.name }}
             </el-menu-item>
           </el-submenu>
@@ -57,15 +59,12 @@
       :lock-visible="lockVisible"
       @handleLock="handleLock"
     />
+    <export-config />
   </div>
 </template>
 <script>
-// import Dialog from '@/components/DialogNav/index'
 import LockScreen from '../../LockScreen/index'
-// import { getNavs } from '@/api/nav'
-import { mapActions, mapGetters } from 'vuex'
-// import request from '@/utils/requestForMock'
-// import Overview from '../../../components/OperationOverview/index'
+import ExportConfig from '@/components/ExportConfig/exportConfig'
 export default {
   name: 'Aside',
   data () {
@@ -77,39 +76,46 @@ export default {
       showDialog: false, // 开启弹窗
       componentName: '',
       navList: [
-        {
-          name: '查询统计',
-          index: '/statistics-home/search-statistics',
-          icon: 'el-icon-star-on',
-          subNav: []
-        },
+        // {
+        //   name: '查询统计',
+        //   index: '/statistics-home/search-statistics',
+        //   icon: 'el-icon-star-on',
+        //   subNav: []
+        // },
         {
           name: '综合信息查询',
-          index: '/statistics-home/quantity-statistics',
+          index: '1',
           icon: 'el-icon-location',
           subNav: [
-            { name: '手术查询', index: '/statistics-home/quantity-statistics' },
-            { name: '取消手术查询', index: '2-2' },
-            {
-              name: '恢复室病人统计',
-              index: '/statistics-home/recover-statistics'
-            },
-            { name: '麻醉方法统计', index: '2-4' },
-            { name: 'ASA分级统计', index: '2-5' },
-            { name: '输血统计', index: '2-6' }
+            { name: '手术查询', index: '/statistics-home/search-statistics' },
+            { name: '取消手术查询', index: '/statistics-home/cancel-statistics' },
+            { name: '恢复室病人统计', index: '/statistics-home/recover-statistics' },
+            { name: '麻醉方法统计', index: '/statistics-home/anes-method-statistics' },
+            { name: 'ASA分级统计', index: '/statistics-home/asa-statistics' },
+            { name: '输血统计', index: '/statistics-home/blood-statistics' }
           ]
         },
         {
           name: '工作量查询',
-          index: '3',
+          index: '2',
           icon: 'el-icon-s-data',
-          subNav: []
+          subNav: [
+            { name: '科室工作量', index: '/statistics-home/dept-statistics' },
+            { name: '麻醉医生工作量', index: '/statistics-home/anes-doc-statistics' },
+            { name: '手术医生工作量', index: '/statistics-home/ope-doc-statistics' },
+            { name: '护士工作量', index: '/statistics-home/nurse-statistics' }
+          ]
         },
         {
           name: '分析决策',
-          index: '4',
+          index: '3',
           icon: 'el-icon-monitor',
-          subNav: []
+          subNav: [
+            { name: '动脉穿刺统计', index: '/statistics-home/arterial-statistics' },
+            { name: '质控数据统计', index: '/statistics-home/quantity-control-statistics' },
+            { name: '术后随访统计', index: '/statistics-home/followup-statistics' },
+            { name: '麻醉质控17项指标统计', index: '/statistics-home/anes-qc17-statistics' }
+          ]
         }
       ],
       overviewList: [],
@@ -120,25 +126,12 @@ export default {
     }
   },
   components: {
-    // Overview
-    LockScreen
-    // ChangePass
-    // Hemodynamics
+    LockScreen, ExportConfig
   },
   computed: {
-    ...mapGetters('Base', ['operationId']),
-    oddEven (index) {
-      return function (index) {
-        if ((index + 1) % 2 === 0) {
-          return true
-        } else {
-          return false
-        }
-      }
-    }
+
   },
   methods: {
-    ...mapActions('Anaes', ['setEventType']),
     handleOpen (key, keyPath) {
       console.log(key, keyPath)
       this.$router.push(key)
@@ -150,62 +143,19 @@ export default {
       //  ----login页测试
       this.$router.push('/login')
     },
+    handleSelectMenu (index, path) {
+      this.activeIndex = index
+      console.log(index, path, 'biubiubiu')
+    },
     handleLock () {
       this.lockVisible = false
     },
     handleDialogClose () {
       this.showDialog = false
       this.activeIndex = false
-    },
-    handleChangeButton (item, index) {
-      if (item.componentName === 'lockScreen') {
-        this.lockVisible = true
-        return
-      }
-      if (this.operationId === '' && item.necessary) {
-        this.$confirm('当前操作需先选择患者', '提示', {
-          confirmButtonText: '确定',
-          type: 'warning',
-          showCancelButton: false,
-          customClass: 'messageBox'
-        }).then(() => {})
-        return
-      }
-      this.activeIndex = index
-      if (item.componentName === 'Event') {
-        this.setEventType(item)
-      }
-      this.dialogTitle = item.perName
-      this.componentName = item.componentName
-      this.showDialog = true
-    },
-    handleShowOverview () {
-      if (this.isCollapse === true) {
-        this.showOverflow = !this.showOverflow
-      }
-    },
-    handleChange (active) {
-      this.activeIndex = null
-      this.activesNames = active
-    },
-    handleCloseMenu () {
-      if (this.showOverflow === false) {
-        this.isCollapse = !this.isCollapse
-      }
-    },
-    openConfiguration (route, name) {
-      this.$electron.ipcRenderer.send('open-new-window', route, name)
     }
   },
   mounted () {
-    this.$eventHub.$on('show-dialog', (item) => {
-      // 激活弹窗
-      this.handleChangeButton(item)
-    })
-    this.$eventHub.$on('close-dialog', () => {
-      // 关闭弹窗
-      this.handleDialogClose()
-    })
   }
 }
 </script>
@@ -260,29 +210,27 @@ export default {
         color: #e3e7fc;
       }
     }
-    span.rightActive {
-      background: linear-gradient(
-        90deg,
-        rgba(89, 247, 199, 1),
-        rgba(42, 131, 247, 1)
-      );
-      border-radius: 15px 0px 0px 15px;
-      color: #edf1f9;
-    }
-    span.leftActive {
-      background: linear-gradient(
-        90deg,
-        rgba(42, 131, 247, 1),
-        rgba(89, 247, 199, 1)
-      );
-      border-radius: 0 15px 15px 0;
-      color: #edf1f9;
-    }
   }
   .nav-list {
-    height: calc(100% - 30px);
+    height: calc(100% - 104px);
     .el-menu {
       border-right: unset;
+      /deep/ .el-submenu__title{
+        height: 40px;
+        line-height: 40px;
+      }
+      .el-menu-item{
+        height:30px;
+        line-height: 30px;
+        .menuActive{
+          width:2px;
+          height:30px;
+          background:linear-gradient(0deg,rgba(89,247,199,1),rgba(41,127,241,1));
+          position: absolute;
+          right: 0;
+          top: 0;
+        }
+      }
     }
   }
   .user-info {
@@ -317,34 +265,7 @@ export default {
     );
   }
 }
-.aside /deep/ .el-collapse-item__header {
-  height: 40px;
-  border: unset;
-  background: #121421;
-  color: #9ba3d5;
-  font-size: 14px;
-  padding-left: 20px;
-  position: relative;
-  .header-icon {
-    font-size: 20px;
-    margin-right: 16px;
-  }
-}
-.aside /deep/ .el-collapse-item__wrap {
-  background: #121421;
-  border: unset;
-}
-.aside /deep/ .el-collapse-item__content {
-  background: #121421;
-  border: unset;
-  padding: 30px 0 4px 0;
-}
-.aside /deep/ .el-collapse-item__header.is-active {
-  background: rgba(28, 31, 50, 1);
-  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.05);
-  color: #edf1f9;
-  font-size: 16px;
-}
+
 </style>
 <style>
 .aside .scrollbar .el-scrollbar__wrap {

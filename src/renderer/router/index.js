@@ -56,8 +56,13 @@ if (process.env.BUILD_TARGET === 'schedule') {
         path: '/statistics-home',
         name: 'HomeStatistics',
         component: () => import('@/views/HomeStatistics/index'),
-        // redirect: '/statistics-home/report',
+        redirect: '/statistics-home/default',
         children: [
+          {
+            path: 'default',
+            name: 'DefaultStatistics',
+            component: () => import('@/views/DefaultStatistics/index')
+          },
           {
             path: 'search-statistics',
             name: 'SearchStatistics',
@@ -72,6 +77,66 @@ if (process.env.BUILD_TARGET === 'schedule') {
             path: 'recover-statistics',
             name: 'RecoverStatistics',
             component: () => import('@/views/RecoverRoomPatientStatistics/index')
+          },
+          {
+            path: 'cancel-statistics',
+            name: 'CancelStatistics',
+            component: () => import('@/views/CancelOperationStatistics/index')
+          },
+          {
+            path: 'anes-method-statistics',
+            name: 'AnesMethodStatistics',
+            component: () => import('@/views/AnesMethodStatistics/index')
+          },
+          {
+            path: 'asa-statistics',
+            name: 'AsALevelStatistics',
+            component: () => import('@/views/AsALevelStatistics/index')
+          },
+          {
+            path: 'blood-statistics',
+            name: 'BloodStatistics',
+            component: () => import('@/views/BloodStatistics/index')
+          },
+          {
+            path: 'dept-statistics',
+            name: 'DeptStatistics',
+            component: () => import('@/views/DeptStatistics/index')
+          },
+          {
+            path: 'anes-doc-statistics',
+            name: 'AnesDocStatistics',
+            component: () => import('@/views/AnesDocStatistics/index')
+          },
+          {
+            path: 'ope-doc-statistics',
+            name: 'OpeDocStatistics',
+            component: () => import('@/views/OpeDocStatistics/index')
+          },
+          {
+            path: 'nurse-statistics',
+            name: 'NurseStatistics',
+            component: () => import('@/views/NurseStatistics/index')
+          },
+          {
+            path: 'arterial-statistics',
+            name: 'ArterialPunctureStatistics',
+            component: () => import('@/views/ArterialPunctureStatistics/index')
+          },
+          {
+            path: 'quantity-control-statistics',
+            name: 'QuantityControlStatistics',
+            component: () => import('@/views/QuantityControlStatistics/index')
+          },
+          {
+            path: 'followup-statistics',
+            name: 'FollowupStatistics',
+            component: () => import('@/views/PostoperativeFollowupStatistics/index')
+          },
+          {
+            path: 'anes-qc17-statistics',
+            name: 'QuantityControlSeventeenStatistics',
+            component: () => import('@/views/QuantityControlSeventeenStatistics/index')
           }
         ]
       },
