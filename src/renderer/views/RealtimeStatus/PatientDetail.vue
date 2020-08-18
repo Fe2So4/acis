@@ -6,7 +6,7 @@
       width: elementWidth + 'px',
       left: elementLeft + 'px'
     }"
-    :class="{hasEnd:this.info.outOperTime}"
+    :class="{hasEnd:info.outOperTime}"
     @mousemove="onMouseover"
     @mouseleave="onMouseLeave"
   >

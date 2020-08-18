@@ -10,9 +10,6 @@
         @change="onChangeTime"
         popper-class="dateTimePicker"
       )
-    el-form-item(label="手术间")
-      el-select(v-model="form.room" @change="onChangeRoom" clearable)
-        el-option(v-for="room in roomList" :key="room" :label="room" :value="room")
     el-form-item
       .status
         span(
@@ -21,7 +18,7 @@
           style="margin-right:10px;"
         )
           span(
-            :class="[item.type]",
+            :class="item.type",
             :style="{ background: item.color }"
           )
           span {{ item.label }}
@@ -42,13 +39,13 @@
           .line(ref="line")
           ul
             li(v-for="item in patientList", :key="item.opeRoom")
-              PatientDetail(v-for="(_item, index) in item.opeStateInfoVos" :date="form.date" :info="_item")
+              PatientDetail(v-for="(_item, index) in item.completedWardsInfo" :date="form.date" :info="_item")
 </template>
 <script>
 import * as spritejs from 'spritejs'
 import moment from 'moment'
 import request from '@/utils/requestForMock'
-import { getRealtimeState, getRoomList } from '@/api/superConfig'
+import { getPacuStatus } from '@/api/pacu'
 import PatientDetail from './PatientDetail'
 const { Scene, Group, Polyline, Label } = spritejs
 export default {
@@ -56,8 +53,8 @@ export default {
   components: { PatientDetail },
   data () {
     const list = Object.freeze([
-      { label: '不带管', color: '#cce0ff', type: 'rectangle' },
-      { label: '带管', color: '#ccffcc', type: 'rectangle' }
+      { label: '不带管', color: '#69a7fb', type: 'rectangle' },
+      { label: '带管', color: '#15d18d', type: 'rectangle' }
     ])
     const today = moment().format('YYYY-MM-DD')
     return {
@@ -74,8 +71,7 @@ export default {
     }
   },
   created () {
-    this.getRealtimeState()
-    this.getRoomList()
+    this.getPacuStatus()
   },
   mounted () {
     this.setTimeLine()
@@ -83,19 +79,18 @@ export default {
   methods: {
     onChangeTime (val) {
       if (val) {
-        this.getRealtimeState()
+        this.getPacuStatus()
       }
     },
     onChangeRoom () {
       this.getRealtimeState()
     },
-    getRealtimeState () {
+    getPacuStatus () {
       return request({
-        url: getRealtimeState,
+        url: getPacuStatus,
         method: 'get',
         params: {
-          day: this.form.date,
-          room: this.form.room
+          dateTime: this.form.date
         }
       }).then(
         res => {
@@ -105,18 +100,18 @@ export default {
         }
       )
     },
-    getRoomList () {
-      return request({
-        url: getRoomList,
-        method: 'get'
-      }).then(
-        res => {
-          if (res.data && res.data.success) {
-            this.roomList = res.data.data
-          }
-        }
-      )
-    },
+    // getRoomList () {
+    //   return request({
+    //     url: getRoomList,
+    //     method: 'get'
+    //   }).then(
+    //     res => {
+    //       if (res.data && res.data.success) {
+    //         this.roomList = res.data.data
+    //       }
+    //     }
+    //   )
+    // },
     setTimeLine () {
       this.renderScene()
       this.createGroups()
@@ -185,11 +180,14 @@ export default {
     },
     setContent () {
       const topPart = this.layer.getElementsByClassName('topPart')[0]
-      for (let i = 9; i <= 21; i++) {
+      for (let i = 1; i <= 24; i++) {
         const s = i + ':00'
         this.timeList.push(s)
       }
-
+      this.timeList = [
+        ...this.timeList.slice(7, 24),
+        ...this.timeList.slice(0, 7)
+      ]
       for (let i = 0; i < this.timeList.length; i++) {
         if (this.timeList[i]) {
           const label = new Label(this.timeList[i])

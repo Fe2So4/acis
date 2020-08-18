@@ -14,7 +14,10 @@
           <div class="title">
             <span>{{ item.operationConditionName || '空闲' }}</span>
           </div>
-          <div class="content">
+          <div
+            class="content"
+            :class="{empty:!item.operationConditionName}"
+          >
             <div class="room">
               <div>{{ item.bedNum }}</div>
             </div>
@@ -63,12 +66,13 @@ export default {
     }
   },
   data () {
+    const wrapStyle = Object.freeze([
+      {
+        'overflow-x': 'hidden'
+      }
+    ])
     return {
-      wrapStyle: [
-        {
-          'overflow-x': 'hidden'
-        }
-      ]
+      wrapStyle
     }
   },
   computed: {
@@ -96,53 +100,50 @@ export default {
     padding: 12px;
     justify-content: center;
     li {
+      display: flex;
+      position: relative;
       box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
       cursor: pointer;
       border-radius: 5px;
-      padding: 0 0 14px 0;
       background: #181c27;
       border: 1px solid #181c27;
-      // width: 464px;
       min-height: 164px;
       font-size: 14px;
-      display: flex;
-      flex-direction: column;
       transition: all 0.3s;
       .title {
-        display: flex;
-        justify-content: space-between;
-        span {
-          color: #ffffff;
-          padding: 0 10px;
-          line-height: 28px;
-          &:last-child {
-            color: #0094ff;
-          }
-        }
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        color: #0093ff;
+        font-weight: bold;
+        font-size: 14px;
       }
       .content {
         flex: 1;
         display: flex;
         .room {
-          flex: 1 0 100px;
           display: flex;
           flex-direction: column;
           justify-content: center;
           div {
-            width: 100%;
             height: 46px;
+            padding: 0 28px;
             line-height: 46px;
-            font-size: 32px;
+            font-size: 30px;
             font-weight: bold;
             color: #fff;
             text-align: center;
+            background: linear-gradient(
+              120deg,
+              rgba(84, 190, 234, 1),
+              rgba(219, 83, 159, 1)
+            );
+            border-radius: 0 23px 23px 0;
+            box-shadow: 0 0 12px 3px #373a44;
           }
         }
         .info {
-          margin: 0 30px 0 20px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-around;
+          padding: 40px 20px 20px 20px;
           p {
             padding: 0;
             margin: 0;
@@ -150,6 +151,14 @@ export default {
             span {
               color: #d0dae5;
               line-height: 28px;
+            }
+          }
+        }
+        &.empty {
+          justify-content: center;
+          .room {
+            div {
+              border-radius: 23px;
             }
           }
         }
