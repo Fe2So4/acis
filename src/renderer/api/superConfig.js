@@ -1,6 +1,7 @@
 import {
   mock,
-  baseLi
+  baseLi,
+  baseZhong
 } from './urlAndPortConfig'
 
 // 术中患者列表 - 李 - 2020-07-27
@@ -62,3 +63,23 @@ export const updateWritConfig = mock
 export const getOpeStateDict = mock
   ? ''
   : baseLi + 'acis/dict/getOpeStateDict'
+
+// 获取文书上传配置 - 钟 - 2020-08-17
+export const getFileUpload = mock
+  ? ''
+  : baseZhong + 'acis/superConfig/getFileUpload'
+
+// 保存文书上传配置 - 钟 - 2020-08-17
+export const saveFileUpload = mock
+  ? ''
+  : baseZhong + 'acis/superConfig/saveFileUpload'
+
+// 获取文书上传列表 - 钟 - 2020-08-17
+export const getUploadTemplateInfo = mock
+  ? ''
+  : baseZhong + 'acis/superConfig/getUploadTemplateInfo'
+
+// 保存文书上传列表 - 钟 - 2020-08-17
+export const saveUploadTemplateInfo = mock
+  ? ''
+  : baseZhong + 'acis/superConfig/saveUploadTemplateInfo'
