@@ -2,7 +2,7 @@
   <div class="aside">
     <div class="title">
       Dandelion 智慧手术中心
-      <i />查询统计
+      <i />数据统计
     </div>
     <div
       class="img"
@@ -87,12 +87,12 @@ export default {
           index: '1',
           icon: 'el-icon-location',
           subNav: [
-            { name: '手术查询', index: '/statistics-home/search-statistics' },
-            { name: '取消手术查询', index: '/statistics-home/cancel-statistics' },
-            { name: '恢复室病人统计', index: '/statistics-home/recover-statistics' },
-            { name: '麻醉方法统计', index: '/statistics-home/anes-method-statistics' },
-            { name: 'ASA分级统计', index: '/statistics-home/asa-statistics' },
-            { name: '输血统计', index: '/statistics-home/blood-statistics' }
+            { name: '手术查询', index: '/statistics-home/search-statistics', code: 'T001' },
+            { name: '取消手术查询', index: '/statistics-home/cancel-statistics', code: 'T002' },
+            { name: '恢复室病人统计', index: '/statistics-home/recover-statistics', code: 'T003' },
+            { name: '麻醉方法统计', index: '/statistics-home/anes-method-statistics', code: 'T004' },
+            { name: 'ASA分级统计', index: '/statistics-home/asa-statistics', code: 'T005' },
+            { name: '输血统计', index: '/statistics-home/blood-statistics', code: 'T006' }
           ]
         },
         {
@@ -100,10 +100,10 @@ export default {
           index: '2',
           icon: 'el-icon-s-data',
           subNav: [
-            { name: '科室工作量', index: '/statistics-home/dept-statistics' },
-            { name: '麻醉医生工作量', index: '/statistics-home/anes-doc-statistics' },
-            { name: '手术医生工作量', index: '/statistics-home/ope-doc-statistics' },
-            { name: '护士工作量', index: '/statistics-home/nurse-statistics' }
+            { name: '科室工作量', index: '/statistics-home/dept-statistics', code: 'T007' },
+            { name: '麻醉医生工作量', index: '/statistics-home/anes-doc-statistics', code: 'T008' },
+            { name: '手术医生工作量', index: '/statistics-home/ope-doc-statistics', code: 'T009' },
+            { name: '护士工作量', index: '/statistics-home/nurse-statistics', code: 'T010' }
           ]
         },
         {
@@ -111,10 +111,10 @@ export default {
           index: '3',
           icon: 'el-icon-monitor',
           subNav: [
-            { name: '动脉穿刺统计', index: '/statistics-home/arterial-statistics' },
-            { name: '质控数据统计', index: '/statistics-home/quantity-control-statistics' },
-            { name: '术后随访统计', index: '/statistics-home/followup-statistics' },
-            { name: '麻醉质控17项指标统计', index: '/statistics-home/anes-qc17-statistics' }
+            { name: '动脉穿刺统计', index: '/statistics-home/arterial-statistics', code: 'T011' },
+            { name: '质控数据统计', index: '/statistics-home/quantity-control-statistics', code: 'T012' },
+            { name: '术后随访统计', index: '/statistics-home/followup-statistics', code: 'T013' },
+            { name: '麻醉质控17项指标统计', index: '/statistics-home/anes-qc17-statistics', code: 'T014' }
           ]
         }
       ],
@@ -185,13 +185,9 @@ export default {
     }
   }
   .img {
-    // height:34px;
     margin: 14px 0;
-    // background:#fff;
     img {
       display: block;
-      // width:100%;
-      // margin-left:20px;
       margin: 0 auto;
       height: 100%;
     }
@@ -222,6 +218,8 @@ export default {
       .el-menu-item{
         height:30px;
         line-height: 30px;
+        // text-indent: 14px;
+        padding-left: 54px !important;
         .menuActive{
           width:2px;
           height:30px;
