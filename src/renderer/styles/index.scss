@@ -91,6 +91,12 @@ input[type="time"] {
 #app /deep/ .el-tree{
   background-color: unset;
 }
+#app /deep/ .el-tabs__item{
+  color:#9AA3D4;
+  &.is-active{
+    color:#409EFF !important;
+  }
+}
 .vxe-checkbox.is--indeterminate > input:not(:checked) + .vxe-checkbox--icon:before {
 .vxe-checkbox.is--indeterminate
   > input:not(:checked)

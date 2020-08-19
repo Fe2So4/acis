@@ -28,6 +28,17 @@ router = new Router({
       ]
     },
     {
+      path: '/print-notice',
+      name: 'PrintNotice',
+      components: () => import('@/views/ScheduleReport/print-notice.vue')
+    },
+    // {
+    //   path: '/print-report',
+    //   name: 'PrintReport',
+    //   components: () => import('@/views/PrintReport/index')
+    // },
+
+    {
       path: '*',
       redirect: '/'
     }

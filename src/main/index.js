@@ -45,7 +45,7 @@ function createWindow () {
     })
   }
   // 显示开发者工具
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', () => {
     mainWindow = null
@@ -157,6 +157,7 @@ const createPrintWindow = (printRoute) => {
 
 let printWin
 ipcMain.on('print-document', (e, printRoute) => {
+  console.log(printRoute)
   printWin = createPrintWindow(printRoute)
 })
 ipcMain.on('ready-to-print', () => {

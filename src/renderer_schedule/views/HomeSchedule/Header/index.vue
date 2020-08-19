@@ -11,7 +11,6 @@
         >
       </div>
     </div>
-
     <div class="header-navs">
       <ul class="navs">
         <li
@@ -37,6 +36,21 @@
           </div>
         </li>
       </ul>
+    </div>
+    <div class="options">
+      <i
+        class="el-icon-minus"
+        @click="miniWindow"
+      />
+      <i
+        class="iconfont icon-icon_min"
+        :class="iconMax"
+        @click="maxWindow"
+      />
+      <i
+        class="el-icon-close"
+        @click="closeWindow"
+      />
     </div>
   </div>
 </template>
@@ -87,7 +101,8 @@ export default {
           index: 3
         }
       ],
-      activeIndex: 1
+      activeIndex: 1,
+      iconMax: 'icon-icon_min2'
     }
   },
   props: ['lock'],
@@ -168,13 +183,13 @@ export default {
 
   .common-header-container {
     display: flex;
+    position: relative;
     height: 100%;
     justify-content: space-between;
     align-items: center;
     // background: #144177;
     background:rgba(18,20,33,1);
     box-shadow:4px 3px 5px 0px rgba(0, 0, 0, 0.4);
-
     .logo-container {
       padding-left:10px;
       width:354px;
@@ -187,7 +202,6 @@ export default {
           height:100%;
         }
       }
-
       .title {
         font-size: 12px;
         color:#0094FF;
@@ -205,7 +219,6 @@ export default {
         }
       }
     }
-
     .header-navs {
       flex: 1;
       font-size: 12px;
@@ -275,7 +288,19 @@ export default {
         }
       }
     }
-
+    .options{
+      position: absolute;
+      right: 0;
+      top: 5px;
+      i{
+        -webkit-app-region: no-drag;
+        font-size:18px;
+        font-weight: bold;
+        color:#0094ff;
+        margin-right:20px;
+        cursor: pointer;
+      }
+    }
     .handle-container {
       flex: 1;
       height: 69px;
@@ -295,7 +320,6 @@ export default {
           }
         }
       }
-
       .user-info {
         font-size: 12px;
         width: 150px;

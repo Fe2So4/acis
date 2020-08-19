@@ -434,6 +434,9 @@ export default {
       float left
       width 20%
       height 100%
+      border 1px solid rgba(57, 66, 92, 1)
+      border-radius 5px 0px 0px 5px
+      border-right unset
     .right
       height 100%
       float right
