@@ -6,11 +6,11 @@ import router from './router'
 import store from './store'
 import ElementUI from 'element-ui'
 import 'normalize.css/normalize.css'
+// import 'element-ui/lib/theme-chalk/index.css'
+import './styles/element-variables.scss' // 修改element-ui默认样式
 import './styles/index.scss'
 import './styles/transition.scss'
 import './iconfont/iconfont.css'
-// import 'element-ui/lib/theme-chalk/index.css'
-import './styles/element-variables.scss' // 修改element-ui默认样式
 import './utils/dialog'
 import 'xe-utils'
 import VXETable from 'vxe-table'

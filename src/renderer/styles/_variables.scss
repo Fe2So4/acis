@@ -1,0 +1,11 @@
+@use "sass:map";
+$document_background_color: ("dark": #e3e3e3, "light": #ffffff);
+
+@mixin theme_color( $property, $variable) {
+  .light &{
+    #{$property}: map-get($variable, "light")
+  }
+  .dark &{
+    #{$property}: map-get($variable, "dark")
+  }
+}

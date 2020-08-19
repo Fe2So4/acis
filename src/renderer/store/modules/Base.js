@@ -1,14 +1,10 @@
 import moment from 'moment'
 const state = {
   // 当前登录用户id
-  // userId: '666',
   userId: '',
   // 病人id
-  // patientId: '1000001',
   patientId: '',
-  // patientId: 'a54sd',
   // 手术id
-  // operationId: 'b0f9d8bda9244397a44cb8ff278937d9',
   operationId: '',
   // 当前选中病人手术间
   roomNo: '',
@@ -36,7 +32,9 @@ const state = {
     ptId: ''
   },
   // 存储各手术状态时间，conCode解释同procedureState
-  operationStateMap: {}
+  operationStateMap: {},
+  // 主题
+  theme: 'dark'
 }
 const getters = {
   patientId: state => state.patientId,
@@ -94,6 +92,9 @@ const mutations = {
   },
   CLEAR_OPERATION_STATE_MAP (state) {
     state.operationStateMap = {}
+  },
+  SET_THEME (state, theme) {
+    state.theme = theme
   }
 }
 
@@ -144,6 +145,9 @@ const actions = {
     dispatch('clearOperationId')
     dispatch('clearRoomNo')
     dispatch('clearProcedureState')
+  },
+  setTheme ({ commit }, theme) {
+    commit('SET_THEME', theme)
   }
 }
 
