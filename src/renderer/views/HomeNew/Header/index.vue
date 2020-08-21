@@ -40,9 +40,6 @@ export default {
     }
   },
   methods: {
-    handleTest () {
-      console.log(123)
-    },
     miniWindow () {
       // 最小化窗口
       win.minimize()
@@ -80,6 +77,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "@/styles/theme";
 .header {
   line-height:32px;
   text-align: right;
@@ -91,7 +89,7 @@ export default {
     -webkit-app-region: no-drag;
     font-size:18px;
     font-weight: bold;
-    color:#0094ff;
+    @include theme-property("color", $color-primary);
     margin-right:20px;
     cursor: pointer;
   }

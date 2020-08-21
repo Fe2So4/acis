@@ -1,13 +1,18 @@
 /* 改变主题色变量 */
-$--custom-el-background-color:#252C40;
+$--custom-el-background-color:#2D2D33;
 /* Color
 -------------------------- */
+/// color|1|Brand Color|0
+$--color-primary: #FB6716;
 // 常用字颜色
 /// color|1|Font Color|2
-$--color-text-regular: #9BA3D5;
+$--color-text-regular: #BABABA;
 
 /// color|1|Border Color|3
-$--border-color-base: #353E56;
+$--border-color-base: #484848;
+
+/// color|1|Font Color|2
+$--color-text-placeholder: map-get($color-text-placeholder, 'dark-gray');
 
 // Background
 /// color|1|Background Color|4
@@ -19,7 +24,7 @@ $--background-color-base: #F5F7FA !default;
 /// color||Color|0
 $--checkbox-background-color: $--custom-el-background-color;
 /// color||Color|0
-$--checkbox-checked-font-color: #ffffff;
+$--checkbox-checked-font-color: #BABABA;
 /// color||Color|0
 // $--checkbox-disabled-input-fill: #6c7eb3;
 
@@ -33,7 +38,7 @@ $--input-font-color: #ffffff;
 $--input-background-color:$--custom-el-background-color;
 $--input-disabled-fill:#2C2E36;
 $--input-disabled-color:#47494C;
-$--input-disabled-border:rgba(71,73,76,1);
+$--input-disabled-border:#47494c;
 //
 
 /* Dialog
@@ -45,12 +50,12 @@ $--dialog-background-color:#181C27;
 /* Button
 -------------------------- */
 /// color||Color|0
-$--button-default-background-color: $--custom-el-background-color;
+$--button-default-background-color: #2D2D33;
 
 //disabled
 $--button-disabled-background-color: #2C2E36;
 $--button-disabled-font-color: #47494C;
-$--button-disabled-border-color:rgba(71,73,76,1);
+$--button-disabled-border-color:#47494c;
 
 /* Select
 -------------------------- */

@@ -1,0 +1,129 @@
+@use "dark-blue";
+@use "dark-gray";
+
+$color-white: #ffffff;
+$color-black: black;
+
+$themes: ("dark-gray", "dary-blue");
+
+$color-primary: (
+  "dark-gray": #fb6715,
+  "dark-blue": #0093ff,
+);
+
+$color-primary-light: (
+  "dark-gray": mix(#fb6715, $color-white, 90%),
+  "dark-blue": mix(#0093ff, $color-white, 90%),
+);
+
+$color-text-primary: (
+  "dark-gray": #fb6715,
+  "dark-blue": #0093ff,
+);
+
+$color-text-regular: (
+  "dark-gray": #B9B9B9,
+  "dark-blue": #9AA3D4,
+);
+
+$color-text-secondary: (
+  "dark-gray": #F9F9F9,
+  "dark-blue": #CFD9E5,
+);
+
+$color-text-placeholder: (
+  "dark-gray": #7e7e7e,
+  "dark-blue": #7F85A9,
+);
+
+$color-background-card: (
+  "dark-gray": #474747,
+  "dark-blue": #171B27,
+);
+
+$color-background-card-hover: (
+  "dark-gray": #555454,
+  "dark-blue": #262c3c,
+);
+
+$color-background-navigation: (
+  "dark-gray": #353537,
+  "dark-blue": #181C27,
+);
+
+$color-background-home: (
+  "dark-gray": #1E1F22,
+  "dark-blue": #121421,
+);
+
+$color-background-aside: (
+  "dark-gray": #353537,
+  "dark-blue": #121421,
+);
+
+$color-background-aside-active: (
+  "dark-gray": #474748,
+  "dark-blue": #1c1f32,
+);
+
+$box-shadow-card:(
+  "dark-gray": 0px 0px 9px 1px rgba(0, 0, 0, 0.2),
+  "dark-blue": 0px 0px 12px 3px rgba(0, 0, 0, 0.4),
+);
+
+$color-background-card-room:(
+  "dark-gray": linear-gradient(120deg,rgba(88,173,246,1),rgba(7,99,226,1)),
+  "dark-blue": linear-gradient(
+    120deg,
+    rgba(84, 190, 234, 1),
+    rgba(219, 83, 160, 1)
+  ),
+);
+
+$box-shadow-card-room:(
+  "dark-gray": 0px 0px 3px 0px rgba(0, 0, 0, 0.35),
+  "dark-blue": 0 0 12px 3px #373a44,
+);
+
+$border-info:(
+  "dark-gray": 2px solid #696969,
+  "dark-blue": 2px solid #353D55,
+);
+
+$border-card-small:(
+  "dark-gray": 2px solid #2e2e2e,
+  "dark-blue": 2px solid #353E56,
+);
+
+// 卡片中的房间号
+@mixin card-room{
+  @each $theme in $themes{
+    .#{$theme} & {
+      background: map-get($map: $color-background-card-room, $key: $theme);
+      box-shadow: map-get($map: $box-shadow-card-room, $key: $theme);
+    }
+  }
+}
+
+// 获取颜色方案
+@mixin theme-property($property, $var) {
+  @each $theme, $value in $var {
+    .#{$theme} & {
+      #{$property}: $value;
+    }
+  }
+}
+
+// 激活边框样式
+@mixin border-active{
+  @each $theme, $value in $color-primary {
+    .#{$theme} & {
+      border: {
+        width:1px;
+        style: solid;
+        color: $value
+      }
+    }
+  }
+}
+

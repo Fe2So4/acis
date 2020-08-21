@@ -44,6 +44,7 @@
               type="date"
               placeholder="选择日期"
               style="width:165px"
+              popper-class="dateTimePicker"
             />
           </el-form-item>
           <el-form-item>
@@ -433,9 +434,3 @@ export default {
   }
 }
 </style>
-<style>
-  .el-picker-panel {
-    background: #252c40 !important;
-  }
-</style>
-}

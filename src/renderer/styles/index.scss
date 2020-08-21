@@ -1,3 +1,4 @@
+@import "theme";
 body {
   height: 100%;
   -moz-osx-font-smoothing: grayscale;
@@ -140,30 +141,50 @@ input[type="time"] {
   background-color: #1e222e;
 }
 
-.dark {
-  @import "element-variables-dark.scss";
-  /*日期时间选择器*/
-  .dateTimePicker {
-    .el-date-table th {
-      border-bottom: 1px solid #006ab6;
-    }
-    .el-date-picker__time-header,
-    .el-date-picker__header--bordered,
-    .el-date-range-picker__time-header,
-    .el-date-range-picker__content.is-left {
-      border-color: #353e56;
-    }
-    .el-picker-panel__footer {
-      background-color: #252c40;
-      border-top: 1px solid #353e56;
-    }
-    .el-date-table td.in-range div {
-      background: #353e56;
-    }
+.dark-blue {
+  @import "element-variables-dark-blue.scss";
+}
+
+
+.dark-gray {
+  @import "element-variables-dark-gray.scss";
+}
+/*日期时间选择器*/
+.dateTimePicker {
+  @include theme-property("background", $color-background-aside);
+  @include theme-property("border-color", $color-background-aside);
+  .el-picker-panel__icon-btn {
+    @include theme-property("color", $color-text-primary);
   }
-  /*消息对话框*/
-  .messageBox.el-message-box {
-    background-color: #252c40;
-    border-color: #353e56;
+  .el-date-table th {
+    // border-bottom: 1px solid #006ab6;
+    border-bottom: {
+      width:1px;
+      style:solid;
+    }
+    @include theme-property("border-color", $color-primary-light);
   }
+  .el-date-picker__time-header,
+  .el-date-picker__header--bordered,
+  .el-date-range-picker__time-header,
+  .el-date-range-picker__content.is-left {
+    @include theme-property("border-color", $color-primary-light);
+  }
+  .el-picker-panel__footer {
+    // background-color: #252c40;
+    @include theme-property("background", $color-background-home);
+    border-top: 1px solid #353e56;
+    @include theme-property("border-color", $color-primary-light);
+  }
+  .el-date-table td.in-range div {
+    // background: #353e56;
+    @include theme-property("background", $color-primary-light);
+  }
+}
+/*消息对话框*/
+.messageBox.el-message-box {
+  // background-color: #252c40;
+  @include theme-property("background-color", $color-background-home);
+  // border-color: #353e56;
+  @include theme-property("border-color", $color-background-aside);
 }
