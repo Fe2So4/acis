@@ -67,6 +67,7 @@
       </div>
       <div class="content">
         <vxe-table
+          round
           show-overflow
           size="mini"
           ref="xTable"
@@ -280,6 +281,7 @@
                 size="mini"
                 format="MM-dd HH:mm"
                 value-format="yyyy-MM-dd HH:mm"
+                @change="handleDateChange(row)"
               />
               <!-- @change="handleBlur" -->
             </template>
@@ -297,7 +299,7 @@
                 v-model="row.isHolding"
                 active-value="1"
                 inactive-value="0"
-                @change="handleBlur"
+                @change="handleChangeSwitch(row)"
               />
             </template>
           </vxe-table-column>
@@ -327,7 +329,7 @@
                 size="mini"
                 popper-class="dateTimePicker"
                 type="datetime"
-                @change="handleBlur"
+                @change="handleDateChange(row)"
                 format="MM-dd HH:mm"
                 value-format="yyyy-MM-dd HH:mm"
               />
@@ -477,6 +479,27 @@ export default {
         }
       }
     },
+    // 处理开关时间改变
+    handleChangeSwitch (row) {
+      this.handleBlur()
+      if (row.isHolding === '0') {
+        row.eventEndTime = ''
+        row.holdingTime = ''
+      } else {
+        row.eventEndTime = moment(new Date()).format('YYYY-MM-DD HH:mm')
+        row.holdingTime = moment(new Date()).diff(moment(row.eventStartTime), 'minute')
+      }
+    },
+    // 处理时间改变
+    handleDateChange (row) {
+      this.handleBlur()
+      // eventStartTime eventEndTime holdingTime
+      if (row.isHolding === '1') {
+        console.log(row.eventEndTime)
+        row.holdingTime = moment(row.eventEndTime).diff(moment(row.eventStartTime), 'minute')
+      }
+      console.log(row)
+    },
     handleCheck ({ records }) {
       console.log(records.length)
       if (records.length > 0) {
@@ -553,10 +576,10 @@ export default {
         concentrationUnit: item.conUnit,
         dosageUnit: item.doseUnit,
         dosage: dose,
-        eventEndTime: item.isHolding === '1' ? moment(new Date()).format('YYYY-MM-DD HH:mm') : '',
+        eventEndTime: item.isContinue === '1' ? moment(new Date()).format('YYYY-MM-DD HH:mm') : '',
         eventName: item.detailName,
         eventType: this.eventType.eventName, // 此处需要写活
-        holdingTime: item.isHolding === '1' ? moment(new Date()).diff(moment(new Date()), 'minute') : '',
+        holdingTime: item.isContinue === '1' ? moment(new Date()).diff(moment(new Date()), 'minute') : '',
         isHolding: item.isContinue,
         speed: item.speed,
         speedUnit: item.speedUnit,
