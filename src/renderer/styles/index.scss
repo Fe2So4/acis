@@ -1,3 +1,4 @@
+@import "theme";
 body {
   height: 100%;
   -moz-osx-font-smoothing: grayscale;
@@ -88,15 +89,17 @@ input[type="time"] {
   height: 50px;
 }
 
-#app /deep/ .el-tree{
+#app /deep/ .el-tree {
   background-color: unset;
 }
-.vxe-checkbox.is--indeterminate > input:not(:checked) + .vxe-checkbox--icon:before {
 .vxe-checkbox.is--indeterminate
   > input:not(:checked)
   + .vxe-checkbox--icon:before {
-  left: 0;
-}
+  .vxe-checkbox.is--indeterminate
+    > input:not(:checked)
+    + .vxe-checkbox--icon:before {
+    left: 0;
+  }
 }
 #app /deep/ .vxe-table .vxe-cell--checkbox .vxe-checkbox--icon:before,
 .vxe-table--filter-option .vxe-checkbox--icon:before,
@@ -116,18 +119,18 @@ input[type="time"] {
 }
 /*滚动条的轨道*/
 .scroll div::-webkit-scrollbar-track {
-  background-color: #1E222E;
+  background-color: #1e222e;
 }
 /*滚动条里面的小方块，能向上向下移动*/
 .scroll div::-webkit-scrollbar-thumb {
-  background-color: #292F40;
+  background-color: #292f40;
   border-radius: 5px;
   // border: 1px solid #f1f1f1;
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 .scroll div::-webkit-scrollbar-thumb:hover {
   // background-color: #252C40;
-  background-color: #292F40;
+  background-color: #292f40;
 }
 .scroll div::-webkit-scrollbar-thumb:active {
   /* background-color: #787878; */
@@ -135,30 +138,53 @@ input[type="time"] {
 }
 /*边角，即两个滚动条的交汇处*/
 .scroll div::-webkit-scrollbar-corner {
-  background-color: #1E222E;
+  background-color: #1e222e;
 }
 
+.dark-blue {
+  @import "element-variables-dark-blue.scss";
+}
+
+
+.dark-gray {
+  @import "element-variables-dark-gray.scss";
+}
 /*日期时间选择器*/
 .dateTimePicker {
+  @include theme-property("background", $color-background-aside);
+  @include theme-property("border-color", $color-background-aside);
+  .el-picker-panel__icon-btn {
+    @include theme-property("color", $color-text-primary);
+  }
   .el-date-table th {
-    border-bottom: 1px solid #006ab6;
+    // border-bottom: 1px solid #006ab6;
+    border-bottom: {
+      width:1px;
+      style:solid;
+    }
+    @include theme-property("border-color", $color-primary-light);
   }
   .el-date-picker__time-header,
   .el-date-picker__header--bordered,
   .el-date-range-picker__time-header,
   .el-date-range-picker__content.is-left {
-    border-color: #353e56;
+    @include theme-property("border-color", $color-primary-light);
   }
   .el-picker-panel__footer {
-    background-color: #252c40;
+    // background-color: #252c40;
+    @include theme-property("background", $color-background-home);
     border-top: 1px solid #353e56;
+    @include theme-property("border-color", $color-primary-light);
   }
-  .el-date-table td.in-range div{
-    background: #353e56;
+  .el-date-table td.in-range div {
+    // background: #353e56;
+    @include theme-property("background", $color-primary-light);
   }
 }
-/*消息对话框*/ 
+/*消息对话框*/
 .messageBox.el-message-box {
-  background-color: #252c40;
-  border-color: #353e56;
+  // background-color: #252c40;
+  @include theme-property("background-color", $color-background-home);
+  // border-color: #353e56;
+  @include theme-property("border-color", $color-background-aside);
 }

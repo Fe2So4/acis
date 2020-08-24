@@ -1,13 +1,27 @@
 <template>
-  <div id="app">
+  <div
+    id="app"
+  >
     <router-view />
   </div>
 </template>
 
 <script>
 // import '@/mock/mockData'
+import { mapState } from 'vuex'
 export default {
   name: 'Acis',
+  computed: {
+    ...mapState('Base', ['theme'])
+  },
+  watch: {
+    theme: {
+      handler: function (val) {
+        document.body.classList.add(val)
+      },
+      immediate: true
+    }
+  },
   created () {
     this.$electron.ipcRenderer.on('route', (e, locationName) => {
       if (locationName) {

@@ -202,12 +202,13 @@ export default {
   }
 }
 </script>
-<style lang="stylus" scoped>
+<style lang="scss" scoped>
+@import "@/styles/theme";
 .operation-status {
   width: 100%;
   height: 114px;
-  background: #181C27;
-  box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+  @include theme-property("background", $color-background-navigation);
+  @include theme-property("box-shadow", $box-shadow-card);
   border-radius: 5px;
   overflow: hidden;
 
@@ -218,8 +219,8 @@ export default {
     float: left;
     min-width: 210px;
     max-height: 94px;
-    background: rgba(37, 44, 64, 1);
-    border: 2px solid rgba(53, 62, 86, 1);
+    background: #252c40;
+    @include theme-property("border", $border-card-small);
     border-radius: 6px;
     font-size: 14px;
     padding: 4px 9px 9px;
@@ -475,9 +476,6 @@ export default {
 }
 </style>
 <style>
-.el-picker-panel {
-  background: #252c40 !important;
-}
 .scrollbar .el-scrollbar__wrap {
   overflow-x: hidden;
 }

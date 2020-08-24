@@ -95,6 +95,7 @@
                 placeholder
                 format="yyyy-MM-dd"
                 value-format="yyyy-MM-dd"
+                popper-class="dateTimePicker"
               />
             </el-form-item>
             <el-form-item>
@@ -256,9 +257,7 @@
                 </p>
                 <p>
                   <span class="label">术者</span>
-                  <span
-                    style="max-width:40px"
-                  >{{ item.surgeonName }}</span>
+                  <span style="max-width:40px">{{ item.surgeonName }}</span>
                   <span
                     class="label"
                     style="margin-left:10px;"
@@ -318,7 +317,7 @@
           class="loading"
         >
           没有更多了
-        </p> -->
+        </p>-->
       </el-scrollbar>
     </div>
   </div>
@@ -338,9 +337,11 @@ import {
 export default {
   name: 'PatientList',
   data () {
-    const wrapStyle = Object.freeze([{
-      'overflow-x': 'hidden'
-    }])
+    const wrapStyle = Object.freeze([
+      {
+        'overflow-x': 'hidden'
+      }
+    ])
     return {
       wrapStyle,
       loading: false,
@@ -384,7 +385,6 @@ export default {
       activeIndex: null
     }
   },
-  components: {},
   computed: {
     noMore () {
       return this.currentPage >= this.totalPages
@@ -628,6 +628,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "@/styles/theme";
 .patient-info {
   height: 100%;
   width: 100%;
@@ -637,8 +638,8 @@ export default {
   .search {
     // flex: 1;
     height: 118px;
-    background: rgba(24, 28, 39, 1);
-    box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+    @include theme-property("background", $color-background-navigation);
+    @include theme-property("box-shadow", $box-shadow-card);
     border-radius: 5px;
     width: 100%;
     padding: 20px;
@@ -647,14 +648,14 @@ export default {
       position: absolute;
       padding: 20px 20px 0 20px;
       width: 100%;
-      background: #181c27;
-      box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+      @include theme-property("background", $color-background-navigation);
+      @include theme-property("box-shadow", $box-shadow-card);
       border-radius: 5px;
       top: 120px;
       left: 0;
       z-index: 1;
     }
-    .el-checkbox{
+    .el-checkbox {
       margin-right: 10px;
     }
   }
@@ -673,18 +674,15 @@ export default {
     }
     ul {
       display: grid;
-      // height:100%;
-      // overflow-y:auto;
       grid-template-columns: repeat(auto-fill, 392px);
       grid-column-gap: 20px;
       grid-row-gap: 20px;
-      // justify-content: space-around;
       li {
-        box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+        @include theme-property("box-shadow", $box-shadow-card);
         cursor: pointer;
         border-radius: 5px;
         padding: 0 0 14px 0;
-        background: #181c27;
+        @include theme-property("background", $color-background-card);
         border: 1px solid #181c27;
         width: 392px;
         height: 196px;
@@ -696,11 +694,12 @@ export default {
           display: flex;
           justify-content: space-between;
           span {
-            color: #7f85a9;
+            @include theme-property("color", $color-text-placeholder);
             padding: 0 10px;
             line-height: 28px;
             &:last-child {
-              color: #0094ff;
+              font-weight: bold;
+              @include theme-property("color", $color-text-primary);
             }
           }
         }
@@ -722,11 +721,7 @@ export default {
               height: 46px;
               display: block;
               line-height: 46px;
-              background: linear-gradient(
-                120deg,
-                rgba(84, 190, 234, 1),
-                rgba(219, 83, 160, 1)
-              );
+              @include card-room;
               border-radius: 0px 23px 23px 0px;
               font-size: 26px;
               font-weight: bold;
@@ -752,7 +747,7 @@ export default {
               color: #9ba3d5;
               // display: flex;
               span {
-                color: #d0dae5;
+                @include theme-property("color", $color-text-secondary);
                 float: left;
                 margin-right: 10px;
                 line-height: 28px;
@@ -766,7 +761,7 @@ export default {
                     }
                   }
                 }
-                &:last-child{
+                &:last-child {
                   margin-right: 0;
                 }
               }
@@ -779,13 +774,12 @@ export default {
                 white-space: nowrap;
               }
               .label {
-                color: #9ba3d5;
+                @include theme-property("color", $color-text-regular);
                 margin-right: 10px;
               }
             }
           }
           .status {
-            // background: pink;
             height: 100%;
             width: 74px;
             float: right;
@@ -795,24 +789,19 @@ export default {
           }
         }
         &:hover {
-          border: 1px solid #0094ff;
-          background: #262c3c;
-          // transform:scale(1.1,1.1);
+          @include border-active;
+          @include theme-property("background", $color-background-card-hover);
         }
-      }
-      li.active {
-        border: 1px solid #0094ff;
-        background: #262c3c;
+        &.active {
+          @include border-active;
+          @include theme-property("background", $color-background-card-hover);
+        }
       }
     }
   }
 }
 </style>
 <style>
-.el-picker-panel {
-  background: #252c40 !important;
-}
-
 .rowScrollbar .el-scrollbar__wrap .el-scrollbar__view {
   white-space: nowrap;
 }

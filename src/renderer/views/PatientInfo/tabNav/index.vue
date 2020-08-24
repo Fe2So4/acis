@@ -1,13 +1,19 @@
-<template lang="pug">
-.tab-nav
-  el-scrollbar.rowScrollbar
-    ul
-      li(
-        v-for="item in navList",
-        :key="item.index",
-        @click="handleClick(item)"
-      )
-        div(:class="{ isActive: item.index === navIndex }") {{ item.label }}
+<template>
+  <div class="tab-nav">
+    <el-scrollbar ref="scrollbar">
+      <ul>
+        <li
+          v-for="item in navList"
+          :key="item.index"
+          @click="handleClick(item)"
+        >
+          <div :class="{ isActive: item.index === navIndex }">
+            {{ item.label }}
+          </div>
+        </li>
+      </ul>
+    </el-scrollbar>
+  </div>
 </template>
 <script>
 import request from '@/utils/requestForMock'
@@ -64,6 +70,7 @@ export default {
   async created () {
     await this.getDocumentsList()
     this.handleClick(this.navList[0])
+    this.$refs.scrollbar.update()
   },
   methods: {
     handleClick (item) {
@@ -95,18 +102,18 @@ export default {
   }
 }
 </script>
-<style lang="stylus" scoped>
+<style lang="scss" scoped>
+@import "@/styles/theme";
 .tab-nav {
   width: 100%;
   margin-top: 18px;
-  box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+  @include theme-property("box-shadow", $box-shadow-card);
   border-radius: 5px;
-  background: #181C27;
-  color: #9BA3D5;
+  @include theme-property("background", $color-background-navigation);
+  @include theme-property("color", $color-text-regular);
   width: 100%;
 
   ul {
-    // width 100%
     display: flex;
     flex-wrap: nowrap;
 
@@ -116,7 +123,6 @@ export default {
       padding: 5px 15px;
       font-size: 14px;
 
-      // float left
       &>div {
         line-height: 30px;
         height: 30px;
@@ -124,8 +130,9 @@ export default {
         padding: 0 5px;
 
         &.isActive {
-          color: #0094ff;
-          border-bottom: 2px solid #0094ff;
+          @include theme-property("color",$color-text-primary);
+          border-bottom: 2px solid;
+          @include theme-property("border-color",$color-text-primary);
           font-weight: bold;
         }
       }

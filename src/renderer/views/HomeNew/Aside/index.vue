@@ -377,6 +377,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "@/styles/theme";
 .aside {
   height: 100%;
   width: 100%;
@@ -384,7 +385,7 @@ export default {
   overflow: hidden;
   // position: relative;
   .title {
-    color: #0094ff;
+    @include theme-property("color", $color-text-primary);
     line-height: 30px;
     text-align: center;
     // background: #f8f9fa;
@@ -397,7 +398,7 @@ export default {
       vertical-align: middle;
       height: 5px;
       border-radius: 50%;
-      background: #388ff7;
+      @include theme-property("background", $color-primary);
       margin: 0 4px;
     }
   }
@@ -420,7 +421,7 @@ export default {
       text-align: center;
       margin-bottom:26px;
       line-height: 30px;
-      color: #9ba3d5;
+      @include theme-property("color", $color-text-regular);
       font-size: 14px;
       cursor: pointer;
       &:hover {
@@ -451,7 +452,7 @@ export default {
   }
   .el-collapse {
     border: unset;
-    background: #121421;
+    @include theme-property("background", $color-background-aside);
   }
   .active {
     width: 2px;
@@ -460,7 +461,7 @@ export default {
     right: 0;
     top: 0;
     background: linear-gradient(
-      0deg,
+      180deg,
       rgba(236, 33, 88, 1),
       rgba(12, 133, 226, 1)
     );
@@ -469,8 +470,8 @@ export default {
 .aside /deep/ .el-collapse-item__header {
   height: 40px;
   border: unset;
-  background: #121421;
-  color: #9ba3d5;
+  @include theme-property("background", $color-background-aside);
+  @include theme-property("color", $color-text-regular);
   font-size: 14px;
   padding-left: 20px;
   position: relative;
@@ -480,16 +481,16 @@ export default {
   }
 }
 .aside /deep/ .el-collapse-item__wrap {
-  background: #121421;
+  @include theme-property("background", $color-background-aside);
   border: unset;
 }
 .aside /deep/ .el-collapse-item__content {
-  background: #121421;
+  @include theme-property("background", $color-background-aside);
   border: unset;
   padding: 30px 0 4px 0;
 }
 .aside /deep/ .el-collapse-item__header.is-active {
-  background: rgba(28, 31, 50, 1);
+  @include theme-property("background", $color-background-aside-active);
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.05);
   color: #edf1f9;
   font-size: 16px;

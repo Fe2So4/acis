@@ -58,7 +58,10 @@ export default {
         if (typeof this.configuration.value === 'undefined') {
           this.checkedOptions = []
         } else {
-          this.checkedOptions = this.configuration.value.split(',')
+          this.checkedOptions =
+            this.configuration.value === ''
+              ? []
+              : this.configuration.value.split(',')
         }
       }
     }
@@ -89,7 +92,7 @@ export default {
     },
     onChange (val) {
       this.configuration.dirty = true
-      if (this.configuration.singleSelect === '1' && val.length > 1) {
+      if (+this.configuration.singleSelect === 1 && val.length > 1) {
         this.checkedOptions.shift()
       }
       this.$emit('change', val.join(','))
