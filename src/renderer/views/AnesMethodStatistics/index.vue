@@ -4,11 +4,12 @@
       <el-form
         size="mini"
         :inline="true"
+        :model="form"
       >
         <span>
           <el-form-item label="麻醉开始时间">
             <el-date-picker
-              v-model="value"
+              v-model="form.anesStartTime"
               type="date"
               style="width:165px;"
               align="right"
@@ -18,7 +19,7 @@
           </el-form-item>
           <el-form-item label="麻醉结束时间">
             <el-date-picker
-              v-model="value"
+              v-model="form.anesEndTime"
               type="date"
               style="width:165px;"
               align="right"
@@ -27,18 +28,21 @@
             />
           </el-form-item>
           <el-form-item label="麻醉医生">
-            <el-input v-model="value" />
+            <el-input v-model="form.anesDocNo" />
           </el-form-item>
           <el-form-item label="麻醉方法">
-            <el-input v-model="value" />
+            <el-input v-model="form.anesMethodNo" />
           </el-form-item>
           <el-form-item label="手术科室">
-            <el-input v-model="value" />
+            <el-input v-model="form.deptCode" />
           </el-form-item>
         </span>
         <span>
           <el-form-item>
-            <el-button type="primary">
+            <el-button
+              type="primary"
+              @click="getData"
+            >
               查询
             </el-button>
             <el-button>导出配置</el-button>
@@ -51,79 +55,40 @@
       <vxe-table
         border
         round
-        show-footer
-        export-config
-        size="mini"
         ref="xTable"
         class="xTable"
-        height="100%"
+        size="mini"
         :data="tableData"
-        align="center"
+        :footer-method="footerMethod"
+        show-footer
       >
         <vxe-table-column
-          field="opeRoom"
-          title="术间"
-        />
-        <vxe-table-column
-          field="sequence"
-          title="序号"
-        />
-        <vxe-table-column
-          field="ptName"
-          title="病人信息"
-        />
-        <vxe-table-column
-          field="inpatientWard"
-          title="病区"
-        />
-        <vxe-table-column
-          field="bedId"
-          title="床号"
-        />
-        <vxe-table-column
-          field="visitId"
-          title="住院号"
-        />
-        <vxe-table-column
-          field="diagnoseBefore"
-          title="诊断"
-        />
-        <vxe-table-column
-          field="operationName"
-          title="手术名称"
-        />
-        <vxe-table-column
-          field="surgeonName"
-          title="手术医师"
-        />
-        <vxe-table-column
-          field="anesMethod"
+          field="anes_name"
           title="麻醉方法"
         />
         <vxe-table-column
-          field="anesDoc"
-          title="麻醉医师"
+          field="count"
+          width="120"
+          title="例数"
         />
-        <vxe-table-column
-          field="opeNurse"
-          title="洗手护士"
-        />
-        <vxe-table-column
-          field="supplyNurse"
-          title="巡回护士"
-        />
-        <vxe-table-column
-          field="memo"
-          title="备注"
-        />
+        <!-- footer-align="center" -->
       </vxe-table>
     </div>
-    <bottom-buttons />
+    <bottom-buttons
+      :page-size="pageSize"
+      :current-page="currentPage"
+      :total-size="totalPages"
+      :total-pages="totalPages"
+    />
   </div>
 </template>
 
 <script>
 import BottomButtons from '@/components/StatisticsBottomButtons/BottomButtons'
+import { getOpeMethodStatistics } from '@/api/statistics'
+import request from '@/utils/requestForMock'
+import XEUtils from 'xe-utils'
+import moment from 'moment'
 export default {
   name: 'CancelOperationStatistics',
   data () {
@@ -205,11 +170,69 @@ export default {
           name: '未填',
           value: '4'
         }
-      ]
+      ],
+      currentPage: 1,
+      pageSize: 20,
+      form: {
+        anesEndTime: moment(new Date()).format('YYYY-MM-DD'),
+        anesStartTime: moment(new Date()).format('YYYY-MM-DD'),
+        anesDocNo: 'P0183',
+        anesMethodNo: 'A002',
+        deptCode: '1001',
+        anesName: '臂丛神经阻滞麻醉'
+      },
+      totalSize: null,
+      totalPages: null
     }
   },
   components: {
     BottomButtons
+  },
+  methods: {
+    getData () {
+      request({
+        method: 'post',
+        url: getOpeMethodStatistics + `?pageSize=${this.pageSize}&index=${this.currentPage}`,
+        data: {
+          anesDocNo: this.form.anesDocNo,
+          anesEndTime: this.form.anesEndTime,
+          anesMethodNo: this.form.anesMethodNo,
+          anesName: this.form.anesName,
+          anesStartTime: this.form.anesStartTime,
+          deptCode: this.form.deptCode
+        }
+      }).then(res => {
+        if (res.data.data) {
+          this.tableData = res.data.data.list
+          this.pageSize = res.data.data.pageSize
+          this.totalSize = res.data.data.total
+          this.totalPages = res.data.data.totalPage
+        } else {
+          this.tableData = []
+        }
+      })
+    },
+    footerMethod ({ columns, data }) {
+      const sums = []
+      columns.forEach((column, columnIndex) => {
+        if (columnIndex === 0) {
+          sums.push('合计：')
+        } else {
+          let sumCell = null
+          switch (column.property) {
+            case 'count':
+              sumCell = XEUtils.sum(data, column.property)
+              break
+          }
+          sums.push(sumCell)
+        }
+      })
+      // 返回一个二维数组的表尾合计
+      return [sums]
+    }
+  },
+  mounted () {
+    this.getData()
   }
 }
 </script>
