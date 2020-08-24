@@ -34,7 +34,7 @@ const state = {
   // 存储各手术状态时间，conCode解释同procedureState
   operationStateMap: {},
   // 主题
-  theme: 'dark-gray' // dark-blue  dark-gray light-white
+  theme: 'dark-blue' // dark-blue  dark-gray light-white
 }
 const getters = {
   patientId: state => state.patientId,
