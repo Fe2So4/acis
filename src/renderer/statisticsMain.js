@@ -7,12 +7,15 @@ import store from './store'
 import ElementUI from 'element-ui'
 import 'normalize.css/normalize.css'
 import './styles/index.scss'
+import './iconfont/iconfont.css'
 import 'element-ui/lib/theme-chalk/index.css'
 import './utils/dialog'
 import VueContextMenu from 'vue-contextmenu'
+
 import 'xe-utils'
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/index.css'
+
 import VXETablePluginElement from 'vxe-table-plugin-element'
 import 'vxe-table-plugin-element/dist/style.css'
 import './styles/vxe-table-variable.scss' // 修改vxe-table默认样式

@@ -5,7 +5,7 @@
         每页显示
         <el-input
           style="width:54px"
-          v-model="count"
+          v-model="pageSize"
           size="mini"
         />
         条数据
@@ -14,7 +14,7 @@
     <div class="buttons rightButtons">
       <div class="button">
         <div class="text">
-          共100条记录 1/8
+          共{{ totalSize }}条记录 {{ currentPage }}/{{ totalPages }}
         </div>
       </div>
       <div class="button">
@@ -54,7 +54,24 @@
 <script>
 export default {
   name: 'BottomButtons',
-  props: {},
+  props: {
+    pageSize: {
+      type: Number,
+      required: true
+    },
+    currentPage: {
+      type: Number,
+      required: true
+    },
+    totalPages: {
+      type: Number,
+      required: true
+    },
+    totalSize: {
+      type: Number,
+      required: true
+    }
+  },
   data () {
     return {
       count: '10'

@@ -61,22 +61,36 @@ export default {
   }
 }
 </script>
-<style lang="stylus" scoped>
-  .dictionary
-    height 80vh
-    width 70vw
-    .title
-      line-height 28px
-      font-size 14px
-      color #9BA3D5
-    .nav
-      height calc(100% - 28px)
-      .el-tabs
-        height 100%
-        /deep/ .el-tabs__content
-          height calc(100% - 55px)
-          .el-tab-pane
-            height 100%
-  .dictionary /deep/ .el-tabs__nav-wrap::after
-    background-color #181C27
+<style lang="scss" scoped>
+  @import "@/styles/theme";
+  .dictionary{
+    height:80vh;
+    width:70vw;
+    .title{
+      line-height:28px;
+      font-size:14px;
+      color:#9BA3D5;
+    }
+    .nav{
+      height:calc(100% - 28px);
+      .el-tabs{
+        height:100%;
+        /deep/ .el-tabs__content{
+          height:calc(100% - 55px);
+          .el-tab-pane{
+            height:100%;
+          }
+        }
+      }
+    }
+  }
+  .dictionary /deep/ .el-tabs__nav-wrap::after{
+    @include theme-property("background", $color-background-navigation)
+  }
+  .dictionary /deep/ .el-tabs__item{
+    @include theme-property("color", $color-text-regular);
+    &.is-active{
+      @include theme-property("color", $color-text-primary);
+    }
+  }
 </style>

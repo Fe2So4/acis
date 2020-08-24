@@ -45,12 +45,12 @@ if (process.env.BUILD_TARGET === 'schedule') {
     routes: [
       {
         path: '/',
-        redirect: '/statistics-home'
+        redirect: '/login'
       },
       {
         path: '/login',
         name: 'Login',
-        component: () => import('@/views/Login/index')
+        component: () => import('@/views/LoginStatistics/index')
       },
       {
         path: '/statistics-home',

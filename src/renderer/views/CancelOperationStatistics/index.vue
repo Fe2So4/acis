@@ -6,9 +6,9 @@
         :inline="true"
       >
         <span>
-          <el-form-item>
+          <el-form-item label="手术安排时间">
             <el-date-picker
-              v-model="value"
+              v-model="time"
               type="daterange"
               align="right"
               unlink-panels
@@ -22,7 +22,10 @@
         </span>
         <span>
           <el-form-item>
-            <el-button type="primary">
+            <el-button
+              type="primary"
+              @click="getCancelData"
+            >
               查询
             </el-button>
             <el-button>导出配置</el-button>
@@ -35,7 +38,6 @@
       <vxe-table
         border
         round
-        show-footer
         export-config
         size="mini"
         ref="xTable"
@@ -45,60 +47,56 @@
         align="center"
       >
         <vxe-table-column
-          field="opeRoom"
-          title="术间"
-        />
-        <vxe-table-column
-          field="sequence"
+          type="seq"
           title="序号"
         />
         <vxe-table-column
-          field="ptName"
-          title="病人信息"
+          field="ope_req_time"
+          title="手术安排时间"
         />
         <vxe-table-column
-          field="inpatientWard"
-          title="病区"
+          field="patient_id"
+          title="病人ID"
         />
         <vxe-table-column
-          field="bedId"
-          title="床号"
+          field="patient_name"
+          title="病人姓名"
         />
         <vxe-table-column
-          field="visitId"
+          field="visit_id"
           title="住院号"
         />
         <vxe-table-column
-          field="diagnoseBefore"
-          title="诊断"
+          field="bed_id"
+          title="床号"
+        />
+        <vxe-table-column
+          field="dept_name"
+          title="住院科室"
+        />
+        <vxe-table-column
+          field="diagnose_before"
+          title="术前诊断"
         />
         <vxe-table-column
           field="operationName"
           title="手术名称"
         />
         <vxe-table-column
-          field="surgeonName"
-          title="手术医师"
-        />
-        <vxe-table-column
-          field="anesMethod"
+          field="operationName"
           title="麻醉方法"
         />
         <vxe-table-column
-          field="anesDoc"
+          field="surgeon"
+          title="手术医师"
+        />
+        <vxe-table-column
+          field="anes_doc"
           title="麻醉医师"
         />
         <vxe-table-column
-          field="opeNurse"
-          title="洗手护士"
-        />
-        <vxe-table-column
-          field="supplyNurse"
-          title="巡回护士"
-        />
-        <vxe-table-column
-          field="memo"
-          title="备注"
+          field="delete_reason"
+          title="取消原因"
         />
       </vxe-table>
     </div>
@@ -108,6 +106,9 @@
 
 <script>
 import BottomButtons from '@/components/StatisticsBottomButtons/BottomButtons'
+import { getCancelStatistics } from '@/api/statistics'
+import request from '@/utils/requestForMock'
+import moment from 'moment'
 export default {
   name: 'CancelOperationStatistics',
   data () {
@@ -140,29 +141,7 @@ export default {
         }]
       },
       tableData: [],
-      options: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        },
-        {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
-        }
-      ],
-      value: '',
+      time: [moment(new Date()).format('YYYY-MM-DD'), moment(new Date()).format('YYYY-MM-DD')],
       filterOptions: [
         { name: '全部', value: '1' },
         { name: '术前', value: '2' },
@@ -189,11 +168,34 @@ export default {
           name: '未填',
           value: '4'
         }
-      ]
+      ],
+      currentPage: 1,
+      pageSize: 20
     }
   },
   components: {
     BottomButtons
+  },
+  methods: {
+    getCancelData () {
+      request({
+        url: getCancelStatistics + `?pageSize=${this.pageSize}&index=${this.currentPage}`,
+        method: 'post',
+        data: {
+          arrangeBeforeTime: moment(this.time[0]).format('YYYY-MM-DD'),
+          arrangeAfterTime: moment(this.time[1]).format('YYYY-MM-DD')
+        }
+      }).then(res => {
+        if (res.data.data) {
+          this.tableData = res.data.data.list
+        } else {
+          this.tableData = []
+        }
+      })
+    }
+  },
+  mounted () {
+    this.getCancelData()
   }
 }
 </script>
