@@ -458,7 +458,7 @@ export default {
           this.showColumn = false
         }
       },
-      // immediate: true,
+      immediate: true,
       deep: true
     }
   },
