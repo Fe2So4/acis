@@ -3,6 +3,7 @@
     class="header"
     style="-webkit-app-region: drag;"
   >
+    <!-- <theme-picker v-hide="true" /> -->
     <i
       class="el-icon-minus"
       @click="miniWindow"
@@ -19,6 +20,7 @@
   </div>
 </template>
 <script>
+// import ThemePicker from './ThemePicker'
 const {
   BrowserWindow,
   dialog
@@ -26,20 +28,27 @@ const {
 const win = BrowserWindow.getAllWindows()[0]
 export default {
   name: 'Header',
+  components: {
+    // ThemePicker
+  },
   data () {
-    win.on('maximize', () => {
-      this.isMax = true
-    })
-    win.on('unmaximize', () => {
-      this.isMax = false
-    })
     return {
       activeIndex: -1,
       isMax: win.isMaximized(),
       iconMax: 'icon-icon_min2'
     }
   },
+
+  mounte () {
+    win.on('maximize', () => {
+      this.isMax = true
+    })
+    win.on('unmaximize', () => {
+      this.isMax = false
+    })
+  },
   methods: {
+
     miniWindow () {
       // 最小化窗口
       win.minimize()

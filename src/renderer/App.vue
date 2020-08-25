@@ -17,6 +17,8 @@ export default {
   watch: {
     theme: {
       handler: function (val) {
+        document.body.classList.remove('dark-gray')
+        document.body.classList.remove('dark-blue')
         document.body.classList.add(val)
       },
       immediate: true

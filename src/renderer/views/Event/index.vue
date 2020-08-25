@@ -774,7 +774,6 @@ export default {
 </script>
 <style>
 .el-picker-panel .el-time-panel {
-  /* background: red !important; */
   left: -30px !important;
 }
 </style>

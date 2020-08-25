@@ -219,12 +219,12 @@ export default {
     float: left;
     min-width: 210px;
     max-height: 94px;
-    background: #252c40;
+    @include theme-property("background", $color-background-card);
     @include theme-property("border", $border-card-small);
     border-radius: 6px;
     font-size: 14px;
     padding: 4px 9px 9px;
-    color: #D0DAE5;
+    @include theme-property("color", $color-text-regular);
 
     .top {
       display: flex;
@@ -233,7 +233,7 @@ export default {
       span {
         > {
           span {
-            color: #9BA3D5;
+            @include theme-property("color", $color-text-secondary);
             display: inline-block;
             line-height: 22px;
             text-indent: 13px;
@@ -248,7 +248,7 @@ export default {
 
     .center {
       span {
-        color: #9BA3D5;
+        @include theme-property("color", $color-text-secondary);
         text-indent: 13px;
         line-height: 22px;
         display: inline-block;
@@ -274,11 +274,12 @@ export default {
       .room {
         width: 100px;
         height: 30px;
-        background: linear-gradient(120deg, rgba(84, 190, 234, 1), rgba(219, 83, 160, 1));
+        // background: linear-gradient(120deg, rgba(84, 190, 234, 1), rgba(219, 83, 160, 1));
+        @include card-room;
         border-radius: 15px;
         font-size: 18px;
         font-weight: bold;
-        color: #FFFFFF;
+        color: #ffffff;
         text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
         line-height: 30px;
         text-align: center;
@@ -326,7 +327,7 @@ export default {
       font-size: 48px;
       line-height: 114px;
       font-weight: bold;
-      color: #2D95F7;
+      color: #2d95f7;
     }
 
     .scroll-content {
@@ -368,7 +369,7 @@ export default {
               top: 0;
               bottom: 0;
               margin: auto;
-              background: #2991EF;
+              background: #2991ef;
               width: 140px;
             }
 
@@ -467,7 +468,7 @@ export default {
         .title {
           font-size: 14px;
           line-height: 26px;
-          color: #9BA3D5;
+          color: #9ba3d5;
           text-align: center;
         }
       }
