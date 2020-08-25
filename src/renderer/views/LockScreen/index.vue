@@ -4,6 +4,8 @@
       title="锁定系统"
       :visible.sync="lockVisible"
       width="30%"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
       :show-close="false"
     >
       <el-form
@@ -80,7 +82,7 @@ export default {
   },
   props: {
     lockVisible: {
-      required: true,
+      default: false,
       type: Boolean
     }
   },

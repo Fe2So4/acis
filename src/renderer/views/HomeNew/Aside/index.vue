@@ -239,7 +239,7 @@ export default {
           necessary: true
         },
         {
-          name: '锁定屏幕',
+          name: '锁定系统',
           componentName: 'LockScreen',
           necessary: false
         }
@@ -278,6 +278,7 @@ export default {
     },
     handleLock () {
       this.lockVisible = false
+      this.activeIndex = false
     },
     handleDialogClose () {
       this.showDialog = false
@@ -287,10 +288,6 @@ export default {
       done()
     },
     handleChangeButton (item, index) {
-      if (item.componentName === 'lockScreen') {
-        this.lockVisible = true
-        return
-      }
       if (this.operationId === '' && item.necessary) {
         this.$confirm('当前操作需先选择患者', '提示', {
           confirmButtonText: '确定',
@@ -301,6 +298,10 @@ export default {
         return
       }
       this.activeIndex = index
+      if (item.componentName === 'LockScreen') {
+        this.lockVisible = true
+        return
+      }
       if (item.componentName === 'Event') {
         this.setEventType(item)
       }
