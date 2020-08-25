@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>表单数据采集</title>
+    <title>dyw的小demo</title>
     <!-- <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"> -->
     </script>
     <!-- <script src="https://unpkg.com/spritejs@3/dist/spritejs.js"></script> -->
@@ -32,6 +32,7 @@
         }
         .content{
             display: flex;
+            flex-direction: row;
             height:calc(100% - 30px)
         }
         aside{
@@ -41,20 +42,42 @@
         }
         main{
             height: 100%;
-            width: calc(100% - 200px);
-            /* background: hotpink; */
+            flex: 1;
+            background: hotpink;
         }
-        @media only screen and (max-width: 400px) {
+        .sign{
+            height: 100%;
+            width: 200px;
+            background: green;
+        }
+        /* @media only screen and (max-width: 400px) {
             main {
                 background: blue;
             }
             .header{
                 background-color: lightcoral;
             }
-        }
+        } */
         
         @media all and (orientation: portrait) {
-            body div {background: red;} 
+            /* body div {background: red;}  */
+            .content{
+                flex-direction: column !important;
+            }
+            .content aside{
+                width:100%;
+                height: 100px;
+                background: honeydew;
+            }
+            .content main{
+                width: 100%;
+                background: khaki;
+            }
+            .content .sign{
+                width: 100%;
+                height: 100px;
+                background:indigo;
+            }
         }
         @media all and (orientation: landscape) { 
             body div {background: blue; } 
@@ -67,6 +90,9 @@
     <div class="content">
         <aside>侧边栏</aside>
         <main>主页面</main>
+        <section class="sign">
+            体征数据
+        </section>
     </div>
    </div>
 </body>
