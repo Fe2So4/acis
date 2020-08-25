@@ -89,6 +89,6 @@ $--datepicker-border-color: #353E56;
 $--tree-font-color:#D0DAE5;
 $--tree-node-hover-background-color:#292F40;
 /* 改变 icon 字体路径变量，必需 */
-$--font-path: 'node_modules/element-ui/lib/theme-chalk/fonts';
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
 
 @import "node_modules/element-ui/packages/theme-chalk/src/index";
