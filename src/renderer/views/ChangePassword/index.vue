@@ -110,21 +110,31 @@ export default {
   }
 }
 </script>
-<style lang="stylus" scoped>
-.pass
-  background #1E222E
-  overflow hidden
-  padding 10px
-  h2
-    text-align center;
-    font-size 18px;
-    color #9BA3D5
-    font-weight 600;
-  .form-box
-    width 450px
-    margin 0 auto
-.pass /deep/ .el-form .el-form-item
-  &:last-child
-    .el-form-item__content
-     text-align center
+<style lang="scss" scoped>
+@import "@/styles/theme";
+.pass{
+  @include theme-property("background", $background-dialog-content);
+  overflow:hidden;
+  padding:10px;
+  border-radius: 5px;
+  h2{
+    text-align:center;
+    font-size:18px;
+    @include theme-property("color", $color-text-regular);
+    font-weight:600;
+  }
+  .form-box{
+    width:450px;
+    margin:0 auto;
+  }
+  /deep/ .el-form .el-form-item{
+    &:last-child{
+      .el-form-item__content{
+        margin-left: 0 !important;
+        text-align:center;
+      }
+    }
+  }
+
+}
 </style>

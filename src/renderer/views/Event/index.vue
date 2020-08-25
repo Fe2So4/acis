@@ -779,6 +779,7 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+@import "@/styles/theme";
 .event {
   width: 80vw;
   height: 60vh;
@@ -787,16 +788,16 @@ export default {
   .title {
     line-height: 30px;
     padding-left: 5px;
-    color: #9ba3d5;
+    @include theme-property("color", $color-text-regular);
   }
   .left {
     height: 100%;
-    padding: 20px;
+    padding: 12px 20px 0;
     margin-right: 20px;
     width: 374px;
     float: left;
     display: flex;
-    background: #1e222e;
+    @include theme-property("background", $background-dialog-content);
     border-radius: 10px;
     flex-direction: column;
     .pagination {
@@ -891,7 +892,7 @@ export default {
     float: right;
     padding: 0 5px;
     display: flex;
-    background: #1e222e;
+    @include theme-property("background", $background-dialog-content);
     border-radius: 10px;
     flex-direction: column;
     .content {
@@ -907,7 +908,7 @@ export default {
         text-align: left;
         margin: 10px 0;
         text-indent: 20px;
-        color: #409eff;
+        color: #FB4451;
       }
       span {
         color: #9ba3d5;

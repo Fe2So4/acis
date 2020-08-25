@@ -134,7 +134,8 @@ export default {
   }
 }
 </script>
-<style lang="stylus" scoped>
+<style lang="scss" scoped>
+@import "@/styles/theme";
 .dialog {
   -webkit-app-region: no-drag;
   font-size: 14px;
@@ -151,14 +152,14 @@ export default {
 
   .dialog-content {
     padding: 0px 20px 20px;
-    background: #181C27;
+    @include theme-property("background", $background-dialog);
     box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
     border-radius: 10px;
 
     .dialog-title {
       line-height: 32px;
       display: flex;
-      color: #0094FF;
+      @include theme-property("color", $color-text-primary);
       justify-content: space-between;
 
       i {

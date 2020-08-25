@@ -69,7 +69,8 @@ export default {
     .title{
       line-height:28px;
       font-size:14px;
-      color:#9BA3D5;
+      // color:#9BA3D5;
+      @include theme-property("color", $color-text-regular);
     }
     .nav{
       height:calc(100% - 28px);

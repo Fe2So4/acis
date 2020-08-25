@@ -1,364 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>表单数据采集</title>
-    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>dyw的小demo</title>
+    <!-- <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"> -->
     </script>
-    <script src="https://unpkg.com/spritejs@3/dist/spritejs.js"></script>
+    <!-- <script src="https://unpkg.com/spritejs@3/dist/spritejs.js"></script> -->
     <!-- 引入样式 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-table/lib/index.css">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vxe-table/lib/index.css"> -->
     <!-- 引入脚本 -->
-    <script src="https://cdn.jsdelivr.net/npm/xe-utils"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vxe-table"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/xe-utils"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vxe-table"></script> -->
     <style>
-        .resize {
-            height: 400px;
-            width: 400px;
-            background: lightseagreen;
-            position: absolute;
-            left: 450px;
-            top: 100px;
+        *{
+            margin:0;
+            padding:0;
         }
-
-        .resize .circle {
-            height: 10px;
-            width: 10px;
-            position: absolute;
-            background: lime;
+        html,body{
+            height: 100%;
+            width: 100%;
         }
-
-        .resize .circle:nth-child(1) {
-            left: -5px;
-            top: -5px;
-            cursor: nw-resize;
+        #container{
+            height:100%;
+            width:100%;
+            background: gray;
         }
-
-        .resize .circle:nth-child(2) {
-            left: 195px;
-            top: -5px;
-            cursor: n-resize;
+        .header{
+            height: 30px;
         }
-
-        .resize .circle:nth-child(3) {
-            left: 395px;
-            top: -5px;
-            cursor: ne-resize;
+        .content{
+            display: flex;
+            flex-direction: row;
+            height:calc(100% - 30px)
         }
-
-        .resize .circle:nth-child(4) {
-            left: 395px;
-            top: 195px;
-            cursor: e-resize;
+        aside{
+            width: 200px;
+            background: greenyellow;
+            height: 100%;
         }
-
-        .resize .circle:nth-child(5) {
-            left: 395px;
-            top: 395px;
-            cursor: se-resize;
+        main{
+            height: 100%;
+            flex: 1;
+            background: hotpink;
         }
-
-        .resize .circle:nth-child(6) {
-            left: 195px;
-            top: 395px;
-            cursor: s-resize;
+        .sign{
+            height: 100%;
+            width: 200px;
+            background: green;
         }
-
-        .resize .circle:nth-child(7) {
-            left: -5px;
-            top: 395px;
-            cursor: sw-resize;
+        /* @media only screen and (max-width: 400px) {
+            main {
+                background: blue;
+            }
+            .header{
+                background-color: lightcoral;
+            }
+        } */
+        
+        @media all and (orientation: portrait) {
+            /* body div {background: red;}  */
+            .content{
+                flex-direction: column !important;
+            }
+            .content aside{
+                width:100%;
+                height: 100px;
+                background: honeydew;
+            }
+            .content main{
+                width: 100%;
+                background: khaki;
+            }
+            .content .sign{
+                width: 100%;
+                height: 100px;
+                background:indigo;
+            }
         }
-
-        .resize .circle:nth-child(8) {
-            left: -5px;
-            top: 195px;
-            cursor: w-resize;
+        @media all and (orientation: landscape) { 
+            body div {background: blue; } 
         }
     </style>
 </head>
-
 <body>
-    <!-- <form id="myform" method="get">
-
-        <table width="50%" border="0">
-            <tr>
-                <td>
-                    姓名： </td>
-                <td>
-                    <input type="text" name="username" /></td>
-            </tr>
-            <tr>
-                <td>
-                    书籍： </td>
-                <td>
-                    <input type="checkbox" name="book" value="01" />
-                    jquery
-                    <input type="checkbox" name="book" value="02" />
-                    java
-                    <input type="checkbox" name="book" value="03" />
-                    oracle </td>
-            </tr>
-            <tr>
-                <td>
-                    性别： </td>
-                <td>
-                    <label>
-                        <input type="radio" name="sex" value="boy" />
-                        男</label>
-                    <label>
-                        <input type="radio" name="sex" value="girl" />
-                        女</label> </td>
-            </tr>
-            <tr>
-                <td>
-                    颜色： </td>
-                <td> <label for="select"></label>
-                    <select name="color" id="select">
-                        <option>请选择</option>
-                        <option value="red">红</option>
-                        <option value="green">绿</option>
-                        <option value="blue">蓝</option>
-                    </select> </td>
-            </tr>
-            <tr>
-                <td>
-                    备注： </td>
-                <td>
-                    <label for="textarea"></label>
-                    <textarea name="addition"></textarea> </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input type="button" id="set" value="填充" />
-                </td>
-                <td colspan="2">
-                    <input type="button" id="get" value="取值" />
-                </td>
-            </tr>
-        </table>
-
-    </form> -->
-    <!-- <div style="height:400px;width: 400px;border:1px solid greenyellow;display: flex;">
-        <div style="flex: 1;background: hotpink;">
-            <ul>
-                <li style="background:lightcoral" ondragstart="dragStart(event)" draggable="true" id="dragtarget">1</li>
-                <li style="background:lightcoral">2</li>
-                <li style="background:lightcoral">3</li>
-            </ul>
-        </div>
-        <div style="flex: 1;" class="content" ondrop="drop(event)" ondragover="allowDrop(event)"
-            ondragleave="leaveDrag(event)" ondragenter="enterDrag(event)">right
-        </div>
-    </div> -->
-    <!-- <div class="resize"> -->
-    <!-- <div class="circle" style="cursor: nw-resize;"></div>
-        <div class="circle" style="cursor: n-resize;"></div>
-        <div class="circle" style="cursor: ne-resize;"></div>
-        <div class="circle" style="cursor: e-resize;"></div>
-        <div class="circle" style="cursor: se-resize;"></div>
-        <div class="circle" style="cursor: s-resize;"></div>
-        <div class="circle" style="cursor: sw-resize;"></div>
-        <div class="circle" style="cursor: w-resize;"></div> -->
-    <!-- </div> -->
-    <!-- <div class="resize" draggable="true" ondragstart="onDragStart(event)" ondrag="onDrag" ondragend="onDragEnd"
-        ondragover="onDragOver(event)">
-        <div class="circle" style="cursor: nw-resize;"></div>
-        <div class="circle" style="cursor: n-resize;"></div>
-        <div class="circle" style="cursor: ne-resize;"></div>
-        <div class="circle" style="cursor: e-resize;"></div>
-        <div class="circle" style="cursor: se-resize;"></div>
-        <div class="circle" style="cursor: s-resize;"></div>
-        <div class="circle" style="cursor: sw-resize;"></div>
-        <div class="circle" style="cursor: w-resize;"></div>
-    </div> -->
-    <div class="container" style="position: relative;height: 800px;">
+   <div id="container">
+    <div class="header">头部</div>
+    <div class="content">
+        <aside>侧边栏</aside>
+        <main>主页面</main>
+        <section class="sign">
+            体征数据
+        </section>
     </div>
+   </div>
 </body>
 <script>
-    var a = new Date('2020-7-21 16:00')
-    var b = new Date('2020-7-21 18:00')
-    var space = 15
-    console.log(getDateArray(a,b,space))
-    function getDateArray(startDate,endDate,space) {
-            if (!endDate) {
-                endDate = new Date();
-            }
-            if (!startDate) {
-                startDate = new Date(new Date().getTime() - 1 * 60 * 60 * 1000);
-            }
-            if (!space) {
-                space = 30 * 60 * 1000;
-            } else {
-                space = space * 60 * 1000;
-            }
-            var endTime = endDate.getTime();
-            var startTime = startDate.getTime();
-            var mod = endTime - startTime;
-            if (mod <= space) {
-                alert("时间太短");
-                return;
-            }
-            var dateArray = [];
-            while (mod >= space) {
-                var d = new Date();
-                d.setTime(startTime + space);
-                dateArray.push(d);
-                mod = mod - space;
-                startTime = startTime + space;
-            }
-            var end = endDate.getTime();
-            var start = startDate.getTime();
-            dateArray.unshift(new Date(start)); // 插入开头时间
-            // 正序
-            return dateArray.sort(function (a, b) {
-                return Date.parse(b) - Date.parse(a);
-            });
-        }
-    // const { Scene, Sprite } = spritejs;
-    // // console.log(Scene, Sprite)
-    // const container = document.querySelector('.container');
-    // const scene = new Scene({ container, width: 3080, height: 800, mode: 'stickyTop' });
-    // const layer = scene.layer();
-    // $(document).ready(function () {
-    //     // 初始化一个对象 该对象的属性要和form 对应的值对应 （其实这里应该是ajax请求返回的对象）
-    //     var obj = new Object();
-    //     obj.username = "randy";
-    //     obj.book = "01,02,03";
-    //     obj.sex = "girl";
-    //     obj.color = "red";
-    //     obj.addition = "哥写的不是代码，是Curtain";
-    //     $("#set").click(function () {
-    //         for (var attr in obj) { //通过for in遍历对象的所有属性值
-    //             if (typeof (obj[attr]) == 'function') {     //判断属性类型，必须不是function类型的属性，才能赋值到表单上              
-    //                 continue;
-    //             }
-    //             var $input = $("#myform    :input[name='" + attr + "']"); //取的对应form下的对应表单
-    //             var type = $input.attr("type");//获取当前遍历表单的类型                
-    //             if (type == "checkbox" || type == "radio") { //如果是单选或者双选就需要处理   
-    //                 var avalues = obj[attr].split(","); //根据
-    //                 for (var v = 0; v < avalues.length; v++) {
-    //                     $input.each(function (i, n) { //通过jquery的each遍历这种单选或者双选的每一个选项
-    //                         var value = $(n).val();
-    //                         if (value == avalues[v]) {
-    //                             $(n).attr("checked", "checked"); //设置选中项
-    //                         }
-    //                     });
-    //                 }
-    //             } else { //为类型为type直接赋值
-    //                 $input.val(obj[attr]);
-    //             }
-    //         }
-    //     });
-    //     $('#get').click(function () {
-    //         var obj = {};
-    //         obj.username = "randy";
-    //         obj.book = "01,02";
-    //         obj.sex = "girl";
-    //         obj.color = "red";
-    //         obj.addition = "哥写的不是代码，是Curtain";
-    //         var $input1 = $("#myform    :input[name='book']");
-    //         console.log($input1)
-    //         for (var i = 0; i < script $input1.length; i++) {
-    //         if ($input1[i].checked == true) {
-    //             console.log($input1[i].value)
-    //         }
-    //     }
-    // })
-
-    // function drop(event) {
-    //     event.preventDefault();
-    //     console.log('drop')
-    //     console.log(event.dataTransfer)
-    //     // console.log(event.dataTransfer.getData('Text'), 'drop')
-    //     var data = event.dataTransfer.getData('Text')
-    //     event.target.appendChild(document.getElementById(data));
-    // }
-    // function allowDrop(event) {
-    //     event.preventDefault();
-    //     console.log('dragover')
-    // }
-    // function enterDrag(event) {
-    //     console.log('enterDrag')
-    // }
-    // function leaveDrag(event) {
-    //     console.log('leave')
-    // }
-
-    // function dragStart(event) {
-    //     console.log(event.target.id)
-    //     event.dataTransfer.setData("Text", event.target.id);
-    //     // document.getElementById("demo").innerHTML = "开始拖动 p 元素";
-    // }
-    // var disX = 0;
-    // var disY = 0;
-    // var disW = 0;
-    // var disH = 0;
-    // var oPanel = document.querySelector('.resize')
-    // $('.resize').mousedown(function (event) {
-    //     var e = event || window.event;
-    //     console.log(event)
-    //     disX = e.offsetX;
-    //     disY = e.offsetY;
-    //     disW = e.clientX - oPanel.offsetLeft; // 获取拖拽前div的宽
-    //     disH = e.clientY - oPanel.offsetTop; // 获取拖拽前div的高
-    //     console.log(disX, disY)
-    //     document.onmousemove = function (event) {
-    //         var e = event || window.event;
-    //         // console.log(e.clientX, e.clientY)
-    //         var W = e.clientX - disX;
-    //         var H = e.clientY - disY;
-    //         console.log(e.clientX - disX, e.clientY - disY)
-    //         oPanel.style.left = W + 'px';// 拖拽后物体的宽
-    //         oPanel.style.top = H + 'px';// 拖拽后物体的高
-    //     }
-    //     document.onmouseup = function () {
-    //         document.onmousemove = null;
-    //         document.onmouseup = null;
-    //     }
-    // })
-    // var pageX = 0;
-    // var pageY = 0;
-    // var pX = 0;
-    // var pY = 0;
-    // var dX = 0;
-    // var dY = 0;
-    // function onDragStart(event) {
-    //     console.log(event)
-    //     pageX = event.offsetX
-    //     pageY = event.offsetY
-    //     // 定义拖动效果
-    //     event.dataTransfer.dropEffect = 'move'
-    // }
-    // function onDrag(e) {
-    //     var e = e || window.event;
-    //     console.log('drag')
-    //     // console.log(event.pageY)
-    //     dX = e.pageX - pageX
-    //     dY = e.pageY - pageY
-    //     oPanel.style.left = dX + 'px'
-    //     oPanel.style.top = dY + 'px'
-    // }
-
-    // function onDrop(e) {
-    //     // e.preventDefault();
-    // }
-    // function onDragOver(event) {
-    //     // console.log(event.pageX, event.pageY, 'xy')
-    //     event.dataTransfer.dropEffect = 'none'
-    // }
-    // function onDragEnd(e) {
-    //     // debugger
-    //     console.log(e);
-    //     console.log('dragend');
-
-        // e.preventDefault()
-        // oPanel.style.left = dX + 'px'
-        // oPanel.style.top = dY + 'px'
-        // console.log(event)
-    // }
+  
 </script>
 
 </html>

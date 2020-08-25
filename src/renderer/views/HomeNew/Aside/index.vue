@@ -461,11 +461,7 @@ export default {
     position: absolute;
     right: 0;
     top: 0;
-    background: linear-gradient(
-      180deg,
-      rgba(236, 33, 88, 1),
-      rgba(12, 133, 226, 1)
-    );
+    @include theme-property("background",$background-menu-active)
   }
 }
 .aside /deep/ .el-collapse-item__header {

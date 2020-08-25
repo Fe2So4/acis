@@ -90,6 +90,24 @@ $border-card-small: (
   "dark-blue": 2px solid #353e56,
 );
 
+//弹框背景色
+$background-dialog: (
+  "dark-gray": #1E2022,
+  "dark-blue": #181C28
+  );
+  
+//弹框内容区域背景色
+$background-dialog-content: (
+  "dark-gray": #363638,
+  "dark-blue": #1E232E
+);
+
+//导航栏激活彩条
+$background-menu-active: (
+  "dark-gray": linear-gradient(0deg,rgba(236,76,34,1),rgba(12,134,226,1)),
+  "dark-blue": linear-gradient(0deg,rgba(236,34,88,1),rgba(12,134,226,1))
+);
+
 // 卡片中的房间号
 @mixin card-room {
   @each $theme in $themes {
