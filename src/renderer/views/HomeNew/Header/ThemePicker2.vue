@@ -16,6 +16,8 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import { renderSync, render } from 'sass'
+
 export default {
   name: 'ThemePicker',
   data () {
@@ -43,19 +45,64 @@ export default {
       },
       set (value) {
         this.setTheme(value)
-        import(`@/styles/element-variables-${value}.scss`).then(
-          module => {
-            console.log(module)
-            for (var a in module) {
-              console.log(a)
-            }
-          }
-        )
       }
     }
   },
+  watch: {
+    theme: {
+      handler (value) {
+        const styleTag = document.getElementById(value)
+        if (styleTag) {
+          document.head.appendChild(styleTag)
+        }
+      }
+    }
+  },
+  created () {
+    this.loadAllThemeStyle()
+  },
   methods: {
-    ...mapActions('Base', ['setTheme'])
+    ...mapActions('Base', ['setTheme']),
+    getCSSString (theme) {
+      const themeFilePath = require('path').resolve(__static, '../src/renderer/styles')
+      const result = renderSync({ file: `${themeFilePath}/element-variables-${theme}.scss` })
+      return result.css.toString()
+    },
+    // 加载所有样式文件
+    loadAllThemeStyle () {
+      this.themes.forEach(async theme => {
+        let styleTag = document.getElementById(theme.value)
+        if (!styleTag) {
+          const string = await this.getCssStringAsync(theme.value)
+          styleTag = document.createElement('style')
+          styleTag.setAttribute('id', theme.value)
+          styleTag.innerText = string
+          document.head.appendChild(styleTag)
+        }
+      })
+      // return Promise.all(this.themes.map(theme => {
+      //   return this.getCssStringAsync(theme.value)
+      // })).then(strings => {
+      //   this.themes.forEach((theme, index) => {
+      //     const styleTag = document.createElement('style')
+      //     styleTag.setAttribute('id', theme.value)
+      //     styleTag.innerText = strings[index]
+      //     document.head.appendChild(styleTag)
+      //   })
+      // })
+    },
+    // 异步获取css字符串
+    getCssStringAsync (theme) {
+      return new Promise((resolve, reject) => {
+        const themeFilePath = require('path').resolve(__static, '../src/renderer/styles')
+        render({ file: `${themeFilePath}/element-variables-${theme}.scss` }, (err, result) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(result.css.toString())
+        })
+      })
+    }
   }
 
 }
