@@ -1130,7 +1130,7 @@ export default {
                 className: 'blood_col',
                 colIndex: i,
                 size: [endTime - startTime, yScale],
-                pos: [startTime, yScale]
+                pos: [startTime, 0]
               })
               dose.attr({
                 pos: [group.attr('width') / 2 - text / 2, 0],
@@ -1230,8 +1230,9 @@ export default {
               })
               group.append(dose)
             }
-            if (row[this.configuration.infusion.num + index]) {
-              row[this.configuration.infusion.num + index].append(group)
+            const rowIndex = parseInt(this.configuration.infusion.num + index)
+            if (row[rowIndex]) {
+              row[rowIndex].append(group)
             }
           })
         })
@@ -1418,8 +1419,9 @@ export default {
             legend.append(text)
           }
         }
+        // 已修改
         for (let i = 0; i < this.bloodTransfusionDataList.length; i++) {
-          if (this.infusionDataList[i]) {
+          if (this.bloodTransfusionDataList[i]) {
             const text = new Label(this.bloodTransfusionDataList[i].gross)
             text.attr({
               pos: [
