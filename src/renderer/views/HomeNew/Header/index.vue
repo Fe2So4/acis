@@ -3,7 +3,7 @@
     class="header"
     style="-webkit-app-region: drag;"
   >
-    <!-- <theme-picker v-hide="true" /> -->
+    <theme-picker />
     <i
       class="el-icon-minus"
       @click="miniWindow"
@@ -20,7 +20,7 @@
   </div>
 </template>
 <script>
-// import ThemePicker from './ThemePicker'
+import ThemePicker from './ThemePicker2'
 const {
   BrowserWindow,
   dialog
@@ -29,7 +29,7 @@ const win = BrowserWindow.getAllWindows()[0]
 export default {
   name: 'Header',
   components: {
-    // ThemePicker
+    ThemePicker
   },
   data () {
     return {
