@@ -1216,8 +1216,7 @@ export default {
                 className: 'blood_col',
                 colIndex: i,
                 size: [text, yScale],
-                pos: [startTime, 0],
-                bgcolor: 'black'
+                pos: [startTime, 0]
               })
               dose.attr({
                 pos: [0, 0],
@@ -1231,8 +1230,8 @@ export default {
               })
               group.append(dose)
             }
-            if (row[this.configuration.infusion.num + index - 1]) {
-              row[this.configuration.infusion.num + index - 1].append(group)
+            if (row[this.configuration.infusion.num + index]) {
+              row[this.configuration.infusion.num + index].append(group)
             }
           })
         })
