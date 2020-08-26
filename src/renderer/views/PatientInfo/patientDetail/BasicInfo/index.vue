@@ -92,7 +92,7 @@ export default {
     font-size: 14px;
     line-height: 26px;
     box-sizing: border-box;
-    color: #ffffff;
+    @include theme-property('color', $color-text-info-title);
     text-indent: 10px;
     padding-top: 10px;
     i {

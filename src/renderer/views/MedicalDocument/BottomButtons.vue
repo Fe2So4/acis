@@ -154,6 +154,7 @@ export default {
 </script>
 <style lang='scss' scoped>
 @import url("./iconfont/iconfont.css");
+@import "@/styles/theme";
 .bottomButtons {
   position: absolute;
   bottom: 0;
@@ -162,9 +163,9 @@ export default {
   height: 36px;
 
   padding: 4px 0;
-  background: rgba(23, 27, 39, 1);
-  box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
-  color: rgba(154, 163, 212, 1);
+  @include theme-property("background", $color-background-card);
+  @include theme-property("box-shadow", $box-shadow-card);
+  @include theme-property("color", $color-text-regular);
   font-size: 14px;
   font-weight: 400;
   overflow: hidden;
@@ -178,7 +179,7 @@ export default {
       &.button {
         cursor: pointer;
         &:hover {
-          color: #fff;
+         @include theme-property('color', $color-regular-light);
         }
       }
       &.red {
@@ -193,13 +194,15 @@ export default {
   .leftButtons {
     float: left;
     & > div {
-      border-right: 1px solid #465274;
+      border-right: 1px solid ;
+      @include theme-property("border-color", $border-color-basic);
     }
   }
   .rightButtons {
     float: right;
     & > div {
-      border-left: 1px solid #465274;
+      border-left: 1px solid;
+      @include theme-property("border-color", $border-color-basic);
     }
   }
   .iconfont {

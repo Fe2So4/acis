@@ -384,6 +384,7 @@ export default {
   width: 100%;
   font-size: 14px;
   overflow: hidden;
+  @include theme-property("background", $color-background-aside);
   // position: relative;
   .title {
     @include theme-property("color", $color-text-primary);
@@ -426,7 +427,7 @@ export default {
       font-size: 14px;
       cursor: pointer;
       &:hover {
-        color: #e3e7fc;
+        @include theme-property("color", $color-text-primary);
       }
     }
     span.rightActive {

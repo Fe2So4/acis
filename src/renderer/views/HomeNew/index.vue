@@ -69,7 +69,7 @@ export default {
     position: relative;
     overflow: unset;
     box-shadow:4px 3px 5px 0px rgba(0, 0, 0, 0.4);
-    @include theme-property("background", $color-background-aside);
+    @include theme-property("box-shadow", $box-shadow-aside);
   }
   .el-main {
     height: calc(100% - 32px);

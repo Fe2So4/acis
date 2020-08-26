@@ -689,7 +689,7 @@ export default {
         border-radius: 5px;
         padding: 0 0 14px 0;
         @include theme-property("background", $color-background-card);
-        border: 1px solid #181c27;
+        // border: 1px solid transparent;
         width: 392px;
         height: 196px;
         font-size: 14px;
@@ -795,11 +795,11 @@ export default {
           }
         }
         &:hover {
-          @include border-active;
+          // @include border-active;
           @include theme-property("background", $color-background-card-hover);
         }
         &.active {
-          @include border-active;
+          // @include border-active;
           @include theme-property("background", $color-background-card-hover);
         }
       }

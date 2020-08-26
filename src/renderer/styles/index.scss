@@ -144,37 +144,21 @@ input[type="time"] {
 // 默认加载深蓝色主题
 .dark-blue {
   @import "element-variables-dark-blue.scss";
+  @import "element-variables.scss";
 }
 
+.dark-gray {
+  @import "element-variables-dark-gray.scss";
+  @import "element-variables.scss";
+}
 
-// .dark-gray {
-//   @import "element-variables-dark-gray.scss";
-// }
+.light-white {
+  @import "element-variables-light-white.scss";
+  @import "element-variables.scss";
+}
+
 /*日期时间选择器*/
 @include dateTimePicker;
 
 /*消息对话框*/
-.messageBox.el-message-box {
-  // background-color: #252c40;
-  @include theme-property("background-color", $color-background-home);
-  // border-color: #353e56;
-  @include theme-property("border-color", $color-background-aside);
-}
-/*输入框*/
-// .el-input__inner {
-//   &:focus {
-//     @include theme-property("border-color", $color-primary);
-//   }
-//   &:hover {
-//     @include theme-property("border-color", $color-primary);
-//   }
-// }
-/* 单选框 */
-// .el-radio-button__inner {
-//   &:hover {
-//     @include theme-property("color", $color-text-primary);
-//   }
-// }
-// .el-radio-button__orig-radio:checked + .el-radio-button__inner {
-//   @include radio-button;
-// }
+@include messageBox;

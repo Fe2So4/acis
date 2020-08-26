@@ -63,7 +63,7 @@ export default {
   .title {
     font-size: 14px;
     line-height: 26px;
-    color: #ffffff;
+    @include theme-property('color', $color-text-info-title);
     text-indent: 10px;
     padding-top: 10px;
     i {

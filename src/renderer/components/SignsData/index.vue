@@ -1,8 +1,5 @@
 <template>
   <div class="signs-data">
-    <div class="title">
-      体征数据
-    </div>
     <ul>
       <el-scrollbar
         style="height: 100%"
@@ -54,9 +51,9 @@ export default {
     getList () {
       request({
         url: getSignItemList
-      }).then(res => {
+      }).then((res) => {
         const data = res.data.data
-        data.forEach(item => {
+        data.forEach((item) => {
           item.itemValue = ''
         })
         this.signsList = data
@@ -68,15 +65,15 @@ export default {
       if (!this.socket) return
       // 体征数据
       const that = this
-      this.socket.on('push_monitor_event_realtime', res => {
+      this.socket.on('push_monitor_event_realtime', (res) => {
         if (Array.isArray(res)) {
           // 回应socket.io
           that.socket.emit('push_monitor_event_realtime', {
             loginUserNum,
             content: res
           })
-          res.forEach(item => {
-            this.signsList.forEach(_item => {
+          res.forEach((item) => {
+            this.signsList.forEach((_item) => {
               if (_item.itemCode === item.itemCode) {
                 _item.itemValue = item.itemValue
               }
@@ -95,42 +92,49 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-    .signs-data{
-        width: 100%;
-        height: 100%;
-        background: #121421;
-        box-shadow:-5px 1px 5px 0px rgba(0, 0, 0, 0.4);
-        .title{
-            font-size: 14px;
-            line-height: 26px;
-            padding-left: 5px;
-            color:#FEFEFF;
+@import "@/styles/theme";
+$box-shadow-signs: (
+  "dark-gray": -5px 1px 5px 0px rgba(0, 0, 0, 0.4),
+  "dark-blue": -5px 1px 5px 0px rgba(0, 0, 0, 0.4),
+  "light-white": -4px 2px 5px 0px rgba(0, 0, 0, 0.1),
+);
+$color-background-signs: (
+  "dark-gray": #363638,
+  "dark-blue": #121421,
+  "light-white": #454546,
+);
+.signs-data {
+  width: 100%;
+  height: 100%;
+  background: #121421;
+  @include theme-property("box-shadow", $box-shadow-signs);
+  @include theme-property("background", $color-background-signs);
+
+  ul {
+    height: calc(100% - 26px);
+    padding-top: 10px;
+    li {
+      margin-bottom: 5px;
+      p {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0;
+        line-height: 26px;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 10px;
+        line-height: 28px;
+        &:first-child {
+          text-align: left;
         }
-        ul {
-            height: calc(100% - 26px);
-            padding-top: 10px;
-            li{
-                margin-bottom:5px;
-                p{
-                    font-size: 16px;
-                    font-weight: 600;
-                    margin:0;
-                    line-height: 26px;
-                    display: flex;
-                    justify-content: space-between;
-                    padding:0 10px;
-                    line-height:28px;
-                    &:first-child{
-                      text-align: left;
-                    }
-                    &:last-child{
-                      justify-content: end;
-                      text-align: right;
-                      font-size: 40px;
-                      line-height:50px;
-                    }
-                }
-            }
+        &:last-child {
+          justify-content: end;
+          text-align: right;
+          font-size: 40px;
+          line-height: 50px;
         }
+      }
     }
+  }
+}
 </style>
