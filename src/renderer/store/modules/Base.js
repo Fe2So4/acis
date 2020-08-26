@@ -1,4 +1,18 @@
 import moment from 'moment'
+const themes = Object.freeze([
+  {
+    name: '黑晶蓝',
+    value: 'dark-blue'
+  },
+  {
+    name: '砂岩灰',
+    value: 'dark-gray'
+  },
+  {
+    name: '琉璃白',
+    value: 'light-white'
+  }
+])
 const state = {
   // 当前登录用户id
   userId: '',
@@ -34,7 +48,8 @@ const state = {
   // 存储各手术状态时间，conCode解释同procedureState
   operationStateMap: {},
   // 主题
-  theme: 'dark-gray' // dark-blue  dark-gray light-white
+  theme: 'dark-gray', // dark-blue  dark-gray light-white
+  themes
 }
 const getters = {
   patientId: state => state.patientId,

@@ -94,7 +94,7 @@ export default {
     font-size: 14px;
     padding-top: 10px;
     line-height: 26px;
-        color: #ffffff;
+    @include theme-property('color', $color-text-info-title);
     text-indent: 10px;
     i {
       width: 2px;

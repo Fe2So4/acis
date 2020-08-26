@@ -20,7 +20,7 @@
   </div>
 </template>
 <script>
-import ThemePicker from './ThemePicker2'
+import ThemePicker from './ThemePicker'
 const {
   BrowserWindow,
   dialog
