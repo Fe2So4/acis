@@ -102,11 +102,7 @@ export default {
       display: inline-block;
       vertical-align: middle;
       margin-right: 8px;
-      background: linear-gradient(
-        0deg,
-        rgba(12, 133, 226, 1),
-        rgba(236, 33, 88, 1)
-      );
+      @include theme-property("background",$background-menu-active)
     }
   }
   span {

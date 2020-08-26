@@ -246,10 +246,16 @@
                 </p>
                 <p>
                   <span class="label">手术</span>
-                  <span
-                    class="overflow"
-                    style="width:150px;margin-left:0;margin-right:0;"
-                  >{{ item.opeName }}</span>
+                  <el-tooltip
+                    effect="dark"
+                    :content="item.opeName"
+                    placement="top-start"
+                  >
+                    <span
+                      class="overflow"
+                      style="width:150px;margin-left:0;margin-right:0;"
+                    >{{ item.opeName }}</span>
+                  </el-tooltip>
                 </p>
                 <p>
                   <span class="label">时间</span>
