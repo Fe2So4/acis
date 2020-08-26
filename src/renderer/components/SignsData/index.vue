@@ -98,11 +98,17 @@ $box-shadow-signs: (
   "dark-blue": -5px 1px 5px 0px rgba(0, 0, 0, 0.4),
   "light-white": -4px 2px 5px 0px rgba(0, 0, 0, 0.1),
 );
+$color-background-signs: (
+  "dark-gray": #363638,
+  "dark-blue": #121421,
+  "light-white": #454546,
+);
 .signs-data {
   width: 100%;
   height: 100%;
   background: #121421;
-  @include theme-property("box-shadow", $box-shadow-signs);;
+  @include theme-property("box-shadow", $box-shadow-signs);
+  @include theme-property("background", $color-background-signs);
 
   ul {
     height: calc(100% - 26px);
