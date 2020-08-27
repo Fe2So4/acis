@@ -6,6 +6,7 @@ $--custom-el-background-color: #2d2d33;
 /// color|1|Brand Color|0
 $--color-primary: #fb6716;
 // 常用字颜色
+$--color-text-primary: $--color-primary;
 /// color|1|Font Color|2
 $--color-text-regular: #bababa;
 
@@ -24,7 +25,7 @@ $--background-color-base: #f5f7fa !default;
 /// color||Color|0
 $--checkbox-background-color: $--custom-el-background-color;
 /// color||Color|0
-$--checkbox-checked-font-color: #bababa;
+$--checkbox-checked-font-color: $--color-text-regular;
 /// color||Color|0
 // $--checkbox-disabled-input-fill: #6c7eb3;
 
@@ -43,19 +44,19 @@ $--input-disabled-border: #47494c;
 
 /* Dialog
 -------------------------- */
-$--color-text-primary: #0094ff;
+
 $--dialog-background-color: #181c27;
 // $--dialog-padding-primary:30;
 
 /* Button
 -------------------------- */
 /// color||Color|0
-$--button-default-background-color: #2d2d33;
+$--button-default-background-color: $--custom-el-background-color;
 
 //disabled
-$--button-disabled-background-color: #2c2e36;
-$--button-disabled-font-color: #47494c;
-$--button-disabled-border-color: #47494c;
+$--button-disabled-background-color: mix($--button-default-background-color, gray, 80%);
+$--button-disabled-font-color: mix($--color-text-regular, gray, 50%);
+$--button-disabled-border-color: $--border-color-base;
 
 /* Select
 -------------------------- */
@@ -63,9 +64,9 @@ $--select-dropdown-background: $--custom-el-background-color;
 $--select-dropdown-border: solid 1px $--border-color-base;
 /// height||Other|4
 $--select-option-hover-background: mix(
-  $--custom-el-background-color,
-  black,
-  50%
+    $--custom-el-background-color,
+    black,
+    50%
 );
 
 /* Popover

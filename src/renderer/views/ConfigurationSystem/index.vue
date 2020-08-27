@@ -12,9 +12,9 @@
           @select="onSelectMenu"
           unique-opened
           class="menu"
-          background-color="#181c27"
-          text-color="#9ba3d5"
-          active-text-color="#ffffff"
+          :background-color="menuBackground"
+          :text-color="menuTextColor"
+          :active-text-color="menuActiveTextColor"
         >
           <el-submenu index="basic">
             <template slot="title">
@@ -66,6 +66,7 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 import configurationComponents from './configurationComponent'
 export default {
   name: 'ConfigurationSystem',
@@ -135,8 +136,42 @@ export default {
     }
   },
   computed: {
+    ...mapState('Base', ['theme']),
     defaultActivePath () {
       return this.normalList[0].path
+    },
+    menuBackground () {
+      switch (this.theme) {
+        case 'dark-gray':
+          return '#1e2022'
+        case 'light-white':
+          return '#F0F0F0'
+        case 'dark-blue':
+        default:
+          return '#181c28'
+      }
+    },
+    menuTextColor () {
+      switch (this.theme) {
+        case 'dark-gray':
+          return '#BABABA'
+        case 'light-white':
+          return '#707C91'
+        case 'dark-blue':
+        default:
+          return '#9BA4D5'
+      }
+    },
+    menuActiveTextColor () {
+      switch (this.theme) {
+        case 'dark-gray':
+          return '#EDF1F9'
+        case 'light-white':
+          return '#1A1A1A'
+        case 'dark-blue':
+        default:
+          return '#FFFFFF'
+      }
     }
   },
   created () {
@@ -189,6 +224,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "@/styles/theme";
 .configurationSystem {
   width: 70vw;
   height: 75vh;
@@ -203,7 +239,7 @@ export default {
     }
   }
   .container {
-    background: #1e222e;
+    @include theme-property("background", $background-dialog-content);
     border-radius: 10px;
     flex: auto;
     overflow: auto;
@@ -211,10 +247,12 @@ export default {
     .title {
       height: 54px;
       line-height: 54px;
-      color: #9ba3d5;
+    }
+    .title ::v-deep .el-breadcrumb__inner {
+      @include theme-property("color", $color-text-regular);
     }
     .title ::v-deep .el-breadcrumb__separator {
-      color: #9ba3d5;
+      @include theme-property("color", $color-text-regular);
     }
     .main {
       height: calc(100% - 54px);

@@ -428,8 +428,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "@/styles/theme";
 .normalSetting {
-  color: #9aa3d4;
+  @include theme-property("color", $color-text-regular);
   overflow: hidden;
   .el-row {
     margin-bottom: 20px;
@@ -443,7 +444,7 @@ export default {
     }
     .el-input-number ::v-deep .el-input-number__decrease,
     .el-input-number ::v-deep .el-input-number__increase {
-      background: #1a2134;
+      @include theme-property("background", $color-background-card);
     }
   }
   .buttons {

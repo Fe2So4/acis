@@ -279,8 +279,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "@/styles/theme";
 .superNormalSetting {
-  color: #9aa3d4;
+  @include theme-property("color", $color-text-regular);
   overflow: hidden;
   .el-row {
     margin-bottom: 20px;

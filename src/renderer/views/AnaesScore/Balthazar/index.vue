@@ -25,6 +25,7 @@
 import ScoreChart from '../components/charts'
 import ScoringComponents from '../components/ScoringItem'
 import mixin from '../mixin'
+
 export default {
   name: 'Balthazar',
   mixins: [mixin],
@@ -40,39 +41,45 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.balthazar {
-  padding: 0;
-  height: 100%;
-  .option {
-    margin: 20px 0;
-    text-align: right;
-  }
-  .form {
-    .score {
+  @import "@/styles/theme";
+
+  .balthazar {
+    padding: 0;
+    height: 100%;
+
+    .option {
+      margin: 20px 0;
       text-align: right;
-      margin-bottom: 20px;
-
-      span {
-        color: #fd4b4b;
-        font-size: 14px;
-      }
-
-      .el-input {
-        margin-left: 20px;
-      }
     }
 
-    .el-row {
-      .el-col {
-        margin: 0 0 20px 0;
+    .form {
+      .score {
+        text-align: right;
+        margin-bottom: 20px;
+
+        span {
+          color: #fd4b4b;
+          font-size: 14px;
+        }
+
+        .el-input {
+          margin-left: 20px;
+        }
       }
-      .radioBlock ::v-deep .el-radio {
-        display: block;
-        background: #1e222e;
-        border-radius: 5px;
-        margin: 0 0 20px 0;
+
+      .el-row {
+        .el-col {
+          margin: 0 0 20px 0;
+        }
+
+        .radioBlock ::v-deep .el-radio {
+          display: block;
+          @include theme-property("background", $background-dialog-content);
+          border-radius: 5px;
+          margin: 0 0 20px 0;
+          padding-left: 10px;
+        }
       }
     }
   }
-}
 </style>

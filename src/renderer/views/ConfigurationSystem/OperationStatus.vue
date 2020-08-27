@@ -64,6 +64,7 @@
 import request from '@/utils/requestForMock'
 import { getOpeConConfig, updateOpeConConfig } from '@/api/superConfig'
 import draggable from 'vuedraggable'
+
 export default {
   name: 'OperationStatus',
   components: {
@@ -109,7 +110,8 @@ export default {
             return Promise.reject(new Error())
           }
         })
-        .catch((e) => {})
+        .catch((e) => {
+        })
     },
     updateOpeConConfig (list) {
       return request({
@@ -138,55 +140,67 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.operationStatus {
-  .mainContent {
-    display: flex;
-    .contentItem {
-      flex: auto;
-      border: 1px solid #39425c;
-      border-radius: 5px;
-      &:first-child {
-        margin-right: 12px;
-      }
-      h3 {
-        height: 50px;
-        margin: 0;
-        color: #9ba3d5;
-        line-height: 50px;
-        font-weight: normal;
-        text-indent: 20px;
-        font-size: 14px;
-      }
-      .listContent {
-        height: 560px;
-        overflow: hidden;
-        .statusList {
-          color: #d0dae5;
-          line-height: 30px;
-          .listItem {
-            height: 30px;
-            background: #292f40;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-bottom: 1px;
-            text-indent: 40px;
-            cursor: move;
-            &:hover {
-              background: #36405c;
+  @import "@/styles/theme";
+
+  .operationStatus {
+    .mainContent {
+      display: flex;
+
+      .contentItem {
+        flex: auto;
+        border: 1px solid;
+        @include theme-property('border-color', $dateTimePicker-color-border);
+        border-radius: 5px;
+
+        &:first-child {
+          margin-right: 12px;
+        }
+
+        h3 {
+          height: 50px;
+          margin: 0;
+          @include theme-property('color', $color-text-regular);
+          line-height: 50px;
+          font-weight: normal;
+          text-indent: 20px;
+          font-size: 14px;
+        }
+
+        .listContent {
+          height: 560px;
+          overflow: hidden;
+
+          .statusList {
+            @include theme-property('color', $color-text-listItem);
+            line-height: 30px;
+
+            .listItem {
+              height: 30px;
+              @include theme-property('background', $color-background-listItem);
+              overflow: hidden;
+              text-overflow: ellipsis;
+              margin-bottom: 1px;
+              text-indent: 40px;
+              cursor: move;
+
+              &:hover {
+                @include theme-property('background', $color-background-listItem-hover);
+              }
             }
           }
         }
       }
     }
-  }
-  .buttons {
-    margin-top: 20px;
-    text-align: right;
-    .info {
-      color: #9ba3d5;
-      font-size: 14px;
-      margin-right: 20px;
+
+    .buttons {
+      margin-top: 20px;
+      text-align: right;
+
+      .info {
+        @include theme-property('color', $color-text-regular);
+        font-size: 14px;
+        margin-right: 20px;
+      }
     }
   }
-}
 </style>

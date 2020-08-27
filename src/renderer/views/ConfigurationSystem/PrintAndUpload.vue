@@ -211,12 +211,13 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "@/styles/theme";
 .printAndUpload {
   overflow: hidden;
   .contentTitle {
     height: 34px;
     line-height: 34px;
-    color: #9ba3d5;
+    @include theme-property("color", $color-text-regular);
   }
 
   .checkbox {
@@ -226,17 +227,17 @@ export default {
     height: 250px;
     overflow: hidden;
     .documentList {
-      color: #d0dae5;
+      @include theme-property("color", $color-text-listItem);
       line-height: 30px;
       .listItem {
         height: 30px;
-        background: #292f40;
+        @include theme-property("background", $color-background-listItem);
         overflow: hidden;
         text-overflow: ellipsis;
         margin-bottom: 1px;
         text-indent: 4px;
         &:hover {
-          background: #36405c;
+          @include theme-property("background", $color-background-listItem-hover);
         }
       }
     }
@@ -245,14 +246,14 @@ export default {
   .attention {
     padding-left: 11px;
     font-size: 12px;
-    color: #9ba3d5;
+    @include theme-property("color", $color-text-regular);
     .attentionInput {
       width: 40px;
       outline: none;
     }
 
     .attentionText {
-      color: #9ba3d5;
+      @include theme-property("color", $color-text-regular);
       line-height: 24px;
     }
   }

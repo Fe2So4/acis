@@ -1,10 +1,11 @@
 @import "theme";
 /* 改变主题色变量 */
-$--custom-el-background-color: #ebecef;
+$--custom-el-background-color: #EBECEF;
 /* Color
 -------------------------- */
 /// color|1|Brand Color|0
 $--color-primary: #3890f7;
+$--color-text-primary: $--color-primary;
 // 常用字颜色
 /// color|1|Font Color|2
 $--color-text-regular: #707c92;
@@ -43,7 +44,6 @@ $--input-disabled-border: mix($--background-color-base, gray, 80%);
 
 /* Dialog
 -------------------------- */
-$--color-text-primary: $--color-primary;
 $--dialog-background-color: #f0f0f0;
 // $--dialog-padding-primary:30;
 
@@ -53,9 +53,9 @@ $--dialog-background-color: #f0f0f0;
 $--button-default-background-color: $--custom-el-background-color;
 
 //disabled
-$--button-disabled-background-color: #2c2e36;
-$--button-disabled-font-color: #47494c;
-$--button-disabled-border-color: #47494c;
+$--button-disabled-background-color: mix($--button-default-background-color, gray, 80%);
+$--button-disabled-font-color: mix($--color-text-regular, gray, 50%);
+$--button-disabled-border-color: $--border-color-base;
 
 /* Select
 -------------------------- */

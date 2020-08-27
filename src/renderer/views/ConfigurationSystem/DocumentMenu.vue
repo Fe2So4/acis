@@ -89,6 +89,7 @@ import {
   getOpeStateDict
 } from '@/api/superConfig'
 import draggable from 'vuedraggable'
+
 export default {
   name: 'DocumentMenu',
   components: {
@@ -143,7 +144,8 @@ export default {
             return Promise.reject(new Error())
           }
         })
-        .catch((e) => {})
+        .catch((e) => {
+        })
     },
     // 更新文书配置
     updateWritConfig (list) {
@@ -183,74 +185,89 @@ export default {
             return Promise.reject(new Error())
           }
         })
-        .catch((e) => {})
+        .catch((e) => {
+        })
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.documentMenu {
-  .topContent {
-    height: 40px;
-    color: #9ba3d5;
-    .el-select {
-      margin-left: 20px;
+  @import "@/styles/theme";
+  .documentMenu {
+    .topContent {
+      height: 40px;
+      @include theme-property('color', $color-text-regular);
+
+      .el-select {
+        margin-left: 20px;
+      }
     }
-  }
-  .contentTitle {
-    height: 34px;
-    line-height: 34px;
-    color: #9ba3d5;
-  }
-  .mainContent {
-    display: flex;
-    .contentItem {
-      flex: auto;
-      max-width: 50%;
-      border: 1px solid #39425c;
-      border-radius: 5px;
-      &:first-child {
-        margin-right: 12px;
-      }
-      h3 {
-        height: 50px;
-        margin: 0;
-        color: #9ba3d5;
-        line-height: 50px;
-        font-weight: normal;
-        text-indent: 20px;
-        font-size: 14px;
-      }
-      .listContent {
-        height: 250px;
-        overflow: hidden;
-        .statusList {
-          color: #d0dae5;
-          line-height: 30px;
-          .listItem {
-            height: 30px;
-            background: #292f40;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-bottom: 1px;
-            text-indent: 40px;
-            cursor: move;
-            &:hover {
-              background: #36405c;
+
+    .contentTitle {
+      height: 34px;
+      line-height: 34px;
+      @include theme-property('color', $color-text-regular);
+    }
+
+    .mainContent {
+      display: flex;
+
+      .contentItem {
+        flex: auto;
+        max-width: 50%;
+        border: 1px solid;
+        @include theme-property('border-color', $dateTimePicker-color-border);
+        border-radius: 5px;
+
+        &:first-child {
+          margin-right: 12px;
+        }
+
+        h3 {
+          height: 50px;
+          margin: 0;
+          @include theme-property('color', $color-text-regular);
+          line-height: 50px;
+          font-weight: normal;
+          text-indent: 20px;
+          font-size: 14px;
+        }
+
+        .listContent {
+          height: 250px;
+          overflow: hidden;
+
+          .statusList {
+            @include theme-property('color', $color-text-listItem);
+            line-height: 30px;
+
+            .listItem {
+              height: 30px;
+              @include theme-property('background', $color-background-listItem);
+              overflow: hidden;
+              text-overflow: ellipsis;
+              margin-bottom: 1px;
+              text-indent: 40px;
+              cursor: move;
+
+              &:hover {
+                @include theme-property('background', $color-background-listItem-hover);
+              }
             }
           }
         }
       }
     }
-  }
-  .buttons {
-    margin-top: 20px;
-    text-align: right;
-    .info {
-      color: #9ba3d5;
-      font-size: 14px;
-      margin-right: 20px;
+
+    .buttons {
+      margin-top: 20px;
+      text-align: right;
+
+      .info {
+        @include theme-property('color', $color-text-regular);
+        font-size: 14px;
+        margin-right: 20px;
+      }
     }
   }
-}
 </style>

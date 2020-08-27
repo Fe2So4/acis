@@ -44,6 +44,7 @@
 <script>
 import request from '@/utils/requestForMock'
 import { getEventDetailList } from '@/api/intraoperative'
+
 export default {
   name: 'EventList',
   props: {
@@ -119,35 +120,41 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
-.eventList {
-  border: 1px solid #39425c;
-  border-radius: 5px;
-  height: 400px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  .buttons {
-    flex: 0 0 auto;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 10px 10px;
-    padding: 10px;
-    .el-button {
-      width: 100%;
-      // height: 100%;
+  @import "@/styles/theme";
+
+  .eventList {
+    border: 1px solid;
+    @include theme-property('border-color', $dateTimePicker-color-border);
+    border-radius: 5px;
+    height: 400px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    .buttons {
+      flex: 0 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 10px 10px;
+      padding: 10px;
+
+      .el-button {
+        width: 100%;
+        // height: 100%;
+      }
+    }
+
+    .detailTable {
+      flex: auto;
+      // height: 199px;
+      // width: 100%;
+      border: none;
+
+      // & ::v-deep .vxe-table .vxe-table--border-line {
+      //   border-top: unset;
+      //   border-left: unset;
+      //   border-right: unset;
+      // }
     }
   }
-  .detailTable {
-    flex: auto;
-    // height: 199px;
-    // width: 100%;
-    border: none;
-
-    // & ::v-deep .vxe-table .vxe-table--border-line {
-    //   border-top: unset;
-    //   border-left: unset;
-    //   border-right: unset;
-    // }
-  }
-}
 </style>

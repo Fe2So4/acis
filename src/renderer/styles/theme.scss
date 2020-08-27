@@ -114,11 +114,11 @@ $box-shadow-card: (
 // 卡片中左侧房间号-床号背景
 $color-background-card-room: (
   "dark-gray":
-    linear-gradient(120deg, rgba(88, 173, 246, 1), rgba(7, 99, 226, 1)),
+  linear-gradient(120deg, rgba(88, 173, 246, 1), rgba(7, 99, 226, 1)),
   "dark-blue":
-    linear-gradient(120deg, rgba(84, 190, 234, 1), rgba(219, 83, 160, 1)),
+  linear-gradient(120deg, rgba(84, 190, 234, 1), rgba(219, 83, 160, 1)),
   "light-white":
-    linear-gradient(120deg, rgba(85, 191, 234, 1), rgba(219, 84, 160, 1)),
+  linear-gradient(120deg, rgba(85, 191, 234, 1), rgba(219, 84, 160, 1)),
 );
 
 // 房间号-床号的投影
@@ -187,9 +187,28 @@ $background-dialog-content: (
 //导航栏激活彩条
 $background-menu-active: (
   "dark-gray":
-    linear-gradient(0deg, rgba(236, 76, 34, 1), rgba(12, 134, 226, 1)),
+  linear-gradient(0deg, rgba(236, 76, 34, 1), rgba(12, 134, 226, 1)),
   "dark-blue":
-    linear-gradient(0deg, rgba(236, 34, 88, 1), rgba(12, 134, 226, 1)),
+  linear-gradient(0deg, rgba(236, 34, 88, 1), rgba(12, 134, 226, 1)),
+);
+
+// 列表项文字颜色
+$color-text-listItem: (
+  "dark-gray": #FAFAFA,
+  "dark-blue": #D0DAE5,
+  "light-white": #707B91,
+);
+// 列表项背景颜色
+$color-background-listItem: (
+  "dark-gray": #444444,
+  "dark-blue": #292F40,
+  "light-white": #F1F1F1,
+);
+// 列表项悬停背景颜色
+$color-background-listItem-hover: (
+  "dark-gray": #2D2D33,
+  "dark-blue": #252C40,
+  "light-white": #CDCDCD,
 );
 
 // 卡片中的房间号
@@ -249,9 +268,7 @@ $dateTimePicker-color-border: (
       }
 
       .el-time-panel__footer {
-        border-top: 1px
-          solid
-          map-get($map: $dateTimePicker-color-border, $key: $theme);
+        border-top: 1px solid map-get($map: $dateTimePicker-color-border, $key: $theme);
       }
 
       .el-time-panel__content::after,
@@ -264,9 +281,7 @@ $dateTimePicker-color-border: (
       }
 
       .el-date-table th {
-        border-bottom: 1px
-          solid
-          map-get($map: $dateTimePicker-color-border, $key: $theme);
+        border-bottom: 1px solid map-get($map: $dateTimePicker-color-border, $key: $theme);
       }
 
       .el-date-picker__time-header,
@@ -276,14 +291,16 @@ $dateTimePicker-color-border: (
         border-color: map-get($map: $dateTimePicker-color-border, $key: $theme);
       }
 
+      .el-date-range-picker__time-header > .el-icon-arrow-right {
+        color: map-get($map: $color-text-primary, $key: $theme);
+      }
+
       .el-picker-panel__footer {
         background: map-get(
           $map: $dateTimePicker-color-background,
           $key: $theme
         );
-        border-top: 1px
-          solid
-          map-get($map: $dateTimePicker-color-border, $key: $theme);
+        border-top: 1px solid map-get($map: $dateTimePicker-color-border, $key: $theme);
       }
 
       .el-date-table td.in-range div {
@@ -305,9 +322,11 @@ $dateTimePicker-color-border: (
         $key: $theme
       );
       border-color: map-get($map: $dateTimePicker-color-border, $key: $theme);
+
       .el-message-box__content {
         color: map-get($map: $color-text-regular, $key: $theme);
       }
+
       .el-message-box__title {
         color: map-get($map: $color-text-primary, $key: $theme);
       }
