@@ -276,7 +276,7 @@
                   <div style="display:flex;justify-content:center;">
                     <img
                       style="height:26px;width:26px;"
-                      src="@/assets/emergency.png"
+                      :src="require(`@/assets/emergency_${theme}.png`)"
                       alt
                     >
                   </div>
@@ -288,7 +288,7 @@
                   <div style="display:flex;justify-content:center;">
                     <img
                       style="height:26px;width:26px;"
-                      src="@/assets/quarantine.png"
+                      :src="require(`@/assets/quarantine_${theme}.png`)"
                       alt
                     >
                   </div>
@@ -300,7 +300,7 @@
                   <div style="display:flex;justify-content:center;">
                     <img
                       style="height:26px;width:26px;"
-                      src="@/assets/radiation.png"
+                      :src="require(`@/assets/radiation_${theme}.png`)"
                       alt
                     >
                   </div>
@@ -332,7 +332,7 @@
 import moment from 'moment'
 import request from '../../utils/requestForMock'
 import { opeList, roomList } from '@/api/patientList'
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { Socket } from '@/model/Socket'
 import {
   anaesMethodDetail,
@@ -392,6 +392,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('Base', ['theme']),
     noMore () {
       return this.currentPage >= this.totalPages
     },

@@ -99,7 +99,7 @@ export default {
     font-size:18px;
     font-weight: bold;
     @include theme-property("color", $color-primary);
-    margin-right:20px;
+    margin-left:12px;
     cursor: pointer;
   }
 }

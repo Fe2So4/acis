@@ -4,8 +4,8 @@ $color-black: black;
 // 主题列表
 $themes: ("dark-gray", "dark-blue", "light-white");
 
-@function color-lighten($map, $theme) {
-  @return lighten(map-get($map: $map, $key: $theme), 10%);
+@function color-lighten($map, $theme, $amount) {
+  @return lighten(map-get($map: $map, $key: $theme), $amount);
 }
 
 // 主题色
@@ -16,9 +16,9 @@ $color-primary: (
 );
 
 $color-primary-light: (
-  "dark-gray": color-lighten($color-primary, "dark-gray"),
-  "dark-blue": color-lighten($color-primary, "dark-blue"),
-  "light-white": color-lighten($color-primary, "light-white"),
+  "dark-gray": color-lighten($color-primary, "dark-gray", 10%),
+  "dark-blue": color-lighten($color-primary, "dark-blue", 10%),
+  "light-white": color-lighten($color-primary, "light-white", 10%),
 );
 
 // 主题字色
@@ -36,9 +36,9 @@ $color-text-regular: (
 );
 
 $color-regular-light: (
-  "dark-gray": color-lighten($color-text-regular, "dark-gray"),
-  "dark-blue": color-lighten($color-text-regular, "dark-blue"),
-  "light-white": color-lighten($color-text-regular, "light-white"),
+  "dark-gray": color-lighten($color-text-regular, "dark-gray", 10%),
+  "dark-blue": color-lighten($color-text-regular, "dark-blue", 10%),
+  "light-white": color-lighten($color-text-regular, "light-white", 10%),
 );
 
 // 次要字色

@@ -31,6 +31,7 @@ import request from '@/utils/requestForMock'
 import { updateDocument, saveTemplateTableInfo } from '@/api/medicalDocument'
 import WidgetCopiable from './WidgetCopiable'
 import { createNamespacedHelpers } from 'vuex'
+
 const { mapActions, mapGetters, mapState } = createNamespacedHelpers(
   'PageTemplateDesigner'
 )
@@ -153,8 +154,8 @@ export default {
       let data = this.templateData.filter(
         (widget) =>
           widget.dataSource &&
-          widget.dataSource.tableName &&
-          widget.dataSource.className
+                        widget.dataSource.tableName &&
+                        widget.dataSource.className
       )
       data = data.reduce((acc, widget) => {
         if (acc[widget.dataSource.tableName]) {
@@ -181,26 +182,32 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.widgetList {
-  // flex: 0 1 200px;
-  height: 100%;
-  background: #364058;
-  overflow: auto;
+  @import "@/styles/theme";
 
-  hr {
-    border-color: #5d709b;
-  }
+  $background: (
+    dark-blue: #364058,
+    dark-gray: #353537,
+    light-white: #EBECEF,
+  );
+  .widgetList {
+    height: 100%;
+    @include theme-property(background, $background);
+    overflow: auto;
 
-  .button {
-    cursor: pointer;
-    width: 100px;
-    height: 30px;
-    background: #f8f8f2;
-    line-height: 30px;
-    margin: 5px 10px;
-    text-align: center;
-    border-radius: 4px;
-    color: #333;
+    hr {
+      border-color: #5d709b;
+    }
+
+    .button {
+      cursor: pointer;
+      width: 100px;
+      height: 30px;
+      background: #f8f8f2;
+      line-height: 30px;
+      margin: 5px 10px;
+      text-align: center;
+      border-radius: 4px;
+      color: #333;
+    }
   }
-}
 </style>

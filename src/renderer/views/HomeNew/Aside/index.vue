@@ -9,7 +9,7 @@
       @click="jumpLogin"
     >
       <img
-        src="../../../assets/tq.png"
+        :src="logoSource"
         alt
       >
     </div>
@@ -69,8 +69,9 @@
 import Dialog from '@/components/DialogNav/index'
 import LockScreen from '../../LockScreen/index'
 import { getNavs } from '@/api/nav'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import request from '@/utils/requestForMock'
+
 // import Overview from '../../../components/OperationOverview/index'
 export default {
   name: 'Aside',
@@ -259,6 +260,7 @@ export default {
     // Hemodynamics
   },
   computed: {
+    ...mapState('Base', ['theme']),
     ...mapGetters('Base', ['operationId']),
     oddEven (index) {
       return function (index) {
@@ -268,6 +270,9 @@ export default {
           return false
         }
       }
+    },
+    logoSource () {
+      return require(`@/assets/tq_${this.theme}.png`)
     }
   },
   methods: {
@@ -294,7 +299,8 @@ export default {
           type: 'warning',
           showCancelButton: false,
           customClass: 'messageBox'
-        }).then(() => {})
+        }).then(() => {
+        })
         return
       }
       this.activeIndex = index
@@ -378,124 +384,140 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import "@/styles/theme";
-.aside {
-  height: 100%;
-  width: 100%;
-  font-size: 14px;
-  overflow: hidden;
-  @include theme-property("background", $color-background-aside);
-  // position: relative;
-  .title {
-    @include theme-property("color", $color-text-primary);
-    line-height: 30px;
-    text-align: center;
-    // background: #f8f9fa;
-    text-indent: 2px;
-    font-size: 12px;
-    cursor: pointer;
-    i {
-      display: inline-block;
-      width: 5px;
-      vertical-align: middle;
-      height: 5px;
-      border-radius: 50%;
-      @include theme-property("background", $color-primary);
-      margin: 0 4px;
-    }
-  }
-  .img {
-    // height:34px;
-    margin: 14px 0;
-    // background:#fff;
-    img {
-      display: block;
-      // width:100%;
-      // margin-left:20px;
-      margin: 0 auto;
-      height: 100%;
-    }
-  }
-  .menu {
-    display: grid;
-    grid-template-columns: repeat(2, 50%);
-    span {
-      text-align: center;
-      margin-bottom:26px;
+  @import "@/styles/theme";
+
+  .aside {
+    height: 100%;
+    width: 100%;
+    font-size: 14px;
+    overflow: hidden;
+    @include theme-property("background", $color-background-aside);
+    // position: relative;
+    .title {
+      @include theme-property("color", $color-text-primary);
       line-height: 30px;
-      @include theme-property("color", $color-text-regular);
-      font-size: 14px;
+      text-align: center;
+      // background: #f8f9fa;
+      text-indent: 2px;
+      font-size: 12px;
       cursor: pointer;
-      &:hover {
-        @include theme-property("color", $color-text-primary);
+
+      i {
+        display: inline-block;
+        width: 5px;
+        vertical-align: middle;
+        height: 5px;
+        border-radius: 50%;
+        @include theme-property("background", $color-primary);
+        margin: 0 4px;
       }
     }
-    span.rightActive {
-      background: linear-gradient(
-        90deg,
-        rgba(89, 247, 199, 1),
-        rgba(42, 131, 247, 1)
-      );
-      border-radius: 15px 0px 0px 15px;
-      color: #edf1f9;
+
+    .img {
+      // height:34px;
+      margin: 14px 0;
+      // background:#fff;
+      img {
+        display: block;
+        // width:100%;
+        // margin-left:20px;
+        margin: 0 auto;
+        height: 100%;
+      }
     }
-    span.leftActive {
-      background: linear-gradient(
-        90deg,
-        rgba(42, 131, 247, 1),
-        rgba(89, 247, 199, 1)
-      );
-      border-radius: 0 15px 15px 0;
-      color: #edf1f9;
+
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(2, 50%);
+
+      span {
+        text-align: center;
+        margin-bottom: 26px;
+        line-height: 30px;
+        @include theme-property("color", $color-text-regular);
+        font-size: 14px;
+        cursor: pointer;
+
+        &:hover {
+          @include theme-property("color", $color-text-primary);
+        }
+      }
+
+      span.rightActive {
+        background: linear-gradient(
+                90deg,
+                rgba(89, 247, 199, 1),
+                rgba(42, 131, 247, 1)
+        );
+        border-radius: 15px 0px 0px 15px;
+        color: #edf1f9;
+      }
+
+      span.leftActive {
+        background: linear-gradient(
+                90deg,
+                rgba(42, 131, 247, 1),
+                rgba(89, 247, 199, 1)
+        );
+        border-radius: 0 15px 15px 0;
+        color: #edf1f9;
+      }
+    }
+
+    .nav-list {
+      height: calc(100% - 30px);
+    }
+
+    .el-collapse {
+      border: unset;
+      @include theme-property("background", $color-background-aside);
+    }
+
+    .active {
+      width: 2px;
+      height: 40px;
+      position: absolute;
+      right: 0;
+      top: 0;
+      @include theme-property("background", $background-menu-active)
     }
   }
-  .nav-list {
-    height: calc(100% - 30px);
-  }
-  .el-collapse {
+
+  .aside /deep/ .el-collapse-item__header {
+    height: 40px;
     border: unset;
     @include theme-property("background", $color-background-aside);
+    @include theme-property("color", $color-text-regular);
+    font-size: 14px;
+    padding-left: 20px;
+    position: relative;
+
+    .header-icon {
+      font-size: 20px;
+      margin-right: 16px;
+    }
   }
-  .active {
-    width: 2px;
-    height: 40px;
-    position: absolute;
-    right: 0;
-    top: 0;
-    @include theme-property("background",$background-menu-active)
+
+  .aside /deep/ .el-collapse-item__wrap {
+    @include theme-property("background", $color-background-aside);
+    border: unset;
   }
-}
-.aside /deep/ .el-collapse-item__header {
-  height: 40px;
-  border: unset;
-  @include theme-property("background", $color-background-aside);
-  @include theme-property("color", $color-text-regular);
-  font-size: 14px;
-  padding-left: 20px;
-  position: relative;
-  .header-icon {
-    font-size: 20px;
-    margin-right: 16px;
+
+  .aside /deep/ .el-collapse-item__content {
+    @include theme-property("background", $color-background-aside);
+    border: unset;
+    padding: 30px 0 4px 0;
   }
-}
-.aside /deep/ .el-collapse-item__wrap {
-  @include theme-property("background", $color-background-aside);
-  border: unset;
-}
-.aside /deep/ .el-collapse-item__content {
-  @include theme-property("background", $color-background-aside);
-  border: unset;
-  padding: 30px 0 4px 0;
-}
-.aside /deep/ .el-collapse-item__header.is-active {
-  @include theme-property("background", $color-background-aside-active);
-  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.05);
-  color: #edf1f9;
-  font-size: 16px;
-}
+
+  .aside /deep/ .el-collapse-item__header.is-active {
+    @include theme-property("background", $color-background-aside-active);
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.05);
+    color: #edf1f9;
+    font-size: 16px;
+  }
 </style>
 <style>
-.aside .scrollbar .el-scrollbar__wrap {
-  overflow-x: hidden;
-}
+  .aside .scrollbar .el-scrollbar__wrap {
+    overflow-x: hidden;
+  }
 </style>
