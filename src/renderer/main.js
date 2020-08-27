@@ -19,7 +19,7 @@ import Tooltip from './components/Tooltip/main'
 import CtxMenu from './components/CtxMenu/main'
 import VXETablePluginElement from 'vxe-table-plugin-element'
 import 'vxe-table-plugin-element/dist/style.css'
-import './styles/vxe-table-variable-gray.scss' // 修改vxe-table默认样式
+// import './styles/vxe-table-variable-gray.scss' // 修改vxe-table默认样式
 // ...
 // 解决vxe - table与element - ui兼容性问题
 // ...

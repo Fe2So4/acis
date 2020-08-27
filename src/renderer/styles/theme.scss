@@ -190,6 +190,57 @@ $background-menu-active: (
     linear-gradient(0deg, rgba(236, 76, 34, 1), rgba(12, 134, 226, 1)),
   "dark-blue":
     linear-gradient(0deg, rgba(236, 34, 88, 1), rgba(12, 134, 226, 1)),
+  "dark-white":
+    linear-gradient(0deg,rgba(236,34,88,1),rgba(12,134,226,1))
+);
+
+//vxe表格文字颜色
+$color-vxe-table:(
+  "dark-gray": #FAFAFA,
+  "dark-blue": #D0DAE5,
+  "light-white": #1A1A1A,
+);
+
+// 大事件药品列表背景色
+$background-event-list:(
+  "dark-gray": #2E2E34,
+  "dark-blue": #262C40,
+  "light-white": #E2E3E5,
+);
+
+// 大事件药品列表悬浮背景色
+$background-hover-event-list:(
+  "dark-gray": #FB6816,
+  "dark-blue": #0094FF,
+  "light-white": #0094FF,
+);
+
+// 大事件药品列表文字色
+$color-event-list:(
+  "dark-gray": #BABABA,
+  "dark-blue": #9BA4D5,
+  "light-white": #717C92,
+);
+
+//大事件药品列表边框色
+$border-event-list:(
+  "dark-gray": 1px solid #484848,
+  "dark-blue": 1px solid #363E56,
+  "light-white": 1px solid rgba(206,206,206,1),
+);
+
+// 多选框背景色
+$background-checkbox:(
+  "dark-gray": #2E2E34,
+  "dark-blue": #262C40,
+  "dark-white": #EBECEF 
+);
+
+//多选框边框颜色
+$border-checkbox:(
+  "dark-gray": 1px solid #484848,
+  "dark-blue": 1px solid #363E56,
+  "dark-white": 1px solid #CECECE
 );
 
 // 卡片中的房间号
