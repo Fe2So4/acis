@@ -109,6 +109,9 @@ input[type="time"] {
   border-width: 1px;
   @include theme-property("border", $border-checkbox);
 }
+#app /deep/ .vxe-table .vxe-cell--checkbox.is--checked .vxe-checkbox--checked-icon:before{
+  @include theme-property("background", $background-checkbox-checked);
+}
 #app /deep/ .vxe-table .vxe-table--body-wrapper .vxe-body--row {
   @include theme-property("color", $color-vxe-table);
 }

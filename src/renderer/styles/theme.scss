@@ -236,6 +236,13 @@ $background-checkbox:(
   "dark-white": #EBECEF 
 );
 
+// 多选框选中背景色
+$background-checkbox-checked:(
+  "dark-gray": #FB6816,
+  "dark-blue": #0094FF,
+  "dark-white": #0094FF 
+);
+
 //多选框边框颜色
 $border-checkbox:(
   "dark-gray": 1px solid #484848,
