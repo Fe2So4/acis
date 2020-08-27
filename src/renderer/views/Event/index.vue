@@ -834,12 +834,13 @@ export default {
               overflow: hidden;
               line-height: 30px;
               text-indent: 10px;
-              background: rgba(37, 44, 64, 1);
+              @include theme-property("background", $background-event-list);
               border: 1px solid rgba(53, 62, 86, 1);
-              color: #9ba3d5;
+              @include theme-property("border", $border-event-list);
+              @include theme-property("color", $color-event-list);
               cursor: pointer;
               &:hover {
-                background: #0094ff;
+                @include theme-property("background", $background-hover-event-list);
                 color: #fff;
               }
             }
@@ -852,16 +853,16 @@ export default {
               text-overflow: ellipsis;
               overflow: hidden;
               white-space: nowrap;
-              background: rgba(37, 44, 64, 1);
-              border: 1px solid rgba(53, 62, 86, 1);
+              @include theme-property("background", $background-event-list);
+              @include theme-property("border", $border-event-list);
               border-radius: 4px;
               display: inline-block;
               line-height: 30px;
-              color: #9ba3d5;
+              @include theme-property("color", $color-event-list);
               cursor: pointer;
               text-align: center;
               &:hover {
-                background: #0094ff;
+                @include theme-property("background", $background-hover-event-list);
                 color: #fff;
               }
             }
