@@ -79,7 +79,10 @@ let rendererConfig = {
       {
         test: /\.js$/,
         use: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        // include: [
+        //   resolve('/node_modules/sass')
+        // ]
       },
       {
         test: /\.node$/,

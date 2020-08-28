@@ -42,7 +42,7 @@
             .line(ref="line")
             ul
               li(v-for="item in patientList", :key="item.opeRoom")
-                PatientDetail(v-for="(_item, index) in item.opeStateInfoVos" :date="form.date" :info="_item")
+                PatientDetail(v-for="(_item, index) in item.opeStateInfoVos" :key="index" :date="form.date" :info="_item")
 </template>
 <script>
 import * as spritejs from 'spritejs'
