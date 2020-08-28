@@ -90,7 +90,7 @@ export default {
       activeIndex: 2
     }
   },
-  props: ['lock'],
+  // props: ['lock'],
   watch: {
 
   },

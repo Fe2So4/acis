@@ -81,7 +81,7 @@ export default {
 
   .themePicker {
     .icon {
-      @include theme-property(color, $color-text-primary);
+      @include theme-property('color', $color-text-primary);
     }
   }
 </style>
@@ -103,13 +103,14 @@ export default {
       padding: 4px 0;
       min-width: unset;
     }
-    @include theme-property(background, $color-background-listItem);
+    @include theme-property('background', $color-background-listItem);
     .pickerItem {
       cursor: pointer;
+      -webkit-app-region: no-drag;
       width: 100px;
       height: 30px;
       line-height: 30px;
-      @include theme-property(color, $color-text-regular);
+      @include theme-property('color', $color-text-regular);
 
       img {
         width: 20px;
@@ -119,11 +120,11 @@ export default {
       }
 
       &.active {
-        @include theme-property(color, $color-text-primary);
+        @include theme-property('color', $color-text-primary);
       }
 
       &:hover {
-        @include theme-property(background, $color-background-listItem-hover);
+        @include theme-property('background', $color-background-listItem-hover);
       }
     }
   }

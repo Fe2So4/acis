@@ -72,3 +72,6 @@ export const synchroApply = `${config.default.api.baseURL}/acis/operation/syncOp
 
 // 同步患者信息
 export const synchroPatient = `${config.default.api.baseURL}/acis/operation/syncPatMasterIndex`
+
+// 手术间最大量配置
+export const configMaxDefalut = `${config.default.api.baseURL}/acis/operation/configMaxDefault`
