@@ -29,9 +29,8 @@
         class="scrollbar"
       >
         <div class="print-document">
-          <vxe-table
+          <!-- <vxe-table
             border
-            show-footer
             auto-resize
             export-config
             ref="xTable"
@@ -113,7 +112,8 @@
                 />
               </vxe-table-column>
             </vxe-table-column>
-          </vxe-table>
+          </vxe-table> -->
+          <Report id="print-report" />
         </div>
       </el-scrollbar>
     </div>
@@ -125,6 +125,8 @@ import {
   getTableList
 } from '@/api/schedule'
 import request from '@/utils/requestForMock'
+import Report from './report'
+import { ipcRenderer } from 'electron'
 export default {
   name: 'Document',
   data () {
@@ -136,10 +138,16 @@ export default {
       floor: ''
     }
   },
+  components: {
+    Report
+  },
   computed: {},
   methods: {
     printEvent () {
-      this.$refs.xTable.print()
+      // this.$router.push('/print-notice')
+      const printHtml = document.querySelector('#print-report').outerHTML
+      const options = { silent: true }
+      ipcRenderer.send('printChannel', printHtml, 'schedule-report.css', options)
     },
     cellClassName ({ row, column }) {
       if (column === 'title') {
@@ -151,7 +159,7 @@ export default {
         url: getTableList + '/' + this.time,
         method: 'GET'
       }).then(res => {
-        this.tableData = res.data.data
+        this.tableData = res.data.data || []
       })
     }
   },
@@ -167,6 +175,10 @@ export default {
     height:calc(100% - 46px);
   }
   .print-document{
+    background: #E3E3E3;
+    box-shadow: 1px 20px 45px 5px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    padding: 0 50px;
     height: 100%;
     h3{
       text-align: center;
@@ -225,6 +237,9 @@ export default {
   height: 100%;
 }
 .table-report{
+  @page {
+    size: landscape;
+  }
   background:#e3e3e3;
   color:#434343;
   font-size: 14px;

@@ -38,7 +38,7 @@
       <div class="unlock-container">
         <div class="logo-box">
           <img
-            src="../../assets/tongqian.png"
+            src="@/assets/tongqian.png"
             alt=""
           >
         </div>
@@ -63,9 +63,9 @@
           <el-form-item style="text-align: center; width: 100%;">
             <el-button
               type="primary"
-              @click="login"
               style="padding: 9px 20px;"
             >
+              <!-- @click="login" -->
               确 定
             </el-button>
             <el-button
@@ -91,9 +91,9 @@
 import Header from './Header/index'
 // import UserInfo from './UserInfo/index'
 // import Navs from './navs'
-import { debounce } from '../../utils/index'
-import { login } from '../../api/login'
-import { getCurrentAccount } from '../../utils/storage'
+import { debounce } from '@/utils/index'
+// import { login } from '../../api/login'
+import { getCurrentAccount } from '@/utils/storage'
 const { BrowserWindow } = require('electron').remote
 const win = BrowserWindow.getAllWindows()[0]
 
@@ -151,18 +151,18 @@ export default {
     })
   },
   methods: {
-    login () {
-      login({
-        loginName: this.username,
-        loginPwd: this.password
-      }).then(res => {
-        this.dialogVisible = false
-        this.password = ''
-      })
-    },
+    // login () {
+    //   login({
+    //     loginName: this.username,
+    //     loginPwd: this.password
+    //   }).then(res => {
+    //     this.dialogVisible = false
+    //     this.password = ''
+    //   })
+    // },
     enter (e) {
       if (e.keyCode === 13) {
-        this.login()
+        // this.login()
       }
     },
     close () {
