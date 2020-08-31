@@ -25,7 +25,7 @@ import { createNamespacedHelpers } from 'vuex'
 const { mapActions, mapGetters } = createNamespacedHelpers(
   'operationApplication'
 )
-const { ipcRenderer } = require('electron')
+// const { ipcRenderer } = require('electron')
 export default {
   components: { Notice },
   computed: {
@@ -42,8 +42,9 @@ export default {
   methods: {
     ...mapActions(['setDialogNoticeVisible']),
     onPrint () {
-      const printHtml = document.getElementById('operationNotice').outerHTML
-      ipcRenderer.send('printChannel', printHtml, 'operationNoticeForPrint.css')
+      this.$electron.ipcRenderer.send('print-document', {
+        path: '/print-notice'
+      })
     },
     onOpened () {
     }

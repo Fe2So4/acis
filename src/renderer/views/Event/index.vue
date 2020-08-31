@@ -56,6 +56,7 @@
           :pager-count="5"
           layout="prev, pager, next"
           :total="total"
+          :page-size="pageSize"
           :current-page="currentPage"
           @current-change="handleCurrentPageChange"
         />
