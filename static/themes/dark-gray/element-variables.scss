@@ -1,31 +1,31 @@
-@import "theme";
+@import "../theme";
 /* 改变主题色变量 */
-$--custom-el-background-color: #EBECEF;
+$--custom-el-background-color: #2d2d33;
 /* Color
 -------------------------- */
 /// color|1|Brand Color|0
-$--color-primary: #3890f7;
-$--color-text-primary: $--color-primary;
+$--color-primary: #fb6716;
 // 常用字颜色
+$--color-text-primary: $--color-primary;
 /// color|1|Font Color|2
-$--color-text-regular: #707c92;
+$--color-text-regular: #bababa;
 
 /// color|1|Border Color|3
-$--border-color-base: #cecece;
+$--border-color-base: #484848;
 
 /// color|1|Font Color|2
-$--color-text-placeholder: map-get($color-text-placeholder, "light-white");
+$--color-text-placeholder: map-get($color-text-placeholder, "dark-gray");
 
 // Background
 /// color|1|Background Color|4
-$--background-color-base: #ecedef !default;
+$--background-color-base: #f5f7fa !default;
 
 /* Checkbox
 -------------------------- */
 /// color||Color|0
 $--checkbox-background-color: $--custom-el-background-color;
 /// color||Color|0
-$--checkbox-checked-font-color: #717c92;
+$--checkbox-checked-font-color: $--color-text-regular;
 /// color||Color|0
 // $--checkbox-disabled-input-fill: #6c7eb3;
 
@@ -34,17 +34,18 @@ $--checkbox-checked-font-color: #717c92;
 /* Input
 -------------------------- */
 /// color||Color|0
-$--input-font-color: #707c91;
+$--input-font-color: #ffffff;
 /// color||Color|0
 $--input-background-color: $--custom-el-background-color;
-$--input-disabled-fill: mix($--input-background-color, gray, 80%);
-$--input-disabled-color: mix($--input-font-color, gray, 80%);
-$--input-disabled-border: mix($--background-color-base, gray, 80%);
+$--input-disabled-fill: #2c2e36;
+$--input-disabled-color: #47494c;
+$--input-disabled-border: #47494c;
 //
 
 /* Dialog
 -------------------------- */
-$--dialog-background-color: #F0F0F0;
+
+$--dialog-background-color: #1e2022;
 // $--dialog-padding-primary:30;
 
 /* Button
@@ -63,9 +64,9 @@ $--select-dropdown-background: $--custom-el-background-color;
 $--select-dropdown-border: solid 1px $--border-color-base;
 /// height||Other|4
 $--select-option-hover-background: mix(
-  $--custom-el-background-color,
-  white,
-  50%
+    $--custom-el-background-color,
+    black,
+    50%
 );
 
 /* Popover
@@ -87,7 +88,7 @@ $--table-header-background-color: $--dialog-background-color;
 
 /* DatePicker
 --------------------------*/
-$--datepicker-border-color: $--border-color-base;
+$--datepicker-border-color: #353e56;
 
 /* Tree
 --------------------------*/

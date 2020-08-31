@@ -1,14 +1,5 @@
 <template>
   <div class="themePicker">
-    <!--<el-radio-group v-model="colorTheme">
-      <el-radio
-        v-for="_theme in themes"
-        :key="_theme.value"
-        :label="_theme.value"
-      >
-        {{ _theme.name }}
-      </el-radio>
-    </el-radio-group>-->
     <el-popover
       placement="top"
       v-model="visible"
@@ -77,55 +68,55 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
-  @import "@/styles/theme";
+@import "@/styles/theme";
 
-  .themePicker {
-    .icon {
-      @include theme-property('color', $color-text-primary);
-    }
+.themePicker {
+  .icon {
+    -webkit-app-region: no-drag;
+    cursor: pointer;
+    @include theme-property("color", $color-text-primary);
   }
+}
 </style>
 <style lang="scss">
-  @import "@/styles/theme";
+@import "@/styles/theme";
 
-  @mixin theme {
-    @each $theme in $themes {
-      .#{$theme} & {
-        @content;
-      }
+@mixin theme {
+  @each $theme in $themes {
+    .#{$theme} & {
+      @content;
     }
   }
+}
+// 主题选择器
+.themePickerPopper {
+  @include theme {
+    padding: 4px 0;
+    min-width: unset;
+  }
+  @include theme-property("background", $color-background-listItem);
+  .pickerItem {
+    cursor: pointer;
+    -webkit-app-region: no-drag;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    @include theme-property("color", $color-text-regular);
 
-  ;
-  // 主题选择器
-  .themePickerPopper {
-    @include theme {
-      padding: 4px 0;
-      min-width: unset;
+    img {
+      width: 20px;
+      height: 20px;
+      margin: 5px;
+      vertical-align: bottom;
     }
-    @include theme-property('background', $color-background-listItem);
-    .pickerItem {
-      cursor: pointer;
-      -webkit-app-region: no-drag;
-      width: 100px;
-      height: 30px;
-      line-height: 30px;
-      @include theme-property('color', $color-text-regular);
 
-      img {
-        width: 20px;
-        height: 20px;
-        margin: 5px;
-        vertical-align: bottom;
-      }
+    &.active {
+      @include theme-property("color", $color-text-primary);
+    }
 
-      &.active {
-        @include theme-property('color', $color-text-primary);
-      }
-
-      &:hover {
-        @include theme-property('background', $color-background-listItem-hover);
-      }
+    &:hover {
+      @include theme-property("background", $color-background-listItem-hover);
     }
   }
+}
 </style>

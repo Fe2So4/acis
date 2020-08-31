@@ -1,31 +1,31 @@
-@import "theme";
+@import "../theme";
 /* 改变主题色变量 */
-$--custom-el-background-color: #252c40;
+$--custom-el-background-color: #EBECEF;
 /* Color
 -------------------------- */
 /// color|1|Brand Color|0
-$--color-primary: #0093ff;
-// 常用字颜色
+$--color-primary: #3890f7;
 $--color-text-primary: $--color-primary;
+// 常用字颜色
 /// color|1|Font Color|2
-$--color-text-regular: #9ba3d5;
+$--color-text-regular: #707c92;
 
 /// color|1|Border Color|3
-$--border-color-base: #353e56;
+$--border-color-base: #cecece;
 
 /// color|1|Font Color|2
-$--color-text-placeholder: map-get($color-text-placeholder, "dark-blue");
+$--color-text-placeholder: map-get($color-text-placeholder, "light-white");
 
 // Background
 /// color|1|Background Color|4
-$--background-color-base: #f5f7fa !default;
+$--background-color-base: #ecedef !default;
 
 /* Checkbox
 -------------------------- */
 /// color||Color|0
 $--checkbox-background-color: $--custom-el-background-color;
 /// color||Color|0
-$--checkbox-checked-font-color: #ffffff;
+$--checkbox-checked-font-color: #717c92;
 /// color||Color|0
 // $--checkbox-disabled-input-fill: #6c7eb3;
 
@@ -34,7 +34,7 @@ $--checkbox-checked-font-color: #ffffff;
 /* Input
 -------------------------- */
 /// color||Color|0
-$--input-font-color: #ffffff;
+$--input-font-color: #707c91;
 /// color||Color|0
 $--input-background-color: $--custom-el-background-color;
 $--input-disabled-fill: mix($--input-background-color, gray, 80%);
@@ -44,8 +44,7 @@ $--input-disabled-border: mix($--background-color-base, gray, 80%);
 
 /* Dialog
 -------------------------- */
-
-$--dialog-background-color: #181c28;
+$--dialog-background-color: #F0F0F0;
 // $--dialog-padding-primary:30;
 
 /* Button
@@ -65,7 +64,7 @@ $--select-dropdown-border: solid 1px $--border-color-base;
 /// height||Other|4
 $--select-option-hover-background: mix(
   $--custom-el-background-color,
-  black,
+  white,
   50%
 );
 

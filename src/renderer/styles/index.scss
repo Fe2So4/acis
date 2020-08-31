@@ -147,19 +147,19 @@ input[type="time"] {
 
 // 默认加载深蓝色主题
 .dark-blue {
-  @import "element-variables-dark-blue.scss";
+  @import "../../../static/themes/dark-blue/element-variables.scss";
   @import "element-variables.scss";
   @import "vxe-table-variable-dark-blue.scss";
 }
 
 .dark-gray {
-  @import "element-variables-dark-gray.scss";
+  @import "../../../static/themes/dark-gray/element-variables.scss";
   @import "element-variables.scss";
   @import "vxe-table-variable-dark-gray.scss";
 }
 
 .light-white {
-  @import "element-variables-light-white.scss";
+  @import "../../../static/themes/light-white/element-variables.scss";
   @import "element-variables.scss";
   @import "vxe-table-variable-dark-white.scss";
 }
