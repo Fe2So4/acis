@@ -9,7 +9,7 @@
 <script>
 // import '@/mock/mockData'
 import { mapState } from 'vuex'
-import { renderSync, render } from 'node-sass'
+import { renderSync, render } from 'sass'
 export default {
   name: 'Acis',
   computed: {
