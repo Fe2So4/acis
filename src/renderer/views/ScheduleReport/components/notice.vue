@@ -91,7 +91,7 @@ export default {
     print () {
       // this.$router.push('/print-notice')
       const printHtml = document.querySelector('#print-notice').outerHTML
-      const options = { silent: false }
+      const options = { silent: true }
       ipcRenderer.send('printChannel', printHtml, options)
     },
     getData () {

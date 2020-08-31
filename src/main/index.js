@@ -3,6 +3,7 @@
 import { app, BrowserWindow, Menu, ipcMain } from 'electron'
 import '../renderer/store'
 const fs = require('fs')
+const Path = require('path')
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -202,3 +203,52 @@ ipcMain.on('show-EMR', (e, name) => {
 // ---------------------------------显示病历功能 end--------------
 
 // 打印手术通知单
+const printPageURL = process.env.NODE_ENV === 'development'
+  ? 'http://localhost:9080/static/print/print.html'
+  : Path.join(__dirname, '../../static/print/print.html')
+const printWindowsPage = new Set()
+const createPrintWindowPage = () => {
+  let newPrintWindow = new BrowserWindow({
+    show: false,
+    webPreferences: {
+      webSecurity: false,
+      nodeIntegration: true
+    }
+  })
+
+  newPrintWindow.loadURL(printPageURL)
+  newPrintWindow.once('ready-to-show-schedule', () => {
+  })
+
+  newPrintWindow.on('closed', () => {
+    printWindowsPage.delete(newPrintWindow)
+    newPrintWindow = null
+  })
+
+  printWindowsPage.add(newPrintWindow)
+  return newPrintWindow
+}
+let printHtml = ''
+let cssFileName = ''
+let printWin1 = null
+let printOptions = null
+ipcMain.on('printChannel', (e, html, css, options) => {
+  printWin1 = createPrintWindowPage()
+  printHtml = html
+  cssFileName = css
+  printOptions = options
+})
+
+ipcMain.on('print-page-ready', (e) => {
+  e.reply('print-page-ready-reply', printHtml, cssFileName, printOptions)
+})
+
+ipcMain.on('print-content', (e, options) => {
+  console.log(e, options)
+  if (options) {
+    printWin1.webContents.print(options)
+  } else {
+    printWin1.webContents.print()
+  }
+  // const options = { silent: true, landscape: true }
+})
