@@ -37,118 +37,23 @@
       </el-form-item>
       <!-- <el-form-item>
         <el-button>搜索</el-button>
-      </el-form-item> -->
+      </el-form-item>-->
       <el-form-item>
         <el-button @click="print">
           打印
         </el-button>
       </el-form-item>
     </el-form>
-    <div class="print-content">
-      <el-row>
-        <el-col
-          :offset="10"
-          :span="6"
-        >
-          <h3>手术通知单</h3>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4">
-          <span>手术间</span>
-          <span>{{ noticeData.opeRoom }}</span>
-        </el-col>
-        <el-col :span="4">
-          <span>手术台次</span>
-          <span>{{ noticeData.sequence }}</span>
-        </el-col>
-        <el-col :span="6">
-          <span>手术时间</span>
-          <span>{{ noticeData.opeScheduleTime }}</span>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4">
-          <span>姓名</span>
-          <span>{{ noticeData.ptName }}</span>
-        </el-col>
-        <el-col :span="4">
-          <span>性别</span>
-          <span>{{ noticeData.gender }}</span>
-        </el-col>
-        <el-col :span="4">
-          <span>年龄</span>
-          <span>{{ noticeData.age }}</span>
-        </el-col>
-        <el-col :span="8">
-          <span>诊断</span>
-          <span>{{ noticeData.diagnoseBefore }}</span>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4">
-          <span>科室</span>
-          <span>{{ noticeData.deptName }}</span>
-        </el-col>
-        <el-col :span="4">
-          <span>床号</span>
-          <span>{{ noticeData.bedId }}</span>
-        </el-col>
-        <el-col :span="4">
-          <span>住院号</span>
-          <span>{{ noticeData.visitId }}</span>
-        </el-col>
-        <el-col :span="8">
-          <span>手术名称</span>
-          <span>{{ noticeData.operationName }}</span>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="5">
-          <span>主刀医生</span>
-          <span>{{ noticeData.surgeon }}</span>
-        </el-col>
-        <el-col :span="5">
-          <span>第一助手</span>
-          <span>{{ noticeData.surgeonAssist1 }}</span>
-        </el-col>
-        <el-col :span="5">
-          <span>第二助手</span>
-          <span>{{ noticeData.surgeonAssist1 }}</span>
-        </el-col>
-        <el-col :span="5">
-          <span>第三助手</span>
-          <span>{{ noticeData.surgeonAssist3 }}</span>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="5">
-          <span>麻醉方式</span>
-          <span>{{ noticeData.anesMethod }}</span>
-        </el-col>
-        <el-col :span="5">
-          <span>麻醉医师</span>
-          <span>{{ noticeData.anesDoc }}</span>
-        </el-col>
-        <el-col :span="5">
-          <span>高危</span>
-          <span />
-        </el-col>
-        <el-col :span="5">
-          <span>备注</span>
-          <span>{{ noticeData.memo }}</span>
-        </el-col>
-      </el-row>
-      <el-row />
-    </div>
+    <notice-print
+      :notice-data="noticeData"
+      id="print-notice"
+    />
   </div>
 </template>
 <script>
 import moment from 'moment'
-import {
-  getNoticeData,
-  getNoticePtList
-} from '@/api/schedule'
+import NoticePrint from '../print-notice'
+import { getNoticeData, getNoticePtList } from '@/api/schedule'
 import request from '@/utils/requestForMock'
 import { ipcRenderer } from 'electron'
 export default {
@@ -180,13 +85,14 @@ export default {
       ptList: []
     }
   },
+  components: { NoticePrint },
   computed: {},
   methods: {
     print () {
-      const html = document.querySelector('.print-content')
-      ipcRenderer.send('print-start', {
-        html: html
-      })
+      // this.$router.push('/print-notice')
+      const printHtml = document.querySelector('#print-notice').outerHTML
+      const options = { silent: false }
+      ipcRenderer.send('printChannel', printHtml, options)
     },
     getData () {
       if (this.value === '') {
@@ -212,7 +118,7 @@ export default {
         request({
           url: getNoticeData + '/' + this.value,
           method: 'GET'
-        }).then(res => {
+        }).then((res) => {
           this.noticeData = res.data.data
         })
       }
@@ -223,7 +129,7 @@ export default {
         params: {
           opeScheduleTime: this.time
         }
-      }).then(res => {
+      }).then((res) => {
         this.ptList = res.data.data
       })
     }
@@ -235,47 +141,17 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.notice {
-  .print-content{
-    width: calc(210mm + 100px);
-    h3{
-      text-align: center;
-    }
-    .el-row{
-      margin-bottom:10px;
-      // padding: 0 0 5px 0;
-      &:first-child{
-        margin:unset ;
-      }
-      .el-col{
-        display: flex;
-        margin-right: 20px;
-        span{
-          display: inline-block;
-          padding: 2px;
-          &:last-child{
-            margin-left: 5px;
-            border-bottom: 1px solid #fff;
-            text-align: left;
-            text-indent:5px;
-            flex: 1;
-          }
-        }
-      }
-    }
-  }
-}
 .notice /deep/ .el-select .el-select-dropdown,
 .el-select-dropdown .content {
   display: flex;
-  border-left: 1px solid #1A2131;
-  border-bottom: 1px solid #1A2131;
+  border-left: 1px solid #1a2131;
+  border-bottom: 1px solid #1a2131;
   span {
     display: block;
     flex: 1;
     text-align: center;
-    border-right: 1px solid #1A2131;
-    border-top: 1px solid #1A2131;
+    border-right: 1px solid #1a2131;
+    border-top: 1px solid #1a2131;
     // border-bottom: 1px solid #1A2131;
     box-sizing: border-box;
   }
