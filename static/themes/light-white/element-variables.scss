@@ -39,7 +39,7 @@ $--input-font-color: #707c91;
 $--input-background-color: $--custom-el-background-color;
 $--input-disabled-fill: mix($--input-background-color, gray, 80%);
 $--input-disabled-color: mix($--input-font-color, gray, 80%);
-$--input-disabled-border: mix($--background-color-base, gray, 80%);
+$--input-disabled-border: mix($--border-color-base, gray, 80%);
 //
 
 /* Dialog
@@ -55,7 +55,7 @@ $--button-default-background-color: $--custom-el-background-color;
 //disabled
 $--button-disabled-background-color: mix($--button-default-background-color, gray, 80%);
 $--button-disabled-font-color: mix($--color-text-regular, gray, 50%);
-$--button-disabled-border-color: $--border-color-base;
+$--input-disabled-border: mix($--border-color-base, gray, 80%);
 
 /* Select
 -------------------------- */

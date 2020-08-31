@@ -37,10 +37,9 @@ $--checkbox-checked-font-color: $--color-text-regular;
 $--input-font-color: #ffffff;
 /// color||Color|0
 $--input-background-color: $--custom-el-background-color;
-$--input-disabled-fill: #2c2e36;
-$--input-disabled-color: #47494c;
-$--input-disabled-border: #47494c;
-//
+$--input-disabled-fill: mix($--input-background-color, gray, 80%);
+$--input-disabled-color: mix($--input-font-color, gray, 80%);
+$--input-disabled-border: mix($--border-color-base, gray, 80%);
 
 /* Dialog
 -------------------------- */
@@ -56,7 +55,7 @@ $--button-default-background-color: $--custom-el-background-color;
 //disabled
 $--button-disabled-background-color: mix($--button-default-background-color, gray, 80%);
 $--button-disabled-font-color: mix($--color-text-regular, gray, 50%);
-$--button-disabled-border-color: $--border-color-base;
+$--input-disabled-border: mix($--border-color-base, gray, 80%);
 
 /* Select
 -------------------------- */
