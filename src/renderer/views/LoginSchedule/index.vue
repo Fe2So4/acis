@@ -7,6 +7,7 @@
         <p>
           <!-- 围手术期临床信息系统 -->
           <span>临床麻醉</span>
+          <span>手术排班</span>
           <span>v1.0.0</span>
         </p>
         <img
@@ -22,7 +23,7 @@
           >
         </div>
         <div class="title">
-          账户密码登录
+          账 户 密 码 登 录
         </div>
         <div class="line" />
         <el-form
@@ -127,7 +128,7 @@ export default {
             if (res.data.code === '0') {
               setUserToken(res.data.data)
               setCurrentAccount(this.form.username)
-              this.$router.push('/home')
+              this.$router.push('/statistics-home')
             } else {
               this.$message({ type: 'error', message: res.data.message })
             }
@@ -190,9 +191,6 @@ export default {
           -webkit-background-clip: text;
         }
         span {
-          font-size: 12px;
-          font-weight: bold;
-          color: #3CADFF;
           &:nth-child(1){
             font-weight: bold;
             font-size: 18px;
@@ -206,6 +204,17 @@ export default {
             -webkit-text-fill-color: transparent;
             -webkit-background-clip: text;
           }
+          &:nth-child(2){
+            display: inline-block;
+            background: #FF752A;
+            color:#FFFFFF;
+            line-height: 18px;
+            padding: 0 5px;
+            border-radius: 3px;
+          }
+          font-size: 12px;
+          font-weight: bold;
+          color: #3CADFF;
         }
         &:nth-child(2) {
           width: 20px;
@@ -225,7 +234,7 @@ export default {
       position: relative;
       .form-icon {
         position: absolute;
-        left: 70px;
+        left: 65px;
         top: 35px;
       }
       .title {

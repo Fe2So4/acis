@@ -3,10 +3,11 @@
     <div class="content clearfix">
       <div class="left">
         <p>Dandelion智慧手术中心</p>
-        <p>line</p>
+        <p />
         <p>
           <!-- 围手术期临床信息系统 -->
-          临床麻醉
+          <span>临床麻醉</span>
+          <span>数据统计</span>
           <span>v1.0.0</span>
         </p>
         <img
@@ -22,7 +23,7 @@
           >
         </div>
         <div class="title">
-          账户密码登录
+          账 户 密 码 登 录
         </div>
         <div class="line" />
         <el-form
@@ -179,16 +180,41 @@ export default {
         font-size: 18px;
         color: rgba(255, 255, 255, 1);
         // text-shadow:2px 3px 1px rgba(0, 0, 0, 0.8);
-        background: linear-gradient(
-          0deg,
-          rgba(0, 94, 210, 1) 0%,
-          rgba(178, 218, 255, 1) 100%
-        );
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        -webkit-background-clip: text;
+        &:first-child{
+          background: linear-gradient(
+            0deg,
+            rgba(0, 94, 210, 1) 0%,
+            rgba(178, 218, 255, 1) 100%
+          );
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          -webkit-background-clip: text;
+        }
         span {
+          &:nth-child(1){
+            font-weight: bold;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 1);
+            background: linear-gradient(
+            0deg,
+            rgba(0, 94, 210, 1) 0%,
+            rgba(178, 218, 255, 1) 100%
+            );
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
+          }
+          &:nth-child(2){
+            display: inline-block;
+            background: #FF752A;
+            color:#FFFFFF;
+            line-height: 18px;
+            padding: 0 5px;
+            border-radius: 3px;
+          }
           font-size: 12px;
+          font-weight: bold;
+          color: #3CADFF;
         }
         &:nth-child(2) {
           width: 20px;
@@ -208,7 +234,7 @@ export default {
       position: relative;
       .form-icon {
         position: absolute;
-        left: 70px;
+        left: 65px;
         top: 35px;
       }
       .title {
