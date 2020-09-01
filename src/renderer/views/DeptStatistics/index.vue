@@ -4,52 +4,64 @@
       <el-form
         size="mini"
         :inline="true"
+        :model="form"
       >
         <span>
           <el-form-item>
             <el-select
-              v-model="value"
+              v-model="form.operationBeforeState"
               placeholder="请选择"
-              style="width:110px;margin-right:4px;"
+              style="width:120px;margin-right:4px;"
             >
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in beforeTimeType"
+                :key="item"
+                :label="item"
+                :value="item"
               />
             </el-select>
             <el-date-picker
-              v-model="value"
+              v-model="form.beforeTime"
               type="date"
+              value-format="yyyy-MM-dd"
+              format="yyyy-MM-dd"
               placeholder="选择日期"
               style="width:165px"
             />
           </el-form-item>
           <el-form-item>
             <el-select
-              v-model="value"
+              v-model="form.operationAfterState"
               placeholder="请选择"
-              style="width:110px;margin-right:4px;"
+              style="width:120px;margin-right:4px;"
             >
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in afterTimeType"
+                :key="item"
+                :label="item"
+                :value="item"
               />
             </el-select>
             <el-date-picker
-              v-model="value"
+              v-model="form.afterTime"
               type="date"
+              value-format="yyyy-MM-dd"
+              format="yyyy-MM-dd"
               placeholder="选择日期"
               style="width:165px"
+              popper-class="dateTimePicker"
             />
+          </el-form-item>
+          <el-form-item label="科室">
+            <el-input v-model="form.dept" />
           </el-form-item>
         </span>
         <span>
           <el-form-item>
-            <el-button type="primary">
+            <el-button
+              type="primary"
+              @click="getData"
+            >
               查询
             </el-button>
             <el-button>导出配置</el-button>
@@ -63,104 +75,70 @@
         border
         round
         show-footer
-        export-config
         size="mini"
         ref="xTable"
         class="xTable"
-        height="100%"
         :data="tableData"
+        :footer-method="footerMethod"
         align="center"
       >
         <vxe-table-column
-          field="opeRoom"
-          title="术间"
+          field="dept_name"
+          title="科室"
         />
         <vxe-table-column
-          field="sequence"
-          title="序号"
+          field="special"
+          title="特"
         />
         <vxe-table-column
-          field="ptName"
-          title="病人信息"
+          field="big"
+          title="大"
         />
         <vxe-table-column
-          field="inpatientWard"
-          title="病区"
+          field="middle"
+          title="中"
         />
         <vxe-table-column
-          field="bedId"
-          title="床号"
+          field="small"
+          title="小"
         />
         <vxe-table-column
-          field="visitId"
-          title="住院号"
+          field="other"
+          title="其他"
         />
         <vxe-table-column
-          field="diagnoseBefore"
-          title="诊断"
+          field="total"
+          title="总计"
         />
         <vxe-table-column
-          field="operationName"
-          title="手术名称"
+          field="is_emergency"
+          title="急诊"
         />
         <vxe-table-column
-          field="surgeonName"
-          title="手术医师"
-        />
-        <vxe-table-column
-          field="anesMethod"
-          title="麻醉方法"
-        />
-        <vxe-table-column
-          field="anesDoc"
-          title="麻醉医师"
-        />
-        <vxe-table-column
-          field="opeNurse"
-          title="洗手护士"
-        />
-        <vxe-table-column
-          field="supplyNurse"
-          title="巡回护士"
-        />
-        <vxe-table-column
-          field="memo"
-          title="备注"
+          field="is_change"
+          title="择期"
         />
       </vxe-table>
     </div>
-    <bottom-buttons />
+    <bottom-buttons
+      :page-size="pageSize"
+      :current-page="currentPage"
+      :total-size="totalPages"
+      :total-pages="totalPages"
+    />
   </div>
 </template>
 
 <script>
 import BottomButtons from '@/components/StatisticsBottomButtons/BottomButtons'
+import { getDeptWork } from '@/api/statistics'
+import request from '@/utils/requestForMock'
+import moment from 'moment'
+import XEUtils from 'xe-utils'
 export default {
   data () {
     return {
       tableData: [],
-      options: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        },
-        {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
-        }
-      ],
       value: '',
       filterOptions: [
         { name: '全部', value: '1' },
@@ -188,11 +166,74 @@ export default {
           name: '未填',
           value: '4'
         }
-      ]
+      ],
+      beforeTimeType: ['麻醉开始时间', '手术开始时间', '入手术室时间', '手术安排时间'],
+      afterTimeType: ['麻醉结束时间', '手术结束时间', '出手术室时间', '手术安排时间'],
+      form: {
+        afterTime: moment(new Date()).format('YYYY-MM-DD'),
+        beforeTime: moment(new Date()).format('YYYY-MM-DD'),
+        operationAfterState: '麻醉结束时间',
+        operationBeforeState: '麻醉开始时间',
+        dept: ''
+      },
+      pageSize: 20,
+      currentPage: 1,
+      totalSize: 0,
+      totalPages: 0
     }
   },
   components: {
     BottomButtons
+  },
+  methods: {
+    getData () {
+      request(
+        {
+          method: 'post',
+          url: getDeptWork + `?pageSize=${this.pageSize}&index=${this.currentPage}&deptCode=${this.form.dept}`,
+          data: {
+            afterTime: this.form.afterTime,
+            beforeTime: this.form.beforeTime,
+            operationAfterState: this.form.operationAfterState,
+            operationBeforeState: this.form.operationBeforeState
+          }
+        }).then(res => {
+        if (res.data.data) {
+          this.tableData = res.data.data.list
+          this.pageSize = res.data.data.pageSize
+          this.totalSize = res.data.data.total
+          this.totalPages = res.data.data.totalPage
+        } else {
+          this.tableData = []
+        }
+      })
+    },
+    footerMethod ({ columns, data }) {
+      const sums = []
+      columns.forEach((column, columnIndex) => {
+        if (columnIndex === 0) {
+          sums.push('合计：')
+        } else {
+          let sumCell = null
+          // switch (column.property) {
+          //   case 'big':
+          //     sumCell = XEUtils.sum(data, column.property)
+          //     break
+          // }
+          if (column.property === 'dept_name') {
+
+          } else {
+            sumCell = XEUtils.sum(data, column.property)
+            sums.push(sumCell)
+          }
+        }
+      })
+      // 返回一个二维数组的表尾合计
+      return [sums]
+    }
+  },
+  mounted () {
+    this.getData()
   }
 }
 </script>

@@ -7,6 +7,7 @@
       <el-menu
         class="icu-navs-list"
         router
+        :unique-opened="true"
         :default-active="active"
         :key="$route.meta.parent"
       >

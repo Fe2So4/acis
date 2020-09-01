@@ -538,7 +538,12 @@
           show-overflow
         />
       </vxe-table>
-      <bottom-buttons />
+      <bottom-buttons
+        :page-size="pageSize"
+        :current-page="currentPage"
+        :total-size="totalPages"
+        :total-pages="totalPages"
+      />
     </div>
   </div>
 </template>
@@ -611,7 +616,9 @@ export default {
       anesEffect: [{ label: '完善', value: '1' }, { label: '不完善', value: '2' }, { label: '无效', value: '3' }],
       ptGoList: [{ label: '回病房', value: '病房' }, { label: '转重症监护室', value: 'ICU' }, { label: '转复苏室', value: '恢复室' }],
       notchLevelList: [1, 2, 3, 4, 5],
-      deptList: []
+      deptList: [],
+      totalSize: 0,
+      totalPages: 0
     }
   },
   components: {
@@ -646,6 +653,9 @@ export default {
       }).then(res => {
         if (res.data.data) {
           this.tableData = res.data.data.list
+          this.pageSize = res.data.data.pageSize
+          this.totalSize = res.data.data.total
+          this.totalPages = res.data.data.totalPage
         } else {
           this.tableData = []
         }

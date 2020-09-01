@@ -2,7 +2,7 @@
   <div class="export-config">
     <el-dialog
       title="导出excel配置"
-      :visible.sync="dialogVisible"
+      :visible.sync="exportVisible"
       width="50%"
       :before-close="handleClose"
     >
@@ -11,11 +11,11 @@
           <div class="title">
             可选字段
           </div>
-          <ul>
-            <li>1</li>
-            <li>2</li>
-            <li>3</li>
-            <li>4</li>
+          <ul class="export-left">
+            <li>l1</li>
+            <li>l2</li>
+            <li>l3</li>
+            <li>l4</li>
           </ul>
         </div>
         <!-- <div class="tips">
@@ -31,11 +31,11 @@
           <div class="title">
             已选字段
           </div>
-          <ul>
-            <li>1</li>
-            <li>2</li>
-            <li>3</li>
-            <li>4</li>
+          <ul class="export-right">
+            <li>r1</li>
+            <li>r2</li>
+            <li>r3</li>
+            <li>r4</li>
           </ul>
         </div>
       </div>
@@ -45,12 +45,10 @@
       >
         <el-button
           size="mini"
-          @click="dialogVisible = false"
         >取 消</el-button>
         <el-button
           type="primary"
           size="mini"
-          @click="dialogVisible = false"
         >确 定</el-button>
       </span>
     </el-dialog>
@@ -58,16 +56,42 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+import Sortable from 'sortablejs'
 export default {
   data () {
     return {
-      dialogVisible: false
+
     }
   },
+  props: {
+  },
+  computed: {
+    ...mapGetters('Statistics', ['exportVisible'])
+  },
   methods: {
+    ...mapActions('Statistics', ['closeExport']),
     handleClose () {
-      this.dialogVisible = false
+      this.closeExport()
+    },
+    handleSortable () {
+      this.$nextTick(() => {
+        const left = document.querySelector('.export-left')
+        const right = document.querySelector('.export-right')
+        var leftSort = new Sortable(left, {
+          group: 'shared',
+          animation: 150
+        })
+        var rightSort = new Sortable(right, {
+          group: 'shared',
+          animation: 150
+        })
+        console.log(leftSort, rightSort)
+      })
     }
+  },
+  mounted () {
+    this.handleSortable()
   }
 }
 </script>
@@ -82,6 +106,7 @@ export default {
         text-indent: 20px;
       }
       ul{
+        height:calc(100% - 52px);
         li{
           height:30px;
           background:rgba(41,47,64,1);

@@ -181,8 +181,8 @@ export default {
         deptCode: '1001',
         anesName: '臂丛神经阻滞麻醉'
       },
-      totalSize: null,
-      totalPages: null
+      totalSize: 0,
+      totalPages: 0
     }
   },
   components: {

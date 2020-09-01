@@ -100,7 +100,12 @@
         />
       </vxe-table>
     </div>
-    <bottom-buttons />
+    <bottom-buttons
+      :page-size="pageSize"
+      :current-page="currentPage"
+      :total-size="totalPages"
+      :total-pages="totalPages"
+    />
   </div>
 </template>
 
@@ -170,7 +175,9 @@ export default {
         }
       ],
       currentPage: 1,
-      pageSize: 20
+      pageSize: 20,
+      totalSize: 0,
+      totalPages: 0
     }
   },
   components: {
@@ -188,6 +195,9 @@ export default {
       }).then(res => {
         if (res.data.data) {
           this.tableData = res.data.data.list
+          this.pageSize = res.data.data.pageSize
+          this.totalSize = res.data.data.total
+          this.totalPages = res.data.data.totalPage
         } else {
           this.tableData = []
         }

@@ -113,7 +113,10 @@
               </vxe-table-column>
             </vxe-table-column>
           </vxe-table> -->
-          <Report id="print-report" />
+          <Report
+            id="print-report"
+            :table-data="tableData"
+          />
         </div>
       </el-scrollbar>
     </div>
@@ -145,9 +148,13 @@ export default {
   methods: {
     printEvent () {
       // this.$router.push('/print-notice')
-      const printHtml = document.querySelector('#print-report').outerHTML
-      const options = { silent: true }
-      ipcRenderer.send('printChannel', printHtml, 'schedule-report.css', options)
+      if (this.tableData.length > 0) {
+        const printHtml = document.querySelector('#print-report').outerHTML
+        const options = { silent: true }
+        ipcRenderer.send('printChannel', printHtml, 'schedule-report.css', options)
+      } else {
+        this.$message({ type: 'warning', message: '请选择正确排班日期' })
+      }
     },
     cellClassName ({ row, column }) {
       if (column === 'title') {

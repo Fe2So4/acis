@@ -1,58 +1,67 @@
 <template>
-  <div class="dept-statistics">
+  <div class="nurse-statistics">
     <div class="top">
       <el-form
         size="mini"
         :inline="true"
+        :model="form"
       >
         <span>
           <el-form-item>
             <el-select
-              v-model="value"
+              v-model="form.operationBeforeState"
               placeholder="请选择"
-              style="width:110px;margin-right:4px;"
+              style="width:120px;margin-right:4px;"
             >
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in beforeTimeType"
+                :key="item"
+                :label="item"
+                :value="item"
               />
             </el-select>
             <el-date-picker
-              v-model="value"
+              v-model="form.beforeTime"
               type="date"
+              value-format="yyyy-MM-dd"
+              format="yyyy-MM-dd"
               placeholder="选择日期"
               style="width:165px"
             />
           </el-form-item>
           <el-form-item>
             <el-select
-              v-model="value"
+              v-model="form.operationAfterState"
               placeholder="请选择"
-              style="width:110px;margin-right:4px;"
+              style="width:120px;margin-right:4px;"
             >
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in afterTimeType"
+                :key="item"
+                :label="item"
+                :value="item"
               />
             </el-select>
             <el-date-picker
-              v-model="value"
+              v-model="form.afterTime"
               type="date"
+              value-format="yyyy-MM-dd"
+              format="yyyy-MM-dd"
               placeholder="选择日期"
               style="width:165px"
+              popper-class="dateTimePicker"
             />
           </el-form-item>
-          <el-form-item label="姓名">
-            <el-input v-model="value" />
+          <el-form-item label="护士">
+            <el-input v-model="form.nurseCode" />
           </el-form-item>
         </span>
         <span>
           <el-form-item>
-            <el-button type="primary">
+            <el-button
+              type="primary"
+              @click="getData"
+            >
               查询
             </el-button>
             <el-button>导出配置</el-button>
@@ -66,142 +75,152 @@
         border
         round
         show-footer
-        export-config
         size="mini"
         ref="xTable"
         class="xTable"
-        height="100%"
         :data="tableData"
+        :footer-method="footerMethod"
         align="center"
       >
         <vxe-table-column
-          field="opeRoom"
-          title="术间"
+          field="nurse_no"
+          title="护士编号"
         />
         <vxe-table-column
-          field="sequence"
-          title="序号"
+          field="surgeon"
+          title="护士姓名"
         />
         <vxe-table-column
-          field="ptName"
-          title="病人信息"
+          field="first_ope_nurse"
+          title="洗手护士1"
         />
         <vxe-table-column
-          field="inpatientWard"
-          title="病区"
+          field="sec_ope_nurse"
+          title="洗手护士2"
         />
         <vxe-table-column
-          field="bedId"
-          title="床号"
+          field="third_ope_nurse"
+          title="洗手护士3"
         />
         <vxe-table-column
-          field="visitId"
-          title="住院号"
+          field="first_supply_nurse"
+          title="巡回护士1"
         />
         <vxe-table-column
-          field="diagnoseBefore"
-          title="诊断"
+          field="sec_supply_nurse"
+          title="巡回护士2"
         />
         <vxe-table-column
-          field="operationName"
-          title="手术名称"
+          field="third_supply_nurse"
+          title="巡回护士3"
         />
         <vxe-table-column
-          field="surgeonName"
-          title="手术医师"
+          field="all_sequence"
+          title="总台数"
         />
         <vxe-table-column
-          field="anesMethod"
-          title="麻醉方法"
+          field="all_time"
+          title="总时长"
         />
         <vxe-table-column
-          field="anesDoc"
-          title="麻醉医师"
-        />
-        <vxe-table-column
-          field="opeNurse"
-          title="洗手护士"
-        />
-        <vxe-table-column
-          field="supplyNurse"
-          title="巡回护士"
-        />
-        <vxe-table-column
-          field="memo"
-          title="备注"
+          field="avg_time"
+          title="平均时长"
         />
       </vxe-table>
     </div>
-    <bottom-buttons />
+    <bottom-buttons
+      :page-size="pageSize"
+      :current-page="currentPage"
+      :total-size="totalPages"
+      :total-pages="totalPages"
+    />
   </div>
 </template>
 
 <script>
 import BottomButtons from '@/components/StatisticsBottomButtons/BottomButtons'
+import { getNurseWork } from '@/api/statistics'
+import request from '@/utils/requestForMock'
+import moment from 'moment'
+import XEUtils from 'xe-utils'
 export default {
   data () {
     return {
       tableData: [],
-      options: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        },
-        {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
-        }
-      ],
       value: '',
-      filterOptions: [
-        { name: '全部', value: '1' },
-        { name: '术前', value: '2' },
-        { name: '术中', value: '3' },
-        {
-          name: '术后',
-          value: '4'
-        }
-      ],
-      radioOptions: [
-        {
-          name: '全部',
-          value: '1'
-        },
-        {
-          name: '急诊',
-          value: '2'
-        },
-        {
-          name: '择期',
-          value: '3'
-        },
-        {
-          name: '未填',
-          value: '4'
-        }
-      ]
+      beforeTimeType: ['麻醉开始时间', '手术开始时间', '入手术室时间', '手术安排时间'],
+      afterTimeType: ['麻醉结束时间', '手术结束时间', '出手术室时间', '手术安排时间'],
+      form: {
+        afterTime: moment(new Date()).format('YYYY-MM-DD'),
+        beforeTime: moment(new Date()).format('YYYY-MM-DD'),
+        operationAfterState: '麻醉结束时间',
+        operationBeforeState: '麻醉开始时间',
+        nurseCode: ''
+      },
+      pageSize: 20,
+      currentPage: 1,
+      totalSize: 0,
+      totalPages: 0
     }
   },
   components: {
     BottomButtons
+  },
+  methods: {
+    getData () {
+      request(
+        {
+          method: 'post',
+          url: getNurseWork + `?pageSize=${this.pageSize}&index=${this.currentPage}&nurseCode=${this.form.nurseCode}`,
+          data: {
+            afterTime: this.form.afterTime,
+            beforeTime: this.form.beforeTime,
+            operationAfterState: this.form.operationAfterState,
+            operationBeforeState: this.form.operationBeforeState
+          }
+        }).then(res => {
+        if (res.data.data) {
+          this.tableData = res.data.data.list
+          this.pageSize = res.data.data.pageSize
+          this.totalSize = res.data.data.total
+          this.totalPages = res.data.data.totalPage
+        } else {
+          this.tableData = []
+        }
+      })
+    },
+    footerMethod ({ columns, data }) {
+      const sums = []
+      columns.forEach((column, columnIndex) => {
+        if (columnIndex === 0) {
+          sums.push('合计：')
+        } else {
+          let sumCell = null
+          // switch (column.property) {
+          //   case 'big':
+          //     sumCell = XEUtils.sum(data, column.property)
+          //     break
+          // }
+          if (column.property === 'dept_name') {
+
+          } else {
+            sumCell = XEUtils.sum(data, column.property)
+            sums.push(sumCell)
+          }
+        }
+      })
+      // 返回一个二维数组的表尾合计
+      return [sums]
+    }
+  },
+  mounted () {
+    this.getData()
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.dept-statistics {
+.nurse-statistics {
   position: relative;
   color: #9ba3d5;
   font-size: 14px;

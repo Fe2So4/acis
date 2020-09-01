@@ -50,7 +50,7 @@ export default {
       required: true
     },
     contextMenuData: {
-      type: Array,
+      type: Object,
       required: true
     }
   },

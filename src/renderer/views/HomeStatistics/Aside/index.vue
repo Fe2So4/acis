@@ -32,7 +32,7 @@
           <el-submenu
             v-for="item in navs"
             :key="item.parentTempleteCode"
-            :index="item.list[0].pagePath"
+            :index="item.icon"
           >
             <template slot="title">
               <i :class="item.icon" />
@@ -59,7 +59,11 @@
       :lock-visible="lockVisible"
       @handleLock="handleLock"
     />
-    <export-config />
+    <export-config
+      v-if="exportVisible"
+      :export-visible="exportVisible"
+      @handleCloseExport="handleCloseExport"
+    />
   </div>
 </template>
 <script>
@@ -67,6 +71,7 @@ import LockScreen from '../../LockScreen/index'
 import ExportConfig from '@/components/ExportConfig/exportConfig'
 import { getStatisticsMenu } from '@/api/statistics'
 import request from '@/utils/requestForMock'
+import { mapGetters } from 'vuex'
 export default {
   name: 'Aside',
   data () {
@@ -105,7 +110,7 @@ export default {
     LockScreen, ExportConfig
   },
   computed: {
-
+    ...mapGetters('Statistics', ['exportVisible'])
   },
   methods: {
     getStatisticsMenu () {
@@ -129,7 +134,7 @@ export default {
     },
     handleOpen (key, keyPath) {
       console.log(key, keyPath)
-      this.$router.push(key)
+      // this.$router.push(key)
     },
     handleClose (key, keyPath) {
       console.log(key, keyPath)
@@ -147,6 +152,12 @@ export default {
     handleDialogClose () {
       this.showDialog = false
       this.activeIndex = false
+    },
+    handleShowExport (param) {
+      this.exportVisible = true
+    },
+    handleCloseExport (param) {
+      this.exportVisible = false
     }
   },
   mounted () {
