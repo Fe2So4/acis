@@ -9,7 +9,7 @@
 <script>
 // import '@/mock/mockData'
 import { mapState } from 'vuex'
-import { renderSync, render } from 'node-sass'
+import { renderSync, render } from 'sass'
 export default {
   name: 'Acis',
   computed: {
@@ -52,10 +52,11 @@ export default {
       return new Promise((resolve, reject) => {
         const themeFilePath = require('path').resolve(
           __static,
-          '../src/renderer/styles/themes'
+          `themes/${theme}/index-${process.env.NODE_ENV}.scss`
         )
+
         const result = renderSync({
-          file: `${themeFilePath}/${theme}.scss`
+          file: themeFilePath
         })
         resolve(result.css.toString())
       })

@@ -59,9 +59,9 @@
           <span>联系人</span>
           {{ basicInfo.contactName }}
         </el-col>
-        <el-col :span="5">
+        <!-- <el-col :span="5">
           <span>职业</span>暂无
-        </el-col>
+        </el-col> -->
       </el-row>
     </div>
   </div>
