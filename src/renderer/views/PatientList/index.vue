@@ -95,6 +95,7 @@
                 placeholder
                 format="yyyy-MM-dd"
                 value-format="yyyy-MM-dd"
+                popper-class="dateTimePicker"
               />
             </el-form-item>
             <el-form-item>
@@ -205,7 +206,7 @@
     <div class="patient-card">
       <el-scrollbar
         style="height:100%;"
-        class="scrollbar"
+        :wrap-style="wrapStyle"
       >
         <ul
           v-infinite-scroll="loadMore"
@@ -245,10 +246,16 @@
                 </p>
                 <p>
                   <span class="label">手术</span>
-                  <span
-                    class="overflow"
-                    style="width:150px;margin-left:0;margin-right:0;"
-                  >{{ item.opeName }}</span>
+                  <el-tooltip
+                    effect="dark"
+                    :content="item.opeName"
+                    placement="top-start"
+                  >
+                    <span
+                      class="overflow"
+                      style="width:150px;margin-left:0;margin-right:0;"
+                    >{{ item.opeName }}</span>
+                  </el-tooltip>
                 </p>
                 <p>
                   <span class="label">时间</span>
@@ -256,9 +263,7 @@
                 </p>
                 <p>
                   <span class="label">术者</span>
-                  <span
-                    style="max-width:40px"
-                  >{{ item.surgeonName }}</span>
+                  <span style="max-width:40px">{{ item.surgeonName }}</span>
                   <span
                     class="label"
                     style="margin-left:10px;"
@@ -271,7 +276,7 @@
                   <div style="display:flex;justify-content:center;">
                     <img
                       style="height:26px;width:26px;"
-                      src="@/assets/emergency.png"
+                      :src="require(`@/assets/emergency_${theme}.png`)"
                       alt
                     >
                   </div>
@@ -283,7 +288,7 @@
                   <div style="display:flex;justify-content:center;">
                     <img
                       style="height:26px;width:26px;"
-                      src="@/assets/quarantine.png"
+                      :src="require(`@/assets/quarantine_${theme}.png`)"
                       alt
                     >
                   </div>
@@ -295,7 +300,7 @@
                   <div style="display:flex;justify-content:center;">
                     <img
                       style="height:26px;width:26px;"
-                      src="@/assets/radiation.png"
+                      :src="require(`@/assets/radiation_${theme}.png`)"
                       alt
                     >
                   </div>
@@ -318,7 +323,7 @@
           class="loading"
         >
           没有更多了
-        </p> -->
+        </p>-->
       </el-scrollbar>
     </div>
   </div>
@@ -327,7 +332,7 @@
 import moment from 'moment'
 import request from '../../utils/requestForMock'
 import { opeList, roomList } from '@/api/patientList'
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { Socket } from '@/model/Socket'
 import {
   anaesMethodDetail,
@@ -338,12 +343,18 @@ import {
 export default {
   name: 'PatientList',
   data () {
+    const wrapStyle = Object.freeze([
+      {
+        'overflow-x': 'hidden'
+      }
+    ])
     return {
+      wrapStyle,
       loading: false,
       searchForm: {
         id: '',
         name: '',
-        date: moment(new Date()).format('yyyy-MM-DD'),
+        date: moment().format('yyyy-MM-DD'),
         endDate: '',
         anaesDoc: '',
         anaesMethod: '',
@@ -380,8 +391,8 @@ export default {
       activeIndex: null
     }
   },
-  components: {},
   computed: {
+    ...mapState('Base', ['theme']),
     noMore () {
       return this.currentPage >= this.totalPages
     },
@@ -516,8 +527,10 @@ export default {
       this.setOperationId(item.operationId)
       this.setProcedureState(item.state)
       this.setRoomNo(item.roomNo)
-      // eslint-disable-next-line no-new
-      Socket.create(item.operationId)
+      const noNeedSocketState = [10, 11, 14, 15, 16, 17]
+      if (!noNeedSocketState.includes(+item.state)) {
+        Socket.create(item.operationId)
+      }
       // if (item.state === 6) {
       //   this.$eventHub.$emit('show-dialog', {
       //     perName: '设备采集', componentName: 'DeviceGather', necessary: true
@@ -622,6 +635,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "@/styles/theme";
 .patient-info {
   height: 100%;
   width: 100%;
@@ -631,8 +645,8 @@ export default {
   .search {
     // flex: 1;
     height: 118px;
-    background: rgba(24, 28, 39, 1);
-    box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+    @include theme-property("background", $color-background-navigation);
+    @include theme-property("box-shadow", $box-shadow-card);
     border-radius: 5px;
     width: 100%;
     padding: 20px;
@@ -641,14 +655,14 @@ export default {
       position: absolute;
       padding: 20px 20px 0 20px;
       width: 100%;
-      background: #181c27;
-      box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+      @include theme-property("background", $color-background-navigation);
+      @include theme-property("box-shadow", $box-shadow-card);
       border-radius: 5px;
       top: 120px;
       left: 0;
       z-index: 1;
     }
-    .el-checkbox{
+    .el-checkbox {
       margin-right: 10px;
     }
   }
@@ -667,19 +681,16 @@ export default {
     }
     ul {
       display: grid;
-      // height:100%;
-      // overflow-y:auto;
       grid-template-columns: repeat(auto-fill, 392px);
       grid-column-gap: 20px;
       grid-row-gap: 20px;
-      // justify-content: space-around;
       li {
-        box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+        @include theme-property("box-shadow", $box-shadow-card);
         cursor: pointer;
         border-radius: 5px;
         padding: 0 0 14px 0;
-        background: #181c27;
-        border: 1px solid #181c27;
+        @include theme-property("background", $color-background-card);
+        // border: 1px solid transparent;
         width: 392px;
         height: 196px;
         font-size: 14px;
@@ -690,11 +701,12 @@ export default {
           display: flex;
           justify-content: space-between;
           span {
-            color: #7f85a9;
+            @include theme-property("color", $color-text-placeholder);
             padding: 0 10px;
             line-height: 28px;
             &:last-child {
-              color: #0094ff;
+              font-weight: bold;
+              @include theme-property("color", $color-text-primary);
             }
           }
         }
@@ -716,11 +728,7 @@ export default {
               height: 46px;
               display: block;
               line-height: 46px;
-              background: linear-gradient(
-                120deg,
-                rgba(84, 190, 234, 1),
-                rgba(219, 83, 160, 1)
-              );
+              @include card-room;
               border-radius: 0px 23px 23px 0px;
               font-size: 26px;
               font-weight: bold;
@@ -746,7 +754,7 @@ export default {
               color: #9ba3d5;
               // display: flex;
               span {
-                color: #d0dae5;
+                @include theme-property("color", $color-text-secondary);
                 float: left;
                 margin-right: 10px;
                 line-height: 28px;
@@ -760,7 +768,7 @@ export default {
                     }
                   }
                 }
-                &:last-child{
+                &:last-child {
                   margin-right: 0;
                 }
               }
@@ -773,13 +781,12 @@ export default {
                 white-space: nowrap;
               }
               .label {
-                color: #9ba3d5;
+                @include theme-property("color", $color-text-regular);
                 margin-right: 10px;
               }
             }
           }
           .status {
-            // background: pink;
             height: 100%;
             width: 74px;
             float: right;
@@ -789,29 +796,19 @@ export default {
           }
         }
         &:hover {
-          border: 1px solid #0094ff;
-          background: #262c3c;
-          // transform:scale(1.1,1.1);
+          // @include border-active;
+          @include theme-property("background", $color-background-card-hover);
         }
-      }
-      li.active {
-        border: 1px solid #0094ff;
-        background: #262c3c;
+        &.active {
+          // @include border-active;
+          @include theme-property("background", $color-background-card-hover);
+        }
       }
     }
   }
 }
 </style>
 <style>
-.el-picker-panel {
-  background: #252c40 !important;
-}
-.scrollbar .el-scrollbar__wrap {
-  overflow-x: hidden;
-}
-.scrollbar .el-scrollbar__wrap .el-scrollbar__view {
-  /* height:100%; */
-}
 .rowScrollbar .el-scrollbar__wrap .el-scrollbar__view {
   white-space: nowrap;
 }

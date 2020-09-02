@@ -246,11 +246,11 @@
 </template>
 <script>
 import {
-  getAnaesMethods,
+  // getAnaesMethods,
   getSwitchList,
-  submitSimple,
+  submitSimpleApply,
   configMaxDefalut,
-  submitRoomConfig,
+  // submitRoomConfig,
   getDocList,
   getNurseList,
   distributeMainAnaes,
@@ -638,15 +638,15 @@ export default {
       })
     },
     // 获取麻醉方法列表
-    async getAnaesMethods () {
-      const res = await getAnaesMethods()
-      // let arr = [];
-      res.forEach((value) => {
-        value.userName = value.anaesthesiaName
-        value.userId = value.id
-      })
-      this.anaesList = res
-    },
+    // async getAnaesMethods () {
+    //   const res = await getAnaesMethods()
+    //   // let arr = [];
+    //   res.forEach((value) => {
+    //     value.userName = value.anaesthesiaName
+    //     value.userId = value.id
+    //   })
+    //   this.anaesList = res
+    // },
     // 双击显示详情页
     handleDetailVisible ({ row }) {
       if (row.state === 1) {
@@ -855,7 +855,7 @@ export default {
           formData.append('patientId', this.selectAllocated.patientId)
           formData.append('visitId', this.selectAllocated.visitId)
           formData.append('scheduleId', this.selectAllocated.scheduleId)
-          submitSimple(formData).then((res) => {
+          submitSimpleApply(formData).then((res) => {
             this.getAllocatedList()
             this.getRoomList()
           })
@@ -984,20 +984,20 @@ export default {
     roomConfig () {
       this.roomVisible = true
     },
-    submitRoomConfig () {
-      this.roomVisible = false
-      const formData = new FormData()
-      formData.append('deptCode', this.dept)
-      formData.append('roomNo', this.currentId)
-      formData.append('maxOperationNum', this.maxCount)
-      submitRoomConfig(formData).then((res) => {
-        this.getRoomList()
-        this.$message({
-          message: '修改成功',
-          type: 'success'
-        })
-      })
-    },
+    // submitRoomConfig () {
+    //   this.roomVisible = false
+    //   const formData = new FormData()
+    //   formData.append('deptCode', this.dept)
+    //   formData.append('roomNo', this.currentId)
+    //   formData.append('maxOperationNum', this.maxCount)
+    //   submitRoomConfig(formData).then((res) => {
+    //     this.getRoomList()
+    //     this.$message({
+    //       message: '修改成功',
+    //       type: 'success'
+    //     })
+    //   })
+    // },
     // 关闭弹窗
     handleClose () {
       this.previewVisible = false

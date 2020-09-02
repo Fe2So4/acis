@@ -14,7 +14,6 @@
       .right
         vxe-table(
           border
-          round
           ref="xTable"
           auto-resize
           show-header-overflow
@@ -276,9 +275,9 @@ export default {
       float: left;
       width: 20%;
       height: 100%;
-      border:1px solid rgba(57, 66, 92, 1);
-      border-radius:5px 0px 0px 5px;
-      border-right: unset;
+      border 1px solid rgba(57, 66, 92, 1)
+      border-radius 5px 0px 0px 5px
+      border-right unset
     }
 
     .right {
@@ -291,6 +290,9 @@ export default {
   .option {
     margin-top: 10px;
     text-align: right;
+    .el-button{
+      margin-right:10px;
+    }
   }
 }
 </style>

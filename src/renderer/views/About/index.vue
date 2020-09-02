@@ -24,20 +24,26 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
-  .about
-    text-align center
-    color #D0DAE5
-    width 430px
-    .img
-      img
-        display block
-        margin 0 auto
-    .title
-      line-height 28px
-      margin 20px 0 30px
+<style lang="scss" scoped>
+  @import "@/styles/theme";
+  .about{
+    text-align:center;
+    @include theme-property("color", $color-text-regular);
+    width:430px;
+    .img{
+      img{
+        display: block;
+        margin: 0 auto;
+      }
+    }
+    .title{
+      line-height:28px;
+      margin:20px 0 30px;
+    }
     // .option
-    .copy-right
-      font-size 12px
-      margin-top 20px
+    .copy-right{
+      font-size:12px;
+      margin-top:20px;
+    }
+  }
 </style>

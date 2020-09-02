@@ -53,20 +53,15 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "@/styles/theme";
 .home {
   height: 100%;
-  background:#121421;
-  // @media all and (orientation: portrait) {
-  //   background: green;
-  // }
-  // @media all and (orientation: landscape) {
-  //   background: red;
-  // }
   .el-header{
     margin: 0 0 0 12px;
   }
   .el-container {
     height: 100%;
+    @include theme-property("background", $color-background-home);
   }
   .el-aside {
     // width: auto !important;
@@ -74,10 +69,10 @@ export default {
     position: relative;
     overflow: unset;
     box-shadow:4px 3px 5px 0px rgba(0, 0, 0, 0.4);
+    @include theme-property("box-shadow", $box-shadow-aside);
   }
   .el-main {
     height: calc(100% - 32px);
-    background:#121421;
     padding:0;
   }
 }

@@ -1,0 +1,100 @@
+@import "../theme";
+/* 改变主题色变量 */
+$--custom-el-background-color: #252c40;
+/* Color
+-------------------------- */
+/// color|1|Brand Color|0
+$--color-primary: #0093ff;
+// 常用字颜色
+$--color-text-primary: $--color-primary;
+/// color|1|Font Color|2
+$--color-text-regular: #9ba3d5;
+
+/// color|1|Border Color|3
+$--border-color-base: #353e56;
+
+/// color|1|Font Color|2
+$--color-text-placeholder: map-get($color-text-placeholder, "dark-blue");
+
+// Background
+/// color|1|Background Color|4
+$--background-color-base: #f5f7fa !default;
+
+/* Checkbox
+-------------------------- */
+/// color||Color|0
+$--checkbox-background-color: $--custom-el-background-color;
+/// color||Color|0
+$--checkbox-checked-font-color: #ffffff;
+/// color||Color|0
+// $--checkbox-disabled-input-fill: #6c7eb3;
+
+// $--checkbox-disabled-checked-input-fill: #6c7eb3;
+
+/* Input
+-------------------------- */
+/// color||Color|0
+$--input-font-color: #ffffff;
+/// color||Color|0
+$--input-background-color: $--custom-el-background-color;
+$--input-disabled-fill: mix($--input-background-color, gray, 80%);
+$--input-disabled-color: mix($--input-font-color, gray, 80%);
+$--input-disabled-border: mix($--border-color-base, gray, 80%);
+//
+
+/* Dialog
+-------------------------- */
+
+$--dialog-background-color: #181c28;
+// $--dialog-padding-primary:30;
+
+/* Button
+-------------------------- */
+/// color||Color|0
+$--button-default-background-color: $--custom-el-background-color;
+
+//disabled
+$--button-disabled-background-color: mix($--button-default-background-color, gray, 80%);
+$--button-disabled-font-color: mix($--color-text-regular, gray, 50%);
+$--input-disabled-border: mix($--border-color-base, gray, 80%);
+
+/* Select
+-------------------------- */
+$--select-dropdown-background: $--custom-el-background-color;
+$--select-dropdown-border: solid 1px $--border-color-base;
+/// height||Other|4
+$--select-option-hover-background: mix(
+  $--custom-el-background-color,
+  black,
+  50%
+);
+
+/* Popover
+-------------------------- */
+/// color||Color|0
+$--popover-background-color: $--custom-el-background-color;
+/// color||Color|0
+$--popover-border-color: $--border-color-base;
+
+/* Table
+-------------------------- */
+/// color||Color|0
+$--table-border-color: $--dialog-background-color;
+/// color||Color|0
+$--table-row-hover-background-color: $--custom-el-background-color;
+$--table-current-row-background-color: $--custom-el-background-color;
+/// color||Color|0
+$--table-header-background-color: $--dialog-background-color;
+
+/* DatePicker
+--------------------------*/
+$--datepicker-border-color: $--border-color-base;
+
+/* Tree
+--------------------------*/
+$--tree-font-color: #d0dae5;
+$--tree-node-hover-background-color: #292f40;
+/* 改变 icon 字体路径变量，必需 */
+// $--font-path: "~element-ui/lib/theme-chalk/fonts";
+
+// @import "node_modules/element-ui/packages/theme-chalk/src/index";

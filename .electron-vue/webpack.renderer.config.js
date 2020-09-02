@@ -21,14 +21,11 @@ const { VueLoaderPlugin } = require('vue-loader')
  */
 let entry = null
 let whiteListedModules = ['vue', 'element-ui']
-let alias = null
-if (process.env.BUILD_TARGET === 'schedule') {
-  entry = path.join(__dirname,'../src/renderer_schedule/scheduleMain.js');
-  alias = '../src/renderer_schedule'
-}else {
-  entry = path.join(__dirname, '../src/renderer/main.js');
-  alias = '../src/renderer'
-}
+
+if (process.env.BUILD_TARGET === 'schedule') entry = path.join(__dirname, '../src/renderer/scheduleMain.js')
+else if (process.env.BUILD_TARGET === 'statistics') entry = path.join(__dirname, '../src/renderer/statisticsMain.js')
+else entry = path.join(__dirname, '../src/renderer/main.js')
+
 let rendererConfig = {
   devtool: '#cheap-module-eval-source-map',
   entry: {
@@ -82,7 +79,10 @@ let rendererConfig = {
       {
         test: /\.js$/,
         use: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        // include: [
+        //   resolve('/node_modules/sass')
+        // ]
       },
       {
         test: /\.node$/,
@@ -174,8 +174,7 @@ let rendererConfig = {
   },
   resolve: {
     alias: {
-      'src': path.join(__dirname, '../src/'),
-      '@': path.join(__dirname, alias),
+      '@': path.join(__dirname, '../src/renderer'),
       'vue$': 'vue/dist/vue.esm.js'
     },
     extensions: ['.js', '.vue', '.json', '.css', '.node']

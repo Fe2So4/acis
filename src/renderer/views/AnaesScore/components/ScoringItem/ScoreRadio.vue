@@ -57,21 +57,26 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
-.scoreRadio {
-  display: flex;
-  line-height: 28px;
-  width: 100%;
-  & ::v-deep .el-radio {
+  @import "@/styles/theme";
+
+  .scoreRadio {
+    display: flex;
     line-height: 28px;
+    width: 100%;
+
+    & ::v-deep .el-radio {
+      line-height: 28px;
+    }
+
+    .label {
+      @include theme-property('color', $color-text-regular);
+      flex: 0 0 130px;
+      padding-right: 10px;
+      text-align: right;
+    }
+
+    .el-radio-group {
+      flex: auto;
+    }
   }
-  .label {
-    color: #9ba3d5;
-    flex: 0 0 130px;
-    padding-right: 10px;
-    text-align: right;
-  }
-  .el-radio-group {
-    flex: auto;
-  }
-}
 </style>

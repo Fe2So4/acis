@@ -127,6 +127,7 @@ import {
 import { getSignList } from '@/api/generalConfig'
 import request from '@/utils/requestForMock'
 import { createNamespacedHelpers } from 'vuex'
+
 const { mapState, mapGetters } = createNamespacedHelpers('Base')
 export default {
   name: 'SignAndMonitorTable',
@@ -260,7 +261,8 @@ export default {
             this.tableData = this.convertTableData(res.data.data)
           }
         })
-        .catch((e) => {})
+        .catch((e) => {
+        })
     },
     getMonitorData () {
       return request({
@@ -412,21 +414,27 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
-.signAndMonitorTable {
-  height: 100%;
-  .buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-  .table {
-    border: 1px solid #39425c;
-    border-radius: 5px;
-    height: calc(100% - 40px);
-    .bottomButtons {
-      margin-top: 10px;
-      margin-left: 10px;
+  @import "@/styles/theme";
+
+  .signAndMonitorTable {
+    height: 100%;
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .table {
+      border: 1px solid;
+      @include theme-property('border-color', $dateTimePicker-color-border);
+      border-radius: 5px;
+      height: calc(100% - 40px);
+
+      .bottomButtons {
+        margin-top: 10px;
+        margin-left: 10px;
+      }
     }
   }
-}
 </style>

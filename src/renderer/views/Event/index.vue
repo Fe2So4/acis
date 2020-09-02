@@ -56,6 +56,7 @@
           :pager-count="5"
           layout="prev, pager, next"
           :total="total"
+          :page-size="pageSize"
           :current-page="currentPage"
           @current-change="handleCurrentPageChange"
         />
@@ -67,6 +68,7 @@
       </div>
       <div class="content">
         <vxe-table
+          round
           show-overflow
           size="mini"
           ref="xTable"
@@ -280,6 +282,7 @@
                 size="mini"
                 format="MM-dd HH:mm"
                 value-format="yyyy-MM-dd HH:mm"
+                @change="handleDateChange(row)"
               />
               <!-- @change="handleBlur" -->
             </template>
@@ -297,7 +300,7 @@
                 v-model="row.isHolding"
                 active-value="1"
                 inactive-value="0"
-                @change="handleBlur"
+                @change="handleChangeSwitch(row)"
               />
             </template>
           </vxe-table-column>
@@ -327,7 +330,7 @@
                 size="mini"
                 popper-class="dateTimePicker"
                 type="datetime"
-                @change="handleBlur"
+                @change="handleDateChange(row)"
                 format="MM-dd HH:mm"
                 value-format="yyyy-MM-dd HH:mm"
               />
@@ -456,7 +459,7 @@ export default {
           this.showColumn = false
         }
       },
-      // immediate: true,
+      immediate: true,
       deep: true
     }
   },
@@ -476,6 +479,27 @@ export default {
           this.saveVisible = true
         }
       }
+    },
+    // 处理开关时间改变
+    handleChangeSwitch (row) {
+      this.handleBlur()
+      if (row.isHolding === '0') {
+        row.eventEndTime = ''
+        row.holdingTime = ''
+      } else {
+        row.eventEndTime = moment(new Date()).format('YYYY-MM-DD HH:mm')
+        row.holdingTime = moment(new Date()).diff(moment(row.eventStartTime), 'minute')
+      }
+    },
+    // 处理时间改变
+    handleDateChange (row) {
+      this.handleBlur()
+      // eventStartTime eventEndTime holdingTime
+      if (row.isHolding === '1') {
+        console.log(row.eventEndTime)
+        row.holdingTime = moment(row.eventEndTime).diff(moment(row.eventStartTime), 'minute')
+      }
+      console.log(row)
     },
     handleCheck ({ records }) {
       console.log(records.length)
@@ -553,10 +577,10 @@ export default {
         concentrationUnit: item.conUnit,
         dosageUnit: item.doseUnit,
         dosage: dose,
-        eventEndTime: item.isHolding === '1' ? moment(new Date()).format('YYYY-MM-DD HH:mm') : '',
+        eventEndTime: item.isContinue === '1' ? moment(new Date()).format('YYYY-MM-DD HH:mm') : '',
         eventName: item.detailName,
         eventType: this.eventType.eventName, // 此处需要写活
-        holdingTime: item.isHolding === '1' ? moment(new Date()).diff(moment(new Date()), 'minute') : '',
+        holdingTime: item.isContinue === '1' ? moment(new Date()).diff(moment(new Date()), 'minute') : '',
         isHolding: item.isContinue,
         speed: item.speed,
         speedUnit: item.speedUnit,
@@ -751,12 +775,12 @@ export default {
 </script>
 <style>
 .el-picker-panel .el-time-panel {
-  /* background: red !important; */
   left: -30px !important;
 }
 </style>
 
 <style lang="scss" scoped>
+@import "@/styles/theme";
 .event {
   width: 80vw;
   height: 60vh;
@@ -765,16 +789,16 @@ export default {
   .title {
     line-height: 30px;
     padding-left: 5px;
-    color: #9ba3d5;
+    @include theme-property("color", $color-text-regular);
   }
   .left {
     height: 100%;
-    padding: 20px;
+    padding: 12px 20px 0;
     margin-right: 20px;
     width: 374px;
     float: left;
     display: flex;
-    background: #1e222e;
+    @include theme-property("background", $background-dialog-content);
     border-radius: 10px;
     flex-direction: column;
     .pagination {
@@ -811,12 +835,13 @@ export default {
               overflow: hidden;
               line-height: 30px;
               text-indent: 10px;
-              background: rgba(37, 44, 64, 1);
+              @include theme-property("background", $background-event-list);
               border: 1px solid rgba(53, 62, 86, 1);
-              color: #9ba3d5;
+              @include theme-property("border", $border-event-list);
+              @include theme-property("color", $color-event-list);
               cursor: pointer;
               &:hover {
-                background: #0094ff;
+                @include theme-property("background", $background-hover-event-list);
                 color: #fff;
               }
             }
@@ -829,16 +854,16 @@ export default {
               text-overflow: ellipsis;
               overflow: hidden;
               white-space: nowrap;
-              background: rgba(37, 44, 64, 1);
-              border: 1px solid rgba(53, 62, 86, 1);
+              @include theme-property("background", $background-event-list);
+              @include theme-property("border", $border-event-list);
               border-radius: 4px;
               display: inline-block;
               line-height: 30px;
-              color: #9ba3d5;
+              @include theme-property("color", $color-event-list);
               cursor: pointer;
               text-align: center;
               &:hover {
-                background: #0094ff;
+                @include theme-property("background", $background-hover-event-list);
                 color: #fff;
               }
             }
@@ -869,7 +894,7 @@ export default {
     float: right;
     padding: 0 5px;
     display: flex;
-    background: #1e222e;
+    @include theme-property("background", $background-dialog-content);
     border-radius: 10px;
     flex-direction: column;
     .content {
@@ -885,7 +910,7 @@ export default {
         text-align: left;
         margin: 10px 0;
         text-indent: 20px;
-        color: #409eff;
+        color: #FB4451;
       }
       span {
         color: #9ba3d5;

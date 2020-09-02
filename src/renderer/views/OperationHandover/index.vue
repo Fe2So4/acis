@@ -271,12 +271,12 @@ export default {
   }
 }
 </script>
-<style lang="stylus" scoped>
+<style lang="scss" scoped>
+ @import "@/styles/theme";
 .operation-handover {
-  background: #1E222E;
   border-radius: 10px;
   padding: 20px 40px;
-
+  @include theme-property("background", $background-dialog-content);
   .el-input, .el-select {
     width: 80px;
   }
@@ -284,7 +284,7 @@ export default {
   h3 {
     font-size: 14px;
     margin: unset;
-    color: #9BA3D5;
+    @include theme-property("color", $color-text-regular);
     line-height: 28px;
     font-weight: 400;
   }

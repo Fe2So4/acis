@@ -157,7 +157,6 @@ const createPrintWindow = (printRoute) => {
 
 let printWin
 ipcMain.on('print-document', (e, printRoute) => {
-  console.log(printRoute)
   printWin = createPrintWindow(printRoute)
 })
 ipcMain.on('ready-to-print', () => {
@@ -204,7 +203,6 @@ ipcMain.on('show-EMR', (e, name) => {
 // ---------------------------------显示病历功能 end--------------
 
 // 打印手术通知单
-// 新建打印窗口
 const printPageURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080/static/print/print.html'
   : Path.join(__dirname, '../../static/print/print.html')
@@ -253,4 +251,13 @@ ipcMain.on('print-content', (e, options) => {
     printWin1.webContents.print()
   }
   // const options = { silent: true, landscape: true }
+})
+
+// 远程下载文件
+ipcMain.on('download', (evt, args) => {
+  const url = JSON.parse(args)
+  const downloadUrl = url.downloadUrl
+  console.log(downloadUrl)
+  // const saveUrl = url.saveUrl
+  mainWindow.webContents.downloadURL(downloadUrl)
 })

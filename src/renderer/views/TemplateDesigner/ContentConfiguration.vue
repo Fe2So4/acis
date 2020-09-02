@@ -157,10 +157,27 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.contentConfiguration {
+  @import "@/styles/theme";
+  $background: (
+    dark-blue: #364058,
+    dark-gray: #353537,
+    light-white: #EBECEF,
+  );
+  $background-darker-1: (
+    dark-blue: darken(map-get($background,dark-blue), 10%),
+    dark-gray: darken(map-get($background,dark-gray), 10%),
+    light-white: darken(map-get($background,light-white), 10%),
+  );
+  $background-darker-2: (
+    dark-blue: darken(map-get($background,dark-blue), 20%),
+    dark-gray: darken(map-get($background,dark-gray), 20%),
+    light-white: darken(map-get($background,light-white), 20%),
+  );
+
+  .contentConfiguration {
   height: 100%;
   flex: 0 1 400px;
-  background: #364058;
+  @include theme-property(background, $background);
   overflow: auto;
   .el-collapse {
     border: none;
@@ -170,8 +187,8 @@ export default {
 .contentConfiguration /deep/ .el-collapse-item__header {
   height: 30px;
   border: unset;
-  background: #121421;
-  color: #9ba3d5;
+  @include theme-property(background, $background-darker-2);
+  @include theme-property(color, $color-text-regular);
   font-size: 14px;
   padding-left: 20px;
   position: relative;
@@ -181,18 +198,15 @@ export default {
   }
 }
 .contentConfiguration /deep/ .el-collapse-item__wrap {
-  background: #121421;
+  @include theme-property(background, $background-darker-1);
   border: unset;
 }
 .contentConfiguration /deep/ .el-collapse-item__content {
-  background: #121421;
+  @include theme-property(background, $background-darker-1);
   border: unset;
   padding: 30px 0;
 }
 .contentConfiguration /deep/ .el-collapse-item__header.is-active {
-  background: rgba(28, 31, 50, 1);
-  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.05);
-  color: #edf1f9;
-  font-size: 16px;
+  @include theme-property(color, $color-text-placeholder);
 }
 </style>

@@ -1,6 +1,7 @@
 import {
   mock,
-  baseLi
+  baseLi,
+  baseZhong
 } from './urlAndPortConfig'
 
 // 获取体征项 - 李 - 2020-07-30
@@ -52,3 +53,23 @@ export const getLiquidProperty = mock
 export const saveLiquidProperty = mock
   ? ''
   : baseLi + 'acis/generalConfig/saveLiquidProperty'
+
+// 系统配置数据查询接口 - 钟 - 2020-08-13
+export const getNormalConfig = mock
+  ? ''
+  : baseZhong + 'acis/generalConfig/getNormalConfig'
+
+// 系统配置数据保存接口 - 钟 - 2020-08-13
+export const saveNormalConfig = mock
+  ? ''
+  : baseZhong + 'acis/generalConfig/saveNormalConfig'
+
+// 获取监护仪列表 - 钟 - 2020-08-13
+export const getMonitorList = mock
+  ? ''
+  : baseZhong + 'acis/generalConfig/getMonitorList'
+
+// 获取用药显示格式和单位 - 钟 - 2020-08-13
+export const getDrugShowType = mock
+  ? ''
+  : baseZhong + 'acis/generalConfig/getDrugShowType'

@@ -33,6 +33,11 @@ export const updateDocument = mock
 export const getTagNamesList = mock
   ? '/api/getTagNamesList'
   : baseLi + 'acis/generalConfig/getHisSignList'
+
+// 保存文书中的表信息 - 钟 - 2020-08-19
+export const saveTemplateTableInfo = mock
+  ? ''
+  : baseZhong + 'acis/templatewrit/templete/saveTemplateTableInfo'
 // 文书设计器相关 ------------------------------end-------------------------------
 
 // 文书展示相关 --------------------------------start---------------------------------

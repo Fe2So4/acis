@@ -6,6 +6,7 @@
       width: elementWidth + 'px',
       left: elementLeft + 'px'
     }"
+    :class="{hasEnd:info.outOperTime}"
     @mousemove="onMouseover"
     @mouseleave="onMouseLeave"
   >
@@ -75,18 +76,24 @@ export default {
     operStartTime () {
       if (this.info.operStartTime) {
         return moment(this.info.operStartTime)
+      } else if (this.info.inOperTime) {
+        return moment()
       }
       return 0
     },
     operEndTime () {
       if (this.info.operEndTime) {
         return moment(this.info.operEndTime)
+      } else if (this.info.inOperTime) {
+        return moment()
       }
       return 0
     },
     outOperTime () {
       if (this.info.outOperTime) {
         return moment(this.info.outOperTime)
+      } else if (this.info.inOperTime) {
+        return moment()
       }
       return 0
     },
@@ -173,10 +180,21 @@ export default {
 <style lang="scss" scoped>
 .patientDetail {
   position: absolute;
-  border: 1px solid #cddaff;
-  border-radius: 5px;
+  border-style: solid;
+  border-color: #cddaff;
+  border-left-width: 1px;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
   height: 56px;
   overflow: hidden;
+  &.hasEnd {
+    border-right-width: 1px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
   .background,
   .content {
     display: flex;

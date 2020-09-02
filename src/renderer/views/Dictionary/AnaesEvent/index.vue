@@ -444,4 +444,7 @@ export default {
   .option
     margin-top 10px
     text-align right
+    .el-button{
+      margin-right:10px;
+    }
 </style>

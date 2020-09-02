@@ -26,6 +26,7 @@ import ChildPugh from './ChildPugh/index'
 import Pars from './Pars/index'
 import GoldMan from './GoldMan/index'
 import Apache from './Apache/index'
+
 export default {
   name: 'AnaesScore',
   data () {
@@ -49,35 +50,37 @@ export default {
   }
 }
 </script>
-<style lang="stylus" scoped>
-.anaes-score {
-  height: 80vh;
-  width: 62vw;
+<style lang="scss" scoped>
+  @import "@/styles/theme";
 
-  .title {
-    line-height: 28px;
-    font-size: 14px;
-    color: #9BA3D5;
-  }
+  .anaes-score {
+    height: 80vh;
+    width: 62vw;
 
-  .nav {
-    height: calc(100% - 28px);
+    .title {
+      line-height: 28px;
+      font-size: 14px;
+      @include theme-property("color", $color-text-regular);
+    }
 
-    .el-tabs {
-      height: 100%;
+    .nav {
+      height: calc(100% - 28px);
 
-      /deep/ .el-tabs__content {
-        height: calc(100% - 55px);
+      .el-tabs {
+        height: 100%;
 
-        .el-tab-pane {
-          height: 100%;
+        /deep/ .el-tabs__content {
+          height: calc(100% - 55px);
+
+          .el-tab-pane {
+            height: 100%;
+          }
         }
       }
     }
   }
-}
 
-.anaes-score /deep/ .el-tabs__nav-wrap::after {
-  background-color: #181C27;
-}
+  .anaes-score /deep/ .el-tabs__nav-wrap::after {
+    @include theme-property("background", $background-dialog-content);
+  }
 </style>

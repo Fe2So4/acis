@@ -51,5 +51,6 @@ export default {
   text-align: center;
   border-radius: 4px;
   color: #333;
+  cursor: move;
 }
 </style>

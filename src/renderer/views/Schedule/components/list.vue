@@ -43,7 +43,17 @@ export default {
       selectItem: {}
     }
   },
-  props: ['dataList', 'contextMenuData'],
+  // props: ['dataList', 'contextMenuData'],
+  props: {
+    dataList: {
+      type: Array,
+      required: true
+    },
+    contextMenuData: {
+      type: Object,
+      required: true
+    }
+  },
   computed: {},
   watch: {
     dataList: {

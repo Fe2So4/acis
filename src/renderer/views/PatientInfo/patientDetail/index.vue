@@ -65,22 +65,15 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "@/styles/theme";
 .patient-detail {
   margin-top: 20px;
   width: 100%;
-  color: #9ba3d5;
   height: calc(100% - 192px);
-  // display: flex;
   padding: 20px;
-  background: #181c27;
-  box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+  @include theme-property('background', $color-background-navigation);
+  @include theme-property('box-shadow', $box-shadow-card);
   border-radius: 5px;
-  .title {
-    color: #15428b;
-    font-size: 14px;
-    line-height: 30px;
-    padding-left: 10px;
-  }
   .content {
     height: 100%;
   }

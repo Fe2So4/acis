@@ -328,12 +328,11 @@ export default {
           .roomIdActive {
             color: #fff;
           }
+          &:hover{
+            background: #2C3B66;
+            color: #fff;
+          }
         }
-
-        // .layout {
-        //   visibility: hidden;
-        // }
-
         .roomActive {
           background: #2C3B66;
           color: #fff;

@@ -32,6 +32,7 @@ import BedList from './BedList'
 import request from '@/utils/requestForMock'
 import { getResuscitationBedList, selectResuscitationBed, addMonitorInfo } from '@/api/resuscitation'
 import { mapState } from 'vuex'
+
 export default {
   name: 'DialogResuscitationBed',
   components: {
@@ -66,7 +67,8 @@ export default {
         customClass: 'messageBox'
       }).then(() => {
         this.selectResuscitationBed(item.bedNum)
-      }).catch(() => {})
+      }).catch(() => {
+      })
     },
     // 获取复苏床位列表
     getResuscitationBedList () {
@@ -128,16 +130,15 @@ export default {
           }
         }
       ).catch(
-        e => {}
+        e => {
+        }
       )
     }
   }
-
 }
-
 </script>
 <style lang='scss' scoped>
-.content {
-  height: 60vh;
-}
+  .content {
+    height: 60vh;
+  }
 </style>

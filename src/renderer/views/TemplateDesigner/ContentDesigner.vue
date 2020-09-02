@@ -654,10 +654,17 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+  @import "@/styles/theme";
+
+  $background: (
+    dark-blue: #465474,
+    dark-gray: #474747,
+    light-white: #F8F8F8,
+  );
 .designer {
   height: 100%;
   flex: 1 1 800px;
-  background: #465474;
+  @include theme-property(background, $background);
   overflow: auto;
   font-family: "宋体";
 }

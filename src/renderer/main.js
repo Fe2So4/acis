@@ -6,11 +6,11 @@ import router from './router'
 import store from './store'
 import ElementUI from 'element-ui'
 import 'normalize.css/normalize.css'
+// import 'element-ui/lib/theme-chalk/index.css'
+import './styles/element-variables.scss' // 修改element-ui默认样式
 import './styles/index.scss'
 import './styles/transition.scss'
 import './iconfont/iconfont.css'
-// import 'element-ui/lib/theme-chalk/index.css'
-import './styles/element-variables.scss' // 修改element-ui默认样式
 import './utils/dialog'
 import 'xe-utils'
 import VXETable from 'vxe-table'
@@ -19,7 +19,7 @@ import Tooltip from './components/Tooltip/main'
 import CtxMenu from './components/CtxMenu/main'
 import VXETablePluginElement from 'vxe-table-plugin-element'
 import 'vxe-table-plugin-element/dist/style.css'
-import './styles/vxe-table-variable.scss' // 修改vxe-table默认样式
+// import './styles/vxe-table-variable-gray.scss' // 修改vxe-table默认样式
 // ...
 // 解决vxe - table与element - ui兼容性问题
 // ...

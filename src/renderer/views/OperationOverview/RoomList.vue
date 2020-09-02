@@ -100,89 +100,102 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.overview {
-  height: 100%;
-  font-size: 14px;
-  ul {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 392px);
-    grid-column-gap: 20px;
-    grid-row-gap: 20px;
-    padding: 12px;
-    justify-content: center;
-    li {
-      box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
-      cursor: pointer;
-      border-radius: 5px;
-      padding: 0 0 14px 0;
-      background: #181c27;
-      border: 1px solid #181c27;
-      // width: 464px;
-      min-height: 164px;
-      font-size: 14px;
-      display: flex;
-      flex-direction: column;
-      transition: all 0.3s;
-      .title {
+  @import "@/styles/theme";
+
+  .overview {
+    height: 100%;
+    font-size: 14px;
+
+    ul {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 392px);
+      grid-column-gap: 20px;
+      grid-row-gap: 20px;
+      padding: 12px;
+      justify-content: center;
+
+      li {
+        @include theme-property("box-shadow", $box-shadow-card);
+        cursor: pointer;
+        border-radius: 5px;
+        padding: 0 0 14px 0;
+        @include theme-property("background", $color-background-card);
+        min-height: 164px;
+        font-size: 14px;
         display: flex;
-        justify-content: space-between;
-        span {
-          // color:#7f85a9;
-          color: #ffffff;
-          padding: 0 10px;
-          line-height: 28px;
-          &:last-child {
-            color: #0094ff;
-          }
-        }
-      }
-      .content {
-        flex: 1;
-        display: flex;
-        overflow: hidden;
-        .room {
-          flex:1 0 100px;
+        flex-direction: column;
+        transition: all 0.3s;
+
+        .title {
           display: flex;
-          flex-direction: column;
-          justify-content: center;
+          justify-content: space-between;
+
           span {
-            width: 100%;
-            height: 46px;
-            display: block;
-            line-height: 46px;
-            font-size: 32px;
-            font-weight: bold;
-            color: #fff;
-            text-align: center;
-          }
-        }
-        .info {
-          margin: 0 30px 0 20px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-around;
-          p {
-            padding: 0;
-            margin: 0;
-            color: #9ba3d5;
-            span {
-              color: #d0dae5;
-              line-height: 28px;
+            // color:#7f85a9;
+            @include theme-property("color", $color-text-secondary);
+            padding: 0 10px;
+            line-height: 28px;
+
+            &:last-child {
+              font-weight: bold;
+              @include theme-property("color", $color-text-primary);
             }
           }
         }
-        .status {
-          width: 74px;
+
+        .content {
+          flex: 1;
           display: flex;
-          flex-direction: column;
-          justify-content: space-around;
+          overflow: hidden;
+
+          .room {
+            flex: 1 0 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            span {
+              width: 100%;
+              height: 46px;
+              display: block;
+              line-height: 46px;
+              font-size: 32px;
+              font-weight: bold;
+              @include theme-property("color", $color-text-primary);
+              text-align: center;
+            }
+          }
+
+          .info {
+            margin: 0 30px 0 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+
+            p {
+              padding: 0;
+              margin: 0;
+              @include theme-property("color", $color-text-regular);
+
+              span {
+                @include theme-property("color", $color-text-secondary);
+                line-height: 28px;
+              }
+            }
+          }
+
+          .status {
+            width: 74px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+          }
         }
-      }
-      &:hover {
-        // border: 1px solid #0094ff;
-        background: #262c3c;
+
+        &:hover {
+          @include theme-property("background", $color-background-card-hover);
+        }
       }
     }
   }
-}
 </style>

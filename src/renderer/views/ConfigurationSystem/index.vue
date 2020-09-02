@@ -12,13 +12,13 @@
           @select="onSelectMenu"
           unique-opened
           class="menu"
-          background-color="#181c27"
-          text-color="#9ba3d5"
-          active-text-color="#fff"
+          :background-color="menuBackground"
+          :text-color="menuTextColor"
+          :active-text-color="menuActiveTextColor"
         >
           <el-submenu index="basic">
             <template slot="title">
-              <i class="el-icon-location" />
+              <i class="el-icon-setting" />
               <span>基础配置</span>
             </template>
             <el-menu-item
@@ -33,7 +33,7 @@
           <el-submenu index="super">
             <template slot="title">
               <i class="el-icon-menu" />
-              <span>高级配置</span>
+              <span>超级配置</span>
             </template>
             <el-menu-item
               v-for="item in superList"
@@ -66,6 +66,7 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 import configurationComponents from './configurationComponent'
 export default {
   name: 'ConfigurationSystem',
@@ -102,11 +103,11 @@ export default {
       {
         text: '文书打印及上传设置',
         path: 'PrintAndUpload'
-      },
-      {
-        text: '医疗文书完整性检查',
-        path: 'DocumentIntegrity'
       }
+      // {
+      //   text: '医疗文书完整性检查',
+      //   path: 'DocumentIntegrity'
+      // }
     ])
     const superList = Object.freeze([
       {
@@ -135,8 +136,42 @@ export default {
     }
   },
   computed: {
+    ...mapState('Base', ['theme']),
     defaultActivePath () {
       return this.normalList[0].path
+    },
+    menuBackground () {
+      switch (this.theme) {
+        case 'dark-gray':
+          return '#1e2022'
+        case 'light-white':
+          return '#F0F0F0'
+        case 'dark-blue':
+        default:
+          return '#181c28'
+      }
+    },
+    menuTextColor () {
+      switch (this.theme) {
+        case 'dark-gray':
+          return '#BABABA'
+        case 'light-white':
+          return '#707C91'
+        case 'dark-blue':
+        default:
+          return '#9BA4D5'
+      }
+    },
+    menuActiveTextColor () {
+      switch (this.theme) {
+        case 'dark-gray':
+          return '#EDF1F9'
+        case 'light-white':
+          return '#1A1A1A'
+        case 'dark-blue':
+        default:
+          return '#FFFFFF'
+      }
     }
   },
   created () {
@@ -189,29 +224,38 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "@/styles/theme";
 .configurationSystem {
   width: 70vw;
-  height: 70vh;
+  height: 75vh;
+  padding-right: 20px;
+  padding-bottom: 20px;
   display: flex;
   flex-direction: row;
   .aside {
     flex: 220px 0 0;
-    border-right: 1px solid #005999;
     .menu {
       border-right: none;
     }
   }
   .container {
+    @include theme-property("background", $background-dialog-content);
+    border-radius: 10px;
     flex: auto;
     overflow: auto;
-    padding-left: 10px;
+    padding: 0 20px;
     .title {
-      height: 40px;
-      line-height: 30px;
-      border-bottom: solid 1px #005999;
+      height: 54px;
+      line-height: 54px;
+    }
+    .title ::v-deep .el-breadcrumb__inner {
+      @include theme-property("color", $color-text-regular);
+    }
+    .title ::v-deep .el-breadcrumb__separator {
+      @include theme-property("color", $color-text-regular);
     }
     .main {
-      height: calc(100% - 40px);
+      height: calc(100% - 54px);
     }
   }
 }

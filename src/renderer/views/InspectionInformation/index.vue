@@ -23,6 +23,7 @@
       .left
         vxe-table(
           border
+          round
           show-header-overflow
           show-overflow
           highlight-hover-row
@@ -42,6 +43,7 @@
       .right
         vxe-table(
           border
+          round
           show-header-overflow
           show-overflow
           highlight-hover-row

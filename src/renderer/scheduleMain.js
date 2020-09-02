@@ -2,11 +2,13 @@ import Vue from 'vue'
 import axios from 'axios'
 
 import App from './Schedule'
-import router from './router'
+import router from './routerSchedule'
 import store from './store'
 import ElementUI from 'element-ui'
 import 'normalize.css/normalize.css'
 import './styles/index.scss'
+import './styles/transition.scss'
+import './iconfont/iconfont.css'
 import 'element-ui/lib/theme-chalk/index.css'
 import './utils/dialog'
 import VueContextMenu from 'vue-contextmenu'
@@ -31,6 +33,7 @@ if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 /* eslint-disable no-new */
+console.log(router)
 new Vue({
   components: { App },
   router,

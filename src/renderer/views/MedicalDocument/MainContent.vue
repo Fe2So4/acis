@@ -160,6 +160,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/theme";
 .mainContent {
   width: 100%;
   height: calc(100% - 36px);
@@ -170,9 +171,10 @@ export default {
     transition:0.3s;
     padding: 50px;
     margin: 20px auto;
-    background: rgba(227, 227, 227, 1);
-    box-shadow: 0px 20px 45px 5px rgba(0, 0, 0, 0.5);
+    @include theme-property("background", $color-background-document);
+    @include theme-property("box-shadow", $box-shadow-document);
     border-radius: 5px;
+
     .widgetContent {
       height: 100%;
       overflow: hidden;

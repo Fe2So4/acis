@@ -183,6 +183,7 @@
 
 <script>
 import moment from 'moment'
+
 export default {
   name: 'EventTable',
   props: {
@@ -304,24 +305,29 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
-.eventTable {
-  border: 1px solid #39425c;
-  border-radius: 5px;
-  height: 400px;
-  .buttons {
-    height: 70px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .left,
-    .right {
-      height: 30px;
-      padding: 0 20px;
-      color: #9ba3d5;
+  .eventTable {
+    @import "@/styles/theme";
+    border: 1px solid;
+    @include theme-property('border-color', $dateTimePicker-color-border);
+    border-radius: 5px;
+    height: 400px;
+
+    .buttons {
+      height: 70px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .left,
+      .right {
+        height: 30px;
+        padding: 0 20px;
+        @include theme-property('color', $color-text-regular);
+      }
+    }
+
+    & ::v-deep .vxe-table .vxe-body--column .vxe-cell {
+      white-space: unset;
     }
   }
-  & ::v-deep .vxe-table .vxe-body--column .vxe-cell {
-    white-space: unset;
-  }
-}
 </style>

@@ -78,7 +78,21 @@ export default {
       // configForm: {},
     }
   },
-  props: ['configVisible', 'configForm', 'configTitle'],
+  // props: ['configVisible', 'configForm', 'configTitle'],
+  props: {
+    configVisible: {
+      required: true,
+      type: Boolean
+    },
+    configForm: {
+      required: true,
+      type: Object
+    },
+    configTitle: {
+      required: true,
+      type: String
+    }
+  },
   methods: {
     submitConfig () {
       const obj = {}

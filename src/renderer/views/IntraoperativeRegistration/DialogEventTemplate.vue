@@ -152,6 +152,7 @@ import {
   getEventTemplateDetail
 } from '@/api/intraoperative'
 import request from '@/utils/requestForMock'
+
 export default {
   name: 'DialogEventTemplate',
   props: {
@@ -230,22 +231,27 @@ export default {
 
 </script>
 <style lang='scss' scoped>
-.content {
-  display: grid;
-  grid-template-columns: 20% 80%;
-  border: 1px solid #39425C;
-  border-radius: 5px;
-  height: 500px;
-  font-size: 14px;
-  .tree {
-    p {
-      color: #0094FF;
-      margin: 0;
-      padding: 10px;
-    }
-    .el-tree {
-      background: unset;
+  @import "@/styles/theme";
+
+  .content {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    border: 1px solid;
+    @include theme-property('border-color', $dateTimePicker-color-border);
+    border-radius: 5px;
+    height: 500px;
+    font-size: 14px;
+
+    .tree {
+      p {
+        @include theme-property('color', $color-text-primary);
+        margin: 0;
+        padding: 10px;
+      }
+
+      .el-tree {
+        background: unset;
+      }
     }
   }
-}
 </style>

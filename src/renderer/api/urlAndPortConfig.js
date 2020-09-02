@@ -6,16 +6,16 @@ const mock =
 const IP = {
   SERVER: '47.103.105.200',
   LOCAL: 'localhost',
-  XIE: '192.168.1.196',
+  XIE: '192.168.1.175',
   LI: '192.168.1.177',
-  ZHONG: '192.168.1.157'
+  ZHONG: '192.168.1.108'
 }
 const PORT = {
   BASE: '8090',
   SCOKET: '9099'
 }
-const productIpType = 'LOCAL' // 'SERVER' / 'LOCAL'
-const developmentIpType = '' // 'SERVER' / ''
+const productIpType = 'SERVER' // 'SERVER' / 'LOCAL'
+const developmentIpType = 'SERVER' // 'SERVER' / ''
 
 const IP_BASE = IP[productIpType]
 const IP_LI = developmentIpType ? IP[developmentIpType] : IP.LI
