@@ -8,23 +8,22 @@ if (process.env.BUILD_TARGET === 'schedule') {
     routes: [
       {
         path: '/',
-        redirect: '/schedule-home'
+        redirect: '/login'
       },
       {
         path: '/login',
         name: 'Login',
-        component: () => import('@/views/Login/index')
+        component: () => import('@/views/LoginSchedule/index')
       },
       {
         path: '/schedule-home',
         name: 'HomeSchedule',
         component: () => import('@/views/HomeSchedule/index'),
-        redirect: '/schedule-home/report',
+        redirect: '/schedule-home/schedule',
         children: [
           {
             path: 'schedule',
             name: 'Schedule',
-            // component: () => import('@/views/Schedule/scheduling')
             component: () => import('@/views/Schedule/index')
           },
           {

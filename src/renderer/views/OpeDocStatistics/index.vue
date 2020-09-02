@@ -64,8 +64,8 @@
             >
               查询
             </el-button>
-            <el-button>导出配置</el-button>
-            <el-button>导出</el-button>
+            <el-button @click="showExport">导出配置</el-button>
+            <el-button @click="handleExport">导出</el-button>
           </el-form-item>
         </span>
       </el-form>
@@ -140,10 +140,12 @@
 
 <script>
 import BottomButtons from '@/components/StatisticsBottomButtons/BottomButtons'
-import { getSurgeonWork } from '@/api/statistics'
+import { getSurgeonWork, getSurgeonWorkName, exportExcel } from '@/api/statistics'
 import request from '@/utils/requestForMock'
 import moment from 'moment'
 import XEUtils from 'xe-utils'
+import { ipcRenderer } from 'electron'
+import { mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -161,13 +163,23 @@ export default {
       pageSize: 20,
       currentPage: 1,
       totalSize: 0,
-      totalPages: 0
+      totalPages: 0,
+      tableColumn: [
+        { type: 'checkbox', width: 60 },
+        { field: 'name', title: 'Name' },
+        { field: 'role', title: 'Role' },
+        { field: 'sex', title: 'Sex', formatter: this.formatterSex },
+        { field: 'date3', title: 'Date' },
+        { field: 'address', title: 'Address', showOverflow: true }
+      ],
+      tableData2: []
     }
   },
   components: {
     BottomButtons
   },
   methods: {
+    ...mapActions('Statistics', ['showExport']),
     getData () {
       request(
         {
@@ -212,6 +224,31 @@ export default {
       })
       // 返回一个二维数组的表尾合计
       return [sums]
+    },
+    handleExport () {
+      request(
+        {
+          method: 'post',
+          url: getSurgeonWorkName + `?surgeonCode=${this.form.surgeonCode}`,
+          data: {
+            afterTime: this.form.afterTime,
+            beforeTime: this.form.beforeTime,
+            operationAfterState: this.form.operationAfterState,
+            operationBeforeState: this.form.operationBeforeState
+          }
+        }
+      ).then(res => {
+        if (res.data.data) {
+          this.exportExcel(res.data.data)
+        }
+      })
+    },
+    exportExcel (param) {
+      ipcRenderer.send('download',
+        JSON.stringify({
+          downloadUrl: exportExcel + `/${param}`
+          // saveUrl: result[0]
+        }))
     }
   },
   mounted () {

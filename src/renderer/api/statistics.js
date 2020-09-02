@@ -24,7 +24,7 @@ export const getDeptWork = `${config}/acis/count/countDpetWork`
 export const getAnesWork = `${config}/acis/count/countAnesDocWork`
 
 // 手术医师工作量导出
-export const getAnesWorkName = `${config}/acis/count/countAnesDocWork`
+export const getSurgeonWorkName = `${config}/acis/count/countSurgeonWorkExcel`
 
 // 手术医师工作量
 export const getSurgeonWork = `${config}/acis/count/countSurgeonWork`
@@ -34,3 +34,12 @@ export const getNurseWork = `${config}/acis/count/countNurseWork`
 
 // 导出excel
 export const exportExcel = `${config}/acis/count/download`
+
+// 自定义导出模板
+export const customExportTemplate = `${config}/acis/count/getUserAllCountTemplateItems`
+
+// 自定义导出模板保存
+export const saveTemplate = `${config}/acis/intraoperative/count/updateUserCountTemplate`
+
+// 查询用户信息
+export const findUserInfo = `${config}/acis/count/getUserInfo`

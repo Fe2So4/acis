@@ -45,7 +45,7 @@ function createWindow () {
     })
   }
   // 显示开发者工具
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', () => {
     mainWindow = null
@@ -251,4 +251,13 @@ ipcMain.on('print-content', (e, options) => {
     printWin1.webContents.print()
   }
   // const options = { silent: true, landscape: true }
+})
+
+// 远程下载文件
+ipcMain.on('download', (evt, args) => {
+  const url = JSON.parse(args)
+  const downloadUrl = url.downloadUrl
+  console.log(downloadUrl)
+  // const saveUrl = url.saveUrl
+  mainWindow.webContents.downloadURL(downloadUrl)
 })

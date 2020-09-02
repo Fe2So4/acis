@@ -45,7 +45,7 @@
             >
               查询
             </el-button>
-            <el-button>导出配置</el-button>
+            <el-button @click="showExport">导出配置</el-button>
             <el-button>导出</el-button>
           </el-form-item>
         </span>
@@ -89,6 +89,7 @@ import { getOpeMethodStatistics } from '@/api/statistics'
 import request from '@/utils/requestForMock'
 import XEUtils from 'xe-utils'
 import moment from 'moment'
+import { mapActions } from 'vuex'
 export default {
   name: 'CancelOperationStatistics',
   data () {
@@ -121,28 +122,6 @@ export default {
         }]
       },
       tableData: [],
-      options: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        },
-        {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
-        }
-      ],
       value: '',
       filterOptions: [
         { name: '全部', value: '1' },
@@ -189,6 +168,7 @@ export default {
     BottomButtons
   },
   methods: {
+    ...mapActions('Statistics', ['showExport']),
     getData () {
       request({
         method: 'post',

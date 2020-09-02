@@ -3,7 +3,7 @@
     <el-dialog
       title="导出excel配置"
       :visible.sync="exportVisible"
-      width="50%"
+      width="40%"
       :before-close="handleClose"
     >
       <div class="export-content clearfix">
@@ -12,10 +12,18 @@
             可选字段
           </div>
           <ul class="export-left">
-            <li>l1</li>
-            <li>l2</li>
-            <li>l3</li>
-            <li>l4</li>
+            <draggable
+              class="excel-group"
+              group="excel"
+              :list="leftList"
+            >
+              <li
+                v-for="item in leftList"
+                :key="item.itemCode"
+              >
+                {{ item.itemName }}
+              </li>
+            </draggable>
           </ul>
         </div>
         <!-- <div class="tips">
@@ -32,10 +40,18 @@
             已选字段
           </div>
           <ul class="export-right">
-            <li>r1</li>
-            <li>r2</li>
-            <li>r3</li>
-            <li>r4</li>
+            <draggable
+              class="excel-group"
+              group="excel"
+              :list="rightList"
+            >
+              <li
+                v-for="item in rightList"
+                :key="item.itemCode"
+              >
+                {{ item.itemName }}
+              </li>
+            </draggable>
           </ul>
         </div>
       </div>
@@ -45,10 +61,12 @@
       >
         <el-button
           size="mini"
+          @click="closeExport"
         >取 消</el-button>
         <el-button
           type="primary"
           size="mini"
+          @click="handleSubmit"
         >确 定</el-button>
       </span>
     </el-dialog>
@@ -57,14 +75,21 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import Sortable from 'sortablejs'
+import { customExportTemplate, saveTemplate, findUserInfo } from '@/api/statistics'
+import request from '@/utils/requestForMock'
+import draggable from 'vuedraggable'
 export default {
   data () {
     return {
-
+      leftList: [],
+      rightList: [],
+      userInfo: {}
     }
   },
   props: {
+  },
+  components: {
+    draggable
   },
   computed: {
     ...mapGetters('Statistics', ['exportVisible'])
@@ -74,24 +99,44 @@ export default {
     handleClose () {
       this.closeExport()
     },
-    handleSortable () {
-      this.$nextTick(() => {
-        const left = document.querySelector('.export-left')
-        const right = document.querySelector('.export-right')
-        var leftSort = new Sortable(left, {
-          group: 'shared',
-          animation: 150
-        })
-        var rightSort = new Sortable(right, {
-          group: 'shared',
-          animation: 150
-        })
-        console.log(leftSort, rightSort)
+    getListData () {
+      request({
+        method: 'POST',
+        url: customExportTemplate + `?userId=${this.userInfo.userId}&templateCode=${this.$route.query.code}`
+      }).then(res => {
+        this.leftList = res.data.data.notUse
+        this.rightList = res.data.data.inUse
+      })
+    },
+    handleSubmit () {
+      request({
+        url: saveTemplate,
+        method: 'POST',
+        data: this.rightList
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.$message({ type: 'success', message: '提交成功' })
+        }
+      })
+    },
+    findUserInfo () {
+      request({
+        url: findUserInfo,
+        method: 'post'
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.userInfo = res.data.data
+          this.getListData()
+        }
       })
     }
   },
+  created () {
+    this.findUserInfo()
+  },
   mounted () {
-    this.handleSortable()
+    // this.handleSortable()
+    // this.getListData()
   }
 }
 </script>
@@ -107,14 +152,17 @@ export default {
       }
       ul{
         height:calc(100% - 52px);
-        li{
-          height:30px;
-          background:rgba(41,47,64,1);
-          margin-bottom:1px;
-          text-indent: 48px;
-          line-height: 30px;
-          &:hover{
-            background:rgba(54,64,92,1);
+        .excel-group{
+          height: 100%;
+          li{
+            height:30px;
+            background:rgba(41,47,64,1);
+            margin-bottom:1px;
+            text-indent: 48px;
+            line-height: 30px;
+            &:hover{
+              background:rgba(54,64,92,1);
+            }
           }
         }
       }

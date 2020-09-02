@@ -41,7 +41,7 @@
             <el-menu-item
               v-for="_item in item.list"
               :key="_item.templeteCode"
-              :index="_item.pagePath"
+              :index="_item.pagePath + `?code=${_item.templeteCode}`"
             >
               <div :class="{'menuActive':activeIndex === _item.pagePath}" />
               {{ _item.templeteName }}
@@ -145,6 +145,7 @@ export default {
     },
     handleSelectMenu (index, path) {
       this.activeIndex = index
+      // this.$router.push({ path })
     },
     handleLock () {
       this.lockVisible = false

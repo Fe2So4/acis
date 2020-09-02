@@ -28,7 +28,7 @@
             >
               查询
             </el-button>
-            <el-button>导出配置</el-button>
+            <el-button @click="showExport">导出配置</el-button>
             <el-button>导出</el-button>
           </el-form-item>
         </span>
@@ -114,6 +114,7 @@ import BottomButtons from '@/components/StatisticsBottomButtons/BottomButtons'
 import { getCancelStatistics } from '@/api/statistics'
 import request from '@/utils/requestForMock'
 import moment from 'moment'
+import { mapActions } from 'vuex'
 export default {
   name: 'CancelOperationStatistics',
   data () {
@@ -184,6 +185,7 @@ export default {
     BottomButtons
   },
   methods: {
+    ...mapActions('Statistics', ['showExport']),
     getCancelData () {
       request({
         url: getCancelStatistics + `?pageSize=${this.pageSize}&index=${this.currentPage}`,

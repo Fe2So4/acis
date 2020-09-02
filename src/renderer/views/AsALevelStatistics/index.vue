@@ -50,10 +50,13 @@
         </span>
         <span>
           <el-form-item>
-            <el-button type="primary">
+            <el-button
+              type="primary"
+              @click="getData"
+            >
               查询
             </el-button>
-            <el-button>导出配置</el-button>
+            <el-button @click="showExport">导出配置</el-button>
             <el-button>导出</el-button>
           </el-form-item>
         </span>
@@ -90,6 +93,7 @@ import { getAsaStatistics } from '@/api/statistics'
 import request from '@/utils/requestForMock'
 import XEUtils from 'xe-utils'
 import moment from 'moment'
+import { mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -157,6 +161,7 @@ export default {
   components: {
   },
   methods: {
+    ...mapActions('Statistics', ['showExport']),
     getData () {
       request({
         url: getAsaStatistics,

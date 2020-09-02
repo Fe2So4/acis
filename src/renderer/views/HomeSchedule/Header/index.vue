@@ -105,7 +105,11 @@ export default {
       iconMax: 'icon-icon_min2'
     }
   },
-  props: ['lock'],
+  props: {
+    lock: {
+      type: Boolean
+    }
+  },
   watch: {
 
   },
