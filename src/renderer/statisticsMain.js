@@ -2,7 +2,7 @@ import Vue from 'vue'
 import axios from 'axios'
 
 import App from './Statistics'
-import router from './router'
+import router from './routerStatistics'
 import store from './store'
 import ElementUI from 'element-ui'
 import 'normalize.css/normalize.css'

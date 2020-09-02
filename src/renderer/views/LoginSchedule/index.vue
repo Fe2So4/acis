@@ -128,7 +128,7 @@ export default {
             if (res.data.code === '0') {
               setUserToken(res.data.data)
               setCurrentAccount(this.form.username)
-              this.$router.push('/statistics-home')
+              this.$router.push('/schedule-home')
             } else {
               this.$message({ type: 'error', message: res.data.message })
             }
