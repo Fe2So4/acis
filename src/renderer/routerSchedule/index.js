@@ -10,23 +10,23 @@ const router = new Router({
     {
       path: '/login',
       name: 'Login',
-      component: () => import('../routerStatistics/node_modules/@/views/LoginSchedule/index')
+      component: () => import('@/views/LoginSchedule/index')
     },
     {
       path: '/schedule-home',
       name: 'HomeSchedule',
-      component: () => import('../routerStatistics/node_modules/@/views/HomeSchedule/index'),
+      component: () => import('@/views/HomeSchedule/index'),
       redirect: '/schedule-home/schedule',
       children: [
         {
           path: 'schedule',
           name: 'Schedule',
-          component: () => import('../routerStatistics/node_modules/@/views/Schedule/index')
+          component: () => import('@/views/Schedule/index')
         },
         {
           path: 'report',
           name: 'Report',
-          component: () => import('../routerStatistics/node_modules/@/views/ScheduleReport/index')
+          component: () => import('@/views/ScheduleReport/index')
         }
       ]
     },
