@@ -45,7 +45,7 @@ function createWindow () {
     })
   }
   // 显示开发者工具
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', () => {
     mainWindow = null

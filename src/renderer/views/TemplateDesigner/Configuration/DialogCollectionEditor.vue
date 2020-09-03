@@ -155,6 +155,7 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
+  @import "@/styles/theme";
 .content {
   display: flex;
   & > div {
@@ -165,5 +166,6 @@ export default {
 }
 .content ::v-deep .el-table tr{
     background: #181C27;
+  @include theme-property(background, $color-background-listItem);
   }
 </style>

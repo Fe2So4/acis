@@ -64,7 +64,6 @@
     "chalk": "^2.4.2",
     "echarts": "^4.8.0",
     "element-ui": "^2.13.2",
-    "file-saver": "^2.0.2",
     "json-server": "^0.16.1",
     "lodash": "^4.17.20",
     "mockjs": "^1.1.0",
@@ -85,8 +84,7 @@
     "vuex-electron": "^1.0.0",
     "vxe-table": "^2.9.17",
     "vxe-table-plugin-element": "^1.8.9",
-    "xe-utils": "^2.7.8",
-    "xlsx": "^0.16.6"
+    "xe-utils": "^2.7.8"
   },
   "devDependencies": {
     "ajv": "^6.5.0",
