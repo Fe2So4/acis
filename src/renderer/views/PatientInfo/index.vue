@@ -49,6 +49,25 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+ @media all and (orientation: portrait) {
+     .patient-info{
+       .left{
+         float: unset !important;
+         width: 100% !important;
+         padding-right: 20px;
+         height: calc(100% - 100px) !important;
+       }
+       .right{
+         position: relative;
+         left: -20px;
+         right: -20px;
+         float: unset !important;
+         height: 100px !important;
+         width: calc(100% + 20px) !important;
+         margin-left: unset !important;
+       }
+     }
+  }
 .patient-info {
   height: 100%;
   padding-left:20px;
