@@ -49,8 +49,8 @@
       </el-scrollbar>
     </div>
     <div class="nav-list-portrait">
+      <!-- :default-active="activeIndex" -->
       <el-menu
-        :default-active="activeIndex"
         class="el-menu-demo"
         mode="horizontal"
         menu-trigger="click"
@@ -469,6 +469,7 @@ export default {
           /deep/ .el-submenu__title{
               height:50px !important;
               line-height:50px !important;
+              border:unset !important;
             }
           /deep/ .is-opened{
               .el-submenu__title{
