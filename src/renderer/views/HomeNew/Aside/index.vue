@@ -449,6 +449,8 @@ export default {
                 rgba(89, 247, 199, 1),
                 rgba(42, 131, 247, 1)
         );
+        font-weight: bold;
+        text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
         border-radius: 15px 0px 0px 15px;
         color: #edf1f9;
       }
@@ -459,6 +461,8 @@ export default {
                 rgba(42, 131, 247, 1),
                 rgba(89, 247, 199, 1)
         );
+        font-weight: bold;
+        text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
         border-radius: 0 15px 15px 0;
         color: #edf1f9;
       }

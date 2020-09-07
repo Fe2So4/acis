@@ -20,7 +20,7 @@ import 'vxe-table/lib/index.css'
 import VXETablePluginElement from 'vxe-table-plugin-element'
 import 'vxe-table-plugin-element/dist/style.css'
 import './styles/vxe-table-variable.scss' // 修改vxe-table默认样式
-import './styles/element-variables.scss' // 修改element-ui默认样式
+import './styles/element-variables-statistics.scss' // 修改element-ui默认样式
 // ...
 // 解决vxe - table与element - ui兼容性问题
 // ...

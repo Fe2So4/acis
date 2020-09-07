@@ -425,26 +425,34 @@ export default {
   }
 }
 </script>
-<style lang="stylus" scoped>
-.anaes-event
-  height 100%
-  .content
-    height calc(100% - 38px)
-    .left
-      float left
-      width 20%
-      height 100%
-      border 1px solid rgba(57, 66, 92, 1)
-      border-radius 5px 0px 0px 5px
-      border-right unset
-    .right
-      height 100%
-      float right
-      width 80%
-  .option
-    margin-top 10px
-    text-align right
+<style lang="scss" scoped>
+ @import "@/styles/theme";
+.anaes-event{
+  height:100%;
+  .content{
+    height:calc(100% - 38px);
+    .left{
+      width:20%;
+      height:100%;
+      float:left;
+      // border 1px solid rgba(57, 66, 92, 1)
+      @include theme-property("border", $border-event-left);
+      border-right: unset !important;
+      border-radius: 5px 0px 0px 5px;
+
+    }
+    .right{
+      height:100%;
+      float:right;
+      width:80%;
+    }
+  }
+  .option{
+    margin-top:10px;
+    text-align:right;
     .el-button{
       margin-right:10px;
+    }
+  }
     }
 </style>

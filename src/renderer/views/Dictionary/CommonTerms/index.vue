@@ -264,7 +264,8 @@ export default {
   }
 }
 </script>
-<style lang="stylus" scoped>
+<style lang="scss" scoped>
+@import "@/styles/theme";
 .common-terms {
   height: 100%;
 
@@ -275,9 +276,9 @@ export default {
       float: left;
       width: 20%;
       height: 100%;
-      border 1px solid rgba(57, 66, 92, 1)
-      border-radius 5px 0px 0px 5px
-      border-right unset
+      @include theme-property("border", $border-event-left);
+      border-right: unset !important;
+      border-radius: 5px 0px 0px 5px;
     }
 
     .right {

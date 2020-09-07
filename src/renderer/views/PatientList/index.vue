@@ -292,7 +292,7 @@
                       alt
                     >
                   </div>
-                  <div :style="{color:'#FE6D2E',fontSize:'14px',textAlign:'center'}">
+                  <div :style="{color:'#2E95FE',fontSize:'14px',textAlign:'center'}">
                     隔离
                   </div>
                 </div>

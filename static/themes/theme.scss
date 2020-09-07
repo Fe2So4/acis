@@ -66,14 +66,15 @@ $color-background-card: (
 $color-background-card-hover: (
   "dark-gray": #636363,
   "dark-blue": #262c40,
-  "light-white": #ebecef,
-);
+  "light-white": #e2e3e8
+  );
+  // "light-white": #ebecef,
 
 // 导航背景色（上部搜索区域）
 $color-background-navigation: (
   "dark-gray": #353537,
   "dark-blue": #181c27,
-  "light-white": #f8f8f8,
+  "light-white": #cdcdcd,
 );
 
 // 整体背景色
@@ -226,7 +227,14 @@ $color-event-list:(
 $border-event-list:(
   "dark-gray": 1px solid #484848,
   "dark-blue": 1px solid #363E56,
-  "light-white": 1px solid rgba(206,206,206,1),
+  "light-white": 1px solid rgb(32, 24, 24),
+);
+
+// 大事件左半部边框色
+$border-event-left:(
+  "dark-gray": 1px solid #5A5A5A,
+  "dark-blue": 1px solid #39425C,
+  "light-white": 1px solid #CECECE,
 );
 
 // 多选框背景色
