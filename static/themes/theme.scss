@@ -191,17 +191,18 @@ $background-menu-active: (
     linear-gradient(0deg, rgba(236, 76, 34, 1), rgba(12, 134, 226, 1)),
   "dark-blue":
     linear-gradient(0deg, rgba(236, 34, 88, 1), rgba(12, 134, 226, 1)),
-  "dark-white":
+  "light-white":
     linear-gradient(0deg,rgba(236,34,88,1),rgba(12,134,226,1))
 );
+
 //导航栏激活彩条---竖屏
 $background-menu-active-portrait: (
   "dark-gray":
     linear-gradient(90deg, rgba(236, 76, 34, 1), rgba(12, 134, 226, 1)),
   "dark-blue":
     linear-gradient(90deg, rgba(236, 34, 88, 1), rgba(12, 134, 226, 1)),
-  "dark-white":
-    linear-gradient(90deg,rgba(236,34,88,1),rgba(12,134,226,1))
+  "light-white":
+    linear-gradient(90deg, rgba(236,34,88,1) ,rgba(12,134,226,1))
 );
 
 //vxe表格文字颜色
@@ -250,21 +251,21 @@ $border-event-left:(
 $background-checkbox:(
   "dark-gray": #2E2E34,
   "dark-blue": #262C40,
-  "dark-white": #EBECEF
+  "light-white": #EBECEF
 );
 
 // 多选框选中背景色
 $background-checkbox-checked:(
   "dark-gray": #FB6816,
   "dark-blue": #0094FF,
-  "dark-white": #0094FF
+  "light-white": #0094FF
 );
 
 //多选框边框颜色
 $border-checkbox:(
   "dark-gray": 1px solid #484848,
   "dark-blue": 1px solid #363E56,
-  "dark-white": 1px solid #CECECE
+  "light-white": 1px solid #CECECE
 );
 
 // 列表项文字颜色

@@ -313,12 +313,12 @@ export default {
     menuBackground () {
       switch (this.theme) {
         case 'dark-gray':
-          return '#1e2022'
+          return '#353537'
         case 'light-white':
-          return '#F0F0F0'
+          return '#F8F8F8'
         case 'dark-blue':
         default:
-          return '#181c28'
+          return '#121421'
       }
     },
     menuTextColor () {
@@ -466,6 +466,7 @@ export default {
         display:block !important;
         flex: 1;
         .el-menu{
+          // @include theme-property("background-color", $color-background-aside);
           /deep/ .el-submenu__title{
               height:50px !important;
               line-height:50px !important;

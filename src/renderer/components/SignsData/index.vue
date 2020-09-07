@@ -152,6 +152,9 @@ $color-background-signs: (
         justify-content: space-between;
         padding: 0 10px;
         line-height: 28px;
+        span{
+          min-width: 50px;
+        }
         &:first-child {
           text-align: left;
         }

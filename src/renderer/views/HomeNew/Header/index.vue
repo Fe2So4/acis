@@ -100,6 +100,11 @@ export default {
   justify-content: space-between;
   height:100%;
   align-items: center;
+  @media all and (orientation: portrait) {
+    .title{
+      box-shadow:unset !important;
+    }
+  }
   .title {
       @include theme-property("color", $color-text-primary);
       line-height: 32px;
