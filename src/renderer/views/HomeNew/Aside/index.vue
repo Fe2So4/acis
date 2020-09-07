@@ -1,9 +1,5 @@
 <template>
   <div class="aside">
-    <div class="title">
-      Dandelion 智慧手术中心
-      <i />临床麻醉
-    </div>
     <div
       class="img"
       @click="jumpLogin"
@@ -51,6 +47,46 @@
           </el-collapse-item>
         </el-collapse>
       </el-scrollbar>
+    </div>
+    <div class="nav-list-portrait">
+      <!-- :default-active="activeIndex" -->
+      <el-menu
+        class="el-menu-demo"
+        mode="horizontal"
+        menu-trigger="click"
+        unique-opened
+        :background-color="menuBackground"
+        :text-color="menuTextColor"
+        :active-text-color="menuActiveTextColor"
+        @select="handleSelect"
+        @open="handleChange"
+      >
+        <el-submenu
+          v-for="item in navs"
+          :index="item.mainNav"
+          :key="item.mainNav"
+        >
+          <template slot="title">
+            <i
+              class="header-icon"
+              :class="item.icon"
+            />
+            {{ item.name }}
+            <div
+              class="active"
+              v-show="item.mainNav === activesNames"
+            />
+          </template>
+          <el-menu-item
+            v-for="(_item,index) in item.subNav"
+            :key="_item.id"
+            :index="_item.perCode"
+            @click="handleChangeButton(_item,index)"
+          >
+            {{ _item.perName }}
+          </el-menu-item>
+        </el-submenu>
+      </el-menu>
     </div>
     <Dialog
       @close="handleDialogClose"
@@ -273,6 +309,39 @@ export default {
     },
     logoSource () {
       return require(`@/assets/tq_${this.theme}.png`)
+    },
+    menuBackground () {
+      switch (this.theme) {
+        case 'dark-gray':
+          return '#1e2022'
+        case 'light-white':
+          return '#F0F0F0'
+        case 'dark-blue':
+        default:
+          return '#181c28'
+      }
+    },
+    menuTextColor () {
+      switch (this.theme) {
+        case 'dark-gray':
+          return '#BABABA'
+        case 'light-white':
+          return '#707C91'
+        case 'dark-blue':
+        default:
+          return '#9BA4D5'
+      }
+    },
+    menuActiveTextColor () {
+      switch (this.theme) {
+        case 'dark-gray':
+          return '#EDF1F9'
+        case 'light-white':
+          return '#1A1A1A'
+        case 'dark-blue':
+        default:
+          return '#FFFFFF'
+      }
     }
   },
   methods: {
@@ -280,6 +349,9 @@ export default {
     jumpLogin () {
       //  ----login页测试
       this.$router.push('/login')
+    },
+    handleSelect () {
+
     },
     handleLock () {
       this.lockVisible = false
@@ -321,6 +393,7 @@ export default {
       }
     },
     handleChange (active) {
+      console.log(123)
       this.activeIndex = null
       this.activesNames = active
     },
@@ -385,34 +458,55 @@ export default {
 </script>
 <style lang="scss" scoped>
   @import "@/styles/theme";
-
+  @media all and (orientation: portrait) {
+      .nav-list{
+        display: none;
+      }
+      .nav-list-portrait{
+        display:block !important;
+        flex: 1;
+        .el-menu{
+          /deep/ .el-submenu__title{
+              height:50px !important;
+              line-height:50px !important;
+              border:unset !important;
+            }
+          /deep/ .is-opened{
+              .el-submenu__title{
+                color:#fff !important;
+                i{
+                  color:#fff !important;
+                }
+              }
+          }
+        }
+      }
+      .aside{
+        display: flex !important;
+        justify-content: space-between;
+        margin: 0 0 20px 0;
+        box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.4);
+        .img{
+          padding: 0 20px 0 18px;
+          margin: unset !important;
+          width: 220px;
+        }
+        .active {
+          width: 100% !important;
+          height: 2px !important;
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          @include theme-property("background", $background-menu-active)
+        }
+      }
+  }
   .aside {
     height: 100%;
     width: 100%;
     font-size: 14px;
     overflow: hidden;
     @include theme-property("background", $color-background-aside);
-    // position: relative;
-    .title {
-      @include theme-property("color", $color-text-primary);
-      line-height: 30px;
-      text-align: center;
-      // background: #f8f9fa;
-      text-indent: 2px;
-      font-size: 12px;
-      cursor: pointer;
-
-      i {
-        display: inline-block;
-        width: 5px;
-        vertical-align: middle;
-        height: 5px;
-        border-radius: 50%;
-        @include theme-property("background", $color-primary);
-        margin: 0 4px;
-      }
-    }
-
     .img {
       // height:34px;
       margin: 14px 0;
@@ -471,6 +565,9 @@ export default {
     .nav-list {
       height: calc(100% - 30px);
     }
+    .nav-list-portrait{
+      display:none;
+    }
 
     .el-collapse {
       border: unset;
@@ -481,9 +578,9 @@ export default {
       width: 2px;
       height: 40px;
       position: absolute;
-      right: 0;
-      top: 0;
-      @include theme-property("background", $background-menu-active)
+      left: 0;
+      bottom: 0;
+      @include theme-property("background", $background-menu-active-portrait)
     }
   }
 

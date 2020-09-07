@@ -57,7 +57,18 @@
     "linux": {
       "icon": "build/icons"
     },
-    "asar": true
+    "asar": true,
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "build/icons/favicon.ico",
+      "uninstallerIcon": "build/icons/favicon.ico",
+      "installerHeaderIcon": "build/icons/favicon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "acis"
+    }
   },
   "dependencies": {
     "axios": "^0.18.0",

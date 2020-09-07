@@ -10,11 +10,19 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
-
+let entry = null
+let alias = null
+if (process.env.BUILD_TARGET === 'schedule') {
+  entry = path.join(__dirname,'../src/renderer_schedule/scheduleMain.js');
+  alias = '../src/renderer_schedule'
+}else {
+  entry = path.join(__dirname, '../src/renderer/main.js');
+  alias = '../src/renderer'
+}
 let webConfig = {
   devtool: '#cheap-module-eval-source-map',
   entry: {
-    web: path.join(__dirname, '../src/renderer/main.js')
+    web: path.join(__dirname, entry)
   },
   module: {
     rules: [
@@ -121,7 +129,8 @@ let webConfig = {
   },
   resolve: {
     alias: {
-      '@': path.join(__dirname, '../src/renderer'),
+      'src': path.join(__dirname, '../src/'),
+      '@': path.join(__dirname, alias),
       'vue$': 'vue/dist/vue.esm.js'
     },
     extensions: ['.js', '.vue', '.json', '.css']

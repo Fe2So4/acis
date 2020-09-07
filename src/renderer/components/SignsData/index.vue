@@ -1,10 +1,10 @@
 <template>
   <div class="signs-data">
-    <ul>
-      <el-scrollbar
-        style="height: 100%"
-        :wrap-style="wrapStyle"
-      >
+    <el-scrollbar
+      style="height: 100%"
+      :wrap-style="wrapStyle"
+    >
+      <ul>
         <li
           v-for="(item,index) in signsList"
           :key="index"
@@ -14,11 +14,11 @@
             <span>{{ item.itemUnit }}</span>
           </p>
           <p :style="{color:item.itemColor}">
-            {{ item.itemValue==='' ? '-' : item.itemValue }}
+            {{ item.itemValue==='' ? '80/140' : item.itemValue }}
           </p>
         </li>
-      </el-scrollbar>
-    </ul>
+      </ul>
+    </el-scrollbar>
   </div>
 </template>
 <script>
@@ -103,6 +103,34 @@ $color-background-signs: (
   "dark-blue": #121421,
   "light-white": #454546,
 );
+ @media all and (orientation: portrait) {
+     .signs-data{
+       .el-scrollbar{
+         width: 100%;
+        ul{
+          display: flex;
+          height: 100% !important;
+          padding-top:unset !important;
+          li{
+            display: flex;
+            margin-bottom:unset !important;
+            p{
+              flex-direction: column;
+              &:first-child {
+                text-align: left;
+              }
+              &:last-child {
+                justify-content: end;
+                text-align: right;
+                font-size: 30px;
+                line-height: 100px;
+              }
+            }
+          }
+          }
+       }
+     }
+  }
 .signs-data {
   width: 100%;
   height: 100%;

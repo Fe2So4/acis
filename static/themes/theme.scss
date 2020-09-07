@@ -194,6 +194,15 @@ $background-menu-active: (
   "dark-white":
     linear-gradient(0deg,rgba(236,34,88,1),rgba(12,134,226,1))
 );
+//导航栏激活彩条---竖屏
+$background-menu-active-portrait: (
+  "dark-gray":
+    linear-gradient(90deg, rgba(236, 76, 34, 1), rgba(12, 134, 226, 1)),
+  "dark-blue":
+    linear-gradient(90deg, rgba(236, 34, 88, 1), rgba(12, 134, 226, 1)),
+  "dark-white":
+    linear-gradient(90deg,rgba(236,34,88,1),rgba(12,134,226,1))
+);
 
 //vxe表格文字颜色
 $color-vxe-table:(
