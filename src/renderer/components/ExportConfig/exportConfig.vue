@@ -12,46 +12,47 @@
             可选字段
           </div>
           <ul class="export-left">
-            <draggable
-              class="excel-group"
-              group="excel"
-              :list="leftList"
+            <el-scrollbar
+              style="height:100%;width:100%;"
+              class="scrollbar"
             >
-              <li
-                v-for="item in leftList"
-                :key="item.itemCode"
+              <draggable
+                class="excel-group"
+                group="excel"
+                :list="leftList"
               >
-                {{ item.itemName }}
-              </li>
-            </draggable>
+                <li
+                  v-for="item in leftList"
+                  :key="item.itemCode"
+                >
+                  {{ item.itemName }}
+                </li>
+              </draggable>
+            </el-scrollbar>
           </ul>
         </div>
-        <!-- <div class="tips">
-          <el-button type="primary">
-            <i class="el-icon-d-arrow-left" />
-          </el-button>
-          <el-button type="primary">
-            <i class="el-icon-d-arrow-right" />
-          </el-button>
-          点击单项可以拖拽
-        </div> -->
         <div class="right">
           <div class="title">
             已选字段
           </div>
           <ul class="export-right">
-            <draggable
-              class="excel-group"
-              group="excel"
-              :list="rightList"
+            <el-scrollbar
+              style="height:100%;width:100%;"
+              class="scrollbar"
             >
-              <li
-                v-for="item in rightList"
-                :key="item.itemCode"
+              <draggable
+                class="excel-group"
+                group="excel"
+                :list="rightList"
               >
-                {{ item.itemName }}
-              </li>
-            </draggable>
+                <li
+                  v-for="item in rightList"
+                  :key="item.itemCode"
+                >
+                  {{ item.itemName }}
+                </li>
+              </draggable>
+            </el-scrollbar>
           </ul>
         </div>
       </div>
@@ -116,6 +117,7 @@ export default {
       }).then(res => {
         if (res.data.code === 200) {
           this.$message({ type: 'success', message: '提交成功' })
+          this.getListData()
         }
       })
     },
@@ -188,6 +190,9 @@ export default {
         border:1px solid rgba(57, 66, 92, 1);
         border-radius:5px;
       }
+    }
+    /deep/ .el-scrollbar__view{
+      height: 100%;
     }
   }
 </style>

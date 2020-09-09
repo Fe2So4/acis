@@ -22,7 +22,10 @@
             </el-select>
             <el-date-picker
               v-model="form.beforeTime"
+              popper-class="dateTimePicker"
               type="date"
+              value-format="yyyy-MM-dd"
+              format="yyyy-MM-dd"
               placeholder="选择日期"
               style="width:165px"
             />
@@ -43,6 +46,9 @@
             <el-date-picker
               v-model="form.afterTime"
               type="date"
+              value-format="yyyy-MM-dd"
+              format="yyyy-MM-dd"
+              popper-class="dateTimePicker"
               placeholder="选择日期"
               style="width:165px"
             />
@@ -57,7 +63,7 @@
               查询
             </el-button>
             <el-button @click="showExport">导出配置</el-button>
-            <el-button>导出</el-button>
+            <el-button @click="handleExport">导出</el-button>
           </el-form-item>
         </span>
       </el-form>
@@ -89,8 +95,9 @@
 </template>
 
 <script>
-import { getAsaStatistics } from '@/api/statistics'
+import { getAsaStatistics, exportExcel, getAsaExcel } from '@/api/statistics'
 import request from '@/utils/requestForMock'
+import { ipcRenderer } from 'electron'
 import XEUtils from 'xe-utils'
 import moment from 'moment'
 import { mapActions } from 'vuex'
@@ -193,6 +200,30 @@ export default {
       })
       // 返回一个二维数组的表尾合计
       return [sums]
+    },
+    handleExport () {
+      request(
+        {
+          method: 'post',
+          url: getAsaExcel,
+          data: {
+            afterTime: this.form.afterTime,
+            beforeTime: this.form.beforeTime,
+            operationAfterState: this.form.operationAfterState,
+            operationBeforeState: this.form.operationBeforeState
+          }
+        }
+      ).then(res => {
+        if (res.data.data) {
+          this.exportExcel(res.data.data)
+        }
+      })
+    },
+    exportExcel (param) {
+      ipcRenderer.send('download',
+        JSON.stringify({
+          downloadUrl: exportExcel + `/${param}`
+        }))
     }
   },
   mounted () {

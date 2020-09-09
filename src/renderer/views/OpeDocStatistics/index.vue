@@ -54,7 +54,23 @@
             />
           </el-form-item>
           <el-form-item label="手术医生">
-            <el-input v-model="form.surgeonCode" />
+            <el-select
+              v-model="form.surgeonCode"
+              filterable
+              remote
+              clearable
+              reserve-keyword
+              placeholder="请输入关键词"
+              :remote-method="getOpeDocData"
+              :loading="loading"
+            >
+              <el-option
+                v-for="item in opeDocList"
+                :key="item.userId"
+                :label="item.userName"
+                :value="item.userId"
+              />
+            </el-select>
           </el-form-item>
         </span>
         <span>
@@ -71,7 +87,6 @@
         </span>
       </el-form>
     </div>
-
     <div class="table">
       <vxe-table
         border
@@ -133,8 +148,9 @@
     <bottom-buttons
       :page-size="pageSize"
       :current-page="currentPage"
-      :total-size="totalPages"
+      :total-size="totalSize"
       :total-pages="totalPages"
+      @changePage="handleChangePage"
     />
   </div>
 </template>
@@ -147,11 +163,11 @@ import moment from 'moment'
 import XEUtils from 'xe-utils'
 import { ipcRenderer } from 'electron'
 import { mapActions } from 'vuex'
+import { opeDoc } from '@/mixin/statistics'
 export default {
   data () {
     return {
       tableData: [],
-      value: '',
       beforeTimeType: ['麻醉开始时间', '手术开始时间', '入手术室时间', '手术安排时间'],
       afterTimeType: ['麻醉结束时间', '手术结束时间', '出手术室时间', '手术安排时间'],
       form: {
@@ -164,7 +180,7 @@ export default {
       pageSize: 20,
       currentPage: 1,
       totalSize: 0,
-      totalPages: 0,
+      totalPages: 1,
       tableColumn: [
         { type: 'checkbox', width: 60 },
         { field: 'name', title: 'Name' },
@@ -173,9 +189,11 @@ export default {
         { field: 'date3', title: 'Date' },
         { field: 'address', title: 'Address', showOverflow: true }
       ],
-      tableData2: []
+      tableData2: [],
+      loading: false
     }
   },
+  mixins: [opeDoc],
   components: {
     BottomButtons
   },
@@ -239,6 +257,7 @@ export default {
           }
         }
       ).then(res => {
+        console.log(res.data.data)
         if (res.data.data) {
           this.exportExcel(res.data.data)
         }
@@ -248,8 +267,32 @@ export default {
       ipcRenderer.send('download',
         JSON.stringify({
           downloadUrl: exportExcel + `/${param}`
-          // saveUrl: result[0]
         }))
+    },
+    handleChangePage (param) {
+      switch (param) {
+        case 1:
+          if (this.currentPage < this.totalPages) {
+            this.currentPage = this.currentPage + 1
+          } else {
+            this.currentPage = 1
+          }
+          break
+        case -1:
+          if (this.currentPage > 1) {
+            this.currentPage = this.currentPage - 1
+          } else {
+            this.currentPage = 1
+          }
+          break
+        case 0:
+          this.currentPage = 1
+          break
+        case 2:
+          this.currentPage = this.totalPages
+          break
+      }
+      this.getData()
     }
   },
   mounted () {

@@ -10,13 +10,10 @@
             <el-date-picker
               v-model="time"
               type="daterange"
-              align="right"
-              unlink-panels
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               popper-class="dateTimePicker"
-              :picker-options="pickerOptions"
             />
           </el-form-item>
         </span>
@@ -29,7 +26,7 @@
               查询
             </el-button>
             <el-button @click="showExport">导出配置</el-button>
-            <el-button>导出</el-button>
+            <el-button @click="handleExport">导出</el-button>
           </el-form-item>
         </span>
       </el-form>
@@ -103,18 +100,20 @@
     <bottom-buttons
       :page-size="pageSize"
       :current-page="currentPage"
-      :total-size="totalPages"
+      :total-size="totalSize"
       :total-pages="totalPages"
+      @changePage="handleChangePage"
     />
   </div>
 </template>
 
 <script>
 import BottomButtons from '@/components/StatisticsBottomButtons/BottomButtons'
-import { getCancelStatistics } from '@/api/statistics'
+import { getCancelStatistics, exportExcel, getCancelStatisticsExcel } from '@/api/statistics'
 import request from '@/utils/requestForMock'
 import moment from 'moment'
 import { mapActions } from 'vuex'
+import { ipcRenderer } from 'electron'
 export default {
   name: 'CancelOperationStatistics',
   data () {
@@ -178,7 +177,7 @@ export default {
       currentPage: 1,
       pageSize: 20,
       totalSize: 0,
-      totalPages: 0
+      totalPages: 1
     }
   },
   components: {
@@ -204,6 +203,55 @@ export default {
           this.tableData = []
         }
       })
+    },
+    handleExport () {
+      request(
+        {
+          method: 'post',
+          url: getCancelStatisticsExcel,
+          data: {
+            afterTime: this.form.afterTime,
+            beforeTime: this.form.beforeTime,
+            operationAfterState: this.form.operationAfterState,
+            operationBeforeState: this.form.operationBeforeState
+          }
+        }
+      ).then(res => {
+        if (res.data.data) {
+          this.exportExcel(res.data.data)
+        }
+      })
+    },
+    exportExcel (param) {
+      ipcRenderer.send('download',
+        JSON.stringify({
+          downloadUrl: exportExcel + `/${param}`
+        }))
+    },
+    handleChangePage (param) {
+      switch (param) {
+        case 1:
+          if (this.currentPage < this.totalPages) {
+            this.currentPage = this.currentPage + 1
+          } else {
+            this.currentPage = 1
+          }
+          break
+        case -1:
+          if (this.currentPage > 1) {
+            this.currentPage = this.currentPage - 1
+          } else {
+            this.currentPage = 1
+          }
+          break
+        case 0:
+          this.currentPage = 1
+          break
+        case 2:
+          this.currentPage = this.totalPages
+          break
+      }
+      this.getCancelData()
     }
   },
   mounted () {

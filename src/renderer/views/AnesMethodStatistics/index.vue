@@ -1,5 +1,5 @@
 <template>
-  <div class="cancel-statistics">
+  <div class="anes-method-statistics">
     <div class="top">
       <el-form
         size="mini"
@@ -12,29 +12,77 @@
               v-model="form.anesStartTime"
               type="date"
               style="width:165px;"
-              align="right"
-              unlink-panels
-              :picker-options="pickerOptions"
+              value-format="yyyy-MM-dd"
+              format="yyyy-MM-dd"
+              popper-class="dateTimePicker"
             />
           </el-form-item>
           <el-form-item label="麻醉结束时间">
             <el-date-picker
               v-model="form.anesEndTime"
               type="date"
+              value-format="yyyy-MM-dd"
+              format="yyyy-MM-dd"
+              popper-class="dateTimePicker"
               style="width:165px;"
-              align="right"
-              unlink-panels
-              :picker-options="pickerOptions"
             />
           </el-form-item>
           <el-form-item label="麻醉医生">
-            <el-input v-model="form.anesDocNo" />
+            <el-select
+              v-model="form.anesDocNo"
+              filterable
+              remote
+              clearable
+              reserve-keyword
+              placeholder="请输入关键词"
+              :remote-method="getAnesDocData"
+              :loading="loading"
+            >
+              <el-option
+                v-for="item in anesDocList"
+                :key="item.userId"
+                :label="item.userName"
+                :value="item.userId"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item label="麻醉方法">
-            <el-input v-model="form.anesMethodNo" />
+            <el-select
+              v-model="form.anesMethodNo"
+              filterable
+              remote
+              clearable
+              reserve-keyword
+              placeholder="请输入关键词"
+              :remote-method="getAnesMethodData"
+              :loading="loading"
+            >
+              <el-option
+                v-for="item in anesMethodList"
+                :key="item.anesCode"
+                :label="item.anesName"
+                :value="item.anesCode"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item label="手术科室">
-            <el-input v-model="form.deptCode" />
+            <el-select
+              v-model="form.deptCode"
+              filterable
+              remote
+              clearable
+              reserve-keyword
+              placeholder="请输入关键词"
+              :remote-method="getDeptData"
+              :loading="loading"
+            >
+              <el-option
+                v-for="item in deptList"
+                :key="item.deptCode"
+                :label="item.deptName"
+                :value="item.deptCode"
+              />
+            </el-select>
           </el-form-item>
         </span>
         <span>
@@ -46,7 +94,7 @@
               查询
             </el-button>
             <el-button @click="showExport">导出配置</el-button>
-            <el-button>导出</el-button>
+            <el-button @click="handleExport">导出</el-button>
           </el-form-item>
         </span>
       </el-form>
@@ -77,50 +125,26 @@
     <bottom-buttons
       :page-size="pageSize"
       :current-page="currentPage"
-      :total-size="totalPages"
+      :total-size="totalSize"
       :total-pages="totalPages"
+      @changePage="handleChangePage"
     />
   </div>
 </template>
 
 <script>
 import BottomButtons from '@/components/StatisticsBottomButtons/BottomButtons'
-import { getOpeMethodStatistics } from '@/api/statistics'
+import { getOpeMethodStatistics, getAnesMethodExcel, exportExcel } from '@/api/statistics'
 import request from '@/utils/requestForMock'
 import XEUtils from 'xe-utils'
 import moment from 'moment'
+import { dept, anesDoc, anesMethod } from '@/mixin/statistics'
+import { ipcRenderer } from 'electron'
 import { mapActions } from 'vuex'
 export default {
-  name: 'CancelOperationStatistics',
+  name: 'AnesMethodStatistics',
   data () {
     return {
-      pickerOptions: {
-        shortcuts: [{
-          text: '最近一周',
-          onClick (picker) {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-            picker.$emit('pick', [start, end])
-          }
-        }, {
-          text: '最近一个月',
-          onClick (picker) {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-            picker.$emit('pick', [start, end])
-          }
-        }, {
-          text: '最近三个月',
-          onClick (picker) {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-            picker.$emit('pick', [start, end])
-          }
-        }]
-      },
       tableData: [],
       value: '',
       filterOptions: [
@@ -155,18 +179,20 @@ export default {
       form: {
         anesEndTime: moment(new Date()).format('YYYY-MM-DD'),
         anesStartTime: moment(new Date()).format('YYYY-MM-DD'),
-        anesDocNo: 'P0183',
-        anesMethodNo: 'A002',
-        deptCode: '1001',
+        anesDocNo: '',
+        anesMethodNo: '',
+        deptCode: '',
         anesName: '臂丛神经阻滞麻醉'
       },
       totalSize: 0,
-      totalPages: 0
+      totalPages: 1,
+      loading: false
     }
   },
   components: {
     BottomButtons
   },
+  mixins: [dept, anesDoc, anesMethod],
   methods: {
     ...mapActions('Statistics', ['showExport']),
     getData () {
@@ -209,6 +235,55 @@ export default {
       })
       // 返回一个二维数组的表尾合计
       return [sums]
+    },
+    handleExport () {
+      request(
+        {
+          method: 'post',
+          url: getAnesMethodExcel + `?deptCode=${this.form.dept}`,
+          data: {
+            afterTime: this.form.afterTime,
+            beforeTime: this.form.beforeTime,
+            operationAfterState: this.form.operationAfterState,
+            operationBeforeState: this.form.operationBeforeState
+          }
+        }
+      ).then(res => {
+        if (res.data.data) {
+          this.exportExcel(res.data.data)
+        }
+      })
+    },
+    exportExcel (param) {
+      ipcRenderer.send('download',
+        JSON.stringify({
+          downloadUrl: exportExcel + `/${param}`
+        }))
+    },
+    handleChangePage (param) {
+      switch (param) {
+        case 1:
+          if (this.currentPage < this.totalPages) {
+            this.currentPage = this.currentPage + 1
+          } else {
+            this.currentPage = 1
+          }
+          break
+        case -1:
+          if (this.currentPage > 1) {
+            this.currentPage = this.currentPage - 1
+          } else {
+            this.currentPage = 1
+          }
+          break
+        case 0:
+          this.currentPage = 1
+          break
+        case 2:
+          this.currentPage = this.totalPages
+          break
+      }
+      this.getData()
     }
   },
   mounted () {
@@ -218,7 +293,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.cancel-statistics {
+.anes-method-statistics {
   position: relative;
   color: #9ba3d5;
   font-size: 14px;

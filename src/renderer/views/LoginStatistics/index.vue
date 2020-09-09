@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import { login } from '@/api/login'
+import { login } from '@/api/statistics'
 import request from '@/utils/requestForMock'
 import { setUserToken, setCurrentAccount } from '../../utils/storage'
 
@@ -125,7 +125,7 @@ export default {
               loginPwd: this.form.password
             }
           }).then((res) => {
-            if (res.data.code === '0') {
+            if (res.data.code === 200) {
               setUserToken(res.data.data)
               setCurrentAccount(this.form.username)
               this.$router.push('/statistics-home')

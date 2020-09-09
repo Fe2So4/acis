@@ -1,0 +1,45 @@
+.dateTimePicker {
+  background: #252C40 !important;
+  border-color: #353E56 !important;
+
+  .el-time-panel {
+    background: #252C40 !important;
+  }
+
+  .el-time-panel__footer {
+    border-top: 1px solid #252C40;
+  }
+
+  .el-time-panel__content::after,
+  .el-time-panel__content::before {
+    border-color: #252C40;
+  }
+
+  .el-picker-panel__icon-btn {
+    color: #9BA3D5;
+  }
+
+  .el-date-table th {
+    border-bottom: 1px solid #3C4867;
+  }
+
+  .el-date-picker__time-header,
+  .el-date-picker__header--bordered,
+  .el-date-range-picker__time-header,
+  .el-date-range-picker__content.is-left {
+    border-color: #252C40;
+  }
+
+  .el-date-range-picker__time-header > .el-icon-arrow-right {
+    color: #252C40;
+  }
+
+  .el-picker-panel__footer {
+    background: #252C40;
+    border-top: 1px solid #252C40;
+  }
+
+  .el-date-table td.in-range div {
+    background: #252C40;
+  }
+}

@@ -10,7 +10,6 @@
 export default {
   name: 'Schedule',
   mounted () {
-    this.$router.push({ name: 'HomeSchedule' })
   }
 }
 </script>
