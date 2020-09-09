@@ -181,6 +181,20 @@ export default {
             widget.dirty = false
             widget.value = value
           }
+          // 表格中赋值
+          if (widget.name === 'widget-table') {
+            widget.cells.forEach((row) => {
+              row.forEach((cell) => {
+                cell.value = valueMap[cell.tableName] && valueMap[cell.tableName].find(
+                  ({ className }) => className === cell.className
+                )
+                  ? valueMap[cell.tableName].find(
+                    ({ className }) => className === cell.className
+                  ).value
+                  : cell.value
+              })
+            })
+          }
         })
         let paperSettingIndex
         const paperSetting = widgetList.find((item, index) => {
@@ -247,7 +261,7 @@ export default {
         await this.getIntraoperativeData(pageIndex)
       }
       const data = this.tempList
-      data.forEach(item => {
+      data.forEach((item) => {
         if (item.name === 'widget-anaes-table') {
           item.name = 'widget-monitor-table'
         }

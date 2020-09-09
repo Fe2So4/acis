@@ -1,3 +1,4 @@
+import { Cell } from '@/model/WidgetTable'
 export default function getConfigurationItems (widgetName) {
   // 边框
   const border = {
@@ -30,6 +31,19 @@ export default function getConfigurationItems (widgetName) {
   const required = false
   // 标签名
   const tagName = ''
+  // 表格
+  const widgetTableConfiguration = {
+    font,
+    border,
+    cells: [[
+      new Cell('0-1_0-1'),
+      new Cell('0-1_1-2')
+    ],
+    [
+      new Cell('1-2_0-1'),
+      new Cell('1-2_1-2')
+    ]]
+  }
   switch (widgetName) {
     case 'widget-checkbox-group':
       return {
@@ -254,6 +268,8 @@ export default function getConfigurationItems (widgetName) {
       return {
         direction: 'horizontal'
       }
+    case 'widget-table':
+      return widgetTableConfiguration
     default:
       return {}
   }
