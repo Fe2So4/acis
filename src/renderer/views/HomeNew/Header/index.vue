@@ -41,7 +41,7 @@ export default {
     return {
       activeIndex: -1,
       isMax: win.isMaximized(),
-      iconMax: 'icon-icon_min2'
+      iconMax: 'icon-icon_max'
     }
   },
 

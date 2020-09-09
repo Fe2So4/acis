@@ -51,8 +51,8 @@
       </el-scrollbar>
     </div>
     <div class="user-info">
-      <span>MDSDSS(ADMIN)</span>
-      <span>注销</span>
+      <span>当前用户：{{ currentAccount }}</span>
+      <span @click="handleLogOut">注销</span>
     </div>
     <lock-screen
       v-if="lockVisible"
@@ -72,6 +72,7 @@ import ExportConfig from '@/components/ExportConfig/exportConfig'
 import { getStatisticsMenu } from '@/api/statistics'
 import request from '@/utils/requestForMock'
 import { mapGetters } from 'vuex'
+import { getCurrentAccount, removeStorage } from '@/utils/storage'
 export default {
   name: 'Aside',
   data () {
@@ -103,7 +104,8 @@ export default {
       activeIndex: null,
       path: '',
       navs: [],
-      lockVisible: false
+      lockVisible: false,
+      currentAccount: null
     }
   },
   components: {
@@ -159,9 +161,18 @@ export default {
     },
     handleCloseExport (param) {
       this.exportVisible = false
+    },
+    getCurrentAccount () {
+      this.currentAccount = getCurrentAccount('ACIS_CURRENT_ACCOUNT')
+    },
+    handleLogOut () {
+      removeStorage('ACIS_URSER_TOKEN')
+      removeStorage('ACIS_CURRENT_ACCOUNT')
+      this.$router.push('login')
     }
   },
   mounted () {
+    this.getCurrentAccount()
     this.getStatisticsMenu()
   }
 }
@@ -251,6 +262,9 @@ export default {
     padding: 0 10px;
     span {
       display: block;
+      &:last-child{
+        cursor: pointer;
+      }
     }
   }
   .el-collapse {
@@ -268,6 +282,14 @@ export default {
       rgba(236, 33, 88, 1),
       rgba(12, 133, 226, 1)
     );
+  }
+  /deep/ .is-active{
+    .el-submenu__title{
+      color:#fff !important;
+      i{
+        color:#fff !important;
+      }
+    }
   }
 }
 

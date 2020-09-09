@@ -59,7 +59,7 @@
 import { synchroApply, synchroPatient } from '@/api/schedule'
 import request from '@/utils/requestForMock'
 const {
-  BrowserWindow
+  BrowserWindow, dialog
 } = require('electron').remote
 
 const win = BrowserWindow.getAllWindows()[0]
@@ -102,7 +102,7 @@ export default {
         }
       ],
       activeIndex: 1,
-      iconMax: 'icon-icon_min2'
+      iconMax: 'icon-icon_max'
     }
   },
   props: {
@@ -160,15 +160,32 @@ export default {
     },
     maxWindow () {
       const isMax = win.isMaximized()
-
       if (isMax) {
         win.unmaximize()
+        this.iconMax = 'icon-icon_min2'
       } else {
         win.maximize()
+        this.iconMax = 'icon-icon_max'
       }
     },
     closeWindow () {
-      win.close()
+      dialog.showMessageBox({
+        type: 'warning',
+        // 按钮文字
+        buttons: ['确认', '取消'],
+        // 默认选择的按钮索引值
+        defaultId: 1,
+        title: '警告',
+        message: '是否确认退出当前程序',
+        // 触发退出的索引值
+        cancelId: 1
+      }).then(
+        res => {
+          if (res.response === 0) {
+            win.close()
+          }
+        }
+      )
     },
     jumpstatistics (item, i) {
       this.activeIndex = i

@@ -17,7 +17,10 @@
           共{{ totalSize }}条记录 {{ currentPage }}/{{ totalPages }}
         </div>
       </div>
-      <div class="button">
+      <div
+        class="button"
+        @click="changePage(0)"
+      >
         <div class="iconfont icon-shouye" />
         <div class="text">
           首页
@@ -25,7 +28,7 @@
       </div>
       <div
         class="button"
-        @click="pageUp"
+        @click="changePage(-1)"
       >
         <div class="iconfont icon-shangyiye rotate" />
         <div class="text">
@@ -34,14 +37,17 @@
       </div>
       <div
         class="button"
-        @click="pageDown"
+        @click="changePage(1)"
       >
         <div class="iconfont icon-xiayiye rotate" />
         <div class="text">
           下一页
         </div>
       </div>
-      <div class="button">
+      <div
+        class="button"
+        @click="changePage(2)"
+      >
         <div class="iconfont icon-last rotate" />
         <div class="text">
           末页
@@ -79,8 +85,9 @@ export default {
   },
   computed: {},
   methods: {
-    pageUp () {},
-    pageDown () {}
+    changePage (param) {
+      this.$emit('changePage', param)
+    }
   }
 }
 </script>

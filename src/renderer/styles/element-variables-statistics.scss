@@ -26,7 +26,7 @@ $--background-color-base: #f5f7fa !default;
 /// color||Color|0
 $--checkbox-background-color: $--custom-el-background-color;
 /// color||Color|0
-$--checkbox-checked-font-color: #ffffff;
+$--checkbox-checked-font-color: $--color-primary;
 /// color||Color|0
 // $--checkbox-disabled-input-fill: #6c7eb3;
 
@@ -97,5 +97,6 @@ $--tree-font-color: #d0dae5;
 $--tree-node-hover-background-color: #292f40;
 /* 改变 icon 字体路径变量，必需 */
 $--font-path: "~element-ui/lib/theme-chalk/fonts";
+
 
 @import "node_modules/element-ui/packages/theme-chalk/src/index";

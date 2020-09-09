@@ -23,6 +23,7 @@
             <el-date-picker
               v-model="form.beforeTime"
               type="date"
+              popper-class="dateTimePicker"
               value-format="yyyy-MM-dd"
               format="yyyy-MM-dd"
               placeholder="选择日期"
@@ -53,7 +54,23 @@
             />
           </el-form-item>
           <el-form-item label="护士">
-            <el-input v-model="form.nurseCode" />
+            <el-select
+              v-model="form.nurseCode"
+              filterable
+              remote
+              clearable
+              reserve-keyword
+              placeholder="请输入关键词"
+              :remote-method="getNurseData"
+              :loading="loading"
+            >
+              <el-option
+                v-for="item in nurseList"
+                :key="item.userId"
+                :label="item.userName"
+                :value="item.userId"
+              />
+            </el-select>
           </el-form-item>
         </span>
         <span>
@@ -64,8 +81,8 @@
             >
               查询
             </el-button>
-            <el-button>导出配置</el-button>
-            <el-button>导出</el-button>
+            <el-button @click="showExport">导出配置</el-button>
+            <el-button @click="handleExport">导出</el-button>
           </el-form-item>
         </span>
       </el-form>
@@ -131,17 +148,21 @@
     <bottom-buttons
       :page-size="pageSize"
       :current-page="currentPage"
-      :total-size="totalPages"
+      :total-size="totalSize"
       :total-pages="totalPages"
+      @changePage="handleChangePage"
     />
   </div>
 </template>
 
 <script>
 import BottomButtons from '@/components/StatisticsBottomButtons/BottomButtons'
-import { getNurseWork } from '@/api/statistics'
+import { getNurseWork, getNurseWorkExcel, exportExcel } from '@/api/statistics'
 import request from '@/utils/requestForMock'
+import { nurse } from '@/mixin/statistics'
 import moment from 'moment'
+import { ipcRenderer } from 'electron'
+import { mapActions } from 'vuex'
 import XEUtils from 'xe-utils'
 export default {
   data () {
@@ -160,13 +181,16 @@ export default {
       pageSize: 20,
       currentPage: 1,
       totalSize: 0,
-      totalPages: 0
+      totalPages: 1,
+      loading: false
     }
   },
+  mixins: [nurse],
   components: {
     BottomButtons
   },
   methods: {
+    ...mapActions('Statistics', ['showExport']),
     getData () {
       request(
         {
@@ -211,6 +235,55 @@ export default {
       })
       // 返回一个二维数组的表尾合计
       return [sums]
+    },
+    handleExport () {
+      request(
+        {
+          method: 'post',
+          url: getNurseWorkExcel + `?nurseCode=${this.form.nurseCode}`,
+          data: {
+            afterTime: this.form.afterTime,
+            beforeTime: this.form.beforeTime,
+            operationAfterState: this.form.operationAfterState,
+            operationBeforeState: this.form.operationBeforeState
+          }
+        }
+      ).then(res => {
+        if (res.data.data) {
+          this.exportExcel(res.data.data)
+        }
+      })
+    },
+    exportExcel (param) {
+      ipcRenderer.send('download',
+        JSON.stringify({
+          downloadUrl: exportExcel + `/${param}`
+        }))
+    },
+    handleChangePage (param) {
+      switch (param) {
+        case 1:
+          if (this.currentPage < this.totalPages) {
+            this.currentPage = this.currentPage + 1
+          } else {
+            this.currentPage = 1
+          }
+          break
+        case -1:
+          if (this.currentPage > 1) {
+            this.currentPage = this.currentPage - 1
+          } else {
+            this.currentPage = 1
+          }
+          break
+        case 0:
+          this.currentPage = 1
+          break
+        case 2:
+          this.currentPage = this.totalPages
+          break
+      }
+      this.getData()
     }
   },
   mounted () {

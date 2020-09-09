@@ -25,6 +25,7 @@
               type="date"
               value-format="yyyy-MM-dd"
               format="yyyy-MM-dd"
+              popper-class="dateTimePicker"
               placeholder="选择日期"
               style="width:165px"
             />
@@ -53,7 +54,23 @@
             />
           </el-form-item>
           <el-form-item label="科室">
-            <el-input v-model="form.dept" />
+            <el-select
+              v-model="form.dept"
+              filterable
+              remote
+              clearable
+              reserve-keyword
+              placeholder="请输入关键词"
+              :remote-method="getDeptData"
+              :loading="loading"
+            >
+              <el-option
+                v-for="item in deptList"
+                :key="item.deptCode"
+                :label="item.deptName"
+                :value="item.deptCode"
+              />
+            </el-select>
           </el-form-item>
         </span>
         <span>
@@ -64,8 +81,8 @@
             >
               查询
             </el-button>
-            <el-button>导出配置</el-button>
-            <el-button>导出</el-button>
+            <el-button @click="showExport">导出配置</el-button>
+            <el-button @click="handleExport">导出</el-button>
           </el-form-item>
         </span>
       </el-form>
@@ -123,17 +140,21 @@
     <bottom-buttons
       :page-size="pageSize"
       :current-page="currentPage"
-      :total-size="totalPages"
+      :total-size="totalSize"
       :total-pages="totalPages"
+      @changePage="handleChangePage"
     />
   </div>
 </template>
 
 <script>
 import BottomButtons from '@/components/StatisticsBottomButtons/BottomButtons'
-import { getDeptWork } from '@/api/statistics'
+import { getDeptWork, getDeptWorkExcel, exportExcel } from '@/api/statistics'
 import request from '@/utils/requestForMock'
 import moment from 'moment'
+import { dept } from '@/mixin/statistics'
+import { ipcRenderer } from 'electron'
+import { mapActions } from 'vuex'
 import XEUtils from 'xe-utils'
 export default {
   data () {
@@ -179,13 +200,16 @@ export default {
       pageSize: 20,
       currentPage: 1,
       totalSize: 0,
-      totalPages: 0
+      totalPages: 1,
+      loading: false
     }
   },
+  mixins: [dept],
   components: {
     BottomButtons
   },
   methods: {
+    ...mapActions('Statistics', ['showExport']),
     getData () {
       request(
         {
@@ -230,6 +254,55 @@ export default {
       })
       // 返回一个二维数组的表尾合计
       return [sums]
+    },
+    handleExport () {
+      request(
+        {
+          method: 'post',
+          url: getDeptWorkExcel + `?deptCode=${this.form.dept}`,
+          data: {
+            afterTime: this.form.afterTime,
+            beforeTime: this.form.beforeTime,
+            operationAfterState: this.form.operationAfterState,
+            operationBeforeState: this.form.operationBeforeState
+          }
+        }
+      ).then(res => {
+        if (res.data.data) {
+          this.exportExcel(res.data.data)
+        }
+      })
+    },
+    exportExcel (param) {
+      ipcRenderer.send('download',
+        JSON.stringify({
+          downloadUrl: exportExcel + `/${param}`
+        }))
+    },
+    handleChangePage (param) {
+      switch (param) {
+        case 1:
+          if (this.currentPage < this.totalPages) {
+            this.currentPage = this.currentPage + 1
+          } else {
+            this.currentPage = 1
+          }
+          break
+        case -1:
+          if (this.currentPage > 1) {
+            this.currentPage = this.currentPage - 1
+          } else {
+            this.currentPage = 1
+          }
+          break
+        case 0:
+          this.currentPage = 1
+          break
+        case 2:
+          this.currentPage = this.totalPages
+          break
+      }
+      this.getData()
     }
   },
   mounted () {
