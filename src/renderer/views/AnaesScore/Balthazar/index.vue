@@ -42,6 +42,9 @@ export default {
 </script>
 <style lang="scss" scoped>
   @import "@/styles/theme";
+  $radioBorder:(
+    "light-white": 1px solid #CECECE
+  );
 
   .balthazar {
     padding: 0;
@@ -75,6 +78,7 @@ export default {
         .radioBlock ::v-deep .el-radio {
           display: block;
           @include theme-property("background", $background-dialog-content);
+          @include theme-property("border", $radioBorder);
           border-radius: 5px;
           margin: 0 0 20px 0;
           padding-left: 10px;
