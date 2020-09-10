@@ -87,7 +87,8 @@ export default {
     @include theme-property("box-shadow", $box-shadow-aside);
   }
   .el-main {
-    height: calc(100% - 32px);
+    // height: calc(100% - 32px);
+    height: 100%;
     padding:0;
   }
 }

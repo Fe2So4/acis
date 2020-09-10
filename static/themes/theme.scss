@@ -55,6 +55,13 @@ $color-text-placeholder: (
   "light-white": #717c92,
 );
 
+// 床头卡左上角手术室文字颜色
+$color-text-card-title: (
+  "dark-gray": #BABABA,
+  "dark-blue": #8085AA,
+  "light-white": #717C92,
+);
+
 // 卡片背景色
 $color-background-card: (
   "dark-gray": #474747,
@@ -74,7 +81,7 @@ $color-background-card-hover: (
 $color-background-navigation: (
   "dark-gray": #353537,
   "dark-blue": #181c27,
-  "light-white": #cdcdcd,
+  "light-white": #f8f8f8,
 );
 
 // 整体背景色

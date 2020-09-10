@@ -155,6 +155,11 @@ export default {
 <style lang='scss' scoped>
 @import url("./iconfont/iconfont.css");
 @import "@/styles/theme";
+$background:(
+  dark-blue:#181C28,
+  dark-gray:#363638,
+  light-white: #F8F8F8
+);
 .bottomButtons {
   position: absolute;
   bottom: 0;
@@ -163,7 +168,7 @@ export default {
   height: 36px;
 
   padding: 4px 0;
-  @include theme-property("background", $color-background-card);
+  @include theme-property("background", $background);
   @include theme-property("box-shadow", $box-shadow-card);
   @include theme-property("color", $color-text-regular);
   font-size: 14px;

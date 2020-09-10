@@ -701,7 +701,7 @@ export default {
           display: flex;
           justify-content: space-between;
           span {
-            @include theme-property("color", $color-text-placeholder);
+            @include theme-property("color", $color-text-card-title);
             padding: 0 10px;
             line-height: 28px;
             &:last-child {

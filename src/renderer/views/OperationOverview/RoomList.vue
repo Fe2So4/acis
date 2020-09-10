@@ -14,12 +14,15 @@
             <span>手术室 {{ item.roomNo }}</span>
             <span>{{ item.stateName }}</span>
           </div>
-          <div class="content">
+          <div
+            class="content"
+            :class="{empty: item.stateName == '空闲'}"
+          >
             <div
               class="room"
-              v-if="showRoom"
+              :class="{empty: item.stateName == '空闲'}"
             >
-              <span>{{ item.roomNo }}</span>
+              <div>{{ item.roomNo }}</div>
             </div>
             <div
               class="info"
@@ -58,7 +61,8 @@ export default {
     return {
       wrapStyle: [
         {
-          'overflow-x': 'hidden'
+          height: 'calc(100% + 18px)',
+          width: 'calc(100% + 18px)'
         }
       ]
     }
@@ -69,10 +73,6 @@ export default {
       default: function () {
         return []
       }
-    },
-    showRoom: {
-      type: Boolean,
-      default: false
     }
   },
   mounted () {
@@ -100,102 +100,112 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  @import "@/styles/theme";
+@import "@/styles/theme";
 
-  .overview {
-    height: 100%;
-    font-size: 14px;
+.overview {
+  height: 100%;
+  font-size: 14px;
 
-    ul {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, 392px);
-      grid-column-gap: 20px;
-      grid-row-gap: 20px;
-      padding: 12px;
-      justify-content: center;
+  ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 392px);
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+    padding: 12px;
+    justify-content: center;
 
-      li {
-        @include theme-property("box-shadow", $box-shadow-card);
-        cursor: pointer;
-        border-radius: 5px;
-        padding: 0 0 14px 0;
-        @include theme-property("background", $color-background-card);
-        min-height: 164px;
-        font-size: 14px;
+    li {
+      @include theme-property("box-shadow", $box-shadow-card);
+      cursor: pointer;
+      border-radius: 5px;
+      padding: 0 0 14px 0;
+      @include theme-property("background", $color-background-card);
+      min-height: 164px;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s;
+
+      .title {
         display: flex;
-        flex-direction: column;
-        transition: all 0.3s;
+        justify-content: space-between;
 
-        .title {
+        span {
+          // color:#7f85a9;
+          @include theme-property("color", $color-text-card-title);
+          padding: 0 10px;
+          line-height: 28px;
+
+          &:last-child {
+            font-weight: bold;
+            @include theme-property("color", $color-text-primary);
+          }
+        }
+      }
+
+      .content {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+        &.empty {
+          justify-content: center;
+        }
+
+        .room {
+          flex: 0 0 100px;
           display: flex;
-          justify-content: space-between;
+          flex-direction: column;
+          justify-content: center;
 
-          span {
-            // color:#7f85a9;
-            @include theme-property("color", $color-text-secondary);
-            padding: 0 10px;
-            line-height: 28px;
-
-            &:last-child {
-              font-weight: bold;
-              @include theme-property("color", $color-text-primary);
+          div {
+            height: 46px;
+            display: block;
+            line-height: 46px;
+            @include card-room;
+            border-radius: 0px 23px 23px 0px;
+            font-size: 26px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+            text-align: center;
+          }
+          &.empty {
+            div {
+              border-radius: 23px;
             }
           }
         }
 
-        .content {
-          flex: 1;
+        .info {
+          margin: 0 30px 0 20px;
           display: flex;
-          overflow: hidden;
+          flex-direction: column;
+          justify-content: space-around;
 
-          .room {
-            flex: 1 0 100px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+          p {
+            padding: 0;
+            margin: 0;
+            @include theme-property("color", $color-text-regular);
 
             span {
-              width: 100%;
-              height: 46px;
-              display: block;
-              line-height: 46px;
-              font-size: 32px;
-              font-weight: bold;
-              @include theme-property("color", $color-text-primary);
-              text-align: center;
+              @include theme-property("color", $color-text-secondary);
+              line-height: 28px;
             }
-          }
-
-          .info {
-            margin: 0 30px 0 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-
-            p {
-              padding: 0;
-              margin: 0;
-              @include theme-property("color", $color-text-regular);
-
-              span {
-                @include theme-property("color", $color-text-secondary);
-                line-height: 28px;
-              }
-            }
-          }
-
-          .status {
-            width: 74px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
           }
         }
 
-        &:hover {
-          @include theme-property("background", $color-background-card-hover);
+        .status {
+          width: 74px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
         }
+      }
+
+      &:hover {
+        @include theme-property("background", $color-background-card-hover);
       }
     }
   }
+}
 </style>

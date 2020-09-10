@@ -393,7 +393,6 @@ export default {
       }
     },
     handleChange (active) {
-      console.log(123)
       this.activeIndex = null
       this.activesNames = active
     },

@@ -14,29 +14,40 @@
     >
       <div class="dialogContent">
         <div class="tableContent">
-          <table
-            class="table"
-            @mousedown.capture="onMouseDown"
-            ref="table"
+          <el-scrollbar
+            style="width: 100%"
+            :view-style="{
+              display: 'flex',
+              'height': '100%'
+            }"
+            :wrap-style="[{
+              height:'calc(100% + 17px)'
+            }]"
           >
-            <tr
-              v-for="(col, rolIndex) of cells"
-              :key="rolIndex"
+            <table
+              class="table"
+              @mousedown.capture="onMouseDown"
+              ref="table"
             >
-              <td
-                is="ConfigurationCellsTableCell"
-                v-for="(cell, rowIndex) of col"
-                :key="rowIndex"
-                :cell="cell"
-                :range="range"
-                :active-cells-array="activeCellsArray"
-                :editable="editable"
-                @activate="onActivate"
-                @deactivate="onDeactivate"
-                @change-text="(text) => cell.text = text"
-              />
-            </tr>
-          </table>
+              <tr
+                v-for="(col, rolIndex) of cells"
+                :key="rolIndex"
+              >
+                <td
+                  is="ConfigurationCellsTableCell"
+                  v-for="(cell, rowIndex) of col"
+                  :key="rowIndex"
+                  :cell="cell"
+                  :range="range"
+                  :active-cells-array="activeCellsArray"
+                  :editable="editable"
+                  @activate="onActivate"
+                  @deactivate="onDeactivate"
+                  @change-text="(text) => cell.text = text"
+                />
+              </tr>
+            </table>
+          </el-scrollbar>
         </div>
         <div class="configurationContent">
           <configuration-cells-form
@@ -57,9 +68,13 @@
         slot="footer"
         class="dialog-footer"
       >
-        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button
+          size="mini"
+          @click="dialogVisible = false"
+        >取 消</el-button>
         <el-button
           type="primary"
+          size="mini"
           @click="onConfirm"
         >确 定</el-button>
       </span>
@@ -146,6 +161,7 @@ export default {
       const configurationNames = [
         'width',
         'height',
+        'lineHeight',
         'borderColor',
         'color',
         'value',
@@ -174,19 +190,17 @@ export default {
       return configurationMap
     }
   },
-  created () {
-    this.cells = cloneDeep(this.value)
-    const {
-      rowLowerBound,
-      rowHigherBound,
-      colLowerBound,
-      colHigherBound
-    } = this.getBounds([...this.cellIndexSet])
-    this.rows = rowHigherBound - rowLowerBound
-    this.cols = colHigherBound - colLowerBound
-  },
   methods: {
     onConfigure () {
+      this.cells = cloneDeep(this.value)
+      const {
+        rowLowerBound,
+        rowHigherBound,
+        colLowerBound,
+        colHigherBound
+      } = this.getBounds([...this.cellIndexSet])
+      this.rows = rowHigherBound - rowLowerBound
+      this.cols = colHigherBound - colLowerBound
       this.dialogVisible = true
     },
     onMouseDown (e) {
@@ -481,10 +495,11 @@ export default {
         colLowerBound !== newColLowerBound ||
         colHigherBound !== newColHigherBound
       ) {
-        rowLowerBound = newRowLowerBound || rowLowerBound
-        rowHigherBound = newRowHigherBound || rowHigherBound
-        colLowerBound = newColLowerBound || colLowerBound
-        colHigherBound = newColHigherBound || colHigherBound
+        rowLowerBound = typeof newRowLowerBound === 'undefined' ? rowLowerBound : newRowLowerBound
+        rowHigherBound = typeof newRowHigherBound === 'undefined' ? rowHigherBound : newRowHigherBound
+        colLowerBound = typeof newColLowerBound === 'undefined' ? colLowerBound : newColLowerBound
+        colHigherBound = typeof newColHigherBound === 'undefined' ? colHigherBound : newColHigherBound
+
         this.cellArray.forEach((cell) => {
           const [
             ,
@@ -535,6 +550,7 @@ export default {
   display: flex;
   height: 80vh;
   .tableContent {
+    max-width: calc(100% - 270px);
     display: flex;
     background: white;
     flex: 1 1 auto;
@@ -545,7 +561,7 @@ export default {
   }
 
   .configurationContent {
-    flex: 0 0 200px;
+    width: 250px;
     border-left: gainsboro 1px solid;
   }
 }

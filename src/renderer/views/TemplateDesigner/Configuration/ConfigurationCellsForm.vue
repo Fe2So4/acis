@@ -39,7 +39,7 @@
         :value="cellConfiguration('value')"
         size="mini"
         @input="(val) => {
-          $emit('change-cell','text',val)
+          $emit('change-cell','value',val)
         }"
         clearable
       />
@@ -116,7 +116,16 @@
         size="mini"
         @change="(val) => $emit('change-cell','height',val)"
         step-strictly
-        :min="20"
+        :min="0"
+      />
+    </el-form-item>
+    <el-form-item label="单元格行高">
+      <el-input-number
+        :value="cellConfiguration('lineHeight')"
+        size="mini"
+        @change="(val) => $emit('change-cell','lineHeight',val)"
+        step-strictly
+        :min="0"
       />
     </el-form-item>
     <el-form-item label="文字颜色">

@@ -52,11 +52,12 @@ $--dialog-background-color: #181c28;
 -------------------------- */
 /// color||Color|0
 $--button-default-background-color: $--custom-el-background-color;
-
+/// fontSize||Font|1
+$--button-mini-font-size: 14px;
 //disabled
 $--button-disabled-background-color: mix($--button-default-background-color, gray, 80%);
 $--button-disabled-font-color: mix($--color-text-regular, gray, 50%);
-$--input-disabled-border: mix($--border-color-base, gray, 80%);
+$--button-disabled-border-color: mix($--border-color-base, gray, 80%);
 
 /* Select
 -------------------------- */

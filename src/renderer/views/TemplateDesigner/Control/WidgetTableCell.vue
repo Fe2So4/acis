@@ -3,11 +3,18 @@
     ref="td"
     :colspan="colspan"
     :rowspan="rowspan"
-    :height="cell.height"
-    :width="cell.width"
     :style="style"
   >
-    {{ cell.value }}
+    <div
+      class="cell"
+      :style="{
+        width: cell.width ? `${cell.width}px` : 'unset',
+        height:cell.height ? `${cell.height}px` : 'unset',
+        'line-height':cell.lineHeight ? `${cell.lineHeight}px` : 'unset'
+      }"
+    >
+      {{ cell.value }}
+    </div>
   </td>
 </template>
 
@@ -31,6 +38,8 @@ export default {
     },
     style () {
       const style = {}
+      // if (this.cell.width) style.width = `${this.cell.width}px`
+      // if (this.cell.height) style.height = `${this.cell.height}px`
       if (this.cell.borderColor) style['border-color'] = this.cell.borderColor
       if (this.cell.color) style.color = this.cell.color
       if (this.cell.textAlign) style['text-align'] = this.cell.textAlign
@@ -49,6 +58,10 @@ export default {
     border: {
       width: 1px;
       style: solid;
+    }
+    .cell {
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
   }
