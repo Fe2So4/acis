@@ -204,7 +204,7 @@ export default {
 .anaes-methods
   height 100%
   .content
-    height calc(100% - 38px)
+    height calc(100% - 40px)
   .option
     text-align right
     margin-top 10px
