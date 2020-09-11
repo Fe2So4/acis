@@ -152,7 +152,6 @@ export default {
     }
 
     .el-radio-group {
-      background: #1E222E;
       padding: 5px;
       border-radius: 5px;
       margin-left: 20px;

@@ -92,9 +92,5 @@ $--datepicker-border-color: #353e56;
 
 /* Tree
 --------------------------*/
-$--tree-font-color: #fafafa;
-$--tree-node-hover-background-color: #6A6A6A;
-/* 改变 icon 字体路径变量，必需 */
-// $--font-path: "~element-ui/lib/theme-chalk/fonts";
-
-// @import "node_modules/element-ui/packages/theme-chalk/src/index";
+$--tree-font-color: map-get($map: $color-text-listItem, $key: dark-gray);
+$--tree-node-hover-background-color: map-get($map: $color-background-listItem-hover, $key: dark-gray);

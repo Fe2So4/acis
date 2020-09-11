@@ -1,39 +1,37 @@
 <template lang="pug">
-  .medical-record-course
-    .title
-      el-form(:inline="true" size="mini")
-        el-form-item(label="起止时间")
-          el-date-picker(
-            size="mini"
-            v-model="date"
-            type="datetimerange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            @change="onSearch"
-            popper-class="dateTimePicker"
-          )
-        el-form-item
-          el-button(@click="onSync") 同步病历病程
-    .content(class="clearfix")
-      vxe-table(
-        border
-        show-header-overflow
-        show-overflow
-        highlight-hover-row
-        align="center"
-        height="100%"
-        auto-resize
-        size="mini"
-        class="scroll"
-        :data="emrList"
+.medical-record-course
+  el-form(:inline="true", size="mini")
+    el-form-item(label="起止时间")
+      el-date-picker(
+        size="mini",
+        v-model="date",
+        type="datetimerange",
+        range-separator="至",
+        start-placeholder="开始日期",
+        end-placeholder="结束日期",
+        value-format="yyyy-MM-dd HH:mm:ss",
+        @change="onSearch",
+        popper-class="dateTimePicker"
       )
-        vxe-table-column(field="sectionName" title="病程标题")
-        vxe-table-column(field="reportTime" title="最后修改时间")
-        vxe-table-column(title="操作")
-          template(v-slot="{row}")
-            el-button(size="mini" type="primary" @click="onCheck(row)") 查看病历
+    el-form-item
+      el-button(@click="onSync") 同步病历病程
+  .content.clearfix
+    vxe-table.scroll(
+      border,
+      show-header-overflow,
+      show-overflow,
+      highlight-hover-row,
+      align="center",
+      height="100%",
+      auto-resize,
+      size="mini",
+      :data="emrList"
+    )
+      vxe-table-column(field="sectionName", title="病程标题")
+      vxe-table-column(field="reportTime", title="最后修改时间")
+      vxe-table-column(title="操作")
+        template(v-slot="{row}")
+          el-button(size="mini", type="primary", @click="onCheck(row)") 查看病历
 </template>
 <script>
 import request from '@/utils/requestForMock'
@@ -137,23 +135,29 @@ export default {
   }
 }
 </script>
-<style lang="stylus" scoped>
-  .medical-record-course
-    height 520px
-    font-size 14px
-    /deep/ .el-range-input
-        background: transparent
-    .title
-      color #9BA3D5
-      // line-height 30px
-    .content
-      height calc(100% - 48px)
-      .left
-        width 50%
-        float left
-        height 100%
-      .right
-        height 100%
-        width 50%
-        float right
+<style lang="scss" scoped>
+.medical-record-course {
+  height: 520px;
+  font-size: 14px;
+
+  /deep/ .el-range-input {
+    background: transparent;
+  }
+
+  .content {
+    height: calc(100% - 48px);
+
+    .left {
+      width: 50%;
+      float: left;
+      height: 100%;
+    }
+
+    .right {
+      height: 100%;
+      width: 50%;
+      float: right;
+    }
+  }
+}
 </style>

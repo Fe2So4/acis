@@ -1,4 +1,4 @@
-import { Cell } from '@/model/WidgetTable'
+import { Cell } from '../../model/WidgetTable'
 export default function getConfigurationItems (widgetName) {
   // 边框
   const border = {
