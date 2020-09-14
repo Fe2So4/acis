@@ -350,9 +350,7 @@ export default {
       //  ----login页测试
       this.$router.push('/login')
     },
-    handleSelect () {
-
-    },
+    handleSelect () {},
     handleLock () {
       this.lockVisible = false
       this.activeIndex = false
@@ -371,8 +369,7 @@ export default {
           type: 'warning',
           showCancelButton: false,
           customClass: 'messageBox'
-        }).then(() => {
-        })
+        }).then(() => {})
         return
       }
       this.activeIndex = index
@@ -456,169 +453,169 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  @import "@/styles/theme";
-  @media all and (orientation: portrait) {
-      .nav-list{
-        display: none;
+@import "@/styles/theme";
+.aside {
+  height: 100%;
+  width: 100%;
+  font-size: 14px;
+  overflow: hidden;
+  @include theme-property("background", $color-background-aside);
+  .img {
+    // height:34px;
+    margin: 14px 0;
+    // background:#fff;
+    img {
+      display: block;
+      // width:100%;
+      // margin-left:20px;
+      margin: 0 auto;
+      height: 100%;
+    }
+  }
+
+  .menu {
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+
+    span {
+      text-align: center;
+      margin-bottom: 26px;
+      line-height: 30px;
+      @include theme-property("color", $color-text-regular);
+      font-size: 14px;
+      cursor: pointer;
+
+      &:hover {
+        @include theme-property("color", $color-text-primary);
       }
-      .nav-list-portrait{
-        display:block !important;
-        flex: 1;
-        .el-menu{
-          // @include theme-property("background-color", $color-background-aside);
-          /deep/ .el-submenu__title{
-              height:50px !important;
-              line-height:50px !important;
-              border:unset !important;
-            }
-          /deep/ .is-opened{
-              .el-submenu__title{
-                color:#fff !important;
-                i{
-                  color:#fff !important;
-                }
-              }
+    }
+
+    span.rightActive {
+      background: linear-gradient(
+        90deg,
+        rgba(89, 247, 199, 1),
+        rgba(42, 131, 247, 1)
+      );
+      font-weight: bold;
+      text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
+      border-radius: 15px 0px 0px 15px;
+      color: #edf1f9;
+    }
+
+    span.leftActive {
+      background: linear-gradient(
+        90deg,
+        rgba(42, 131, 247, 1),
+        rgba(89, 247, 199, 1)
+      );
+      font-weight: bold;
+      text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
+      border-radius: 0 15px 15px 0;
+      color: #edf1f9;
+    }
+  }
+
+  .nav-list {
+    height: calc(100% - 30px);
+  }
+  .nav-list-portrait {
+    display: none;
+  }
+
+  .el-collapse {
+    border: unset;
+    @include theme-property("background", $color-background-aside);
+  }
+
+  .active {
+    width: 2px;
+    height: 40px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    @include theme-property("background", $background-menu-active);
+  }
+}
+
+.aside /deep/ .el-collapse-item__header {
+  height: 40px;
+  border: unset;
+  @include theme-property("background", $color-background-aside);
+  @include theme-property("color", $color-text-regular);
+  font-size: 14px;
+  padding-left: 20px;
+  position: relative;
+
+  .header-icon {
+    font-size: 20px;
+    margin-right: 16px;
+  }
+}
+
+.aside /deep/ .el-collapse-item__wrap {
+  @include theme-property("background", $color-background-aside);
+  border: unset;
+}
+
+.aside /deep/ .el-collapse-item__content {
+  @include theme-property("background", $color-background-aside);
+  border: unset;
+  padding: 30px 0 4px 0;
+}
+
+.aside /deep/ .el-collapse-item__header.is-active {
+  @include theme-property("background", $color-background-aside-active);
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.05);
+  color: #edf1f9;
+  font-size: 16px;
+}
+@media all and (orientation: portrait) {
+  .nav-list {
+    display: none;
+  }
+  .nav-list-portrait {
+    display: block !important;
+    flex: 1;
+    .el-menu {
+      // @include theme-property("background-color", $color-background-aside);
+      /deep/ .el-submenu__title {
+        height: 50px !important;
+        line-height: 50px !important;
+        border: unset !important;
+      }
+      /deep/ .is-opened {
+        .el-submenu__title {
+          color: #fff !important;
+          i {
+            color: #fff !important;
           }
         }
       }
-      .aside{
-        display: flex !important;
-        justify-content: space-between;
-        margin: 0 0 20px 0;
-        box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.4);
-        .img{
-          padding: 0 20px 0 18px;
-          margin: unset !important;
-          width: 220px;
-        }
-        .active {
-          width: 100% !important;
-          height: 2px !important;
-          position: absolute;
-          left: 0;
-          bottom: 0;
-          @include theme-property("background", $background-menu-active)
-        }
-      }
+    }
   }
   .aside {
-    height: 100%;
-    width: 100%;
-    font-size: 14px;
-    overflow: hidden;
-    @include theme-property("background", $color-background-aside);
+    display: flex !important;
+    justify-content: space-between;
+    margin: 0 0 20px 0;
+    box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.4);
     .img {
-      // height:34px;
-      margin: 14px 0;
-      // background:#fff;
-      img {
-        display: block;
-        // width:100%;
-        // margin-left:20px;
-        margin: 0 auto;
-        height: 100%;
-      }
+      padding: 0 20px 0 18px;
+      margin: unset !important;
+      width: 220px;
     }
-
-    .menu {
-      display: grid;
-      grid-template-columns: repeat(2, 50%);
-
-      span {
-        text-align: center;
-        margin-bottom: 26px;
-        line-height: 30px;
-        @include theme-property("color", $color-text-regular);
-        font-size: 14px;
-        cursor: pointer;
-
-        &:hover {
-          @include theme-property("color", $color-text-primary);
-        }
-      }
-
-      span.rightActive {
-        background: linear-gradient(
-                90deg,
-                rgba(89, 247, 199, 1),
-                rgba(42, 131, 247, 1)
-        );
-        font-weight: bold;
-        text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
-        border-radius: 15px 0px 0px 15px;
-        color: #edf1f9;
-      }
-
-      span.leftActive {
-        background: linear-gradient(
-                90deg,
-                rgba(42, 131, 247, 1),
-                rgba(89, 247, 199, 1)
-        );
-        font-weight: bold;
-        text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
-        border-radius: 0 15px 15px 0;
-        color: #edf1f9;
-      }
-    }
-
-    .nav-list {
-      height: calc(100% - 30px);
-    }
-    .nav-list-portrait{
-      display:none;
-    }
-
-    .el-collapse {
-      border: unset;
-      @include theme-property("background", $color-background-aside);
-    }
-
     .active {
-      width: 2px;
-      height: 40px;
+      width: 100%;
+      height: 2px;
       position: absolute;
       left: 0;
       bottom: 0;
-      @include theme-property("background", $background-menu-active-portrait)
+      @include theme-property("background", $background-menu-active-portrait);
     }
   }
-
-  .aside /deep/ .el-collapse-item__header {
-    height: 40px;
-    border: unset;
-    @include theme-property("background", $color-background-aside);
-    @include theme-property("color", $color-text-regular);
-    font-size: 14px;
-    padding-left: 20px;
-    position: relative;
-
-    .header-icon {
-      font-size: 20px;
-      margin-right: 16px;
-    }
-  }
-
-  .aside /deep/ .el-collapse-item__wrap {
-    @include theme-property("background", $color-background-aside);
-    border: unset;
-  }
-
-  .aside /deep/ .el-collapse-item__content {
-    @include theme-property("background", $color-background-aside);
-    border: unset;
-    padding: 30px 0 4px 0;
-  }
-
-  .aside /deep/ .el-collapse-item__header.is-active {
-    @include theme-property("background", $color-background-aside-active);
-    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.05);
-    color: #edf1f9;
-    font-size: 16px;
-  }
+}
 </style>
 <style>
-  .aside .scrollbar .el-scrollbar__wrap {
-    overflow-x: hidden;
-  }
+.aside .scrollbar .el-scrollbar__wrap {
+  overflow-x: hidden;
+}
 </style>

@@ -4,20 +4,31 @@
       style="height: 100%"
       :wrap-style="wrapStyle"
     >
-      <ul>
-        <li
-          v-for="(item,index) in signsList"
-          :key="index"
-        >
-          <p :style="{color:item.itemColor}">
-            <span>{{ item.itemName }}</span>
-            <span>{{ item.itemUnit }}</span>
-          </p>
-          <p :style="{color:item.itemColor}">
-            {{ item.itemValue==='' ? '80/140' : item.itemValue }}
-          </p>
-        </li>
-      </ul>
+      <div class="list">
+        <template v-for="(item,index) in signsList">
+          <div
+            :style="{color:item.itemColor}"
+            :key="index+item.itemName"
+            class="name"
+          >
+            {{ item.itemName }}
+          </div>
+          <div
+            :style="{color:item.itemColor}"
+            :key="index+item.itemUnit"
+            class="unit"
+          >
+            {{ item.itemUnit }}
+          </div>
+          <div
+            class="value"
+            :style="{color:item.itemColor,fontSize:/\//g.test(item.itemValue) ? '30px' : '40px'}"
+            :key="index+item.itemValue"
+          >
+            {{ item.itemValue==='' ? '--' : item.itemValue }}
+          </div>
+        </template>
+      </div>
     </el-scrollbar>
   </div>
 </template>
@@ -103,68 +114,45 @@ $color-background-signs: (
   "dark-blue": #121421,
   "light-white": #454546,
 );
- @media all and (orientation: portrait) {
-     .signs-data{
-       .el-scrollbar{
-         width: 100%;
-        ul{
-          display: flex;
-          height: 100% !important;
-          padding-top:unset !important;
-          li{
-            display: flex;
-            margin-bottom:unset !important;
-            p{
-              flex-direction: column;
-              &:first-child {
-                text-align: left;
-              }
-              &:last-child {
-                justify-content: end;
-                text-align: right;
-                font-size: 30px;
-                line-height: 100px;
-              }
-            }
-          }
-          }
-       }
-     }
+@media all and (orientation: portrait) {
+  .signs-data {
+    .el-scrollbar {
+      width: 100%;
+      .list {
+        grid-auto-flow: column;
+        grid-template-rows: 1fr 1fr;
+        .value {
+          grid-row: 1 / span 2;
+          grid-column: unset;
+          padding: 0 30px 0 10px;
+          height: 60px;
+        }
+      }
+    }
   }
+}
 .signs-data {
   width: 100%;
   height: 100%;
   background: #121421;
   @include theme-property("box-shadow", $box-shadow-signs);
   @include theme-property("background", $color-background-signs);
-
-  ul {
+  .list {
+    display: grid;
     height: calc(100% - 26px);
-    padding-top: 10px;
-    li {
-      margin-bottom: 5px;
-      p {
-        font-size: 16px;
-        font-weight: 600;
-        margin: 0;
-        line-height: 26px;
-        display: flex;
-        justify-content: space-between;
-        padding: 0 10px;
-        line-height: 28px;
-        span{
-          min-width: 50px;
-        }
-        &:first-child {
-          text-align: left;
-        }
-        &:last-child {
-          justify-content: end;
-          text-align: right;
-          font-size: 40px;
-          line-height: 50px;
-        }
-      }
+    padding: 20px;
+    grid-template-columns: 1fr 1fr;
+    text-align: right;
+    .name,
+    .unit {
+      font-size: 14px;
+      white-space: nowrap;
+    }
+    .value {
+      font-weight: bold;
+      grid-column: 1 / span 2;
+      padding-bottom: 10px;
+      white-space: nowrap;
     }
   }
 }

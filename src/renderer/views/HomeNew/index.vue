@@ -28,17 +28,6 @@ import Header from './Header/index'
 import Aside from './Aside/index'
 export default {
   name: 'Home',
-  data () {
-    return {
-
-    }
-  },
-  computed: {
-    // key () {
-    //   console.log(this.$route.path)
-    //   return this.$route.path
-    // }
-  },
   components: {
     Header,
     Aside
@@ -46,7 +35,10 @@ export default {
   beforeRouteEnter (to, from, next) {
     if (from.path === '/login') {
       const { BrowserWindow } = require('electron').remote
-      BrowserWindow.getFocusedWindow().maximize()
+      const wins = BrowserWindow.getAllWindows()
+      if (wins.length > 0) {
+        wins[0].maximize()
+      }
     }
     next()
   }
@@ -83,7 +75,6 @@ export default {
     // margin-right: 20px;
     position: relative;
     overflow: unset;
-    box-shadow:4px 3px 5px 0px rgba(0, 0, 0, 0.4);
     @include theme-property("box-shadow", $box-shadow-aside);
   }
   .el-main {

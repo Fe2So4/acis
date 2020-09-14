@@ -340,7 +340,38 @@
         </vxe-table>
       </div>
       <div class="option">
-        <el-row>
+        <el-row
+          typ="flex"
+          justify="space-between"
+        >
+          <el-col
+            :span="12"
+            class="tip"
+          >
+            要删除某时间点，必须选中整行！
+          </el-col>
+          <el-col :span="12">
+            <el-button
+              size="mini"
+              @click="handleSave"
+              :disabled="saveVisible"
+            >
+              保存
+            </el-button>
+            <el-button
+              size="mini"
+              @click="handleDelete"
+              :disabled="deleteVisible"
+            >
+              删除
+            </el-button>
+            <el-button
+              size="mini"
+              @click="handleRefresh"
+            >
+              刷新
+            </el-button>
+          </el-col>
           <!-- <span>类型筛选</span>
           <el-select
             v-model="select"
@@ -361,28 +392,7 @@
               输液
             </el-option>
           </el-select>-->
-          <el-button
-            size="mini"
-            @click="handleSave"
-            :disabled="saveVisible"
-          >
-            保存（S）
-          </el-button>
-          <el-button
-            size="mini"
-            @click="handleDelete"
-            :disabled="deleteVisible"
-          >
-            删除（D）
-          </el-button>
-          <el-button
-            size="mini"
-            @click="handleRefresh"
-          >
-            刷新（R）
-          </el-button>
         </el-row>
-        <p>要删除某时间点，必须选中整行！</p>
       </div>
     </div>
   </div>
@@ -921,9 +931,9 @@ export default {
     .option {
       text-align: right;
       padding: 10px 0;
-      p {
+      .tip {
         text-align: left;
-        margin: 10px 0;
+        line-height: 30px;
         text-indent: 20px;
         color: #fb4451;
       }
