@@ -458,50 +458,6 @@ export default {
 </script>
 <style lang="scss" scoped>
   @import "@/styles/theme";
-  @media all and (orientation: portrait) {
-      .nav-list{
-        display: none;
-      }
-      .nav-list-portrait{
-        display:block !important;
-        flex: 1;
-        .el-menu{
-          // @include theme-property("background-color", $color-background-aside);
-          /deep/ .el-submenu__title{
-              height:50px !important;
-              line-height:50px !important;
-              border:unset !important;
-            }
-          /deep/ .is-opened{
-              .el-submenu__title{
-                color:#fff !important;
-                i{
-                  color:#fff !important;
-                }
-              }
-          }
-        }
-      }
-      .aside{
-        display: flex !important;
-        justify-content: space-between;
-        margin: 0 0 20px 0;
-        box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.4);
-        .img{
-          padding: 0 20px 0 18px;
-          margin: unset !important;
-          width: 220px;
-        }
-        .active {
-          width: 100% !important;
-          height: 2px !important;
-          position: absolute;
-          left: 0;
-          bottom: 0;
-          @include theme-property("background", $background-menu-active)
-        }
-      }
-  }
   .aside {
     height: 100%;
     width: 100%;
@@ -579,9 +535,9 @@ export default {
       width: 2px;
       height: 40px;
       position: absolute;
-      left: 0;
+      right: 0;
       bottom: 0;
-      @include theme-property("background", $background-menu-active-portrait)
+      @include theme-property("background", $background-menu-active)
     }
   }
 
@@ -616,6 +572,50 @@ export default {
     box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.05);
     color: #edf1f9;
     font-size: 16px;
+  }
+  @media all and (orientation: portrait) {
+      .nav-list{
+        display: none;
+      }
+      .nav-list-portrait{
+        display:block !important;
+        flex: 1;
+        .el-menu{
+          // @include theme-property("background-color", $color-background-aside);
+          /deep/ .el-submenu__title{
+              height:50px !important;
+              line-height:50px !important;
+              border:unset !important;
+            }
+          /deep/ .is-opened{
+              .el-submenu__title{
+                color:#fff !important;
+                i{
+                  color:#fff !important;
+                }
+              }
+          }
+        }
+      }
+      .aside{
+        display: flex !important;
+        justify-content: space-between;
+        margin: 0 0 20px 0;
+        box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.4);
+        .img{
+          padding: 0 20px 0 18px;
+          margin: unset !important;
+          width: 220px;
+        }
+        .active {
+          width: 100% !important;
+          height: 2px !important;
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          @include theme-property("background", $background-menu-active-portrait)
+        }
+      }
   }
 </style>
 <style>
