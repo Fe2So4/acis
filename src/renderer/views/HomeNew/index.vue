@@ -48,26 +48,31 @@ export default {
 @import "@/styles/theme";
 .home {
   height: 100%;
-  .el-header{
+  .el-header {
     // margin: 0 0 0 2px;
-    padding-left:0;
+    padding-left: 0;
+    @media screen and (orientation: portrait) {
+      & {
+        @include theme-property(background, $color-background-aside);
+        z-index: 1;
+      }
+    }
   }
   .el-container {
     height: 100%;
     @include theme-property("background", $color-background-home);
   }
-  .container{
+  .container {
     @media all and (orientation: portrait) {
       display: flex;
       flex-direction: column;
-      .el-aside{
+      .el-aside {
         width: 100% !important;
-        margin-bottom:20px;
+        margin-bottom: 20px;
         height: 50px;
       }
     }
     @media all and (orientation: landscape) {
-
     }
   }
   .el-aside {
@@ -80,7 +85,7 @@ export default {
   .el-main {
     // height: calc(100% - 32px);
     height: 100%;
-    padding:0;
+    padding: 0;
   }
 }
 </style>

@@ -87,6 +87,7 @@ export default {
   overflow: hidden;
   .table {
     border-collapse: collapse;
+    table-layout: fixed;
     tr {
       min-height: 30px;
     }

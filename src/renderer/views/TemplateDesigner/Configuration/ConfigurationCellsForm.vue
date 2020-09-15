@@ -186,6 +186,16 @@
         </el-option>
       </el-select>
     </el-form-item>
+    <el-form-item label="键名">
+      <el-input
+        :value="cellConfiguration('keyName')"
+        size="mini"
+        @input="(val) => {
+          $emit('change-cell','keyName',val)
+        }"
+        clearable
+      />
+    </el-form-item>
     <el-form-item label="开启编辑">
       <el-switch
         :value="editable"

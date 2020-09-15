@@ -597,7 +597,7 @@ export default {
     display: flex !important;
     justify-content: space-between;
     margin: 0 0 20px 0;
-    box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.4);
+    // box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.4);
     .img {
       padding: 0 20px 0 18px;
       margin: unset !important;

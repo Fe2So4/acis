@@ -97,6 +97,7 @@ export default {
 <style lang="scss" scoped>
   td {
     user-select: none;
+    padding: 0;
     border: {
       width: 1px;
       style: solid;
@@ -107,6 +108,8 @@ export default {
     }
 
     input {
+      display: block;
+      text-indent: inherit;
       width: 100%;
       height: 100%;
     }
