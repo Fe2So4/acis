@@ -40,9 +40,6 @@ export default {
     }
   },
   methods: {
-    handleTest () {
-      console.log(123)
-    },
     miniWindow () {
       // 最小化窗口
       win.minimize()

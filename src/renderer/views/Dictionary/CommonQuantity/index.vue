@@ -277,7 +277,7 @@ export default {
   .common-quantity{
     height:100%;
     .content{
-      height:calc(100% - 38px);
+      height:calc(100% - 40px);
       .left{
         float:left;
         width:20%;

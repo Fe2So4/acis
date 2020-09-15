@@ -11,6 +11,7 @@
           style="width:170px",
           format="yyyy-MM-dd HH:mm:ss",
           value-format="yyyy-MM-dd HH:mm:ss"
+          popper-class="dateTimePicker"
         )
       el-form-item(label="交班医生")
         el-input(v-model="surgeon", readonly)
@@ -47,6 +48,7 @@
           style="width:170px",
           format="yyyy-MM-dd HH:mm:ss",
           value-format="yyyy-MM-dd HH:mm:ss"
+          popper-class="dateTimePicker"
         )
       el-form-item(label="交班洗手护士")
         el-input(v-model="firstOpeNurse", readonly)

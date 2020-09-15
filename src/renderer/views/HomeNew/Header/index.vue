@@ -27,10 +27,7 @@
 </template>
 <script>
 import ThemePicker from './ThemePicker'
-const {
-  BrowserWindow,
-  dialog
-} = require('electron').remote
+const { BrowserWindow, dialog } = require('electron').remote
 const win = BrowserWindow.getAllWindows()[0]
 export default {
   name: 'Header',
@@ -54,7 +51,6 @@ export default {
     })
   },
   methods: {
-
     miniWindow () {
       // 最小化窗口
       win.minimize()
@@ -70,23 +66,23 @@ export default {
       }
     },
     closeWindow () {
-      dialog.showMessageBox({
-        type: 'warning',
-        // 按钮文字
-        buttons: ['确认', '取消'],
-        // 默认选择的按钮索引值
-        defaultId: 1,
-        title: '警告',
-        message: '是否确认退出当前程序',
-        // 触发退出的索引值
-        cancelId: 1
-      }).then(
-        res => {
+      dialog
+        .showMessageBox({
+          type: 'warning',
+          // 按钮文字
+          buttons: ['确认', '取消'],
+          // 默认选择的按钮索引值
+          defaultId: 1,
+          title: '警告',
+          message: '是否确认退出当前程序',
+          // 触发退出的索引值
+          cancelId: 1
+        })
+        .then((res) => {
           if (res.response === 0) {
             win.close()
           }
-        }
-      )
+        })
     }
   }
 }
@@ -94,48 +90,50 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/theme";
 .header {
-  line-height:32px;
+  line-height: 32px;
   text-align: right;
   display: flex;
   justify-content: space-between;
-  height:100%;
+  height: 100%;
   align-items: center;
+  overflow: hidden;
   @media all and (orientation: portrait) {
-    .title{
-      box-shadow:unset !important;
+    .title {
+      box-shadow: unset !important;
     }
   }
   .title {
-      @include theme-property("color", $color-text-primary);
-      line-height: 32px;
-      text-align: center;
-      text-indent: 2px;
-      width: 220px;
-      font-size: 12px;
-      cursor: pointer;
-      box-shadow:4px 3px 5px 0px rgba(0, 0, 0, 0.4);
-      @include theme-property("box-shadow", $box-shadow-aside);
-      i {
-        display: inline-block;
-        width: 5px;
-        vertical-align: middle;
-        height: 5px;
-        border-radius: 50%;
-        @include theme-property("background", $color-primary);
-        margin: 0 4px;
-      }
+    @include theme-property("color", $color-text-primary);
+    @include theme-property(background, $color-background-aside);
+    z-index: 1;
+    line-height: 32px;
+    text-align: center;
+    text-indent: 2px;
+    width: 220px;
+    font-size: 12px;
+    cursor: pointer;
+    @include theme-property("box-shadow", $box-shadow-aside);
+    i {
+      display: inline-block;
+      width: 5px;
+      vertical-align: middle;
+      height: 5px;
+      border-radius: 50%;
+      @include theme-property("background", $color-primary);
+      margin: 0 4px;
+    }
   }
-  .options{
+  .options {
     display: flex;
-    height:100%;
+    height: 100%;
     align-items: center;
-    i{
+    i {
       -webkit-app-region: no-drag;
-      font-size:18px;
+      font-size: 18px;
       display: inline-block;
       font-weight: bold;
       @include theme-property("color", $color-primary);
-      margin-left:12px;
+      margin-left: 12px;
       cursor: pointer;
     }
   }

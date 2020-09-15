@@ -51,11 +51,12 @@ $--dialog-background-color: #1e2022;
 -------------------------- */
 /// color||Color|0
 $--button-default-background-color: $--custom-el-background-color;
-
+/// fontSize||Font|1
+$--button-mini-font-size: 14px;
 //disabled
 $--button-disabled-background-color: mix($--button-default-background-color, gray, 80%);
 $--button-disabled-font-color: mix($--color-text-regular, gray, 50%);
-$--input-disabled-border: mix($--border-color-base, gray, 80%);
+$--button-disabled-border-color: mix($--border-color-base, gray, 80%);
 
 /* Select
 -------------------------- */
@@ -91,9 +92,5 @@ $--datepicker-border-color: #353e56;
 
 /* Tree
 --------------------------*/
-$--tree-font-color: #fafafa;
-$--tree-node-hover-background-color: #6A6A6A;
-/* 改变 icon 字体路径变量，必需 */
-// $--font-path: "~element-ui/lib/theme-chalk/fonts";
-
-// @import "node_modules/element-ui/packages/theme-chalk/src/index";
+$--tree-font-color: map-get($map: $color-text-listItem, $key: dark-gray);
+$--tree-node-hover-background-color: map-get($map: $color-background-listItem-hover, $key: dark-gray);

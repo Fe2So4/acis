@@ -55,6 +55,13 @@ $color-text-placeholder: (
   "light-white": #717c92,
 );
 
+// 床头卡左上角手术室文字颜色
+$color-text-card-title: (
+  "dark-gray": #BABABA,
+  "dark-blue": #8085AA,
+  "light-white": #717C92,
+);
+
 // 卡片背景色
 $color-background-card: (
   "dark-gray": #474747,
@@ -74,7 +81,7 @@ $color-background-card-hover: (
 $color-background-navigation: (
   "dark-gray": #353537,
   "dark-blue": #181c27,
-  "light-white": #cdcdcd,
+  "light-white": #f8f8f8,
 );
 
 // 整体背景色
@@ -100,9 +107,9 @@ $color-background-aside-active: (
 
 // 左侧投影
 $box-shadow-aside: (
-  "dark-gray": 4px 4px 5px 0px rgba(0, 0, 0, 0.3),
-  "dark-blue": 4px 4px 5px 0px rgba(0, 0, 0, 0.4),
-  "light-white": 3px 2px 5px 0px rgba(0, 0, 0, 0.1),
+  "dark-gray": 4px 0px 5px 0px rgba(0, 0, 0, 0.3),
+  "dark-blue": 4px 0px 5px 0px rgba(0, 0, 0, 0.4),
+  "light-white": 3px 0px 5px 0px rgba(0, 0, 0, 0.1),
 );
 
 // 卡片投影
@@ -237,7 +244,7 @@ $color-event-list:(
 $border-event-list:(
   "dark-gray": 1px solid #484848,
   "dark-blue": 1px solid #363E56,
-  "light-white": 1px solid rgb(32, 24, 24),
+  "light-white": 1px solid #cecece,
 );
 
 // 大事件左半部边框色

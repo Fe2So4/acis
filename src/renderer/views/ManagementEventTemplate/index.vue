@@ -44,7 +44,6 @@
           <vxe-table-column
             field="eventName"
             title="事件名称"
-            width="200"
           />
           <vxe-table-column
             field="approach"
@@ -444,6 +443,7 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
+@import "@/styles/theme";
 .managementEventTemplate {
   font-size: 14px;
   width: 90vw;
@@ -452,13 +452,15 @@ export default {
     margin-top: 20px;
     display: grid;
     grid-template-columns: 20% 80%;
-    border: 1px solid #39425c;
+    border: 1px solid;
+    @include theme-property(border-color, $dateTimePicker-color-border);
+    overflow: hidden;
     border-radius: 5px;
     height: 600px;
     font-size: 14px;
     .tree {
       p {
-        color: #0094ff;
+        @include theme-property("color", $color-text-primary);
         margin: 0;
         padding: 10px;
       }

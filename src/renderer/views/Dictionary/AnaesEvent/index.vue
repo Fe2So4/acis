@@ -430,7 +430,7 @@ export default {
 .anaes-event{
   height:100%;
   .content{
-    height:calc(100% - 38px);
+    height:calc(100% - 40px);
     .left{
       width:20%;
       height:100%;

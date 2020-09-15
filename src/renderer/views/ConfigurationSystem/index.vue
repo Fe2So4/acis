@@ -76,7 +76,8 @@ export default {
   data () {
     const wrapStyle = Object.freeze([
       {
-        'overflow-x': 'hidden'
+        width: 'calc(100% + 18px)',
+        height: 'calc(100% + 18px)'
       }
     ])
     const normalList = Object.freeze([
@@ -88,10 +89,10 @@ export default {
         text: '液体属性选项',
         path: 'LiquidProperties'
       },
-      {
-        text: '文书正反面打印配置',
-        path: 'FrontAndBackPrint'
-      },
+      // {
+      //   text: '文书正反面打印配置',
+      //   path: 'FrontAndBackPrint'
+      // },
       {
         text: '血气分析选项',
         path: 'BloodGasAnalysis'

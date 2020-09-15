@@ -118,9 +118,7 @@
             width="120"
             v-if="showColumn"
           >
-            <template
-              v-slot:edit="{ row }"
-            >
+            <template v-slot:edit="{ row }">
               <el-select
                 size="mini"
                 v-model="row.approach"
@@ -174,7 +172,7 @@
             <template v-slot="{ row }">
               {{ getSelectLabel(row.concentrationUnit, conUnitList) }}
             </template>
-          </vxe-table-column> -->
+          </vxe-table-column>-->
           <vxe-table-column
             field="speed"
             title="速度"
@@ -342,7 +340,38 @@
         </vxe-table>
       </div>
       <div class="option">
-        <el-row>
+        <el-row
+          typ="flex"
+          justify="space-between"
+        >
+          <el-col
+            :span="12"
+            class="tip"
+          >
+            要删除某时间点，必须选中整行！
+          </el-col>
+          <el-col :span="12">
+            <el-button
+              size="mini"
+              @click="handleSave"
+              :disabled="saveVisible"
+            >
+              保存
+            </el-button>
+            <el-button
+              size="mini"
+              @click="handleDelete"
+              :disabled="deleteVisible"
+            >
+              删除
+            </el-button>
+            <el-button
+              size="mini"
+              @click="handleRefresh"
+            >
+              刷新
+            </el-button>
+          </el-col>
           <!-- <span>类型筛选</span>
           <el-select
             v-model="select"
@@ -363,28 +392,7 @@
               输液
             </el-option>
           </el-select>-->
-          <el-button
-            size="mini"
-            @click="handleSave"
-            :disabled="saveVisible"
-          >
-            保存（S）
-          </el-button>
-          <el-button
-            size="mini"
-            @click="handleDelete"
-            :disabled="deleteVisible"
-          >
-            删除（D）
-          </el-button>
-          <el-button
-            size="mini"
-            @click="handleRefresh"
-          >
-            刷新（R）
-          </el-button>
         </el-row>
-        <p>要删除某时间点，必须选中整行！</p>
       </div>
     </div>
   </div>
@@ -488,7 +496,10 @@ export default {
         row.holdingTime = ''
       } else {
         row.eventEndTime = moment(new Date()).format('YYYY-MM-DD HH:mm')
-        row.holdingTime = moment(new Date()).diff(moment(row.eventStartTime), 'minute')
+        row.holdingTime = moment(new Date()).diff(
+          moment(row.eventStartTime),
+          'minute'
+        )
       }
     },
     // 处理时间改变
@@ -497,7 +508,10 @@ export default {
       // eventStartTime eventEndTime holdingTime
       if (row.isHolding === '1') {
         console.log(row.eventEndTime)
-        row.holdingTime = moment(row.eventEndTime).diff(moment(row.eventStartTime), 'minute')
+        row.holdingTime = moment(row.eventEndTime).diff(
+          moment(row.eventStartTime),
+          'minute'
+        )
       }
       console.log(row)
     },
@@ -577,10 +591,16 @@ export default {
         concentrationUnit: item.conUnit,
         dosageUnit: item.doseUnit,
         dosage: dose,
-        eventEndTime: item.isContinue === '1' ? moment(new Date()).format('YYYY-MM-DD HH:mm') : '',
+        eventEndTime:
+          item.isContinue === '1'
+            ? moment(new Date()).format('YYYY-MM-DD HH:mm')
+            : '',
         eventName: item.detailName,
         eventType: this.eventType.eventName, // 此处需要写活
-        holdingTime: item.isContinue === '1' ? moment(new Date()).diff(moment(new Date()), 'minute') : '',
+        holdingTime:
+          item.isContinue === '1'
+            ? moment(new Date()).diff(moment(new Date()), 'minute')
+            : '',
         isHolding: item.isContinue,
         speed: item.speed,
         speedUnit: item.speedUnit,
@@ -836,12 +856,14 @@ export default {
               line-height: 30px;
               text-indent: 10px;
               @include theme-property("background", $background-event-list);
-              border: 1px solid rgba(53, 62, 86, 1);
               @include theme-property("border", $border-event-list);
               @include theme-property("color", $color-event-list);
               cursor: pointer;
               &:hover {
-                @include theme-property("background", $background-hover-event-list);
+                @include theme-property(
+                  "background",
+                  $background-hover-event-list
+                );
                 color: #fff;
               }
             }
@@ -863,7 +885,10 @@ export default {
               cursor: pointer;
               text-align: center;
               &:hover {
-                @include theme-property("background", $background-hover-event-list);
+                @include theme-property(
+                  "background",
+                  $background-hover-event-list
+                );
                 color: #fff;
               }
             }
@@ -906,11 +931,11 @@ export default {
     .option {
       text-align: right;
       padding: 10px 0;
-      p {
+      .tip {
         text-align: left;
-        margin: 10px 0;
+        line-height: 30px;
         text-indent: 20px;
-        color: #FB4451;
+        color: #fb4451;
       }
       span {
         color: #9ba3d5;
@@ -922,7 +947,15 @@ export default {
   text-align: center;
 }
 </style>
-<style>
+<style lang="scss">
+@import "@/styles/theme";
+.event{
+  .el-pagination.is-background .btn-prev,
+  .el-pagination.is-background .btn-next,
+  .el-pagination.is-background .el-pager li {
+    @include theme-property(background-color, $background-event-list);
+  }
+}
 .event .scrollbar .el-scrollbar__wrap {
   overflow-x: hidden;
 }

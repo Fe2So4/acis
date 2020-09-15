@@ -2,7 +2,6 @@
   <div class="operation-overview">
     <RoomList
       :list="roomList"
-      :show-room="true"
     />
   </div>
 </template>

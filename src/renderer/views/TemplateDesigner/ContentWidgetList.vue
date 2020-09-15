@@ -93,6 +93,10 @@ export default {
       {
         label: '日期时间选择',
         name: 'widget-date-picker'
+      },
+      {
+        label: '表格',
+        name: 'widget-table'
       }
     ])
     const wrapStyle = Object.freeze([
@@ -151,11 +155,12 @@ export default {
       })
     },
     saveTemplateTableInfo () {
+      // 过滤出一般控件的表名字段名
       let data = this.templateData.filter(
         (widget) =>
           widget.dataSource &&
-                        widget.dataSource.tableName &&
-                        widget.dataSource.className
+          widget.dataSource.tableName &&
+          widget.dataSource.className
       )
       data = data.reduce((acc, widget) => {
         if (acc[widget.dataSource.tableName]) {
@@ -166,6 +171,21 @@ export default {
         }
         return acc
       }, {})
+      // 过滤出表格，将表格中的表名字段名添加到请求集合中
+      this.templateData.filter(widget => widget.name === 'widget-table')
+        .map(widgetTable => widgetTable.cells)
+        .reduce((arr, cells) => {
+          return [...arr, ...cells.reduce((acc, cell) => [...acc, ...cell], [])]
+        }, [])
+        .filter(cell => cell.tableName && cell.className)
+        .forEach(cell => {
+          if (data[cell.tableName]) {
+            data[cell.tableName].add(cell.className)
+          } else {
+            data[cell.tableName] = new Set()
+            data[cell.tableName].add(cell.className)
+          }
+        })
       Object.keys(data).forEach((key) => {
         data[key] = Array.from(data[key]).join(',')
       })
@@ -182,32 +202,32 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  @import "@/styles/theme";
+@import "@/styles/theme";
 
-  $background: (
-    dark-blue: #364058,
-    dark-gray: #353537,
-    light-white: #EBECEF,
-  );
-  .widgetList {
-    height: 100%;
-    @include theme-property(background, $background);
-    overflow: auto;
+$background: (
+  dark-blue: #364058,
+  dark-gray: #353537,
+  light-white: #ebecef,
+);
+.widgetList {
+  height: 100%;
+  @include theme-property(background, $background);
+  overflow: auto;
 
-    hr {
-      border-color: #5d709b;
-    }
-
-    .button {
-      cursor: pointer;
-      width: 100px;
-      height: 30px;
-      background: #f8f8f2;
-      line-height: 30px;
-      margin: 5px 10px;
-      text-align: center;
-      border-radius: 4px;
-      color: #333;
-    }
+  hr {
+    border-color: #5d709b;
   }
+
+  .button {
+    cursor: pointer;
+    width: 100px;
+    height: 30px;
+    background: #f8f8f2;
+    line-height: 30px;
+    margin: 5px 10px;
+    text-align: center;
+    border-radius: 4px;
+    color: #333;
+  }
+}
 </style>

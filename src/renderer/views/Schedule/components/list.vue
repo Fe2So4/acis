@@ -70,7 +70,6 @@ export default {
       this.selectItem = item
     },
     handleDocConfig () {
-      console.log(123)
       this.$emit('handleDocConfig', this.selectItem)
     },
     showMenu () {

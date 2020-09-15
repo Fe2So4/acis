@@ -138,7 +138,8 @@ export default {
   }
 }
 </script>
-<style lang="stylus" scoped>
+<style lang="scss" scoped>
+@import "@/styles/theme";
 .medical-order-information {
   height: 500px;
   font-size: 14px;
@@ -147,11 +148,10 @@ export default {
     line-height: 38px;
 
     span {
-      color: #9BA3D5;
+      @include theme-property("color", $color-text-secondary);
     }
 
     .el-radio-group {
-      background: #1E222E;
       padding: 5px;
       border-radius: 5px;
       margin-left: 20px;
