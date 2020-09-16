@@ -71,7 +71,7 @@
                   <el-progress
                     :percentage="item.process"
                     :show-text="false"
-                    color="#0094FF"
+                    :color="progressBackground"
                   />
                 </el-tooltip>
               </div>
@@ -101,7 +101,8 @@
 <script>
 import request from '@/utils/requestForMock'
 import { getRoomList } from '@/api/schedule'
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
+
 export default {
   data () {
     return {
@@ -178,6 +179,18 @@ export default {
   },
   computed: {
     // ...mapGetters('Schedule', ['time'])
+    ...mapState('Base', ['theme']),
+    progressBackground () {
+      switch (this.theme) {
+        case 'dark-gray':
+          return '#FB6816'
+        case 'light-white':
+          return '#0094FF'
+        case 'dark-blue':
+        default:
+          return '#0094FF'
+      }
+    }
   },
   mounted () {
     this.getData()
@@ -240,6 +253,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "@/styles/theme";
 .ope-room{
   height:calc(100% - 28px);
   width:100%;
@@ -270,7 +284,7 @@ export default {
           display: flex;
           border-radius: 6px;
           box-sizing: border-box;
-          background:#252C40;
+          @include theme-property("background", $color-background-card);
           overflow: hidden;
           position: relative;
 
@@ -286,7 +300,8 @@ export default {
             .circle {
               width:80px;
               height:30px;
-              background:linear-gradient(120deg,rgba(84,190,234,1),rgba(219,83,160,1));
+              // background:linear-gradient(120deg,rgba(84,190,234,1),rgba(219,83,160,1));
+              @include card-room;
               border-radius:0px 15px 15px 0px;
               line-height: 30px;
               text-shadow:0px 1px 3px rgba(0, 0, 0, 0.2);
@@ -308,7 +323,8 @@ export default {
               text-overflow: ellipsis;
               white-space: nowrap;
               overflow: hidden;
-              color:#9BA3D5;
+              // color:#9BA3D5;
+              @include theme-property("color",  $color-text-regular);
 
               &:last-child {
                 line-height: 18px;
@@ -320,6 +336,7 @@ export default {
 
                 .el-progress {
                   width: 80%;
+                  @include theme-property("background",  $background-progress);
                 }
               }
             }
@@ -329,12 +346,12 @@ export default {
             color: #fff;
           }
           &:hover{
-            background: #2C3B66;
+            @include theme-property("background", $color-background-card-hover);
             color: #fff;
           }
         }
         .roomActive {
-          background: #2C3B66;
+          @include theme-property("background", $color-background-card-hover);
           color: #fff;
         }
       }

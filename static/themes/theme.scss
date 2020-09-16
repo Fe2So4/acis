@@ -294,6 +294,42 @@ $color-background-listItem-hover: (
   "light-white": #CDCDCD,
 );
 
+// 以下为智能排班颜色
+// 排班页左右背景色
+$background-schedule: (
+  "dark-gray": #363638,
+  "dark-blue": #1e232e,
+  "light-white": #F0F0F0,
+);
+
+// 医护人员列表标题背景色
+$background-schedule-list: (
+  "dark-gray": #444444,
+  "dark-blue": #262C40,
+  "light-white": #E2E3E8,
+);
+
+// 医护人员列表背景色
+$background-schedule-list-item: (
+  "dark-gray": #474747,
+  "dark-blue": #2A3040,
+  "light-white": #F1F1F1,
+);
+
+// 排班页操作按钮背景色
+$background-schedule-option: (
+  "dark-gray": #2E2E34,
+  "dark-blue": #181C28,
+  "light-white": #E2E3E8,
+);
+
+// 手术室排班进度条背景颜色
+$background-progress: (
+  "dark-gray": #6E6E6E,
+  "dark-blue": #404C70,
+  "light-white": #BCCEDA,
+);
+
 // 卡片中的房间号
 @mixin card-room {
   @each $theme in $themes {

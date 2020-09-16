@@ -1,12 +1,14 @@
 <template>
   <div
     class="print-content"
-    style="width:210mm"
+    style="width:960px"
   >
-    <table style="width:100%;">
+    <table
+      style="width:880px;height:380px;margin:0 auto;border-collapse:collapse;text-align:center;"
+    >
       <tr>
         <td
-          colspan="8"
+          colspan="10"
           style="text-align:center;line-height:40px;
           font-weight:bold;"
         >
@@ -16,116 +18,142 @@
       <tr>
         <td
           class="label"
-          style="width:80px;"
+          style="border-top:1px solid #000;border-right:1px solid #000;border-left:1px solid #000;"
         >
-          手术间
+          姓名
         </td>
         <td
           class="value"
-          style="width:80px;"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
         >
-          {{ noticeData.opeRoom }}
+          {{ noticeData.ptName }}
         </td>
         <td
           class="label"
-          style="width:80px;"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
         >
-          手术台次
+          性别
         </td>
         <td
           class="value"
-          style="width:80px;"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
         >
-          {{ noticeData.sequence }}
+          {{ noticeData.gender }}
         </td>
         <td
           class="label"
-          style="width:80px;"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
         >
-          手术时间
+          年龄
         </td>
         <td
           class="value"
-          colspan="3"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
         >
-          {{ noticeData.opeScheduleTime }}
+          {{ noticeData.age }}
+        </td>
+        <td
+          class="label"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
+        >
+          床号
+        </td>
+        <td
+          class="value"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
+        >
+          {{ noticeData.bedId }}
+        </td>
+        <td
+          class="label"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
+        >
+          住院号
+        </td>
+        <td
+          class="value"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
+        >
+          {{ noticeData.visitId }}
         </td>
       </tr>
       <tr>
         <td
           class="label"
-          style="width:80px;"
+          style="border-top:1px solid #000;border-right:1px solid #000;border-left:1px solid #000;"
         >
-          姓名
+          手术时间
         </td>
-        <td class="value">
-          {{ noticeData.ptName }}
+        <td
+          class="value"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
+          colspan="3"
+        >
+          {{ noticeData.opeScheduleTime }}
         </td>
         <td
           class="label"
-          style="width:80px;"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
         >
-          性别
+          手术间
         </td>
-        <td class="value">
-          {{ noticeData.gender }}
+        <td
+          class="value"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
+        >
+          {{ noticeData.opeRoom }}
         </td>
         <td
           class="label"
-          style="width:80px;"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
         >
-          年龄
+          手术台次
         </td>
-        <td class="value">
-          {{ noticeData.age }}
+        <td
+          class="value"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
+        >
+          {{ noticeData.sequence }}
         </td>
         <td
           class="label"
-          style="width:80px;"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
         >
-          诊断
+          科室
         </td>
-        <td class="value">
+        <td
+          class="value"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
+        >
+          {{ noticeData.deptName }}
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="label"
+          style="border-top:1px solid #000;border-right:1px solid #000;border-left:1px solid #000;"
+        >
+          术前诊断
+        </td>
+        <td
+          class="value"
+          colspan="9"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
+        >
           {{ noticeData.diagnoseBefore }}
         </td>
       </tr>
       <tr>
         <td
           class="label"
-          style="width:80px;"
-        >
-          科室
-        </td>
-        <td class="value">
-          {{ noticeData.deptName }}
-        </td>
-        <td
-          class="label"
-          style="width:80px;"
-        >
-          床号
-        </td>
-        <td class="value">
-          {{ noticeData.bedId }}
-        </td>
-        <td
-          class="label"
-          style="width:80px;"
-        >
-          住院号
-        </td>
-        <td class="value">
-          {{ noticeData.visitId }}
-        </td>
-        <td
-          class="label"
-          style="width:80px;"
+          style="border-top:1px solid #000;border-right:1px solid #000;border-left:1px solid #000;"
         >
           手术名称
         </td>
         <td
-          style="width:200px;"
           class="value"
+          colspan="9"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
         >
           {{ noticeData.operationName }}
         </td>
@@ -133,43 +161,75 @@
       <tr>
         <td
           class="label"
-          style="width:80px;"
+          style="border-top:1px solid #000;border-right:1px solid #000;border-left:1px solid #000;"
+        >
+          麻醉方式
+        </td>
+        <td
+          class="value"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
+        >
+          {{ noticeData.anesMethod }}
+        </td>
+        <td
+          class="label"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
+        >
+          麻醉医师
+        </td>
+        <td
+          class="value"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
+        >
+          {{ noticeData.anesDoc }}
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="label"
+          style="border-top:1px solid #000;border-right:1px solid #000;border-left:1px solid #000;"
         >
           主刀医生
         </td>
-        <td class="value">
+        <td
+          class="value"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
+        >
           {{ noticeData.surgeon }}
         </td>
         <td
           class="label"
-          style="width:80px;"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
         >
           第一助手
         </td>
         <td
           class="value"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
         >
           {{ noticeData.surgeonAssist1 }}
         </td>
         <td
           class="label"
-          style="width:80px;"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
         >
           第二助手
         </td>
         <td
           class="value"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
         >
           {{ noticeData.surgeonAssist1 }}
         </td>
         <td
           class="label"
-          style="width:80px;"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
         >
           第三助手
         </td>
         <td
           class="value"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
         >
           {{ noticeData.surgeonAssist3 }}
         </td>
@@ -177,47 +237,31 @@
       <tr>
         <td
           class="label"
-          style="width:80px;"
-        >
-          麻醉方式
-        </td>
-        <td
-          class="value"
-        >
-          {{ noticeData.anesMethod }}
-        </td>
-        <td
-          class="label"
-          style="width:80px;"
-        >
-          麻醉医师
-        </td>
-        <td
-          class="value"
-        >
-          {{ noticeData.anesDoc }}
-        </td>
-        <td
-          class="label"
-          style="width:80px;"
-        >
-          高危
-        </td>
-        <td
-          class="value"
-        >
-          789
-        </td>
-        <td
-          class="label"
-          style="width:80px;"
+          style="border-top:1px solid #000;border-right:1px solid #000;border-left:1px solid #000;"
         >
           备注
         </td>
         <td
           class="value"
+          colspan="9"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
         >
           {{ noticeData.memo }}
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="label"
+          style="border-top:1px solid #000;border-right:1px solid #000;border-left:1px solid #000;"
+        >
+          高危
+        </td>
+        <td
+          class="value"
+          colspan="9"
+          style="border-top:1px solid #000;border-right:1px solid #000;"
+        >
+          789
         </td>
       </tr>
     </table>
@@ -242,15 +286,20 @@ export default {
 
 <style lang="scss" scoped>
    .print-content{
-      // background: #E3E3E3;
+      background: #E3E3E3;
+      margin:0 auto;
+      width: 960px;
+      box-shadow: 1px 20px 45px 5px rgba(0, 0, 0, 0.5);
+      border-radius: 5px 5px 0px 0px;
+      color: #202020;
       h3{
         text-align: center;
       }
       .label{
-        color:#CFD9E5
+        // color:#CFD9E5
       }
       .value{
-        color:#9AA3D4;
+        // color:#9AA3D4;
       }
       .el-row{
         margin-bottom:10px;

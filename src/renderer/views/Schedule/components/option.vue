@@ -64,17 +64,18 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "@/styles/theme";
 .option {
   padding: 0 20px;
-  background: #181c27;
+  @include theme-property("background", $background-schedule-option);
   display: flex;
-  color: #9ba3d5;
+  @include theme-property("color", $color-text-regular);
   font-size: 14px;
   line-height: 28px;
   justify-content: space-between;
   border-radius: 0px 0px 5px 5px;
 }
 .option /deep/ .el-button--text {
-  color: #9ba3d5;
+  @include theme-property("color", $color-text-regular);
 }
 </style>

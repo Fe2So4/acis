@@ -3,6 +3,7 @@
     <vxe-table
       ref="unTable"
       resizable
+      round
       width="100%"
       height="100%"
       size="mini"

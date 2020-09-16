@@ -181,11 +181,12 @@ export default {
 }
 
 .el-main {
-  padding: 0;
+  @import "@/styles/theme";
+  padding: 10px;
   height: calc(100vh - 90px);
-  border: 10px solid #000;
+  // border: 10px solid #000;
   overflow: auto;
-  background: #000;
+  @include theme-property("background", $color-background-home);
 
   &.no-border {
     border: none;

@@ -24,7 +24,6 @@
               <div class="IconS">
                 <div
                   class="IconT"
-                  style="background:#2E96F7;"
                 >
                   {{ item.index }}
                 </div>
@@ -38,6 +37,7 @@
       </ul>
     </div>
     <div class="options">
+      <theme-picker />
       <i
         class="el-icon-minus"
         @click="miniWindow"
@@ -56,6 +56,7 @@
 </template>
 
 <script>
+import ThemePicker from './ThemePicker'
 import { synchroApply, synchroPatient } from '@/api/schedule'
 import request from '@/utils/requestForMock'
 const {
@@ -65,6 +66,9 @@ const {
 const win = BrowserWindow.getAllWindows()[0]
 
 export default {
+  components: {
+    ThemePicker
+  },
   data () {
     win.on('maximize', () => {
       this.isMax = true
@@ -127,7 +131,6 @@ export default {
           end: 10
         }
       })
-      //
       request({
         url: synchroPatient,
         params: {
@@ -201,16 +204,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+  @import "@/styles/theme";
   .common-header-container {
     display: flex;
     position: relative;
     height: 100%;
     justify-content: space-between;
     align-items: center;
-    // background: #144177;
-    background:rgba(18,20,33,1);
-    box-shadow:4px 3px 5px 0px rgba(0, 0, 0, 0.4);
+    @include theme-property("background", $color-background-aside);
+    @include theme-property("box-shadow", $box-shadow-aside);
     .logo-container {
       padding-left:10px;
       width:354px;
@@ -225,7 +227,7 @@ export default {
       }
       .title {
         font-size: 12px;
-        color:#0094FF;
+        @include theme-property("color", $color-text-primary);
         line-height: 24px;
         p{
           margin:0;
@@ -234,7 +236,8 @@ export default {
             width: 5px;
             height: 5px;
             border-radius: 50%;
-            background: #388FF7;
+            vertical-align: middle;
+            @include theme-property("background", $color-primary);
             margin:0 4px;
           }
         }
@@ -284,6 +287,7 @@ export default {
             -ms-transform: rotate(-60deg);
             -moz-transform: rotate(-60deg);
             -webkit-transform: rotate(-60deg);
+            @include theme-property("background", $color-primary);
             color:#fff;
             font-size: 18px;
             line-height:30px;
@@ -291,7 +295,8 @@ export default {
           }
         }
         .nav-title{
-          color:#9BA3D5;
+          // color:#9BA3D5;
+          @include theme-property("color",  $color-text-regular);
           font-size:16px;
           line-height: 30px;
           // margin-left:10px;
@@ -301,11 +306,12 @@ export default {
       li.active {
         .nav-title{
           color:#388FF7;
+          @include theme-property("color", $background-hover-event-list);
         }
       }
       li:hover{
         .nav-title{
-          color:#388FF7;
+          @include theme-property("color", $background-hover-event-list);
         }
       }
     }
@@ -313,13 +319,19 @@ export default {
       position: absolute;
       right: 0;
       top: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       i{
         -webkit-app-region: no-drag;
         font-size:18px;
         font-weight: bold;
-        color:#0094ff;
+        @include theme-property("color", $color-primary);
         margin-right:20px;
         cursor: pointer;
+        &:nth-last-child(3){
+          margin-left: 20px;
+        }
       }
     }
     .handle-container {

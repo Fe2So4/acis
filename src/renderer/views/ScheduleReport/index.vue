@@ -12,7 +12,7 @@ import Document from './components/document'
 export default {
   data () {
     return {
-      activeName: 'first'
+      activeName: 'second'
     }
   },
   components: { Notice, Document },
@@ -26,7 +26,7 @@ export default {
   color:#fff;
   height:100%;
   padding:0 20px;
-  background:#121421;
+  // background:#121421;
   .el-tabs{
     height:100%;
     /deep/ .el-tabs__content{

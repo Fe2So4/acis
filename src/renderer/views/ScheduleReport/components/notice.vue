@@ -44,10 +44,12 @@
         </el-button>
       </el-form-item>
     </el-form>
-    <notice-print
-      :notice-data="noticeData"
-      id="print-notice"
-    />
+    <div class="notice-content">
+      <notice-print
+        :notice-data="noticeData"
+        id="print-notice"
+      />
+    </div>
   </div>
 </template>
 <script>
@@ -155,6 +157,9 @@ export default {
     // border-bottom: 1px solid #1A2131;
     box-sizing: border-box;
   }
+}
+.notice-content{
+  // background: #1E1F22;
 }
 .notice /deep/ .el-select .el-select-dropdown,
 .el-select-dropdown .el-select-dropdown__item {

@@ -6,6 +6,8 @@ import router from './routerSchedule'
 import store from './store'
 import ElementUI from 'element-ui'
 import 'normalize.css/normalize.css'
+import './styles/element-variables.scss'
+
 import './styles/index.scss'
 import './styles/transition.scss'
 import './iconfont/iconfont.css'
@@ -17,8 +19,8 @@ import VXETable from 'vxe-table'
 import 'vxe-table/lib/index.css'
 import VXETablePluginElement from 'vxe-table-plugin-element'
 import 'vxe-table-plugin-element/dist/style.css'
-import './styles/vxe-table-variable.scss' // 修改vxe-table默认样式
-import './styles/element-variables.scss' // 修改element-ui默认样式
+// import './styles/vxe-table-variable.scss' // 修改vxe-table默认样式
+// import './styles/element-variables.scss' // 修改element-ui默认样式
 // ...
 // 解决vxe - table与element - ui兼容性问题
 // ...

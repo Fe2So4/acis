@@ -1063,6 +1063,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "@/styles/theme";
 .schedule {
   width: 100%;
   height: 100%;
@@ -1070,6 +1071,8 @@ export default {
     width: 500px;
     height: 100%;
     float: left;
+    @include theme-property("background", $background-schedule);
+    // @include theme-property("box-shadow", $box-shadow-card);
     background: rgba(24, 28, 39, 1);
     box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
     border-radius: 5px;
@@ -1092,7 +1095,7 @@ export default {
     float: right;
     padding: 10px;
     height: 100%;
-    background: #181c27;
+    @include theme-property("background", $background-schedule);
     box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
     border-radius: 5px;
     .content {
@@ -1106,19 +1109,18 @@ export default {
     }
     .allocated {
       height: 220px;
-      background: rgba(30, 34, 46, 1);
-      border: 1px solid rgba(57, 66, 92, 1);
+      // @include theme-property("border", $border-event-left);
+      // border: 1px solid rgba(57, 66, 92, 1);
       border-radius: 5px;
     }
     .patient-detail {
       padding-left: 10px;
       height: 60px;
-      background: rgba(30, 34, 46, 1);
-      border: 1px solid rgba(57, 66, 92, 1);
+      @include theme-property("border", $border-event-left);
       border-radius: 5px;
       font-size: 14px;
       margin: 10px 0;
-      color: #9ba3d5;
+      @include theme-property("color", $color-text-regular);
       line-height: 60px;
       span {
         color: #d0dae5;
@@ -1126,32 +1128,37 @@ export default {
     }
     .room {
       height: calc(100% - 300px);
-      background: rgba(30, 34, 46, 1);
-      border: 1px solid rgba(57, 66, 92, 1);
+      @include theme-property("border", $border-event-left);
       border-radius: 5px;
+      overflow: hidden;
     }
     .records {
       height: 100px;
-      background: rgba(30, 34, 46, 1);
-      border: 1px solid rgba(57, 66, 92, 1);
+      @include theme-property("border", $border-event-left);
       border-radius: 5px;
       margin-top: 10px;
     }
   }
 }
-.schedule /deep/ .el-input-group__prepend {
-  background: #252c40;
-}
+// .schedule /deep/ .el-input-group__prepend {
+//   background: #252c40;
+// }
 .schedule /deep/ .el-collapse-item__header {
   height: 30px;
-  background: #252c40;
-  color: #9ba3d5;
-  border-bottom: 1px solid #000;
+  // background: #252c40;
+  @include theme-property("background", $background-schedule-list);
+  @include theme-property("color", $color-text-regular);
+  // color: #9ba3d5;
+  // border-bottom: 1px solid #000;
+  @include theme-property("border-color", $background-schedule);
   padding: 0 0 0 10px;
 }
 .schedule /deep/ .el-collapse-item__wrap {
-  background: #252c40;
-  border-bottom: 1px solid #000;
+  // background: #252c40;
+  // $background-schedule-list-item
+  @include theme-property("background", $background-schedule-list-item);
+  @include theme-property("border-color", $background-schedule-list-item);
+  // border-bottom: 1px solid #000;
   .el-collapse-item__content {
     padding-bottom: unset;
   }

@@ -101,6 +101,7 @@ export default {
 }
 </script>
 <style lang="scss">
+@import "@/styles/theme";
 .list {
   height:100%;
   // height: 500px;
@@ -111,13 +112,15 @@ export default {
     .list-item {
       font: 12px/30px "";
       padding-left: 10px;
-      border-bottom: 1px dashed #f3f6f9;
+      border-bottom:1px solid #fff;
+      @include theme-property("border-color",  $background-schedule);
+      @include theme-property("color", $color-text-secondary);
       &:hover{
-        background: #f1f3f6;
+        @include theme-property("background", $color-background-card-hover);
       }
     }
     .active {
-      background: #f1f3f6;
+      @include theme-property("background", $color-background-card-hover);
     }
   }
 }

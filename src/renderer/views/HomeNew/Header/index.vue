@@ -104,7 +104,7 @@ export default {
   }
   .title {
     @include theme-property("color", $color-text-primary);
-    @include theme-property(background, $color-background-aside);
+    @include theme-property("background", $color-background-aside);
     z-index: 1;
     line-height: 32px;
     text-align: center;
