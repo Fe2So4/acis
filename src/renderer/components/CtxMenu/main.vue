@@ -70,6 +70,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/theme';
 .mask {
   position: absolute;
   left: 0;
@@ -80,7 +81,8 @@ export default {
 }
 .contextMenu {
   position: relative;
-  border: 1px solid #39425c;
+  border: 1px solid;
+  @include theme-property('border-color', $dateTimePicker-color-border);
   border-radius: 4px;
   width: 180px;
   overflow: auto;
@@ -88,12 +90,12 @@ export default {
     display: flex;
     .iconContent {
       flex: 1 1 30px;
-      background: #2c3140;
+      @include theme-property('background', $dateTimePicker-color-background);
       padding: 2px 0;
     }
     .labelContent {
       flex: 1 1 150px;
-      background: #1e222e;
+      @include theme-property('background', $background-dialog);
       padding: 2px 0;
 
       .label {
@@ -101,7 +103,7 @@ export default {
         line-height: 24px;
         font-size: 12px;
         height: 24px;
-        color: #9ba3d5;
+        @include theme-property('color', $color-text-regular);
         text-indent: 8px;
         white-space: nowrap;
         width: 150px;
@@ -109,7 +111,7 @@ export default {
         text-overflow: ellipsis;
 
         &:hover {
-          color: #388ff7;
+          @include theme-property('color', $color-text-primary);
         }
       }
     }

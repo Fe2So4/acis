@@ -97,11 +97,6 @@ export default {
   height: 100%;
   align-items: center;
   overflow: hidden;
-  @media all and (orientation: portrait) {
-    .title {
-      box-shadow: unset !important;
-    }
-  }
   .title {
     @include theme-property("color", $color-text-primary);
     @include theme-property("background", $color-background-aside);
@@ -121,6 +116,11 @@ export default {
       border-radius: 50%;
       @include theme-property("background", $color-primary);
       margin: 0 4px;
+    }
+  }
+  @media all and (orientation: portrait) {
+    .title {
+      @include theme-property(box-shadow, $unset);
     }
   }
   .options {

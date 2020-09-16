@@ -43,7 +43,7 @@ export default {
       if (this.cell.borderColor) style['border-color'] = this.cell.borderColor
       if (this.cell.color) style.color = this.cell.color
       if (this.cell.textAlign) style['text-align'] = this.cell.textAlign
-      if (this.cell.textIndent) style['text-indent'] = `${this.cell.textIndent}px`
+      if (this.cell.textIndent) { style['text-indent'] = `${this.cell.textIndent}px` }
       if (this.cell.fontSize) style['font-size'] = `${this.cell.fontSize}px`
       if (this.cell.fontWeight) style['font-weight'] = this.cell.fontWeight
       return style
@@ -53,16 +53,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  td {
-    // user-select: none;
-    border: {
-      width: 1px;
-      style: solid;
-    }
-    .cell {
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
+td {
+  // user-select: none;
+  padding: 0;
+  border: {
+    width: 1px;
+    style: solid;
   }
+  .cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
 </style>

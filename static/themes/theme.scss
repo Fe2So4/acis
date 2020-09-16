@@ -8,6 +8,13 @@ $themes: ("dark-gray", "dark-blue", "light-white");
   @return lighten(map-get($map: $map, $key: $theme), $amount);
 }
 
+// 清除设置
+$unset: (
+  "dark-gray": unset,
+  "dark-blue": unset,
+  "light-white": unset,
+);
+
 // 主题色
 $color-primary: (
   "dark-gray": #fb6715,

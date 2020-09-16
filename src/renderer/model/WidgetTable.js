@@ -13,5 +13,7 @@ export class Cell {
     this.fontWeight = ''
     this.tableName = ''
     this.className = ''
+    this.keyName = ''
+    this.rowIndex = ''
   }
 }

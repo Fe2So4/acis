@@ -50,18 +50,28 @@
           </el-scrollbar>
         </div>
         <div class="configurationContent">
-          <configuration-cells-form
-            :rows="rows"
-            :cols="cols"
-            :cell-active-configuration="cellActiveConfiguration"
-            :editable="editable"
-            @merge-cells="onMergeCells"
-            @split-cells="onSplitCells"
-            @change-rows="onChangeRows"
-            @change-cols="onChangeCols"
-            @change-cell="onChangeCell"
-            @switch-editable="onSwitchEditable"
-          />
+          <el-scrollbar
+            style="width: 100%;height:100%"
+            :view-style="{
+              'height': '100%'
+            }"
+            :wrap-style="[{
+              height:'calc(100% + 17px)'
+            }]"
+          >
+            <configuration-cells-form
+              :rows="rows"
+              :cols="cols"
+              :cell-active-configuration="cellActiveConfiguration"
+              :editable="editable"
+              @merge-cells="onMergeCells"
+              @split-cells="onSplitCells"
+              @change-rows="onChangeRows"
+              @change-cols="onChangeCols"
+              @change-cell="onChangeCell"
+              @switch-editable="onSwitchEditable"
+            />
+          </el-scrollbar>
         </div>
       </div>
       <span
@@ -170,7 +180,8 @@ export default {
         'fontSize',
         'fontWeight',
         'tableName',
-        'className'
+        'className',
+        'keyName'
       ]
       const configurationMap = configurationNames.reduce((acc, name) => {
         acc[name] = new Set()
@@ -398,6 +409,25 @@ export default {
     },
     // 单元格配置修改
     onChangeCell (name, val) {
+      // 如果是字段名修改，则自动增加行索引值
+      if (name === 'className') {
+        // 取出所有单元格行的数据
+        const rowBoundArr = this.cellArrayActive.reduce((arr, cell) => {
+          const [, rowBound] = /^(\d+)-\d+_\d+-\d+$/.exec(cell.index)
+          if (!arr.includes(rowBound)) {
+            arr.push(rowBound)
+          }
+          return arr
+        }, []).sort((a, b) => a - b)
+        const rowIndexMap = {}
+        for (let i = 0; i < rowBoundArr.length; i++) {
+          rowIndexMap[rowBoundArr[i]] = i
+        }
+        this.cellArrayActive.forEach((cell) => {
+          const [, rowBound] = /^(\d+)-\d+_\d+-\d+$/.exec(cell.index)
+          cell.rowIndex = rowIndexMap[rowBound]
+        })
+      }
       this.cellArrayActive.forEach((cell) => {
         cell[name] = val
       })
@@ -556,12 +586,13 @@ export default {
     flex: 1 1 auto;
     .table {
       border-collapse: collapse;
+      table-layout: fixed;
       margin: auto;
     }
   }
 
   .configurationContent {
-    width: 250px;
+    width: 270px;
     border-left: gainsboro 1px solid;
   }
 }
