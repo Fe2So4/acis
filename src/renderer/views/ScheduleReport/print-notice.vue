@@ -10,7 +10,7 @@
         <td
           colspan="10"
           style="text-align:center;line-height:40px;
-          font-weight:bold;"
+          font-weight:bold;font-size:30;"
         >
           手术通知单
         </td>
@@ -86,8 +86,8 @@
         </td>
         <td
           class="value"
+          colspan="2"
           style="border-top:1px solid #000;border-right:1px solid #000;"
-          colspan="3"
         >
           {{ noticeData.opeScheduleTime }}
         </td>
@@ -123,6 +123,7 @@
         </td>
         <td
           class="value"
+          colspan="2"
           style="border-top:1px solid #000;border-right:1px solid #000;"
         >
           {{ noticeData.deptName }}
@@ -168,6 +169,7 @@
         <td
           class="value"
           style="border-top:1px solid #000;border-right:1px solid #000;"
+          colspan="4"
         >
           {{ noticeData.anesMethod }}
         </td>
@@ -179,6 +181,7 @@
         </td>
         <td
           class="value"
+          colspan="4"
           style="border-top:1px solid #000;border-right:1px solid #000;"
         >
           {{ noticeData.anesDoc }}
@@ -193,6 +196,7 @@
         </td>
         <td
           class="value"
+          colspan="3"
           style="border-top:1px solid #000;border-right:1px solid #000;"
         >
           {{ noticeData.surgeon }}
@@ -261,8 +265,14 @@
           colspan="9"
           style="border-top:1px solid #000;border-right:1px solid #000;"
         >
-          789
+          高危（未做）
         </td>
+      </tr>
+      <tr>
+        <td
+          colspan="10"
+          style="border-top:1px solid #000;border-right:1px solid #000;border-bottom:1px solid #000;height:38px;border-left:1px solid #000;"
+        />
       </tr>
     </table>
   </div>
@@ -287,6 +297,7 @@ export default {
 <style lang="scss" scoped>
    .print-content{
       background: #E3E3E3;
+      height: 100%;
       margin:0 auto;
       width: 960px;
       box-shadow: 1px 20px 45px 5px rgba(0, 0, 0, 0.5);
@@ -300,6 +311,7 @@ export default {
       }
       .value{
         // color:#9AA3D4;
+        min-width: 50px;
       }
       .el-row{
         margin-bottom:10px;

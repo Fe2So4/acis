@@ -54,6 +54,7 @@ npm run lint
 #  -EmergencyTreatment 急诊登记 
 #  -OperationInfo 手术信息 
 #  -RecoveryRegistration 复苏登记 
+#  -PatientWarning 患者预警
 ```
 
 ---

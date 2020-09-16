@@ -337,6 +337,13 @@ $background-progress: (
   "light-white": #BCCEDA,
 );
 
+// 手术室排班表导航页背景颜色
+$background-tabs: (
+  "dark-gray": #353537,
+  "dark-blue": #181C27,
+  "light-white": #F8F8F8,
+);
+
 // 卡片中的房间号
 @mixin card-room {
   @each $theme in $themes {

@@ -93,12 +93,12 @@ export default {
           name: '工作量查询',
           index: '2',
           icon: 'el-icon-s-data'
-        },
-        {
-          name: '分析决策',
-          index: '3',
-          icon: 'el-icon-monitor'
         }
+        // {
+        //   name: '分析决策',
+        //   index: '3',
+        //   icon: 'el-icon-monitor'
+        // }
       ],
       overviewList: [],
       activeIndex: null,

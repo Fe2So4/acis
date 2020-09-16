@@ -11,6 +11,7 @@
           placeholder="选择日期"
           value-format="yyyy-MM-dd"
           format="yyyy-MM-dd"
+          popper-class="dateTimePicker"
           @change="getData"
         />
       </el-form-item>
@@ -116,6 +117,7 @@
           <Report
             id="print-report"
             :table-data="tableData"
+            :time="time"
           />
         </div>
       </el-scrollbar>

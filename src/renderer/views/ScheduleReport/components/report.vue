@@ -21,13 +21,13 @@
             colspan="7"
             style="text-align:left;padding:9px 0;"
           >
-            时间：2020-8-31
+            时间：{{ time }}
           </th>
           <th
             colspan="7"
             style="text-align:right;padding:9px 0;"
           >
-            台数：0台
+            台数：{{ tableData.length }} 台
           </th>
         </tr>
         <tr>
@@ -128,6 +128,7 @@
   </div>
 </template>
 <script>
+import moment from 'moment'
 export default {
   name: 'ScheduleReport',
   data () {
@@ -140,6 +141,10 @@ export default {
         return []
       },
       type: Array
+    },
+    time: {
+      type: String,
+      default: moment(new Date()).format('YYYY-MM-DD')
     }
   },
   computed: {},

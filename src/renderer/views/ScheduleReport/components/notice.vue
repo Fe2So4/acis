@@ -11,6 +11,7 @@
           placeholder="选择日期"
           value-format="yyyy-MM-dd"
           format="yyyy-MM-dd"
+          popper-class="dateTimePicker"
           @change="getPtData"
         />
       </el-form-item>
@@ -92,9 +93,13 @@ export default {
   methods: {
     print () {
       // this.$router.push('/print-notice')
-      const printHtml = document.querySelector('#print-notice').outerHTML
-      const options = { silent: true }
-      ipcRenderer.send('printChannel', printHtml, options)
+      if (this.noticeData.ptName !== '') {
+        const printHtml = document.querySelector('#print-notice').outerHTML
+        const options = { silent: true }
+        ipcRenderer.send('printChannel', printHtml, options)
+      } else {
+        this.$message({ type: 'warning', message: '请先选择患者' })
+      }
     },
     getData () {
       if (this.value === '') {
@@ -143,6 +148,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.notice{
+  height: 100%;
+}
 .notice /deep/ .el-select .el-select-dropdown,
 .el-select-dropdown .content {
   display: flex;
@@ -160,6 +168,7 @@ export default {
 }
 .notice-content{
   // background: #1E1F22;
+  height: calc(100% - 48px);
 }
 .notice /deep/ .el-select .el-select-dropdown,
 .el-select-dropdown .el-select-dropdown__item {

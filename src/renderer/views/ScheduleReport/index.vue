@@ -12,7 +12,7 @@ import Document from './components/document'
 export default {
   data () {
     return {
-      activeName: 'second'
+      activeName: 'first'
     }
   },
   components: { Notice, Document },
@@ -21,7 +21,8 @@ export default {
   }
 }
 </script>
-<style lang="stylus" scoped>
+<style lang="scss" scoped>
+@import "@/styles/theme";
 .report {
   color:#fff;
   height:100%;
@@ -29,21 +30,34 @@ export default {
   // background:#121421;
   .el-tabs{
     height:100%;
+
+    /deep/ .el-tabs__header{
+      @include theme-property("background", $background-tabs);
+      // $background-tabs
+      padding-left: 15px;
+      overflow: hidden;
+      border-radius:5px;
+    }
+    /deep/ .el-tabs__active-bar{
+      bottom:5px;
+    }
     /deep/ .el-tabs__content{
       height:calc(100% - 55px);
       .el-tab-pane{
-        height 100%
+        height:100%;
       }
     }
   }
   /deep/ .el-tabs__item{
-    color:#9AA3D4;
+    // color:#9AA3D4;
+    @include theme-property("color", $color-text-regular);
     &.is-active{
-      color:#409EFF !important;
+      // color:#409EFF !important;
+       @include theme-property("color", $color-text-primary);
     }
   }
   /deep/ .el-tabs__nav-wrap::after{
-    background-color:#121421;
+    @include theme-property("background", $background-tabs);
   }
 }
 </style>

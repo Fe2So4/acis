@@ -86,6 +86,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "@/styles/theme";
 .page-withdraw {
   height: 100%;
   // background: #f3f6f9;
@@ -96,9 +97,9 @@ export default {
       font: 14px/28px "";
       padding-left: 10px;
       cursor: pointer;
-      color: #d0dae5;
+      @include theme-property("color", $color-text-regular);
       &:hover {
-        background: #2c3b66;
+        @include theme-property("background", $color-background-card-hover);
       }
     }
   }

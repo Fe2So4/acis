@@ -22,7 +22,7 @@
           >
         </div>
         <div class="title">
-          账户密码登录
+          账 户 密 码 登 录
         </div>
         <div class="line" />
         <el-form

@@ -21,7 +21,7 @@
       .message 您共有0条未读消息
       .buttons
         el-button(size="mini" type="primary") 保存
-        el-button(size="mini") 关闭
+        el-button(size="mini" @click="onCancel") 关闭
 </template>
 <script>
 export default {
@@ -29,6 +29,11 @@ export default {
   data () {
     return {
       tableData: []
+    }
+  },
+  methods: {
+    onCancel () {
+      this.$eventHub.$emit('close-dialog')
     }
   }
 }

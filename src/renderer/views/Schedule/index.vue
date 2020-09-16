@@ -11,6 +11,7 @@
               style="width:95%"
               format="yyyy-MM-dd"
               value-format="yyyy-MM-dd"
+              popper-class="dateTimePicker"
               @change="changeData"
               size="mini"
             />
@@ -41,6 +42,7 @@
                 v-model="select"
                 slot="prepend"
                 placeholder="选择"
+                width="80px"
               >
                 <el-option
                   label="病区"
@@ -1073,8 +1075,8 @@ export default {
     float: left;
     @include theme-property("background", $background-schedule);
     // @include theme-property("box-shadow", $box-shadow-card);
-    background: rgba(24, 28, 39, 1);
-    box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+    // background: rgba(24, 28, 39, 1);
+    // box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
     border-radius: 5px;
     overflow: hidden;
     .option {
@@ -1089,6 +1091,14 @@ export default {
     .unallocated {
       height: calc(100% - 86px);
     }
+    /deep/ .el-input-group__prepend{
+      width:80px;
+      @include theme-property("color", $color-text-regular);
+      @include theme-property("background", $background-schedule-list);
+    }
+    /deep/ .el-select .el-input__inner:focus{
+      @include theme-property("border-color", $background-schedule-list);
+    }
   }
   .right {
     width: calc(100% - 510px);
@@ -1096,7 +1106,7 @@ export default {
     padding: 10px;
     height: 100%;
     @include theme-property("background", $background-schedule);
-    box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+    // box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
     border-radius: 5px;
     .content {
       height: calc(100% - 110px);
@@ -1135,6 +1145,7 @@ export default {
     .records {
       height: 100px;
       @include theme-property("border", $border-event-left);
+      @include theme-property("color", $color-text-regular);
       border-radius: 5px;
       margin-top: 10px;
     }
@@ -1165,16 +1176,16 @@ export default {
 }
 .schedule /deep/ .vue-contextmenu-listWrapper {
   width: 180px;
-  background: #2c3140;
-  border: 1px solid rgba(57, 66, 92, 1);
+  @include theme-property('background', $dateTimePicker-color-background);
+  @include theme-property('border-color', $dateTimePicker-color-border);
   box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
   border-radius: 5px;
   padding-left: 30px;
   .context-menu-list {
     // background: #39425c;
-    background: #1f2130;
+    @include theme-property('background', $background-dialog);
     line-height: 28px;
-    color: #9ba3d5;
+    @include theme-property('color', $color-text-regular);
     margin: unset;
     .btn-wrapper-simple {
       height: 28px;
@@ -1191,7 +1202,7 @@ export default {
     .no-child-btn {
       padding: unset;
       &:hover {
-        color: #388ff7;
+        @include theme-property('color', $color-text-primary);
       }
     }
     .has-child {
@@ -1200,8 +1211,8 @@ export default {
   }
 }
 .schedule /deep/ .child-ul-wrapper {
-  background: #1e222e;
-  border: 1px solid rgba(57, 66, 92, 1);
+  @include theme-property('background', $dateTimePicker-color-background);
+  @include theme-property('border-color', $dateTimePicker-color-border);
   box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
   border-radius: 5px;
   .child-li-wrapper {
