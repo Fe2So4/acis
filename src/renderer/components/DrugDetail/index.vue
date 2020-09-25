@@ -141,7 +141,7 @@ export default {
           moment(new Date()).format('yyyy-MM-DD') +
           ' ' +
           moment(newVal).format('HH:mm')
-        console.log(newVal)
+        // console.log(newVal)
       },
       immediate: true
     },

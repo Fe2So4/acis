@@ -32,7 +32,7 @@
         </tr>
         <tr>
           <th style="border-bottom:1px solid #444444;border-top:1px solid #444444;border-right:1px solid #444444;border-left:1px solid #444444;padding:9px 0;">
-            术间
+            手术间
           </th>
           <th style="border-bottom:1px solid #444444;border-top:1px solid #444444;border-right:1px solid #444444;padding:9px 0;">
             序号

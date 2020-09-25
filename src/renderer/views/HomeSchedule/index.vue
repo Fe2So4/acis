@@ -26,7 +26,7 @@
       </el-container>
     </el-container>
 
-    <el-dialog
+    <!-- <el-dialog
       :visible.sync="dialogVisible"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
@@ -65,8 +65,8 @@
               type="primary"
               style="padding: 9px 20px;"
             >
-              <!-- @click="login" -->
-              确 定
+              @click="login" -->
+    <!-- 确 定
             </el-button>
             <el-button
               style="padding: 9px 20px;"
@@ -83,7 +83,7 @@
           </el-form-item>
         </el-form>
       </div>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -91,7 +91,7 @@
 import Header from './Header/index'
 // import UserInfo from './UserInfo/index'
 // import Navs from './navs'
-import { debounce } from '@/utils/index'
+// import { debounce } from '@/utils/index'
 // import { login } from '../../api/login'
 import { getCurrentAccount } from '@/utils/storage'
 const { BrowserWindow } = require('electron').remote
@@ -136,19 +136,29 @@ export default {
     // UserInfo,
     // Navs
   },
+  beforeRouteEnter (to, from, next) {
+    if (from.path === '/login') {
+      const { BrowserWindow } = require('electron').remote
+      const wins = BrowserWindow.getAllWindows()
+      if (wins.length > 0) {
+        wins[0].maximize()
+      }
+    }
+    next()
+  },
   mounted () {
-    const time = 10 * 60 * 1000
-    let timer
-    const lock = debounce(() => {
-      clearTimeout(timer)
-      timer = setTimeout(() => {
-        this.dialogVisible = true
-      }, time)
-    }, 5000)
+    // const time = 10 * 60 * 1000
+    // let timer
+    // const lock = debounce(() => {
+    //   clearTimeout(timer)
+    //   timer = setTimeout(() => {
+    //     this.dialogVisible = true
+    //   }, time)
+    // }, 5000)
 
-    document.body.addEventListener('mousemove', () => {
-      lock()
-    })
+    // document.body.addEventListener('mousemove', () => {
+    //   lock()
+    // })
   },
   methods: {
     // login () {

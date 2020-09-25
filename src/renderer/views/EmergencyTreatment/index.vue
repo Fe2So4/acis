@@ -299,22 +299,6 @@ export default {
         hospitalNo: [{ required: true, message: '请输入住院号', trigger: 'change' }],
         ope_room: [{ required: true, message: '请选择手术间', trigger: 'change' }]
       },
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
       level: [{ value: '0', label: '特' }, { value: '1', label: '大' }, { value: '2', label: '中' }, { value: '3', label: '小' }],
       isolation: [{ value: '0', label: '正常' }, { value: '1', label: '隔离' }, { value: '2', label: '放射' }],
       changeTime: [{ value: '0', label: '急诊' }, { value: '1', label: '择期' }],

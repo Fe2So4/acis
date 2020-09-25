@@ -12,10 +12,16 @@
       highlight-current-row
       :data="data"
       class="mytable-style scroll"
+      :checkbox-config="{trigger: 'row', highlight: true, range: true, checkMethod:handleCheckFilter}"
       :row-style="rowStyle"
+      @checkbox-change="selectChangeEvent"
       @cell-dblclick="handleDetailVisible"
       @cell-click="handleSimpleApply"
     >
+      <vxe-table-column
+        type="checkbox"
+        width="60"
+      />
       <vxe-table-column
         field="sequence"
         title="台"
@@ -116,6 +122,12 @@
       :detail="detailApply"
       @close="handleClose"
     />
+    <detail-batch
+      v-if="batchVisible"
+      :check-list="checkList"
+      :batch-visible="batchVisible"
+      @close="handleCloseBatch"
+    />
   </div>
 </template>
 
@@ -124,11 +136,14 @@ import request from '@/utils/requestForMock'
 import { cancelOpeApply } from '@/api/schedule'
 import { mapGetters } from 'vuex'
 import AllocatedDetail from './allocated-detail'
+import DetailBatch from './allocated-detail-batch'
 export default {
   data () {
     return {
       detailVisible: false,
-      detailApply: null
+      detailApply: null,
+      batchVisible: false,
+      checkList: []
     }
   },
   props: {
@@ -138,7 +153,7 @@ export default {
     }
   },
   components: {
-    AllocatedDetail
+    AllocatedDetail, DetailBatch
   },
   computed: {
     ...mapGetters('Schedule', ['currentRoom', 'time'])
@@ -168,6 +183,9 @@ export default {
     distribute (row) {
       this.$emit('distribute', row)
     },
+    handleCheckFilter ({ row }) {
+      return row.state === '1'
+    },
     rowStyle ({
       row,
       rowIndex
@@ -190,12 +208,25 @@ export default {
         this.detailApply = JSON.parse(JSON.stringify(row))
       }
     },
+    handleBatchVisible () {
+      if (this.checkList.length > 0) {
+        this.batchVisible = true
+      } else {
+        this.$message({ type: 'warning', message: '请勾选要修改的手术' })
+      }
+    },
     handleSimpleApply ({ row }) {
       // console.log(row)
       this.$emit('handleSimpleApply', row)
     },
     handleClose () {
       this.detailVisible = false
+    },
+    handleCloseBatch () {
+      this.batchVisible = false
+    },
+    selectChangeEvent ({ records }) {
+      this.checkList = records
     }
   },
   mounted () {

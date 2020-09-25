@@ -2,7 +2,7 @@
   <div class="allocated-detail">
     <el-dialog
       title="手术详细信息"
-      :visible.sync="detailVisible"
+      :visible.sync="batchVisible"
       width="50%"
       before-close="handleClose"
     >
@@ -17,94 +17,12 @@
             justify="space-between"
           >
             <el-col :span="10">
-              <el-form-item label="手术间号">
-                <el-input
-                  v-model="currentRoom.roomNo"
-                  disabled
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="10">
-              <el-form-item label="台次">
-                <el-input v-model="detailApply.sequence" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row
-            type="flex"
-            justify="space-between"
-          >
-            <el-col :span="10">
-              <el-form-item label="申请时间">
-                <el-date-picker
-                  v-model="detailApply.opeScheduleTime"
-                  type="datetime"
-                  placeholder="选择日期时间"
-                  value-format="yyyy-MM-dd HH:mm:ss"
-                  format="yyyy-MM-dd HH:mm:ss"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="10">
-              <el-form-item
-                label="手术名称"
-                disabled
-              >
-                <el-input
-                  v-model="detailApply.operationName"
-                  disabled
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row
-            type="flex"
-            justify="space-between"
-          >
-            <el-col :span="10">
-              <el-form-item label="手术医师">
-                <el-input
-                  v-model="detailApply.surgeon"
-                  disabled
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="10">
-              <el-form-item label="麻醉方法">
-                <el-select
-                  v-model="detailApply.anaesthesiaCode"
-                  placeholder="请选择"
-                  filterable
-                >
-                  <!-- @change="changeValue" -->
-                  <el-option
-                    v-for="(item,index) in anaesList"
-                    :key="index"
-                    :label="item.userName"
-                    :value="item.userId"
-                  >
-                    <div class="content">
-                      <span>{{ item.userId }}</span>
-                      <span>{{ item.userName }}</span>
-                      <span>{{ item.inputCode }}</span>
-                    </div>
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row
-            type="flex"
-            justify="space-between"
-          >
-            <el-col :span="10">
               <el-form-item label="主麻">
                 <el-select
-                  v-model="detailApply.anesDocId"
+                  v-model="detailApply.anesDoc"
                   placeholder="请选择"
                   filterable
                 >
-                  <!-- @change="changeValue" -->
                   <el-option
                     v-for="(item,index) in doctorList"
                     :key="index"
@@ -123,11 +41,10 @@
             <el-col :span="10">
               <el-form-item label="副麻1">
                 <el-select
-                  v-model="detailApply.firstDoctorCode"
+                  v-model="detailApply.firstAnesDoc"
                   placeholder="请选择"
                   filterable
                 >
-                  <!-- @change="changeValue" -->
                   <el-option
                     v-for="(item,index) in doctorList"
                     :key="index"
@@ -150,18 +67,11 @@
           >
             <el-col :span="10">
               <el-form-item label="副麻2">
-                <!-- <Select
-              :data-list="doctorList"
-              @changeValue="changeValue(3)"
-              :current-value="detailApply.secAnesDocId"
-              @selectOperaion="selectOperaion(3)"
-                />-->
                 <el-select
-                  v-model="detailApply.secAnesDocId"
+                  v-model="detailApply.secAnesDoc"
                   placeholder="请选择"
                   filterable
                 >
-                  <!-- @change="changeValue" -->
                   <el-option
                     v-for="(item,index) in doctorList"
                     :key="index"
@@ -179,18 +89,11 @@
             </el-col>
             <el-col :span="10">
               <el-form-item label="副麻3">
-                <!-- <Select
-              :data-list="doctorList"
-              @changeValue="changeValue(4)"
-              :current-value="detailApply.thirdDoctorCode"
-              @selectOperaion="selectOperaion(4)"
-                />-->
                 <el-select
-                  v-model="detailApply.thirdDoctorCode"
+                  v-model="detailApply.thirdAnesDoc"
                   placeholder="请选择"
                   filterable
                 >
-                  <!-- @change="changeValue" -->
                   <el-option
                     v-for="(item,index) in doctorList"
                     :key="index"
@@ -214,11 +117,10 @@
             <el-col :span="10">
               <el-form-item label="洗手护士1">
                 <el-select
-                  v-model="detailApply.firstOpeNurseId"
+                  v-model="detailApply.firstOpeNurse"
                   placeholder="请选择"
                   filterable
                 >
-                  <!-- @change="changeValue" -->
                   <el-option
                     v-for="(item,index) in nurseList"
                     :key="index"
@@ -237,11 +139,10 @@
             <el-col :span="10">
               <el-form-item label="洗手护士2">
                 <el-select
-                  v-model="detailApply.secOpeNurseId"
+                  v-model="detailApply.secOpeNurse"
                   placeholder="请选择"
                   filterable
                 >
-                  <!-- @change="changeValue" -->
                   <el-option
                     v-for="(item,index) in nurseList"
                     :key="index"
@@ -265,11 +166,10 @@
             <el-col :span="10">
               <el-form-item label="巡回护士1">
                 <el-select
-                  v-model="detailApply.firstSupplyNurseId"
+                  v-model="detailApply.firstSupplyNurse"
                   placeholder="请选择"
                   filterable
                 >
-                  <!-- @change="changeValue" -->
                   <el-option
                     v-for="(item,index) in nurseList"
                     :key="index"
@@ -288,11 +188,10 @@
             <el-col :span="10">
               <el-form-item label="巡回护士2">
                 <el-select
-                  v-model="detailApply.secSupplyNurseId"
+                  v-model="detailApply.secSupplyNurse"
                   placeholder="请选择"
                   filterable
                 >
-                  <!-- @change="changeValue" -->
                   <el-option
                     v-for="(item,index) in nurseList"
                     :disabled="detailApply.firstOpeNurseId === item.userId"
@@ -307,20 +206,6 @@
                     </div>
                   </el-option>
                 </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row
-            type="flex"
-            justify="space-between"
-          >
-            <el-col :span="24">
-              <el-form-item label="备注">
-                <el-input
-                  type="textarea"
-                  rows="2"
-                  v-model="detailApply.memo"
-                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -355,9 +240,9 @@ import {
   getDetailDocList,
   getDetailNurseList,
   getAnaesMethod,
-  updateSimpleApply
+  updateScheduledInfo
 } from '@/api/schedule'
-import request from 'src/common/utils/requestForMock'
+import request from '@/utils/requestForMock'
 export default {
   data () {
     return {
@@ -369,32 +254,42 @@ export default {
       loading: false,
       nurseList: [],
       anaesList: [],
-      detailApply: JSON.parse(JSON.stringify(this.detail))
+      detailApply: {
+        anesDoc: '',
+        firstAnesDoc: '',
+        secAnesDoc: '',
+        thirdAnesDoc: '',
+        firstOpeNurse: '',
+        secOpeNurse: '',
+        firstSupplyNurse: '',
+        secSupplyNurse: ''
+      }
     }
   },
   watch: {
-    detail: {
-      handler (newVal) {
-        this.detailApply = newVal
-      },
-      deep: true
-    }
+    // detail: {
+    //   handler (newVal) {
+    //     this.detailApply = newVal
+    //   },
+    //   deep: true
+    // }
   },
   computed: {
     ...mapGetters('Schedule', ['currentRoom'])
-    // detailApply () {
-    //   return JSON.parse(JSON.stringify(this.detail))
-    // },
   },
   props: {
-    detailVisible: {
+    batchVisible: {
       type: Boolean,
       default: false
     },
-    detail: {
-      type: Object,
+    checkList: {
+      type: Array,
       required: true
     }
+    // detail: {
+    //   type: Object,
+    //   required: true
+    // }
   },
   components: {},
   methods: {
@@ -426,30 +321,28 @@ export default {
         const data = res.data.data
         data.forEach((item) => {
           item.userName = item.anesName
-          item.userId = item.anesCode
         })
         this.anaesList = data
       })
     },
     selectOperaion (param) {},
     updateSimpleApply () {
+      const operationIds = []
+      this.checkList.forEach(item => {
+        operationIds.push(item.operationId)
+      })
       const obj = {}
-      obj.anesMethod = this.detailApply.anaesthesiaCode
-      obj.anesDoc = this.detailApply.anesDocId
-      obj.firstAnesDoc = this.detailApply.firstDoctorCode
-      obj.secAnesDoc = this.detailApply.secAnesDocId
-      obj.thirdAnesDoc = this.detailApply.thirdAnesDocId
-      obj.sequence = this.detailApply.sequence
-      obj.opeScheduledTime = this.detailApply.opeScheduledTime
-      obj.operationId = this.detailApply.operationId
-      obj.firstOpeNurse = this.detailApply.firstOpeNurseId
-      obj.secOpeNurse = this.detailApply.secOpeNurseId
-      obj.firstSupplyNurse = this.detailApply.firstSupplyNurseId
-      obj.secSupplyNurse = this.detailApply.secSupplyNurseId
-      obj.thirdOpeNurse = this.detailApply.thirdOpeNurseId
-      obj.thirdSupplyNurse = this.detailApply.thirdSupplyNurseId
+      obj.operationIds = operationIds
+      obj.anesDoc = this.detailApply.anesDoc
+      obj.firstAnesDoc = this.detailApply.firstAnesDoc
+      obj.secAnesDoc = this.detailApply.secAnesDoc
+      obj.thirdAnesDoc = this.detailApply.thirdAnesDoc
+      obj.firstOpeNurse = this.detailApply.firstOpeNurse
+      obj.secOpeNurse = this.detailApply.secOpeNurse
+      obj.firstSupplyNurse = this.detailApply.firstSupplyNurse
+      obj.secSupplyNurse = this.detailApply.secSupplyNurse
       request({
-        url: updateSimpleApply,
+        url: updateScheduledInfo,
         method: 'PUT',
         data: obj
       }).then((res) => {
@@ -467,6 +360,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "@/styles/theme";
 .detail {
   .el-input {
     // width: 178px;
@@ -492,6 +386,9 @@ export default {
       display: block;
       flex: 1;
     }
+  }
+  /deep/ .el-dialog__title{
+    @include theme-property("color", $color-text-regular);
   }
 }
 // .select /deep/ .el-select .el-select-dropdown,.el-select-dropdown{

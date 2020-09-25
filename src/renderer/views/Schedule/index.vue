@@ -159,6 +159,7 @@
           <div class="allocated">
             <Allacate
               :data="allacatedList"
+              ref="allocated"
               @handleSimpleApply="handleSimpleApply"
             />
           </div>
@@ -206,6 +207,7 @@
           @handleClear7="handleClear(7)"
           @handleClear8="handleClear(8)"
           @handleClear9="handleClear(9)"
+          @handleEditBatch="handleEditBatch"
         />
       </div>
       <div class="records">
@@ -353,6 +355,10 @@ export default {
           {
             btnName: '切换',
             fnHandler: 'handleShowSwitch'
+          },
+          {
+            btnName: '批量修改',
+            fnHandler: 'handleEditBatch'
           },
           {
             btnName: '提交',
@@ -544,6 +550,11 @@ export default {
     // 切换患者基本信息
     changePatientDetail (row) {
       this.patientBasBasicInfo = row
+    },
+    // 批量排班操作
+    handleEditBatch () {
+      this.$refs.allocated.handleBatchVisible()
+      console.log('批量操作触发')
     },
     // 获取当前排班列表数据
     getData () {
@@ -986,20 +997,6 @@ export default {
     roomConfig () {
       this.roomVisible = true
     },
-    // submitRoomConfig () {
-    //   this.roomVisible = false
-    //   const formData = new FormData()
-    //   formData.append('deptCode', this.dept)
-    //   formData.append('roomNo', this.currentId)
-    //   formData.append('maxOperationNum', this.maxCount)
-    //   submitRoomConfig(formData).then((res) => {
-    //     this.getRoomList()
-    //     this.$message({
-    //       message: '修改成功',
-    //       type: 'success'
-    //     })
-    //   })
-    // },
     // 关闭弹窗
     handleClose () {
       this.previewVisible = false
@@ -1070,7 +1067,7 @@ export default {
   width: 100%;
   height: 100%;
   .left {
-    width: 500px;
+    width: 760px;
     height: 100%;
     float: left;
     @include theme-property("background", $background-schedule);
@@ -1101,7 +1098,7 @@ export default {
     }
   }
   .right {
-    width: calc(100% - 510px);
+    width: calc(100% - 770px);
     float: right;
     padding: 10px;
     height: 100%;

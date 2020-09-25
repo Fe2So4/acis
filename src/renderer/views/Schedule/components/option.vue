@@ -10,6 +10,7 @@
       <el-button
         type="text"
         size="mini"
+        @click="handleRefresh"
       >刷新</el-button>
       <!-- <el-button
         type="text"
@@ -54,6 +55,13 @@ export default {
           this.$message({ type: 'warning', message: '提交失败' })
         }
       })
+    },
+    handleRefresh () {
+      this.$eventHub.$emit('get-unallocated')
+      this.$eventHub.$emit('get-allocated')
+      this.$eventHub.$emit('get-room')
+      this.$eventHub.$emit('get-records')
+      this.$eventHub.$emit('get-DocNurse')
     }
   },
   mounted () {

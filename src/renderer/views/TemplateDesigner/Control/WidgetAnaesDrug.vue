@@ -650,8 +650,8 @@ export default {
           const grid = this.layer.getElementsByClassName('grid')[0]
           const leftPart = this.layer.getElementsByClassName('leftPart')[0]
           const width = grid.attr('width')
-          const xAxislist = this.xAxisList
-          console.log(xAxislist)
+          // const xAxislist = this.xAxisList
+          // console.log(xAxislist)
           // const xScale = Math.floor(width / xAxislist.length);
           // const interval = Math.floor(
           //   (this.configuration.xAxis.timeInterval * 60 * 1000) / xScale

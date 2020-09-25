@@ -17,10 +17,10 @@
       @cell-dblclick="handleDistributeRoom"
     >
       <!-- @cell-click="handleShowDetail" -->
-      <vxe-table-column
+      <!-- <vxe-table-column
         field="opeScheduleTime"
         title="申请时间"
-      />
+      /> -->
       <!-- <vxe-table-column
         field="sequence"
         title="申请台次"
