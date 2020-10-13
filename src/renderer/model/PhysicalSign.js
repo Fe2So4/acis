@@ -47,7 +47,7 @@ export class PhysicalSignLine {
       anchor: [0, 0],
       width,
       height,
-      fontSize: 12,
+      fontSize: 8,
       fontFamily: '宋体',
       textAlign: 'center',
       verticalAlign: 'middle',
