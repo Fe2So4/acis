@@ -28,7 +28,7 @@ export class PhysicalSignLine {
       pos: [0, 0],
       points: [],
       strokeColor: this._color,
-      lineWidth: 1,
+      lineWidth: 2,
       className: 'signLine'
     })
     this._group.append(this._line)
@@ -41,8 +41,8 @@ export class PhysicalSignLine {
     const text = hasLabel ? this._label : ''
     const label = new Label(text)
     const position = [x, y]
-    const width = hasLabel ? 12 : 4
-    const height = hasLabel ? 14 : 4
+    const width = hasLabel ? 8 : 4
+    const height = hasLabel ? 10 : 4
     label.attr({
       anchor: [0, 0],
       width,
