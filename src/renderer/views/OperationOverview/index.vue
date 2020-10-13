@@ -1,14 +1,16 @@
 <template>
   <div class="operation-overview">
-    <RoomList
+    <!-- <RoomList
       :list="roomList"
-    />
+    /> -->
+    <RoomTable :list="roomList" />
   </div>
 </template>
 <script>
 import request from '@/utils/requestForMock'
 import { getOpeView } from '@/api/superConfig'
-import RoomList from './RoomList'
+// import RoomList from './RoomList'
+import RoomTable from './RoomTable'
 export default {
   data () {
     return {
@@ -16,7 +18,8 @@ export default {
     }
   },
   components: {
-    RoomList
+    RoomTable
+    // RoomList
   },
   created () {
     this.getOpeView()

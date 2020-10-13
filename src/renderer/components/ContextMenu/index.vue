@@ -68,7 +68,8 @@ export default {
       width:30px;
       height:100%;
       float:left;
-      @include theme-property('background', $background-dialog);
+      @include theme-property('background', $dateTimePicker-color-background);
+      // @include theme-property('background', $background-dialog);
       // background #2C3140
       border-radius:5px 0px 0px 5px;
     }

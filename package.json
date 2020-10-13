@@ -1,8 +1,8 @@
 {
-  "name": "acis",
+  "name": "acis-schedule",
   "version": "1.0.0",
   "author": "dyw-design <1875742887@qq.com>",
-  "description": "acis-statistics",
+  "description": "acis-schedule",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
@@ -25,8 +25,8 @@
     "mock": "node ./mock/server.js"
   },
   "build": {
-    "productName": "acis",
-    "appId": "acis",
+    "productName": "acis-schedule",
+    "appId": "acis-schedule",
     "directories": {
       "output": "build"
     },
@@ -67,7 +67,7 @@
       "installerHeaderIcon": "build/icons/favicon.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "acis"
+      "shortcutName": "acis-schedule"
     }
   },
   "dependencies": {

@@ -658,6 +658,11 @@ export default {
           // );
           grid.addEventListener('mousedown', (evt) => {
             if (evt.originalEvent.button === 2) {
+              // const menu = document.querySelector('.menu-list')
+              // console.log(menu)
+              // if (menu) {
+              //   menu.remove()
+              // }
               if (evt.target.attr('className') === 'row') {
                 this.groupNo = evt.target.attr('index')
                 // console.log(evt.x - leftPart.attr("width"));
