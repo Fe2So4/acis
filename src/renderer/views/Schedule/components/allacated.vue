@@ -24,12 +24,12 @@
       />
       <vxe-table-column
         field="sequence"
-        title="台"
+        title="台次"
         width="82"
       />
       <vxe-table-column
         field="ptName"
-        title="病人"
+        title="患者姓名"
         width="82"
       />
       <vxe-table-column

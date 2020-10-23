@@ -35,7 +35,7 @@
             手术间
           </th>
           <th style="border-bottom:1px solid #444444;border-top:1px solid #444444;border-right:1px solid #444444;padding:9px 0;">
-            序号
+            台次
           </th>
           <th style="border-bottom:1px solid #444444;border-top:1px solid #444444;border-right:1px solid #444444;padding:9px 0;">
             病人信息

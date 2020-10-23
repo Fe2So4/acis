@@ -21,11 +21,11 @@
         field="opeScheduleTime"
         title="申请时间"
       /> -->
-      <!-- <vxe-table-column
+      <vxe-table-column
         field="sequence"
-        title="申请台次"
+        title="台次"
         show-overflow="title"
-      /> -->
+      />
       <vxe-table-column
         field="ptName"
         title="姓名"
@@ -46,20 +46,41 @@
         title="住院号"
         show-overflow="title"
       />
+      <vxe-table-column
+        field="surgeon"
+        title="医师"
+        show-overflow="title"
+      />
+      <vxe-table-column
+        field="operation"
+        title="手术"
+        show-overflow="title"
+      />
+      <!-- <vxe-table-column
+        field="diagnose"
+        title="诊断"
+        show-overflow="title"
+      /> -->
+      <!-- <vxe-table-column
+        field="memo"
+        title="备注"
+        show-overflow="title"
+      /> -->
     </vxe-table>
   </div>
 </template>
 
 <script>
 import request from '@/utils/requestForMock'
-import { getOpeApply, distributeOpeApply } from '@/api/schedule'
+// import { getOpeApply, distributeOpeApply } from '@/api/schedule'
+import { distributeOpeApply } from '@/api/schedule'
 import moment from 'moment'
 import XEUtils from 'xe-utils'
 import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
-      list: []
+      // list: []
     }
   },
   props: {
@@ -71,6 +92,14 @@ export default {
     select: {
       type: String,
       default: ''
+    },
+    floor: {
+      type: String,
+      required: true
+    },
+    list: {
+      type: Array,
+      required: true
     }
   },
   computed: {
@@ -113,17 +142,17 @@ export default {
     imediate: true
   },
   methods: {
-    getData () {
-      request({
-        url: getOpeApply + '/' + this.time
-      }).then(res => {
-        const data = res.data.data
-        data.forEach(value => {
+    // getData () {
+    //   request({
+    //     url: getOpeApply + '/' + this.time + '/' + this.floor
+    //   }).then(res => {
+    //     const data = res.data.data
+    //     data.forEach(value => {
 
-        })
-        this.list = data
-      })
-    },
+    //     })
+    //     this.list = data
+    //   })
+    // },
     // handleShowDetail () {
     //   this.$emit('handleShowDetail')
     // },
@@ -138,7 +167,7 @@ export default {
         ).then(res => {
           this.$eventHub.$emit('get-allocated')
           this.$eventHub.$emit('get-room')
-          this.getData()
+          this.$eventHub.$emit('get-unallocated')
           this.$eventHub.$emit('get-records')
         })
       } else {
@@ -150,11 +179,11 @@ export default {
     }
   },
   mounted () {
-    this.getData()
-    this.$eventHub.$on('get-unallocated', () => {
-      // 获取数据
-      this.getData()
-    })
+    // this.getData()
+    // this.$eventHub.$on('get-unallocated', () => {
+    //   // 获取数据
+    //   this.getData()
+    // })
   }
 }
 </script>

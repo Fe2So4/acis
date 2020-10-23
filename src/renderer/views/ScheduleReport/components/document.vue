@@ -16,122 +16,167 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="printEvent">
+        <el-button
+          @click="printEvent"
+          :disabled="!reportVisible"
+        >
           打印
         </el-button>
-        <el-button>
+        <el-button
+          @click="handleEdit"
+          v-show="reportVisible"
+        >
+          编辑
+        </el-button>
+        <el-button @click="getData">
           刷新
+        </el-button>
+        <el-button
+          @click="handleSubmit"
+          v-show="!reportVisible"
+        >
+          提交修改
+        </el-button>
+        <el-button
+          @click="handleEdit"
+          v-show="!reportVisible"
+        >
+          返回
         </el-button>
       </el-form-item>
     </el-form>
     <div class="content">
-      <el-scrollbar
+      <!-- <el-scrollbar
         style="height:100%;"
         class="scrollbar"
+      > -->
+      <div
+        v-if="!reportVisible"
+        style="height:100%;"
       >
-        <div class="print-document">
-          <!-- <vxe-table
-            border
-            auto-resize
-            export-config
-            ref="xTable"
-            height="100%"
-            :data="tableData"
-            align="center"
-            size="mini"
-            :header-cell-class-name="cellClassName"
-            class="table-report"
+        <vxe-table
+          border
+          round
+          auto-resize
+          keep-source
+          export-config
+          ref="xTable"
+          height="100%"
+          :data="tableData"
+          align="center"
+          size="mini"
+          :edit-config="{trigger: 'dblclick', mode: 'cell', showStatus: true}"
+          :header-cell-class-name="cellClassName"
+        >
+          <!-- class="table-report" -->
+          <vxe-table-column
+            field="opeRoom"
+            title="手术间"
+            :edit-render="{}"
           >
-            <vxe-table-column
-              field="title"
-              title="手术排班表"
-            >
-              <vxe-table-column>
-                <template v-slot:header>
-                  <span>时间：{{ time }}</span>
-                </template>
-                <vxe-table-column
-                  field="opeRoom"
-                  title="术间"
+            <template v-slot:edit="scope">
+              <el-select
+                v-model="scope.row.opeRoom"
+              >
+                <el-option
+                  v-for="item in roomList"
+                  :key="item"
+                  :label="item"
+                  :value="item"
                 />
-                <vxe-table-column
-                  field="sequence"
-                  title="序号"
-                />
-                <vxe-table-column
-                  field="ptName"
-                  title="病人信息"
-                />
-                <vxe-table-column
-                  field="inpatientWard"
-                  title="病区"
-                />
-                <vxe-table-column
-                  field="bedId"
-                  title="床号"
-                />
-                <vxe-table-column
-                  field="visitId"
-                  title="住院号"
-                />
-                <vxe-table-column
-                  field="diagnoseBefore"
-                  title="诊断"
-                />
-              </vxe-table-column>
-              <vxe-table-column>
-                <template v-slot:header>
-                  <span>台数：0台</span>
-                </template>
-                <vxe-table-column
-                  field="operationName"
-                  title="手术名称"
-                />
-                <vxe-table-column
-                  field="surgeonName"
-                  title="手术医师"
-                />
-                <vxe-table-column
-                  field="anesMethod"
-                  title="麻醉方法"
-                />
-                <vxe-table-column
-                  field="anesDoc"
-                  title="麻醉医师"
-                />
-                <vxe-table-column
-                  field="opeNurse"
-                  title="洗手护士"
-                />
-                <vxe-table-column
-                  field="supplyNurse"
-                  title="巡回护士"
-                />
-                <vxe-table-column
-                  field="memo"
-                  title="备注"
-                />
-              </vxe-table-column>
-            </vxe-table-column>
-          </vxe-table> -->
-          <Report
-            id="print-report"
-            :table-data="tableData"
-            :time="time"
+              </el-select>
+            </template>
+            <template v-slot="{ row }">
+              {{ getSelectLabel(row.opeRoom, roomList) }}
+            </template>
+          </vxe-table-column>
+          <vxe-table-column
+            field="sequence"
+            title="台次"
+            :edit-render="{}"
+          >
+            <template v-slot:edit="scope">
+              <el-input
+                v-model="scope.row.sequence"
+              />
+            </template>
+          </vxe-table-column>
+          <vxe-table-column
+            field="ptName"
+            title="病人信息"
           />
-        </div>
-      </el-scrollbar>
+          <vxe-table-column
+            field="inpatientWard"
+            title="病区"
+          />
+          <vxe-table-column
+            field="bedId"
+            title="床号"
+          />
+          <vxe-table-column
+            field="visitId"
+            title="住院号"
+          />
+          <vxe-table-column
+            field="diagnoseBefore"
+            title="诊断"
+          />
+          <vxe-table-column
+            field="operationName"
+            title="手术名称"
+          />
+          <vxe-table-column
+            field="surgeonName"
+            title="手术医师"
+          />
+          <vxe-table-column
+            field="anesMethod"
+            title="麻醉方法"
+          />
+          <vxe-table-column
+            field="anesDoc"
+            title="麻醉医师"
+          />
+          <vxe-table-column
+            field="opeNurse"
+            title="洗手护士"
+          />
+          <vxe-table-column
+            field="supplyNurse"
+            title="巡回护士"
+          />
+          <vxe-table-column
+            field="memo"
+            title="备注"
+          />
+        </vxe-table>
+      </div>
+      <div
+        class="print-document"
+        v-else
+      >
+        <Report
+          id="print-report"
+          :table-data="tableData"
+          :time="time"
+        />
+      </div>
+      <!-- </el-scrollbar> -->
     </div>
   </div>
 </template>
 <script>
 import moment from 'moment'
 import {
-  getTableList
+  getTableList, updateScheduledRoomPlatform
 } from '@/api/schedule'
+import {
+  roomNoList
+} from '@/api/dictionary'
 import request from '@/utils/requestForMock'
 import Report from './report'
 import { ipcRenderer } from 'electron'
+import XEUtils from 'xe-utils'
 export default {
   name: 'Document',
   data () {
@@ -140,7 +185,9 @@ export default {
       time: moment(new Date()).format('yyyy-MM-DD'),
       ptList: [],
       tableData: [],
-      floor: ''
+      floor: '',
+      roomList: [],
+      reportVisible: true
     }
   },
   components: {
@@ -158,10 +205,49 @@ export default {
         this.$message({ type: 'warning', message: '请选择正确排班日期' })
       }
     },
+    handleEdit () {
+      // const updateRecords = this.$refs.xTable.getUpdateRecords()
+      this.reportVisible = !this.reportVisible
+    },
+    getRoomList () {
+      request({
+        method: 'get',
+        url: roomNoList
+      }).then(res => {
+        this.roomList = res.data.data
+      })
+    },
+    getSelectLabel (value, list, valueProp = 'value', labelField = 'label') {
+      const item = XEUtils.find(list, item => item === value)
+      return item || null
+    },
     cellClassName ({ row, column }) {
       if (column === 'title') {
         return 'header-title'
       }
+    },
+    handleSubmit () {
+      const updateRecords = this.$refs.xTable.getUpdateRecords()
+      const arr = []
+      updateRecords.forEach(item => {
+        arr.push({
+          operationId: item.operationId,
+          opeRoom: item.opeRoom,
+          sequence: item.sequence
+        })
+      })
+      request({
+        method: 'put',
+        url: updateScheduledRoomPlatform,
+        data: arr
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.$message({ type: 'success', message: '修改成功' })
+          this.getData()
+        } else {
+          this.$message({ type: 'success', message: res.data.msg })
+        }
+      })
     },
     getData () {
       request({
@@ -174,6 +260,7 @@ export default {
   },
   mounted () {
     this.getData()
+    this.getRoomList()
   }
 }
 </script>
@@ -233,8 +320,8 @@ export default {
 }
 .document /deep/ .el-select .el-select-dropdown,
 .el-select-dropdown .el-select-dropdown__item {
-  padding: 0;
-  width: 400px;
+  // padding: 0;
+  // width: 400px;
 }
 .document /deep/ .el-select .el-select-dropdown,
 .document .el-select-dropdown__item.is-disabled {

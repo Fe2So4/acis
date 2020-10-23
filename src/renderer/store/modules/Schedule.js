@@ -5,12 +5,14 @@ const state = {
   {
     roomNo: '601',
     maxCount: '',
-    count: ''
+    count: '',
+    listLength: 0
   }
 }
 const getters = {
   time: state => state.time,
-  currentRoom: state => state.currentRoom
+  currentRoom: state => state.currentRoom,
+  listLength: state => state.listLength
 }
 const mutations = {
   SET_TIME (state, payload) {

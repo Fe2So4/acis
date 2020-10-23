@@ -6,7 +6,7 @@
       </div>
       <div class="logo-img">
         <img
-          src="@/assets/tq.png"
+          src="@/assets/hs_logo.png"
           alt=""
         >
       </div>
@@ -34,6 +34,14 @@
             {{ item.title }}
           </div>
         </li>
+        <el-button
+          @click="synchro"
+          type="primary"
+          size="mini"
+          icon="el-icon-refresh"
+        >
+          HIS同步
+        </el-button>
       </ul>
     </div>
     <div class="options">
@@ -96,14 +104,14 @@ export default {
           route: '/schedule-home/report',
           name: 'ScheduleReport',
           index: 2
-        },
-        {
-          title: 'HIS同步',
-          icon: 'el-icon-s-data',
-          route: '/schedule-home/report',
-          name: 'ScheduleReport',
-          index: 3
         }
+        // {
+        //   title: 'HIS同步',
+        //   icon: 'el-icon-s-data',
+        //   route: '/schedule-home/report',
+        //   name: 'ScheduleReport',
+        //   index: 3
+        // }
       ],
       activeIndex: 1,
       iconMax: 'icon-icon_max'
@@ -152,9 +160,6 @@ export default {
       }
       if (item.index === 2) {
         this.$router.push('/schedule-home/report')
-      }
-      if (item.index === 3) {
-        this.synchro()
       }
     },
     miniWindow () {

@@ -2,13 +2,20 @@
   <div class="schedule clearfix">
     <div class="left">
       <div class="option">
-        <el-row>
-          <el-col :span="13">
+        <el-row
+          justify="space-between"
+          type="flex"
+        >
+          <el-col
+            :span="12"
+            style="display:flex;"
+          >
+            <span class="left-label">日期：</span>
             <el-date-picker
               v-model="timeDate"
               type="date"
+              style="flex:1;"
               placeholder="选择日期"
-              style="width:95%"
               format="yyyy-MM-dd"
               value-format="yyyy-MM-dd"
               popper-class="dateTimePicker"
@@ -16,12 +23,19 @@
               size="mini"
             />
           </el-col>
-          <el-col :span="11">
+          <el-col
+            :span="11"
+            style="display:flex;"
+          >
+            <span class="left-label">
+              楼层：
+            </span>
             <el-select
-              v-model="type"
+              v-model="floor"
+              style="flex:1"
               placeholder="楼层"
-              style="width:100%"
               size="mini"
+              @change="changeFloor"
             >
               <el-option value="6" />
               <el-option value="7" />
@@ -29,14 +43,14 @@
             </el-select>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row v-show="defaultCollapse==='A'">
           <el-col :span="24">
             <el-input
               size="mini"
               placeholder="请输入内容"
               v-model="searchContent"
               class="input-with-select"
-              style="100%"
+              style="overflow:hidden;"
             >
               <el-select
                 v-model="select"
@@ -61,7 +75,13 @@
                   value="4"
                 />
               </el-select>
-              <!-- <el-button slot="append" icon="el-icon-search"></el-button> -->
+              <span
+                slot="append"
+                style="cursor:pointer;"
+              >
+                <!-- icon="el-icon-search" -->
+                <i class="el-icon-search" />
+              </span>
             </el-input>
           </el-col>
         </el-row>
@@ -77,13 +97,17 @@
         >
           <el-collapse-item name="A">
             <template slot="title">
-              手术({{ list.length }})
+              <!-- <div class="collapse-title"> -->
+              手术({{ opeList.length }})
+              <!-- </div> -->
             </template>
             <div class="collapse-height">
               <Unallocated
                 :time="timeDate"
+                :list="opeList"
                 :select="select"
                 @changePatientDetail="changePatientDetail"
+                :floor="floor"
               />
               <!-- :list="list" -->
             </div>
@@ -164,17 +188,24 @@
             />
           </div>
           <div class="patient-detail">
-            申请时间：
-            <span>{{ patientBasBasicInfo.opeScheduleTime }}</span> 病区：
-            <span>{{ patientBasBasicInfo.inpatientWard }}</span> 床位:
-            <span>{{ patientBasBasicInfo.bedId }}</span> 住院号：
-            <span>{{ patientBasBasicInfo.visitId }}</span> 医师：
-            <span>{{ patientBasBasicInfo.surgeon }}</span>
-            手术：
-            <span>{{ patientBasBasicInfo.operation }}</span> 病人姓名：
-            <span>{{ patientBasBasicInfo.ptName }}</span> 诊断：
-            <span>{{ patientBasBasicInfo.diagnose }}</span> 备注：
-            <span>{{ patientBasBasicInfo.diagnose }}</span>
+            <el-scrollbar
+              style="width:100%;"
+              class="scrollbar"
+            >
+              <div class="detail-content">
+                申请时间：
+                <span>{{ patientBasBasicInfo.opeScheduleTime }}</span> 病区：
+                <span>{{ patientBasBasicInfo.inpatientWard }}</span> 床位:
+                <span>{{ patientBasBasicInfo.bedId }}</span> 住院号：
+                <span>{{ patientBasBasicInfo.visitId }}</span> 医师：
+                <span>{{ patientBasBasicInfo.surgeon }}</span>
+                手术：
+                <span>{{ patientBasBasicInfo.operation }}</span> 病人姓名：
+                <span>{{ patientBasBasicInfo.ptName }}</span> 诊断：
+                <span>{{ patientBasBasicInfo.diagnose }}</span> 备注：
+                <span>{{ patientBasBasicInfo.diagnose }}</span>
+              </div>
+            </el-scrollbar>
           </div>
           <div class="room">
             <Room
@@ -254,6 +285,7 @@ import {
   getSwitchList,
   submitSimpleApply,
   configMaxDefalut,
+  getOpeApply,
   // submitRoomConfig,
   getDocList,
   getNurseList,
@@ -291,6 +323,7 @@ export default {
     return {
       allacatedList: [],
       dept: '',
+      floor: '6',
       roomVisible: false,
       changeTitle: '',
       checkAll: false,
@@ -504,6 +537,7 @@ export default {
       deptList: [],
       detailTime: '',
       list: [],
+      opeList: [],
       patientBasBasicInfo: {} // 患者基本信息--new
     }
   },
@@ -555,6 +589,17 @@ export default {
     handleEditBatch () {
       this.$refs.allocated.handleBatchVisible()
       console.log('批量操作触发')
+    },
+    getOpeData () {
+      request({
+        url: getOpeApply + '/' + this.timeDate + '/' + this.floor
+      }).then(res => {
+        const data = res.data.data
+        data.forEach(value => {
+
+        })
+        this.opeList = data
+      })
     },
     // 获取当前排班列表数据
     getData () {
@@ -618,6 +663,10 @@ export default {
       this.checkAll = checkedCount === this.changeContent.length
       this.isIndeterminate =
         checkedCount > 0 && checkedCount < this.changeContent.length
+    },
+    // 切换楼层获取数据
+    changeFloor () {
+      this.$eventHub.$emit('get-unallocated')
     },
     // 切换时间获取数据
     changeData (val) {
@@ -1044,6 +1093,7 @@ export default {
     this.getNurseList()
     this.getDoctorList()
     this.getData()
+    this.getOpeData()
     this.$eventHub.$on('get-allocated', () => {
       this.getData()
     })
@@ -1053,6 +1103,10 @@ export default {
     this.$eventHub.$on('get-DocNurse', () => {
       this.getNurseList()
       this.getDoctorList()
+    })
+    this.$eventHub.$on('get-unallocated', () => {
+      // 获取数据
+      this.getOpeData()
     })
     this.$eventHub.$on('handle-close', () => {
       this.handleClose()
@@ -1067,7 +1121,7 @@ export default {
   width: 100%;
   height: 100%;
   .left {
-    width: 760px;
+    width: 660px;
     height: 100%;
     float: left;
     @include theme-property("background", $background-schedule);
@@ -1076,6 +1130,11 @@ export default {
     // box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
     border-radius: 5px;
     overflow: hidden;
+    .left-label{
+      @include theme-property("color", $color-text-regular);
+      font-size: 14px;
+      line-height: 28px;
+    }
     .option {
       padding: 0 10px;
       .el-row {
@@ -1084,6 +1143,9 @@ export default {
     }
     .el-collapse {
       border: unset;
+      // /deep/ .is-active>div{
+      //   background: #9ba3d5;
+      // }
     }
     .unallocated {
       height: calc(100% - 86px);
@@ -1092,13 +1154,14 @@ export default {
       width:80px;
       @include theme-property("color", $color-text-regular);
       @include theme-property("background", $background-schedule-list);
+      cursor:pointer;
     }
     /deep/ .el-select .el-input__inner:focus{
       @include theme-property("border-color", $background-schedule-list);
     }
   }
   .right {
-    width: calc(100% - 770px);
+    width: calc(100% - 670px);
     float: right;
     padding: 10px;
     height: 100%;
@@ -1132,6 +1195,9 @@ export default {
       span {
         color: #d0dae5;
       }
+      .detail-content{
+        white-space: nowrap;
+      }
     }
     .room {
       height: calc(100% - 300px);
@@ -1151,6 +1217,12 @@ export default {
 // .schedule /deep/ .el-input-group__prepend {
 //   background: #252c40;
 // }
+.schedule /deep/ .el-input-group__append{
+  @include theme-property("background", $color-text-primary);
+  @include theme-property("color", $color-text-regular);
+  overflow: hidden;
+  border: unset;
+}
 .schedule /deep/ .el-collapse-item__header {
   height: 30px;
   // background: #252c40;
@@ -1160,6 +1232,10 @@ export default {
   // border-bottom: 1px solid #000;
   @include theme-property("border-color", $background-schedule);
   padding: 0 0 0 10px;
+  &.is-active{
+    color: #fff;
+    @include theme-property("background", $color-text-primary);
+  }
 }
 .schedule /deep/ .el-collapse-item__wrap {
   // background: #252c40;
@@ -1217,5 +1293,10 @@ export default {
       background: unset;
     }
   }
+}
+</style>
+<style>
+.schedule .scrollbar .el-scrollbar__wrap {
+  overflow-y: hidden;
 }
 </style>

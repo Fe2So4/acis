@@ -289,7 +289,7 @@ export default {
           position: relative;
 
           .room-id {
-            width: 80px;
+            width: 60px;
             font-size: 30px;
             color: #fff;
             text-align: center;
@@ -309,17 +309,16 @@ export default {
               font-weight: bold;
             }
           }
-
           .room-info {
             flex: 1;
             font-size: 12px;
-            margin-left:20px;
+            margin-left:10px;
             display: flex;
             justify-content: center;
             flex-direction: column;
 
             .room-info-item {
-              width: 110px;
+              width: 130px;
               text-overflow: ellipsis;
               white-space: nowrap;
               overflow: hidden;

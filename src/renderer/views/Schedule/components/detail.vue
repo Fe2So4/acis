@@ -2,7 +2,6 @@
   <div class="detail">
     <div
       class="content"
-      v-show="detail.scheduledDateTime"
     >
       申请时间：{{ detail.scheduledDateTime }}
       申请台次：{{ detail.sequence }}
@@ -34,5 +33,8 @@ export default {
     height: 40px;
     background: #f3f6f9;
     font: 14px/40px "";
+    .content{
+      overflow-x: auto;
+    }
   }
 </style>

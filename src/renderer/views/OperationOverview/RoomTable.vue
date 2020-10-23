@@ -17,48 +17,38 @@
         auto-resize
         class="scroll"
         :data="list"
-        :checkbox-config="{checkStrictly: true}"
-        :edit-config="{trigger: 'click', mode: 'cell', showStatus: true}"
       >
         <vxe-table-column
           field="roomNo"
           title="手术室"
-          :edit-render="{}"
         />
         <vxe-table-column
           field="patientName"
           title="患者"
-          :edit-render="{}"
         />
         <vxe-table-column
           field="patientId"
           title="患者ID"
-          :edit-render="{}"
         />
         <vxe-table-column
           field="opeNameBefore"
           title="手术名称"
-          :edit-render="{}"
         />
         <vxe-table-column
           field="opeScheduleTime"
           title="手术时间"
-          :edit-render="{}"
         />
         <vxe-table-column
           field="surgeon"
           title="手术医生"
-          :edit-render="{}"
         />
         <vxe-table-column
           field="anesDoc"
           title="麻醉医生"
-          :edit-render="{}"
         />
         <vxe-table-column
           field="stateName"
           title="当前状态"
-          :edit-render="{}"
         />
       </vxe-table>
     </div>
