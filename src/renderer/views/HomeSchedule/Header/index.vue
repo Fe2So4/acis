@@ -65,7 +65,7 @@
 
 <script>
 import ThemePicker from './ThemePicker'
-import { synchroApply, synchroPatient } from '@/api/schedule'
+import { synchroApply } from '@/api/schedule'
 import request from '@/utils/requestForMock'
 const {
   BrowserWindow, dialog
@@ -138,13 +138,6 @@ export default {
           start: 10,
           end: 10
         }
-      })
-      request({
-        url: synchroPatient,
-        params: {
-          start: 10,
-          end: 10
-        }
       }).then(res => {
         if (res.data.code === 200) {
           this.$message({ type: 'success', message: '同步成功' })
@@ -152,6 +145,19 @@ export default {
           this.$message({ type: 'error', message: res.data.msg })
         }
       })
+      // request({
+      //   url: synchroPatient,
+      //   params: {
+      //     start: 10,
+      //     end: 10
+      //   }
+      // }).then(res => {
+      //   if (res.data.code === 200) {
+      //     this.$message({ type: 'success', message: '同步成功' })
+      //   } else {
+      //     this.$message({ type: 'error', message: res.data.msg })
+      //   }
+      // })
     },
     handleChange (item) {
       this.activeIndex = item.index

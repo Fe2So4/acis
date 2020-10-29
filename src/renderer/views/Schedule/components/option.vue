@@ -1,14 +1,14 @@
 <template>
   <div class="option">
-    <span>共0台</span>
+    <span>{{ allCount }}台</span>
     <span>
       <el-button
-        type="text"
+        type="primary"
         size="mini"
         @click="showPreview"
       >提交前预览</el-button>
       <el-button
-        type="text"
+        type="primary"
         size="mini"
         @click="handleRefresh"
       >刷新</el-button>
@@ -17,7 +17,7 @@
         size="mini"
       >切换</el-button> -->
       <el-button
-        type="text"
+        type="primary"
         size="mini"
         @click="submitAll"
       >提交</el-button>
@@ -33,7 +33,7 @@ export default {
     return {}
   },
   computed: {
-    ...mapGetters('Schedule', ['time'])
+    ...mapGetters('Schedule', ['time', 'allCount'])
   },
   methods: {
     showPreview () {
@@ -74,7 +74,7 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/theme";
 .option {
-  padding: 0 20px;
+  padding: 10px 20px;
   @include theme-property("background", $background-schedule-option);
   display: flex;
   @include theme-property("color", $color-text-regular);

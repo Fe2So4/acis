@@ -7,12 +7,14 @@ const state = {
     maxCount: '',
     count: '',
     listLength: 0
-  }
+  },
+  allCount: '' // 分配手术总数
 }
 const getters = {
   time: state => state.time,
   currentRoom: state => state.currentRoom,
-  listLength: state => state.listLength
+  listLength: state => state.listLength,
+  allCount: state => state.allCount
 }
 const mutations = {
   SET_TIME (state, payload) {
@@ -20,6 +22,9 @@ const mutations = {
   },
   SET_CURRENT_ROOM (state, payload) {
     state.currentRoom = payload
+  },
+  SET_ALL_COUNT (state, payload) {
+    state.allCount = payload
   }
 }
 const actions = {
@@ -28,6 +33,9 @@ const actions = {
   },
   setCurrentRoom ({ commit }, payload) {
     commit('SET_CURRENT_ROOM', payload)
+  },
+  setAllCount ({ commit }, payload) {
+    commit('SET_ALL_COUNT', payload)
   }
 }
 export default {

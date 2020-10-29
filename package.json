@@ -52,7 +52,7 @@
       "icon": "build/icons/icon.icns"
     },
     "win": {
-      "icon": "build/icons/favicon.ico"
+      "icon": "build/icons/schedule.ico"
     },
     "linux": {
       "icon": "build/icons"
@@ -62,9 +62,9 @@
       "oneClick": false,
       "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
-      "installerIcon": "build/icons/favicon.ico",
-      "uninstallerIcon": "build/icons/favicon.ico",
-      "installerHeaderIcon": "build/icons/favicon.ico",
+      "installerIcon": "build/icons/schedule.ico",
+      "uninstallerIcon": "build/icons/schedule.ico",
+      "installerHeaderIcon": "build/icons/schedule.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "acis-schedule"

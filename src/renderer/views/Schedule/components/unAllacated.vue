@@ -29,12 +29,10 @@
       <vxe-table-column
         field="ptName"
         title="姓名"
-        type="html"
       />
       <vxe-table-column
         field="inpatientWard"
         title="病区"
-        type="html"
       />
       <vxe-table-column
         field="bedId"

@@ -200,14 +200,16 @@ export default {
     // this.changeRoom(this.roomList[0])
   },
   methods: {
-    ...mapActions('Schedule', ['setCurrentRoom']),
+    ...mapActions('Schedule', ['setCurrentRoom', 'setAllCount']),
     getData () {
       request({
         url: getRoomList + '/' + this.time
       }).then(res => {
         const data = res.data.data
+        let count = 0
         data.forEach(item => {
           item.tip = item.number + '/' + item.maxCount
+          count = count + parseInt(item.number)
           if (item.number === '0') {
             item.process = 0
           } else {
@@ -215,6 +217,7 @@ export default {
           }
         })
         this.roomList = data
+        this.setAllCount(count)
       })
     },
     async changeRoom (item, i) {
@@ -255,7 +258,7 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/theme";
 .ope-room{
-  height:calc(100% - 28px);
+  height:calc(100% - 50px);
   width:100%;
   .content {
       height: 100%;
