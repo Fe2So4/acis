@@ -3,6 +3,8 @@
     <el-scrollbar
       style="height:100%;"
       class="scrollbar"
+      ref="scrollContainer"
+      @wheel.native.prevent="handleScroll"
     >
       <div
         class="box"
@@ -79,6 +81,11 @@ export default {
         y
       }
     },
+    handleScroll (e) {
+      const eventDelta = e.wheelDelta || -e.deltaY * 40
+      const $scrollWrapper = this.$refs.scrollContainer.$refs.wrap
+      $scrollWrapper.scrollTop = $scrollWrapper.scrollTop - eventDelta / 4
+    },
     handleWithdraw (sysno) {
       this.$emit('handleWithdraw', sysno)
     }
@@ -89,13 +96,17 @@ export default {
 @import "@/styles/theme";
 .page-withdraw {
   height: 100%;
+  width: 100%;
   // background: #f3f6f9;
   // overflow-y: auto;
   .box {
+    width: 100%;
     height: 100%;
     .box-item {
       font: 14px/28px "";
-      padding-left: 10px;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0 10px;
       cursor: pointer;
       @include theme-property("color", $color-text-regular);
       &:hover {

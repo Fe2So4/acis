@@ -4,7 +4,7 @@
       title="手术详细信息"
       :visible.sync="batchVisible"
       width="50%"
-      before-close="handleClose"
+      :before-close="handleClose"
     >
       <div class="detail">
         <el-form

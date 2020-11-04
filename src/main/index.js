@@ -45,7 +45,7 @@ function createWindow () {
     })
   }
   // 显示开发者工具
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', () => {
     mainWindow = null
@@ -205,7 +205,9 @@ ipcMain.on('show-EMR', (e, name) => {
 // 打印手术通知单
 const printPageURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080/static/print/print.html'
-  : Path.join(__dirname, '../../static/print/print.html')
+  // : Path.join(__dirname, '../../static/print/print.html')
+  // `file://${__dirname}/index.html`
+  : Path.join(__dirname, '/static/print/print.html')
 const printWindowsPage = new Set()
 const createPrintWindowPage = () => {
   let newPrintWindow = new BrowserWindow({

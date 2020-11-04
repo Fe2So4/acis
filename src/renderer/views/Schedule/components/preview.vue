@@ -16,6 +16,7 @@
         size="mini"
         auto-resize
         align="center"
+        class="scroll"
         :row-style="rowStyle"
         highlight-current-row
         :data="previewList"

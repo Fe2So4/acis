@@ -51,6 +51,7 @@
               v-model="searchContent"
               class="input-with-select"
               style="overflow:hidden;"
+              @keyup.enter.native="handleSearch"
             >
               <el-select
                 v-model="select"
@@ -77,10 +78,13 @@
               </el-select>
               <span
                 slot="append"
-                style="cursor:pointer;"
+                style="cursor:pointer;height:100%;width:100%;display:inline-block;"
               >
                 <!-- icon="el-icon-search" -->
-                <i class="el-icon-search" />
+                <i
+                  class="el-icon-search"
+                  @click="handleSearch"
+                />
               </span>
             </el-input>
           </el-col>
@@ -106,6 +110,7 @@
                 :time="timeDate"
                 :list="opeList"
                 :select="select"
+                :search-content="search"
                 @changePatientDetail="changePatientDetail"
                 :floor="floor"
               />
@@ -473,6 +478,7 @@ export default {
       timeDate: moment(new Date()).format('yyyy-MM-DD'), // 时间
       allocatedList: [], // 当前手术间申请
       tableData: [],
+      search: '',
       searchContent: '', // 待分配区搜索内容,
       detailForm: {},
       currentDocOrNur: {}, // 单击选中当前医护
@@ -600,6 +606,10 @@ export default {
         })
         this.opeList = data
       })
+    },
+    handleSearch () {
+      this.search = this.searchContent
+      console.log(this.searchContent, this.select)
     },
     // 获取当前排班列表数据
     getData () {

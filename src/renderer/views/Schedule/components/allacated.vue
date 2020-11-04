@@ -60,7 +60,7 @@
         show-overflow="title"
       />
       <vxe-table-column
-        field="anaesthesiaName"
+        field="anesMethod"
         title="麻醉方法"
         width="120"
       />
@@ -100,12 +100,6 @@
       >
         <template v-slot="{ row }">
           <template>
-            <!-- <el-button
-              type="text"
-              @click="distribute(row)"
-            >
-              分配医生
-            </el-button> -->
             <el-button
               type="text"
               @click="cancelSingle(row)"

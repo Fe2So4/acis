@@ -98,6 +98,12 @@ export default {
     list: {
       type: Array,
       required: true
+    },
+    searchContent: {
+      type: String,
+      default: function () {
+        return ''
+      }
     }
   },
   computed: {
@@ -107,11 +113,11 @@ export default {
       let searchProps = []
       if (filterName) {
         const filterRE = new RegExp(filterName, 'gi')
-        if (this.select === 1) {
+        if (this.select === '1') {
           searchProps = ['inpatientWard']
-        } else if (this.select === 2) {
+        } else if (this.select === '2') {
           searchProps = ['surgeon']
-        } else if (this.select === 3) {
+        } else if (this.select === '3') {
           searchProps = ['operationName']
         } else {
           searchProps = ['patientName']
@@ -123,7 +129,8 @@ export default {
           const item = Object.assign({}, row)
           searchProps.forEach(key => {
             item[key] = XEUtils.toString(item[key]).replace(filterRE, match =>
-              `<span class="keyword-lighten">${match}</span>`)
+              // `<span class="keyword-lighten">${match}</span>`)
+              `${match}`)
           })
           return item
         })
@@ -135,9 +142,21 @@ export default {
     time: {
       handler (val) {
         return val
-      }
+      },
+      imediate: true
     },
-    imediate: true
+    searchContent: {
+      handler (newValue, old) {
+        return newValue
+      },
+      imediate: true
+    }
+    // select: {
+    //   handler (newValue, old) {
+    //     return newValue
+    //   },
+    //   imediate: true
+    // }
   },
   methods: {
     // getData () {

@@ -320,7 +320,7 @@ export default {
       }
     },
     logoSource () {
-      return require(`@/assets/tq_${this.theme}.png`)
+      return require(`@/assets/hs_${this.theme}.png`)
     },
     menuBackground () {
       switch (this.theme) {
@@ -473,7 +473,7 @@ export default {
   overflow: hidden;
   @include theme-property("background", $color-background-aside);
   .img {
-    // height:34px;
+    height:48px;
     margin: 14px 0;
     // background:#fff;
     img {

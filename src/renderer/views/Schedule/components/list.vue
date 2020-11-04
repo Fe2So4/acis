@@ -3,6 +3,8 @@
     <el-scrollbar
       style="height:100%;"
       class="scrollbar"
+      ref="scrollContainer"
+      @wheel.native.prevent="handleScroll"
     >
       <div
         class="list-all"
@@ -71,6 +73,11 @@ export default {
     },
     handleDocConfig () {
       this.$emit('handleDocConfig', this.selectItem)
+    },
+    handleScroll (e) {
+      const eventDelta = e.wheelDelta || -e.deltaY * 40
+      const $scrollWrapper = this.$refs.scrollContainer.$refs.wrap
+      $scrollWrapper.scrollTop = $scrollWrapper.scrollTop - eventDelta / 4
     },
     showMenu () {
       // this.transferIndex1 = index // tranfer index to child component

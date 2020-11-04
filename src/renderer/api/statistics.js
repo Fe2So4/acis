@@ -1,6 +1,7 @@
 // const config = require('@/config/urlConfig')
-// const config = 'http://192.168.1.178:7090'
-const config = 'http://47.103.105.200:7090'
+const config = 'http://192.168.1.106:7090'
+// const config = 'http://47.103.105.200:7090'
+// const config = 'http://47.103.105.200:7090'
 
 // 统计登录
 export const login = `${config}/acis/count/countLogin`

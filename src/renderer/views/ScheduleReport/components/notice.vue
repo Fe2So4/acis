@@ -95,8 +95,8 @@ export default {
       // this.$router.push('/print-notice')
       if (this.noticeData.ptName !== '') {
         const printHtml = document.querySelector('#print-notice').outerHTML
-        const options = { silent: true }
-        ipcRenderer.send('printChannel', printHtml, options)
+        // const options = { silent: false }
+        ipcRenderer.send('printChannel', printHtml)
       } else {
         this.$message({ type: 'warning', message: '请先选择患者' })
       }

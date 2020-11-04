@@ -3,6 +3,8 @@
     <el-scrollbar
       style="height:100%;"
       class="scrollbar"
+      ref="scrollContainer"
+      @wheel.native.prevent="handleScroll"
     >
       <div class="content">
         <div
@@ -227,6 +229,11 @@ export default {
       setTimeout(() => {
         this.$eventHub.$emit('get-allocated')
       })
+    },
+    handleScroll (e) {
+      const eventDelta = e.wheelDelta || -e.deltaY * 40
+      const $scrollWrapper = this.$refs.scrollContainer.$refs.wrap
+      $scrollWrapper.scrollTop = $scrollWrapper.scrollTop - eventDelta / 4
     },
     showMenu (index) {
       if (this.roomIndex === index) {
