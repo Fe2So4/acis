@@ -35,7 +35,7 @@
           </div>
         </li>
         <el-button
-          @click="synchro"
+          @click="handleAsync"
           type="primary"
           size="mini"
           icon="el-icon-refresh"
@@ -67,6 +67,7 @@
 import ThemePicker from './ThemePicker'
 import { synchroApply } from '@/api/schedule'
 import request from '@/utils/requestForMock'
+import throttle from 'lodash/throttle'
 const {
   BrowserWindow, dialog
 } = require('electron').remote
@@ -131,34 +132,42 @@ export default {
   created () {
   },
   methods: {
-    async synchro () {
-      await request({
+    synchro () {
+      request({
         url: synchroApply,
         params: {
-          start: 10,
-          end: 10
+          start: 5,
+          end: 5
         }
       }).then(res => {
         if (res.data.code === 200) {
-          this.$message({ type: 'success', message: '同步成功' })
+          this.$confirm('同步成功', '提示', {
+            confirmButtonText: '确定',
+            type: 'success',
+            customClass: 'messageBox',
+            confirmButtonClass: 'el-button--mini',
+            showCancelButton: false
+          }).then(() => {
+          })
         } else {
-          this.$message({ type: 'error', message: res.data.msg })
+          this.$confirm('同步失败', '提示', {
+            confirmButtonText: '确定',
+            type: 'error',
+            customClass: 'messageBox',
+            confirmButtonClass: 'el-button--mini',
+            showCancelButton: false
+          }).then(() => {
+          })
         }
       })
-      // request({
-      //   url: synchroPatient,
-      //   params: {
-      //     start: 10,
-      //     end: 10
-      //   }
-      // }).then(res => {
-      //   if (res.data.code === 200) {
-      //     this.$message({ type: 'success', message: '同步成功' })
-      //   } else {
-      //     this.$message({ type: 'error', message: res.data.msg })
-      //   }
-      // })
     },
+    handleAsync: throttle(() => {
+      // console.log('throttle')
+      this.synchro()
+    }, 5000, {
+      leading: true,
+      trailing: false
+    }),
     handleChange (item) {
       this.activeIndex = item.index
       if (item.index === 1) {
@@ -386,5 +395,10 @@ export default {
         }
       }
     }
+  }
+</style>
+<style>
+  .messageBox{
+    width: 220px !important;
   }
 </style>
