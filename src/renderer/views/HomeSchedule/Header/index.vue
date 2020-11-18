@@ -68,6 +68,7 @@ import ThemePicker from './ThemePicker'
 import { synchroApply } from '@/api/schedule'
 import request from '@/utils/requestForMock'
 import throttle from 'lodash/throttle'
+import $bus from '@/utils/bus'
 const {
   BrowserWindow, dialog
 } = require('electron').remote
@@ -148,6 +149,7 @@ export default {
             confirmButtonClass: 'el-button--mini',
             showCancelButton: false
           }).then(() => {
+            $bus.$emit('getApplyData')
           })
         } else {
           this.$confirm('同步失败', '提示', {
@@ -161,8 +163,7 @@ export default {
         }
       })
     },
-    handleAsync: throttle(() => {
-      // console.log('throttle')
+    handleAsync: throttle(function () {
       this.synchro()
     }, 5000, {
       leading: true,

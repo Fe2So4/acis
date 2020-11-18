@@ -355,12 +355,12 @@ export default {
             color: #fff;
           }
           &:hover{
-            @include theme-property("background", $color-background-card-hover);
+            @include theme-property("background",  $background-schedule-room-hover);
             color: #fff;
           }
         }
         .roomActive {
-          @include theme-property("background", $color-background-card-hover);
+          @include theme-property("background",  $background-schedule-room-hover);
           color: #fff;
         }
       }

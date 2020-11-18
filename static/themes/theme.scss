@@ -302,6 +302,19 @@ $color-background-listItem-hover: (
 );
 
 // 以下为智能排班颜色
+
+// 排班房态图颜色
+$background-schedule-room-hover: (
+  "dark-gray": #636363,
+  "dark-blue": #262c40,
+  "light-white":#c3d8f7
+);
+// 患者详情字体颜色
+$patient-detail-color:(
+  "dark-gray": #ffffff,
+  "dark-blue": #ffffff,
+  "light-white":#1a1a1a
+);
 // 排班页左右背景色
 $background-schedule: (
   "dark-gray": #363638,

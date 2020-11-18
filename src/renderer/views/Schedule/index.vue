@@ -208,7 +208,7 @@
                 <span>{{ patientBasBasicInfo.operation }}</span> 病人姓名：
                 <span>{{ patientBasBasicInfo.ptName }}</span> 诊断：
                 <span>{{ patientBasBasicInfo.diagnose }}</span> 备注：
-                <span>{{ patientBasBasicInfo.diagnose }}</span>
+                <span>{{ patientBasBasicInfo.memo }}</span>
               </div>
             </el-scrollbar>
           </div>
@@ -317,7 +317,7 @@ import OperationDoc from './components/operation-doc'
 import Option from './components/option'
 import Preview from './components/preview'
 import SwitchList from './components/switch-list'
-
+import $bus from '@/utils/bus'
 import {
   // addOperationRoom,
   getDepartmentList
@@ -1104,6 +1104,7 @@ export default {
     this.getDoctorList()
     this.getData()
     this.getOpeData()
+    $bus.$on('getApplyData', this.getOpeData)
     this.$eventHub.$on('get-allocated', () => {
       this.getData()
     })
@@ -1122,6 +1123,14 @@ export default {
       this.handleClose()
     })
     this.getH()
+  },
+  beforeDestroy () {
+    $bus.$off('getApplyData')
+    this.$eventHub.$off('get-allocated')
+    this.$eventHub.$off('clearSelectAllocation')
+    this.$eventHub.$off('get-DocNurse')
+    this.$eventHub.$off('get-unallocated')
+    this.$eventHub.$off('handle-close')
   }
 }
 </script>
@@ -1194,7 +1203,9 @@ export default {
       border-radius: 5px;
     }
     .patient-detail {
-      padding-left: 10px;
+      // padding:0 10px;
+      width: 100%;
+      box-sizing: border-box;
       height: 60px;
       @include theme-property("border", $border-event-left);
       border-radius: 5px;
@@ -1203,10 +1214,13 @@ export default {
       @include theme-property("color", $color-text-regular);
       line-height: 60px;
       span {
-        color: #d0dae5;
+        // color: #d0dae5;
+        @include theme-property("color", $patient-detail-color);
       }
       .detail-content{
+        width: calc(100% - 16px);
         white-space: nowrap;
+        padding:0 10px;
       }
     }
     .room {
@@ -1229,7 +1243,8 @@ export default {
 // }
 .schedule /deep/ .el-input-group__append{
   @include theme-property("background", $color-text-primary);
-  @include theme-property("color", $color-text-regular);
+  // @include theme-property("color", $color-text-regular);
+  color: #ffffff;
   overflow: hidden;
   border: unset;
 }

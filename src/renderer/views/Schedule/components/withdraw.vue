@@ -68,7 +68,6 @@ export default {
       })
     },
     handlerClearList () {
-      console.log('qingkong')
       this.recordsList = []
     },
     showMenu2 () {
@@ -104,7 +103,7 @@ export default {
     height: 100%;
     .box-item {
       font: 14px/28px "";
-      width: 100%;
+      width: calc(100% - 17px);
       box-sizing: border-box;
       padding: 0 10px;
       cursor: pointer;
