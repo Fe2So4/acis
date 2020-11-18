@@ -39,6 +39,9 @@
           type="primary"
           size="mini"
           icon="el-icon-refresh"
+          v-loading.fullscreen.lock="fullscreenLoading"
+          element-loading-background="rgba(255, 255, 255, 0.5)"
+          element-loading-text="数据同步中"
         >
           HIS同步
         </el-button>
@@ -88,6 +91,7 @@ export default {
     })
     return {
       active: 0,
+      fullscreenLoading: false,
       isMax: win.isMaximized(),
       parentInfo: {
         secMenus: []
@@ -134,6 +138,7 @@ export default {
   },
   methods: {
     synchro () {
+      this.fullscreenLoading = true
       request({
         url: synchroApply,
         params: {
@@ -142,12 +147,15 @@ export default {
         }
       }).then(res => {
         if (res.data.code === 200) {
+          this.fullscreenLoading = false
           this.$confirm('同步成功', '提示', {
             confirmButtonText: '确定',
             type: 'success',
             customClass: 'messageBox',
             confirmButtonClass: 'el-button--mini',
-            showCancelButton: false
+            showCancelButton: false,
+            showClose: false,
+            closeOnClickModal: false
           }).then(() => {
             $bus.$emit('getApplyData')
           })
@@ -157,7 +165,9 @@ export default {
             type: 'error',
             customClass: 'messageBox',
             confirmButtonClass: 'el-button--mini',
-            showCancelButton: false
+            showCancelButton: false,
+            showClose: false,
+            closeOnClickModal: false
           }).then(() => {
           })
         }
