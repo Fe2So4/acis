@@ -78,6 +78,10 @@
         />
       </div>
     </div>
+    <UpdaterPage
+      :center-dialog-visible="centerDialogVisible"
+      @handleClose="handleCloseUpdate"
+    />
   </div>
 </template>
 
@@ -85,7 +89,8 @@
 import { login } from '@/api/login'
 import request from '@/utils/requestForMock'
 import { setUserToken, setCurrentAccount } from '../../utils/storage'
-
+import UpdaterPage from '@/components/UpdaterPage/updater-page'
+import { ipcRenderer } from 'electron'
 const { BrowserWindow } = require('electron').remote
 
 export default {
@@ -96,6 +101,7 @@ export default {
         username: '',
         password: ''
       },
+      centerDialogVisible: false,
       rules: {
         username: [
           { required: true, message: '请正确填写用户名', trigger: 'blur' }
@@ -106,11 +112,20 @@ export default {
       }
     }
   },
+  components: {
+    UpdaterPage
+  },
   created () {
     const win = BrowserWindow.getFocusedWindow()
     if (win) {
       win.unmaximize()
     }
+    this.autoUpdate()
+    ipcRenderer.on('message', (event, { message, data }) => {
+      if (message === 'update-available') {
+        this.centerDialogVisible = true
+      }
+    })
   },
   methods: {
     jumpHome () {},
@@ -143,6 +158,9 @@ export default {
         this.login()
       }
     },
+    handleCloseUpdate () {
+      this.centerDialogVisible = false
+    },
     close () {
       const win = BrowserWindow.getFocusedWindow()
       win.close()
@@ -150,7 +168,16 @@ export default {
     mini () {
       const win = BrowserWindow.getFocusedWindow()
       win.minimize()
+    },
+    autoUpdate () {
+      ipcRenderer.send('update')
     }
+  },
+  mounted () {
+
+  },
+  beforeDestroy () {
+    ipcRenderer.removeAll(['message', 'update'])
   }
 }
 </script>

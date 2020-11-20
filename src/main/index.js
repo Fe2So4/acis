@@ -2,6 +2,7 @@
 
 import { app, BrowserWindow, Menu, ipcMain } from 'electron'
 import '../renderer/store'
+const { autoUpdater } = require('electron-updater')
 const fs = require('fs')
 const Path = require('path')
 /**
@@ -13,6 +14,7 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
+const feedUrl = 'http://192.168.1.58/operation/operation_schedule'
 const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`
@@ -47,6 +49,62 @@ function createWindow () {
   // 显示开发者工具
   // mainWindow.webContents.openDevTools()
 
+  // 主进程监听渲染进程更新事件
+  ipcMain.on('update', (e, arg) => {
+    console.log('update', arg)
+    checkForUpdates()
+  })
+  const checkForUpdates = () => {
+    // 执行更新检查
+    // if (config.LOCAL_DEBUG) {
+    //   // 调试环境必须主动设置当前版本，electron-update有bug会去取electron的版本,而不是app的版本
+    //   autoUpdater.currentVersion = config.version
+    // }
+    autoUpdater.autoDownload = false
+    // 配置安装包远端服务器
+    autoUpdater.setFeedURL(feedUrl)
+    // 下面是自动更新的整个生命周期所发生的事件
+    autoUpdater.on('error', function (message) {
+      sendUpdateMessage('error', message)
+    })
+    autoUpdater.on('checking-for-update', function (message) {
+      sendUpdateMessage('checking-for-update', message)
+    })
+    autoUpdater.on('update-available', function (message) {
+      sendUpdateMessage('update-available', message)
+    })
+    autoUpdater.on('update-not-available', function (message) {
+      sendUpdateMessage('update-not-available', message)
+    })
+
+    // 更新下载进度事件
+    autoUpdater.on('download-progress', function (progressObj) {
+      sendUpdateMessage('downloadProgress', progressObj)
+      // mainWindow.webContents.send('downloadProgress', progressObj)
+    })
+    // 更新下载完成事件
+    autoUpdater.on('update-downloaded', function (event, releaseNotes, releaseName, releaseDate, updateUrl, quitAndUpdate) {
+      sendUpdateMessage('isUpdateNow')
+      ipcMain.on('updateNow', (e, arg) => {
+        autoUpdater.quitAndInstall()
+      })
+    })
+    // 执行自动更新检查
+    autoUpdater.checkForUpdates()
+    ipcMain.on('checkForUpdate', () => {
+      // 执行自动更新检查
+      autoUpdater.checkForUpdates()
+    })
+    ipcMain.on('downloadUpdate', () => {
+      // 下载
+      autoUpdater.downloadUpdate()
+    })
+  }
+  // 主进程主动发送消息给渲染进程函数
+  function sendUpdateMessage (message, data) {
+    console.log({ message, data })
+    mainWindow.webContents.send('message', { message, data })
+  }
   mainWindow.on('closed', () => {
     mainWindow = null
   })
