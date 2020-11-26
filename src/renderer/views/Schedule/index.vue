@@ -43,7 +43,7 @@
             </el-select>
           </el-col>
         </el-row>
-        <el-row v-show="defaultCollapse==='A'">
+        <el-row>
           <el-col :span="24">
             <el-input
               size="mini"
@@ -82,8 +82,8 @@
               >
                 <!-- icon="el-icon-search" -->
                 <i
-                  class="el-icon-search"
                   @click="handleSearch"
+                  class="el-icon-search"
                 />
               </span>
             </el-input>
@@ -97,6 +97,7 @@
         <el-collapse
           accordion
           size="mini"
+          @change="handleChangeCollapse"
           v-model="defaultCollapse"
         >
           <el-collapse-item name="A">
@@ -198,7 +199,7 @@
               class="scrollbar"
             >
               <div class="detail-content">
-                申请时间：
+                申请手术时间：
                 <span>{{ patientBasBasicInfo.opeScheduleTime }}</span> 病区：
                 <span>{{ patientBasBasicInfo.inpatientWard }}</span> 床位:
                 <span>{{ patientBasBasicInfo.bedId }}</span> 住院号：
@@ -591,6 +592,10 @@ export default {
     changePatientDetail (row) {
       this.patientBasBasicInfo = row
     },
+    // 切换折叠面板
+    handleChangeCollapse (activeName) {
+      this.searchContent = ''
+    },
     // 批量排班操作
     handleEditBatch () {
       this.$refs.allocated.handleBatchVisible()
@@ -608,8 +613,24 @@ export default {
       })
     },
     handleSearch () {
-      this.search = this.searchContent
-      console.log(this.searchContent, this.select)
+      switch (this.defaultCollapse) {
+        case 'A':
+          this.search = this.searchContent
+          break
+        case 'B':
+          this.getDoctorList()
+          break
+        case 'C':
+          this.getDoctorList()
+          break
+        case 'D':
+          this.getNurseList()
+          break
+        case 'E':
+          this.getNurseList()
+          break
+      }
+      // console.log(this.searchContent, this.select)
     },
     // 获取当前排班列表数据
     getData () {
@@ -618,6 +639,7 @@ export default {
       }).then((res) => {
         const data = res.data.data
         data.forEach((item) => {
+          item.opeScheduleTime = moment(item.opeScheduleTime).format('YYYY-MM-DD HH:mm')
           item.subDoc = (
             item.firstAnesDocName +
             ',' +
@@ -693,8 +715,14 @@ export default {
     },
     // 获取护士列表
     getNurseList () {
+      let content = -1
+      if (this.searchContent === '') {
+        content = -1
+      } else {
+        content = this.searchContent
+      }
       request({
-        url: getNurseList + '/' + this.timeDate
+        url: getNurseList + '/' + this.timeDate + '/' + content
       }).then((res) => {
         const data = res.data.data
         this.nurseList = data
@@ -702,8 +730,14 @@ export default {
     },
     // 获取医生列表
     getDoctorList () {
+      let content = -1
+      if (this.searchContent === '') {
+        content = -1
+      } else {
+        content = this.searchContent
+      }
       request({
-        url: getDocList + '/' + this.timeDate
+        url: getDocList + '/' + this.timeDate + '/' + content
       }).then((res) => {
         const data = res.data.data
         this.doctorList = data

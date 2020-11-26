@@ -1,6 +1,6 @@
 {
   "name": "acis-schedule",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "author": "dyw-design <1875742887@qq.com>",
   "description": "acis-schedule",
   "main": "./dist/electron/main.js",
@@ -33,7 +33,7 @@
     "publish": [
       {
         "provider": "generic",
-        "url": "http://192.168.1.58/operation/operation_schedule"
+        "url": "http://128.0.18.38:8080/operation/operation_schedule"
       }
     ],
     "files": [

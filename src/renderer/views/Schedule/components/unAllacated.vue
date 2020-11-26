@@ -24,30 +24,36 @@
       <vxe-table-column
         field="sequence"
         title="台次"
+        width="50px"
         show-overflow="title"
       />
       <vxe-table-column
         field="ptName"
         title="姓名"
+        width="70px"
       />
       <vxe-table-column
         field="inpatientWard"
         title="病区"
+        width="70px"
       />
       <vxe-table-column
         field="bedId"
         title="床位"
         show-overflow="title"
+        width="70px"
       />
       <vxe-table-column
         field="visitId"
         title="住院号"
+        width="80px"
         show-overflow="title"
       />
       <vxe-table-column
         field="surgeon"
         title="医师"
         show-overflow="title"
+        width="70px"
       />
       <vxe-table-column
         field="operation"

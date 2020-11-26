@@ -27,6 +27,7 @@ import 'vxe-table-plugin-element/dist/style.css'
 VXETable.use(VXETablePluginElement)
 Vue.use(VXETable)
 Vue.use(ElementUI)
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
 // 引入鼠标右击菜单栏相关
 Vue.use(VueContextMenu)
 // 增加广播功能
@@ -35,7 +36,6 @@ if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 /* eslint-disable no-new */
-console.log(router)
 new Vue({
   components: { App },
   router,

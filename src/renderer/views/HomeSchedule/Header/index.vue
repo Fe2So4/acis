@@ -136,6 +136,9 @@ export default {
   },
   created () {
   },
+  mounted () {
+    this.synchro()
+  },
   methods: {
     synchro () {
       this.fullscreenLoading = true

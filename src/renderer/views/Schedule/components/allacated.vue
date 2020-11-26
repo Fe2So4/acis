@@ -20,43 +20,43 @@
     >
       <vxe-table-column
         type="checkbox"
-        width="60"
+        width="50"
       />
       <vxe-table-column
         field="sequence"
         title="台次"
-        width="82"
+        width="50"
       />
       <vxe-table-column
         field="ptName"
-        title="患者姓名"
-        width="82"
+        title="患者"
+        width="70"
       />
       <vxe-table-column
         field="bedId"
-        title="床号"
-        width="82"
+        title="床位"
+        width="70"
       />
       <vxe-table-column
         field="visitId"
         title="住院号"
-        width="120"
+        width="80"
       />
       <!-- <vxe-table-column field="diagBeforeOperation" title="诊断" width="120"></vxe-table-column> -->
       <vxe-table-column
         field="surgeonName"
-        title="手术医师"
-        width="82"
+        title="主刀"
+        width="70"
       />
       <vxe-table-column
         field="opeScheduleTime"
         title="手术时间"
-        width="82"
+        width="120"
       />
       <vxe-table-column
         field="operationName"
         title="手术名称"
-        width="120"
+        width="230"
         show-overflow="title"
       />
       <vxe-table-column
@@ -67,13 +67,13 @@
       <vxe-table-column
         field="anesDocName"
         title="主麻医师"
-        width="82"
+        width="70"
         show-overflow="title"
       />
       <vxe-table-column
         field="subDoc"
         title="副麻医师"
-        width="82"
+        width="140"
         show-overflow="title"
       />
       <vxe-table-column
@@ -95,7 +95,7 @@
       />
       <vxe-table-column
         title="操作"
-        width="120"
+        width="80"
         fixed="right"
       >
         <template v-slot="{ row }">
@@ -237,5 +237,9 @@ export default {
   .allacated{
     height: 100%;
     width: 100%;
+    /deep/ .el-button.el-button--text{
+      padding-top: unset !important;
+      padding-bottom: unset !important;
+    }
   }
 </style>

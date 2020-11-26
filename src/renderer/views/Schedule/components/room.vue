@@ -30,37 +30,37 @@
                 effect="light"
               >
                 <div class="room-info-item">
-                  手术台数：{{ item.number }} 台
+                  台数：{{ item.number }} 台
                 </div>
               </el-tooltip>
               <el-tooltip
                 :content="item.surgeon"
                 placement="bottom"
                 effect="light"
-                :open-delay="2000"
+                :open-delay="1000"
               >
                 <div class="room-info-item">
-                  {{ item.surgeon }}
+                  主刀：{{ item.surgeon }}
                 </div>
               </el-tooltip>
               <el-tooltip
                 :content="item.anesthesiaDoctors"
                 placement="bottom"
                 effect="light"
-                :open-delay="2000"
+                :open-delay="1000"
               >
                 <div class="room-info-item">
-                  {{ item.anesthesiaDoctors }}
+                  麻醉：{{ item.anesthesiaDoctors }}
                 </div>
               </el-tooltip>
               <el-tooltip
                 :content="item.nurses"
                 placement="bottom"
                 effect="light"
-                :open-delay="2000"
+                :open-delay="1000"
               >
                 <div class="room-info-item">
-                  {{ item.nurses }}
+                  护士：{{ item.nurses }}
                 </div>
               </el-tooltip>
               <div class="room-info-item">
@@ -68,7 +68,7 @@
                   :content="item.tip"
                   placement="bottom"
                   effect="light"
-                  :open-delay="2000"
+                  :open-delay="1000"
                 >
                   <el-progress
                     :percentage="item.process"
@@ -345,7 +345,7 @@ export default {
 
                 .el-progress {
                   width: 80%;
-                  @include theme-property("background",  $background-progress);
+                  // @include theme-property("background",  $background-progress);
                 }
               }
             }
