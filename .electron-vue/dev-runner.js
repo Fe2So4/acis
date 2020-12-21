@@ -64,23 +64,23 @@ function startRenderer() {
       {
         contentBase: path.join(__dirname, '../'),
         quiet: true,
-        proxy: {
-          '/acis': {
-            // 请求的目标服务器地址
-            target: 'http://192.168.1.198:8090',
-            // 如果是https接口，需要配置这个参数
-            secure: false,
-            // 设置允许跨域
-            changeOrigin: true,
-            // 重写路径
-            pathRewrite: {
-              '^/acis': ''
-            },
-            headers: {
-              referer: ''
-            }
-          }
-        },
+        // proxy: {
+        //   '/acis': {
+        //     // 请求的目标服务器地址
+        //     target: 'http://192.168.1.198:8090',
+        //     // 如果是https接口，需要配置这个参数
+        //     secure: false,
+        //     // 设置允许跨域
+        //     changeOrigin: true,
+        //     // 重写路径
+        //     pathRewrite: {
+        //       '^/acis': ''
+        //     },
+        //     headers: {
+        //       referer: ''
+        //     }
+        //   }
+        // },
         before(app, ctx) {
           app.use(hotMiddleware)
           ctx.middleware.waitUntilValid(() => {

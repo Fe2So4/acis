@@ -1,6 +1,6 @@
 <template>
   <div class="option">
-    <span>{{ allCount }}台</span>
+    <span>共排班{{ allCount }}台</span>
     <span>
       <el-button
         type="primary"

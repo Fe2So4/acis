@@ -276,8 +276,12 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .switch {
+  @import "@/styles/theme";
+  .change-dialog {
     height: 100%;
     width: 100%;
+    /deep/ .el-dialog__title{
+    @include theme-property("color", $color-text-regular);
+  }
   }
 </style>

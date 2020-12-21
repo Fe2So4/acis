@@ -5,7 +5,8 @@ const mock =
 
 const IP = {
   // SERVER: '47.103.105.200',
-  SERVER: '192.168.1.58',
+  // SERVER: '192.168.1.58',
+  SERVER: 'localhost',
   LOCAL: 'localhost',
   XIE: '192.168.1.175',
   LI: '192.168.1.177',

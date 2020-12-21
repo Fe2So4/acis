@@ -4,6 +4,7 @@ if (process.env.NODE_ENV === 'production') {
   api = {
     // baseURL: 'http://47.103.105.200:8090'
     baseURL: 'http://128.0.18.38:8090'
+    // baseURL: 'http://localhost:8090'
     // baseURL: 'http://192.168.1.58:8090'
     // baseURL: 'http://192.168.1.175:8090'
     // baseURL: 'http://47.103.105.200:8090'

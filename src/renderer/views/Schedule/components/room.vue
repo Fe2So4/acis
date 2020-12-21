@@ -108,7 +108,7 @@ import { mapActions, mapState } from 'vuex'
 export default {
   data () {
     return {
-      roomIndex: 0,
+      roomIndex: -1,
       contextMenuData1: {
         menuName: 'demo',
         axis: {

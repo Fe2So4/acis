@@ -121,10 +121,14 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "@/styles/theme";
 .app-container{
   /deep/ .el-progress-bar__outer{
     height: 10px !important;
     // background: #EBEEF4 !important;
+  }
+  /deep/ .el-dialog__title{
+    @include theme-property("color", $color-text-regular);
   }
 }
 </style>

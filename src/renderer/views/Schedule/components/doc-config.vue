@@ -134,4 +134,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "@/styles/theme";
+.doc{
+  /deep/ .el-dialog__title{
+    @include theme-property("color", $color-text-regular);
+  }
+}
 </style>

@@ -8,7 +8,7 @@
           <!-- 围手术期临床信息系统 -->
           <span>临床麻醉</span>
           <span>手术排班</span>
-          <span>v1.1.1</span>
+          <span>1.1.1</span>
         </p>
         <img
           src="../../assets/welcome.png"
@@ -23,7 +23,7 @@
           >
         </div>
         <div class="title">
-          账 户 密 码 登 录
+          账 户 登 录
         </div>
         <div class="line" />
         <el-form
