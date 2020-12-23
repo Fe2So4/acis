@@ -25,8 +25,8 @@
     "mock": "node ./mock/server.js"
   },
   "build": {
-    "productName": "acis-schedule",    
-    "appId": "acis-schedule",
+    "productName": "acis",
+    "appId": "acis",
     "directories": {
       "output": "build"
     },
@@ -58,7 +58,7 @@
       "icon": "build/icons/icon.icns"
     },
     "win": {
-      "icon": "build/icons/schedule.ico"
+      "icon": "build/icons/favicon.ico"
     },
     "linux": {
       "icon": "build/icons"
@@ -68,12 +68,12 @@
       "oneClick": false,
       "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
-      "installerIcon": "build/icons/schedule.ico",
-      "uninstallerIcon": "build/icons/schedule.ico",
-      "installerHeaderIcon": "build/icons/schedule.ico",
+      "installerIcon": "build/icons/favicon.ico",
+      "uninstallerIcon": "build/icons/favicon.ico",
+      "installerHeaderIcon": "build/icons/favicon.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "acis-schedule"
+      "shortcutName": "acis"
     }
   },
   "dependencies": {
