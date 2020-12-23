@@ -320,7 +320,7 @@ export default {
       }
     },
     logoSource () {
-      return require(`@/assets/hs_${this.theme}.png`)
+      return require(`@/assets/lan_${this.theme}.png`)
     },
     menuBackground () {
       switch (this.theme) {

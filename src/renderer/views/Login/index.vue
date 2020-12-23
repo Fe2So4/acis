@@ -64,7 +64,7 @@
         </div>
       </div>
       <div class="copyright">
-        Copyright©2020仝佥信息版权所有
+        Copyright©2020蓝想数科版权所有
       </div>
       <div class="close">
         <i

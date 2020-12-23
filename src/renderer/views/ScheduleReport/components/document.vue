@@ -72,6 +72,7 @@
           <vxe-table-column
             field="opeRoom"
             title="手术间"
+            width="60"
             :edit-render="{}"
           >
             <template v-slot:edit="scope">
@@ -93,6 +94,7 @@
           <vxe-table-column
             field="sequence"
             title="台次"
+            width="60"
             :edit-render="{}"
           >
             <template v-slot:edit="scope">
@@ -112,10 +114,12 @@
           <vxe-table-column
             field="bedId"
             title="床号"
+            width="60"
           />
           <vxe-table-column
             field="visitId"
             title="住院号"
+            width="80"
           />
           <vxe-table-column
             field="diagnoseBefore"
@@ -128,6 +132,7 @@
           <vxe-table-column
             field="surgeonName"
             title="手术医师"
+            width="60"
           />
           <vxe-table-column
             field="anesMethod"
@@ -136,6 +141,7 @@
           <vxe-table-column
             field="anesDoc"
             title="麻醉医师"
+            width="60"
           />
           <vxe-table-column
             field="opeNurse"
