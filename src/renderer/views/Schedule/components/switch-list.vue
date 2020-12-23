@@ -24,7 +24,7 @@
         width="60"
       />
       <vxe-table-column
-        field="ptName"
+        field="operationId"
         title="病人ID"
         width="120"
       />

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Message } from 'element-ui'
+// import { Message } from 'element-ui'
 import { getUserToken, removeUserToken } from '../utils/storage'
 import router from '../router'
 
@@ -50,11 +50,11 @@ service.interceptors.response.use(
     if (response.headers['content-type'] === 'application/x-msdownload') {
       return response
     } else if (res.code !== '0') {
-      Message({
-        message: res.message || 'Error',
-        type: 'error',
-        duration: 5 * 1000
-      })
+      // Message({
+      //   message: res.message || 'Error',
+      //   type: 'error',
+      //   duration: 5 * 1000
+      // })
 
       // Token expired;
       if (res.code === '100012') {
@@ -69,11 +69,11 @@ service.interceptors.response.use(
   },
   error => {
     console.dir(error.response.data) // for debug
-    Message({
-      message: error.response.data.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
+    // Message({
+    //   message: error.response.data.message,
+    //   type: 'error',
+    //   duration: 5 * 1000
+    // })
     return Promise.reject(error)
   }
 )
