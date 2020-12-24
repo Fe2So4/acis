@@ -195,7 +195,7 @@
           </div>
           <div class="patient-detail">
             <el-scrollbar
-              style="width:100%;height:100%;"
+              style="width:100%;"
               class="scrollbar"
             >
               <div class="detail-content">

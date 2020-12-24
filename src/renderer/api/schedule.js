@@ -107,3 +107,6 @@ export const updateScheduledInfo = `${config.default.api.baseURL}/acis/operation
 
 // 批量修改已排班手术间和台次
 export const updateScheduledRoomPlatform = `${config.default.api.baseURL}/acis/operation/updateRoomAndSequence`
+
+// 排班已提交撤销操作
+export const cancelScheduleSubmit = `${config.default.api.baseURL}/acis/operation/repealOperation`

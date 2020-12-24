@@ -15,19 +15,38 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
+let initialWindow
 const feedUrl = 'http://128.0.18.38:8080/operation/operation_schedule'
 const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`
 
-function createWindow () {
+function createInitialWindow() {
+  initialWindow = new BrowserWindow({
+    width: 880,
+    height: 560,
+    frame: false,
+    center: true,
+    resizable: false,
+    movable: false,
+    transparent: true,
+    alwaysOnTop: true,
+    webPreferences: {
+      devTools: false,
+      preload: Path.resolve(__static, './loading/preload.js')
+    }
+  })
+  initialWindow.loadURL(Path.resolve(__static, './loading/index.html'))
+}
+function createWindow() {
   /**
    * Initial window options
    */
   mainWindow = new BrowserWindow({
     height: 560,
-    // useContentSize: true,
+    useContentSize: true,
     width: 880,
+    show: false,
     frame: process.env.NODE_ENV === 'development',
     // fullscreen: true, // 是否全屏
     webPreferences: {
@@ -101,7 +120,7 @@ function createWindow () {
     autoUpdater.checkForUpdates()
   }
   // 主进程主动发送消息给渲染进程函数
-  function sendUpdateMessage (message, data) {
+  function sendUpdateMessage(message, data) {
     mainWindow.webContents.send('message', { message, data })
   }
   mainWindow.on('closed', () => {
@@ -112,7 +131,40 @@ function createWindow () {
   Menu.setApplicationMenu(null)
 }
 
-app.on('ready', createWindow)
+app.on('ready', () => {
+  createInitialWindow()
+  createWindow()
+})
+
+// app.on('ready', () => {
+//   createInitialWindow()
+//   createWindow()
+// })
+
+//窗口最小化
+ipcMain.on('window-min', function () {
+  mainWindow.minimize();
+})
+//窗口最大化
+ipcMain.on('window-max', function () {
+  if (mainWindow.isMaximized()) {
+    mainWindow.restore();
+  } else {
+    mainWindow.maximize();
+  }
+})
+ipcMain.on('window-close', function () {
+  mainWindow.close();
+})
+
+ipcMain.once('open-main', () => {
+  initialWindow.webContents.send('close-initial-window')
+  mainWindow.show()
+})
+
+ipcMain.once('close-initial-window', () => {
+  initialWindow.destroy()
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
