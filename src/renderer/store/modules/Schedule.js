@@ -17,24 +17,24 @@ const getters = {
   allCount: state => state.allCount
 }
 const mutations = {
-  SET_TIME(state, payload) {
+  SET_TIME (state, payload) {
     state.time = payload
   },
-  SET_CURRENT_ROOM(state, payload) {
+  SET_CURRENT_ROOM (state, payload) {
     state.currentRoom = payload
   },
-  SET_ALL_COUNT(state, payload) {
+  SET_ALL_COUNT (state, payload) {
     state.allCount = payload
   }
 }
 const actions = {
-  setTime({ commit }, payload) {
+  setTime ({ commit }, payload) {
     commit('SET_TIME', payload)
   },
-  setCurrentRoom({ commit }, payload) {
+  setCurrentRoom ({ commit }, payload) {
     commit('SET_CURRENT_ROOM', payload)
   },
-  setAllCount({ commit }, payload) {
+  setAllCount ({ commit }, payload) {
     commit('SET_ALL_COUNT', payload)
   }
 }

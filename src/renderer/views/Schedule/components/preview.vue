@@ -8,7 +8,7 @@
     >
       <div class="preview-table">
         <vxe-table
-          max-height="600px"
+          height="100%"
           width="100%"
           border
           ref="previewTable"
@@ -20,11 +20,31 @@
           highlight-current-row
           :data="previewList"
         >
-          <vxe-table-column field="opeRoom" title="手术间" width="82" />
-          <vxe-table-column field="sequence" title="台次" width="82" />
-          <vxe-table-column field="ptName" title="姓名" width="120" />
-          <vxe-table-column field="inpatientWard" title="病区" width="82" />
-          <vxe-table-column field="bedId" title="床位" width="120" />
+          <vxe-table-column
+            field="opeRoom"
+            title="手术间"
+            width="82"
+          />
+          <vxe-table-column
+            field="sequence"
+            title="台次"
+            width="82"
+          />
+          <vxe-table-column
+            field="ptName"
+            title="姓名"
+            width="120"
+          />
+          <vxe-table-column
+            field="inpatientWard"
+            title="病区"
+            width="82"
+          />
+          <vxe-table-column
+            field="bedId"
+            title="床位"
+            width="120"
+          />
           <vxe-table-column
             field="visitId"
             title="住院号"
@@ -36,7 +56,11 @@
             title="手术名称"
             width="120"
           />
-          <vxe-table-column field="surgeon" title="手术医师" width="82" />
+          <vxe-table-column
+            field="surgeon"
+            title="手术医师"
+            width="82"
+          />
           <vxe-table-column
             field="anesDoc"
             title="麻醉医师"
@@ -54,72 +78,82 @@
           />
         </vxe-table>
       </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button size="mini" type="primary">提 交</el-button>
-        <el-button size="mini">关 闭</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          size="mini"
+          type="primary"
+        >
+          提 交
+        </el-button>
+        <el-button size="mini">
+          关 闭
+        </el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
-import { previewList } from "@/api/schedule";
-import request from "@/utils/requestForMock";
-import { mapGetters } from "vuex";
+import { previewList } from '@/api/schedule'
+import request from '@/utils/requestForMock'
+import { mapGetters } from 'vuex'
 export default {
-  data() {
+  data () {
     return {
-      previewList: [],
-    };
+      previewList: []
+    }
   },
   props: {
     timeDate: {
       type: String,
       default: function () {
-        return "";
-      },
+        return ''
+      }
     },
     previewVisible: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   computed: {
-    ...mapGetters("Schedule", ["time"]),
+    ...mapGetters('Schedule', ['time'])
   },
   methods: {
-    rowStyle({ row, rowIndex }) {
-      if (row.state === "1") {
+    rowStyle ({ row, rowIndex }) {
+      if (row.state === '1') {
         return {
-          color: "red",
-        };
+          color: 'red'
+        }
       } else {
         return {
-          color: "green",
-        };
+          color: 'green'
+        }
       }
     },
-    getData() {
+    getData () {
       request({
-        url: previewList + "/" + this.time,
+        url: previewList + '/' + this.time
       }).then((res) => {
-        const data = res.data.data;
-        this.previewList = data;
-      });
+        const data = res.data.data
+        this.previewList = data
+      })
     },
-    handleClose() {
-      this.$emit("handleClose");
-    },
+    handleClose () {
+      this.$emit('handleClose')
+    }
   },
-  mounted() {
-    this.getData();
-  },
-};
+  mounted () {
+    this.getData()
+  }
+}
 </script>
 <style lang="scss" scoped>
 @import "@/styles/theme";
 .preview {
   .preview-table {
-    height: 80%;
+    height: 600px;
   }
   .dialog-footer {
     text-align: center;
