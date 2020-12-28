@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        img {
+            width: 880px;
+            height: 560px;
+        }
+
+        .loading {
+            width: 100%;
+            position: absolute;
+            left: 0px;
+            right: 0px;
+            bottom: 40px;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .loading span {
+            color: rgb(14, 110, 184);
+            display: block;
+            display: flex;
+            align-items: center;
+        }
+
+        .loading span:nth-child(2) {
+            overflow: hidden;
+        }
+
+        .circle {
+            height: 4px;
+            display: block;
+            width: 4px;
+            background-color: rgb(14, 110, 184);
+            border-radius: 50%;
+            float: left;
+            margin: 0 3px;
+            animation: circle linear 1s infinite;
+            -webkit-animation: circle linear 1s infinite;
+        }
+
+        .circle:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .circle:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .circle:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .circle:nth-child(4) {
+            animation-delay: 0.45s;
+        }
+
+        .circle:nth-child(5) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes circle {
+
+            0%,
+            60%,
+            100% {
+                transform: scale(1);
+            }
+
+            30% {
+                transform: scale(2.5);
+            }
+        }
+
+        @-webkit-keyframes circle {
+
+            0%,
+            60%,
+            100% {
+                transform: scale(1);
+            }
+
+            30% {
+                transform: scale(2.5);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <img src="./initialPage.png" alt="蓝想">
+    <div class="loading">
+        <span>程序加载中</span>
+        <span>
+            <i class="circle"></i>
+            <i class="circle"></i>
+            <i class="circle"></i>
+            <i class="circle"></i>
+            <i class="circle"></i>
+            <i class="circle"></i>
+        </span>
+    </div>
+</body>
+
+</html>

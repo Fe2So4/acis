@@ -8,30 +8,17 @@
           <!-- 围手术期临床信息系统 -->
           <span>临床麻醉</span>
           <span>手术排班</span>
-          <span>1.1.1</span>
+          <span>1.1.2</span>
         </p>
-        <img
-          src="../../assets/welcome.png"
-          alt
-        >
+        <img src="../../assets/welcome.png" alt />
       </div>
       <div class="right">
         <div class="form-icon">
-          <img
-            src="../../assets/dandelion.png"
-            alt
-          >
+          <img src="../../assets/dandelion.png" alt />
         </div>
-        <div class="title">
-          账 户 登 录
-        </div>
+        <div class="title">账 户 登 录</div>
         <div class="line" />
-        <el-form
-          :rules="rules"
-          ref="form"
-          :model="form"
-          hide-required-asterisk
-        >
+        <el-form :rules="rules" ref="form" :model="form" hide-required-asterisk>
           <el-form-item prop="username">
             <el-input
               prefix-icon="el-icon-s-custom"
@@ -50,32 +37,14 @@
           </el-form-item>
         </el-form>
         <div class="option clearfix">
-          <div
-            class="button"
-            @click="login"
-          >
-            确定
-          </div>
-          <div
-            class="button"
-            @click="close"
-          >
-            取消
-          </div>
+          <div class="button" @click="login">确定</div>
+          <div class="button" @click="close">取消</div>
         </div>
       </div>
-      <div class="copyright">
-        Copyright©2020仝佥信息版权所有
-      </div>
+      <div class="copyright">Copyright©2020仝佥信息版权所有</div>
       <div class="close">
-        <i
-          class="el-icon-minus"
-          @click="mini"
-        />
-        <i
-          class="el-icon-close"
-          @click="close"
-        />
+        <i class="el-icon-minus" @click="mini" />
+        <i class="el-icon-close" @click="close" />
       </div>
     </div>
     <UpdaterPage
@@ -86,100 +55,100 @@
 </template>
 
 <script>
-import { login } from '@/api/login'
-import request from '@/utils/requestForMock'
-import { setUserToken, setCurrentAccount } from '../../utils/storage'
-import UpdaterPage from '@/components/UpdaterPage/updater-page'
-import { ipcRenderer } from 'electron'
-const { BrowserWindow } = require('electron').remote
+import { login } from "@/api/login";
+import request from "@/utils/requestForMock";
+import { setUserToken, setCurrentAccount } from "../../utils/storage";
+import UpdaterPage from "@/components/UpdaterPage/updater-page";
+const { BrowserWindow } = require("electron").remote;
+import { ipcRenderer } from "electron";
 
 export default {
-  name: 'Login',
-  data () {
+  name: "Login",
+  data() {
     return {
       form: {
-        username: '',
-        password: ''
+        username: "",
+        password: "",
       },
       centerDialogVisible: false,
       rules: {
         username: [
-          { required: true, message: '请正确填写用户名', trigger: 'blur' }
+          { required: true, message: "请正确填写用户名", trigger: "blur" },
         ],
         password: [
-          { required: true, message: '请正确填写密码', trigger: 'blur' }
-        ]
-      }
-    }
+          { required: true, message: "请正确填写密码", trigger: "blur" },
+        ],
+      },
+    };
   },
   components: {
-    UpdaterPage
+    UpdaterPage,
   },
-  created () {
-    const win = BrowserWindow.getFocusedWindow()
+  created() {
+    const win = BrowserWindow.getFocusedWindow();
     if (win) {
-      win.unmaximize()
+      win.unmaximize();
     }
-    this.autoUpdate()
-    ipcRenderer.on('message', (event, { message, data }) => {
-      if (message === 'update-available') {
-        this.centerDialogVisible = true
+    this.autoUpdate();
+    ipcRenderer.on("message", (event, { message, data }) => {
+      if (message === "update-available") {
+        this.centerDialogVisible = true;
       }
-    })
+    });
   },
   methods: {
-    jumpHome () {},
-    login () {
+    jumpHome() {},
+    login() {
       this.$refs.form.validate((valid) => {
         if (valid) {
           request({
-            method: 'post',
+            method: "post",
             url: login,
             data: {
               loginName: this.form.username,
-              loginPwd: this.form.password
-            }
+              loginPwd: this.form.password,
+            },
           }).then((res) => {
-            if (res.data.code === '0') {
-              setUserToken(res.data.data)
-              setCurrentAccount(this.form.username)
-              this.$router.push('/schedule-home')
+            if (res.data.code === "0") {
+              setUserToken(res.data.data);
+              setCurrentAccount(this.form.username);
+              this.$router.push("/schedule-home");
             } else {
-              this.$message({ type: 'error', message: res.data.message })
+              this.$message({ type: "error", message: res.data.message });
             }
-          })
+          });
         } else {
-          return false
+          return false;
         }
-      })
+      });
     },
-    enter (e) {
+    enter(e) {
       if (e.keyCode === 13) {
-        this.login()
+        this.login();
       }
     },
-    handleCloseUpdate () {
-      this.centerDialogVisible = false
+    handleCloseUpdate() {
+      this.centerDialogVisible = false;
     },
-    close () {
-      const win = BrowserWindow.getFocusedWindow()
-      win.close()
+    close() {
+      const win = BrowserWindow.getFocusedWindow();
+      win.close();
     },
-    mini () {
-      const win = BrowserWindow.getFocusedWindow()
-      win.minimize()
+    mini() {
+      const win = BrowserWindow.getFocusedWindow();
+      win.minimize();
     },
-    autoUpdate () {
-      ipcRenderer.send('update')
-    }
+    autoUpdate() {
+      ipcRenderer.send("update");
+    },
   },
-  mounted () {
-
+  mounted() {
+    ipcRenderer.send("open-main");
   },
-  beforeDestroy () {
-    ipcRenderer.removeAll(['message', 'update'])
-  }
-}
+  beforeDestroy() {
+    ipcRenderer.removeAllListeners(["message", "update"]);
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -207,7 +176,7 @@ export default {
         font-size: 18px;
         color: rgba(255, 255, 255, 1);
         // text-shadow:2px 3px 1px rgba(0, 0, 0, 0.8);
-        &:first-child{
+        &:first-child {
           background: linear-gradient(
             0deg,
             rgba(0, 94, 210, 1) 0%,
@@ -218,30 +187,30 @@ export default {
           -webkit-background-clip: text;
         }
         span {
-          &:nth-child(1){
+          &:nth-child(1) {
             font-weight: bold;
             font-size: 18px;
             color: rgba(255, 255, 255, 1);
             background: linear-gradient(
-            0deg,
-            rgba(0, 94, 210, 1) 0%,
-            rgba(178, 218, 255, 1) 100%
+              0deg,
+              rgba(0, 94, 210, 1) 0%,
+              rgba(178, 218, 255, 1) 100%
             );
             background-clip: text;
             -webkit-text-fill-color: transparent;
             -webkit-background-clip: text;
           }
-          &:nth-child(2){
+          &:nth-child(2) {
             display: inline-block;
-            background: #FF752A;
-            color:#FFFFFF;
+            background: #ff752a;
+            color: #ffffff;
             line-height: 18px;
             padding: 0 5px;
             border-radius: 3px;
           }
           font-size: 12px;
           font-weight: bold;
-          color: #3CADFF;
+          color: #3cadff;
         }
         &:nth-child(2) {
           width: 20px;

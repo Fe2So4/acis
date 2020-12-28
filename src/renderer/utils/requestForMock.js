@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Message } from 'element-ui'
+// import { Message } from 'element-ui'
 // import { getUserToken, removeUserToken } from '../utils/storage'
 import { getUserToken } from '../utils/storage'
 // const request = (options) => {
@@ -36,10 +36,10 @@ request.interceptors.response.use(function (response) {
 }, function (error) {
   // 对响应错误做点什么
   if (process.env.NODE_ENV === 'development') {
-    Message({
-      type: 'error',
-      message: JSON.stringify(error, '', 2)
-    })
+    // Message({
+    //   type: 'error',
+    //   message: JSON.stringify(error, '', 2)
+    // })
   }
   return Promise.reject(error)
 })
