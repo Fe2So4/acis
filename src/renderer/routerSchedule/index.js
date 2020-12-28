@@ -27,6 +27,11 @@ const router = new Router({
           path: 'report',
           name: 'Report',
           component: () => import('@/views/ScheduleReport/index')
+        },
+        {
+          path: 'schedule-change',
+          name: 'ScheduleChange',
+          component: () => import('@/views/ScheduleChange/index')
         }
       ]
     },
@@ -38,7 +43,7 @@ const router = new Router({
 })
 // 解决重复点击导航路由报错
 const originalPush = Router.prototype.push
-Router.prototype.push = function push (location) {
+Router.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
 }
 

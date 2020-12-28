@@ -24,11 +24,13 @@
               prefix-icon="el-icon-s-custom"
               v-model="form.username"
               placeholder="请输入用户名"
+              @keydown.enter.native="handleInputPass"
             />
           </el-form-item>
           <el-form-item prop="password">
             <el-input
               prefix-icon="el-icon-lock"
+              ref="password"
               placeholder="请输入密码"
               v-model="form.password"
               @keydown.native="enter"
@@ -41,7 +43,7 @@
           <div class="button" @click="close">取消</div>
         </div>
       </div>
-      <div class="copyright">Copyright©2020仝佥信息版权所有</div>
+      <div class="copyright">Copyright©{{ time }}蓝想数科版权所有</div>
       <div class="close">
         <i class="el-icon-minus" @click="mini" />
         <i class="el-icon-close" @click="close" />
@@ -61,6 +63,7 @@ import { setUserToken, setCurrentAccount } from "../../utils/storage";
 import UpdaterPage from "@/components/UpdaterPage/updater-page";
 const { BrowserWindow } = require("electron").remote;
 import { ipcRenderer } from "electron";
+import moment from "moment";
 
 export default {
   name: "Login",
@@ -70,6 +73,7 @@ export default {
         username: "",
         password: "",
       },
+      time: moment(new Date()),
       centerDialogVisible: false,
       rules: {
         username: [
@@ -98,6 +102,10 @@ export default {
   },
   methods: {
     jumpHome() {},
+    handleInputPass() {
+      let pass = this.$refs.password;
+      pass.focus();
+    },
     login() {
       this.$refs.form.validate((valid) => {
         if (valid) {

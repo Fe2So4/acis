@@ -13,21 +13,81 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="printEvent" :disabled="!reportVisible">
-          打印
-        </el-button>
         <el-button @click="getData"> 刷新 </el-button>
-        <el-button @click="handleEdit" v-show="!reportVisible">
-          返回
-        </el-button>
+        <el-button @click="handleSubmit"> 提交修改 </el-button>
       </el-form-item>
     </el-form>
     <div class="content">
-      <el-scrollbar style="height: 100%" class="scrollbar">
-        <div class="print-document">
-          <Report id="print-report" :table-data="tableData" :time="time" />
-        </div>
-      </el-scrollbar>
+      <div style="height: 100%">
+        <vxe-table
+          border
+          round
+          auto-resize
+          keep-source
+          export-config
+          ref="xTable"
+          height="100%"
+          :data="tableData"
+          align="center"
+          size="mini"
+          :edit-config="{ trigger: 'dblclick', mode: 'cell', showStatus: true }"
+          :header-cell-class-name="cellClassName"
+        >
+          <vxe-table-column
+            field="opeRoom"
+            title="手术间"
+            width="80"
+            :edit-render="{}"
+          >
+            <template v-slot:edit="scope">
+              <el-select v-model="scope.row.opeRoom">
+                <el-option
+                  v-for="item in roomList"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                />
+              </el-select>
+            </template>
+            <template v-slot="{ row }">
+              {{ getSelectLabel(row.opeRoom, roomList) }}
+            </template>
+          </vxe-table-column>
+          <vxe-table-column
+            field="sequence"
+            title="台次"
+            width="60"
+            :edit-render="{}"
+          >
+            <template v-slot:edit="scope">
+              <el-input v-model="scope.row.sequence" />
+            </template>
+          </vxe-table-column>
+          <vxe-table-column field="ptName" title="病人信息" />
+          <vxe-table-column field="inpatientWard" title="病区" />
+          <vxe-table-column field="bedId" title="床号" width="60" />
+          <vxe-table-column field="visitId" title="住院号" width="80" />
+          <vxe-table-column field="diagnoseBefore" title="诊断" width="100" />
+          <vxe-table-column
+            field="operationName"
+            title="手术名称"
+            width="220"
+          />
+          <vxe-table-column field="surgeonName" title="手术医师" width="80" />
+          <vxe-table-column field="anesMethod" title="麻醉方法" />
+          <vxe-table-column field="anesDoc" title="麻醉医师" width="80" />
+          <vxe-table-column field="opeNurse" title="洗手护士" />
+          <vxe-table-column field="supplyNurse" title="巡回护士" />
+          <vxe-table-column field="memo" title="备注" />
+          <vxe-table-column title="操作">
+            <template v-slot="{ row }">
+              <el-button type="text" @click="cancelSchedule(row)">
+                撤销
+              </el-button>
+            </template>
+          </vxe-table-column>
+        </vxe-table>
+      </div>
     </div>
   </div>
 </template>

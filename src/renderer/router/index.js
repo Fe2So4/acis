@@ -30,6 +30,11 @@ if (process.env.BUILD_TARGET === 'schedule') {
             path: 'report',
             name: 'Report',
             component: () => import('@/views/ScheduleReport/index')
+          },
+          {
+            path: 'schedule-change',
+            name: 'ScheduleChange',
+            component: () => import('@/views/ScheduleChange/index')
           }
         ]
       },
@@ -205,7 +210,7 @@ if (process.env.BUILD_TARGET === 'schedule') {
 }
 // 解决重复点击导航路由报错
 const originalPush = Router.prototype.push
-Router.prototype.push = function push (location) {
+Router.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
 }
 

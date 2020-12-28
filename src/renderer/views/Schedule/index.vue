@@ -2,19 +2,13 @@
   <div class="schedule clearfix">
     <div class="left">
       <div class="option">
-        <el-row
-          justify="space-between"
-          type="flex"
-        >
-          <el-col
-            :span="12"
-            style="display:flex;"
-          >
+        <el-row justify="space-between" type="flex">
+          <el-col :span="12" style="display: flex">
             <span class="left-label">日期：</span>
             <el-date-picker
               v-model="timeDate"
               type="date"
-              style="flex:1;"
+              style="flex: 1"
               placeholder="选择日期"
               format="yyyy-MM-dd"
               value-format="yyyy-MM-dd"
@@ -23,20 +17,16 @@
               size="mini"
             />
           </el-col>
-          <el-col
-            :span="11"
-            style="display:flex;"
-          >
-            <span class="left-label">
-              楼层：
-            </span>
+          <el-col :span="11" style="display: flex">
+            <span class="left-label"> 楼层： </span>
             <el-select
               v-model="floor"
-              style="flex:1"
+              style="flex: 1"
               placeholder="楼层"
               size="mini"
               @change="changeFloor"
             >
+              <el-option value="0" label="全部" />
               <el-option value="6" />
               <el-option value="7" />
               <el-option value="8" />
@@ -50,7 +40,7 @@
               placeholder="请输入内容"
               v-model="searchContent"
               class="input-with-select"
-              style="overflow:hidden;"
+              style="overflow: hidden"
               @keyup.enter.native="handleSearch"
             >
               <el-select
@@ -59,41 +49,28 @@
                 placeholder="选择"
                 width="80px"
               >
-                <el-option
-                  label="病区"
-                  value="1"
-                />
-                <el-option
-                  label="医师"
-                  value="2"
-                />
-                <el-option
-                  label="手术"
-                  value="3"
-                />
-                <el-option
-                  label="病人"
-                  value="4"
-                />
+                <el-option label="病区" value="1" />
+                <el-option label="医师" value="2" />
+                <el-option label="手术" value="3" />
+                <el-option label="病人" value="4" />
               </el-select>
               <span
                 slot="append"
-                style="cursor:pointer;height:100%;width:100%;display:inline-block;"
+                style="
+                  cursor: pointer;
+                  height: 100%;
+                  width: 100%;
+                  display: inline-block;
+                "
               >
                 <!-- icon="el-icon-search" -->
-                <i
-                  @click="handleSearch"
-                  class="el-icon-search"
-                />
+                <i @click="handleSearch" class="el-icon-search" />
               </span>
             </el-input>
           </el-col>
         </el-row>
       </div>
-      <div
-        class="unallocated"
-        ref="unallocated"
-      >
+      <div class="unallocated" ref="unallocated">
         <el-collapse
           accordion
           size="mini"
@@ -105,6 +82,31 @@
               <!-- <div class="collapse-title"> -->
               手术({{ opeList.length }})
               <!-- </div> -->
+              <div class="color-diff">
+                <ul>
+                  <li>
+                    <span>急诊</span>
+                    <span
+                      class="cd-color"
+                      style="background: rgb(250, 175, 255)"
+                    ></span>
+                  </li>
+                  <li>
+                    <span>加台</span>
+                    <span
+                      class="cd-color"
+                      style="background: rgb(225, 126, 126)"
+                    ></span>
+                  </li>
+                  <li>
+                    <span>紧急</span>
+                    <span
+                      class="cd-color"
+                      style="background: rgb(171, 220, 255)"
+                    ></span>
+                  </li>
+                </ul>
+              </div>
             </template>
             <div class="collapse-height">
               <Unallocated
@@ -118,10 +120,7 @@
               <!-- :list="list" -->
             </div>
           </el-collapse-item>
-          <el-collapse-item
-            title="主麻医生"
-            name="B"
-          >
+          <el-collapse-item title="主麻医生" name="B">
             <div class="collapse-height">
               <List
                 :context-menu-data="contextMenuData3"
@@ -132,10 +131,7 @@
               />
             </div>
           </el-collapse-item>
-          <el-collapse-item
-            title="副麻医生"
-            name="C"
-          >
+          <el-collapse-item title="副麻医生" name="C">
             <div class="collapse-height">
               <List
                 :context-menu-data="contextMenuData4"
@@ -146,10 +142,7 @@
               />
             </div>
           </el-collapse-item>
-          <el-collapse-item
-            title="洗手护士"
-            name="D"
-          >
+          <el-collapse-item title="洗手护士" name="D">
             <div class="collapse-height">
               <List
                 :context-menu-data="contextMenuData5"
@@ -160,10 +153,7 @@
               />
             </div>
           </el-collapse-item>
-          <el-collapse-item
-            title="巡回护士"
-            name="E"
-          >
+          <el-collapse-item title="巡回护士" name="E">
             <div class="collapse-height">
               <List
                 :context-menu-data="contextMenuData6"
@@ -178,14 +168,8 @@
       </div>
     </div>
     <div class="right">
-      <div
-        class="content"
-        @contextmenu="showMenu7"
-      >
-        <div
-          v-show="!showSwitch"
-          class="content-info"
-        >
+      <div class="content" @contextmenu="showMenu7">
+        <div v-show="!showSwitch" class="content-info">
           <div class="allocated">
             <Allacate
               :data="allacatedList"
@@ -194,10 +178,7 @@
             />
           </div>
           <div class="patient-detail">
-            <el-scrollbar
-              style="width:100%;"
-              class="scrollbar"
-            >
+            <el-scrollbar style="width: 100%" class="scrollbar">
               <div class="detail-content">
                 申请手术时间：
                 <span>{{ patientBasBasicInfo.opeScheduleTime }}</span> 病区：
@@ -224,10 +205,7 @@
             <Option @showPreview="showPreview" />
           </div>
         </div>
-        <div
-          v-show="showSwitch"
-          class="switch"
-        >
+        <div v-show="showSwitch" class="switch">
           <switch-list v-if="showSwitch" />
         </div>
         <vue-context-menu
@@ -251,10 +229,7 @@
         <with-draw @handleWithdraw="handleWithdraw" />
       </div>
     </div>
-    <operation-doc
-      :doctor-visible="doctorVisible"
-      :doctor-list="doctorList"
-    />
+    <operation-doc :doctor-visible="doctorVisible" :doctor-list="doctorList" />
     <doc-config
       v-if="configVisible"
       :config-visible="configVisible"
@@ -301,252 +276,252 @@ import {
   distributeWashNurse,
   cancelClearDistribute,
   clearAllRoomData,
-  getAllocatedList
-} from '@/api/schedule'
-import moment from 'moment'
-import Unallocated from './components/unAllacated'
-import Allacate from './components/allacated'
-import List from './components/list'
-import Room from './components/room'
-import request from '@/utils/requestForMock'
-import { mapActions, mapGetters } from 'vuex'
-import RoomConfig from './components/roomConfig'
-import ChangeDialog from './components/change-dialog'
-import DocConfig from './components/doc-config'
-import WithDraw from './components/withdraw'
-import OperationDoc from './components/operation-doc'
-import Option from './components/option'
-import Preview from './components/preview'
-import SwitchList from './components/switch-list'
-import $bus from '@/utils/bus'
+  getAllocatedList,
+} from "@/api/schedule";
+import moment from "moment";
+import Unallocated from "./components/unAllacated";
+import Allacate from "./components/allacated";
+import List from "./components/list";
+import Room from "./components/room";
+import request from "@/utils/requestForMock";
+import { mapActions, mapGetters } from "vuex";
+import RoomConfig from "./components/roomConfig";
+import ChangeDialog from "./components/change-dialog";
+import DocConfig from "./components/doc-config";
+import WithDraw from "./components/withdraw";
+import OperationDoc from "./components/operation-doc";
+import Option from "./components/option";
+import Preview from "./components/preview";
+import SwitchList from "./components/switch-list";
+import $bus from "@/utils/bus";
 import {
   // addOperationRoom,
-  getDepartmentList
-} from '../../api/system'
+  getDepartmentList,
+} from "../../api/system";
 export default {
-  name: 'Scheduling',
-  data () {
+  name: "Scheduling",
+  data() {
     return {
       allacatedList: [],
-      dept: '',
-      floor: '6',
+      dept: "",
+      floor: "6",
       roomVisible: false,
-      changeTitle: '',
+      changeTitle: "",
       checkAll: false,
       isIndeterminate: true,
       changeVisible: false,
       changeContent: [
         {
-          label: '主麻',
-          value: 'A'
+          label: "主麻",
+          value: "A",
         },
         {
-          label: '副麻1',
-          value: 'B'
+          label: "副麻1",
+          value: "B",
         },
         {
-          label: '副麻2',
-          value: 'C'
+          label: "副麻2",
+          value: "C",
         },
         {
-          label: '副麻3',
-          value: 'D'
+          label: "副麻3",
+          value: "D",
         },
         {
-          label: '洗手1',
-          value: 'E'
+          label: "洗手1",
+          value: "E",
         },
         {
-          label: '洗手2',
-          value: 'F'
+          label: "洗手2",
+          value: "F",
         },
         {
-          label: '巡回1',
-          value: 'G'
+          label: "巡回1",
+          value: "G",
         },
         {
-          label: '巡回2',
-          value: 'H'
-        }
+          label: "巡回2",
+          value: "H",
+        },
       ],
       checkedContent: [],
       configVisible: false,
       configForm: {
-        name: '',
-        max: '',
-        no: '',
-        room: '',
-        userId: ''
+        name: "",
+        max: "",
+        no: "",
+        room: "",
+        userId: "",
       },
       switchList: [], // 交换列表信息
       detail: {},
-      select: '1',
+      select: "1",
       showSwitch: false,
-      defaultCollapse: 'A', // collapse默认展开项
+      defaultCollapse: "A", // collapse默认展开项
       doctorVisible: false, // 分配医生弹窗
       contextMenuData7: {
-        menuName: 'demo7',
+        menuName: "demo7",
         axis: {
           x: null,
-          y: null
+          y: null,
         },
         menulists: [
           {
-            btnName: '切换',
-            fnHandler: 'handleShowSwitch'
+            btnName: "切换",
+            fnHandler: "handleShowSwitch",
           },
           {
-            btnName: '批量修改',
-            fnHandler: 'handleEditBatch'
+            btnName: "批量修改",
+            fnHandler: "handleEditBatch",
           },
           {
-            btnName: '提交',
-            fnHandler: 'submitSimple'
+            btnName: "提交",
+            fnHandler: "submitSimple",
           },
           {
-            btnName: '清空',
+            btnName: "清空",
             children: [
               {
-                btnName: '清空全部',
-                fnHandler: 'handleClear1'
+                btnName: "清空全部",
+                fnHandler: "handleClear1",
               },
               {
-                btnName: '主麻医师',
-                fnHandler: 'handleClear2'
+                btnName: "主麻医师",
+                fnHandler: "handleClear2",
               },
               {
-                btnName: '副麻医师1',
-                fnHandler: 'handleClear3'
+                btnName: "副麻医师1",
+                fnHandler: "handleClear3",
               },
               {
-                btnName: '副麻医师2',
-                fnHandler: 'handleClear4'
+                btnName: "副麻医师2",
+                fnHandler: "handleClear4",
               },
               {
-                btnName: '副麻医师3',
-                fnHandler: 'handleClear5'
+                btnName: "副麻医师3",
+                fnHandler: "handleClear5",
               },
               {
-                btnName: '洗手护士1',
-                fnHandler: 'handleClear6'
+                btnName: "洗手护士1",
+                fnHandler: "handleClear6",
               },
               {
-                btnName: '洗手护士2',
-                fnHandler: 'handleClear7'
+                btnName: "洗手护士2",
+                fnHandler: "handleClear7",
               },
               {
-                btnName: '洗手护士3',
-                fnHandler: 'handleClear8'
+                btnName: "洗手护士3",
+                fnHandler: "handleClear8",
               },
               {
-                btnName: '巡回护士1',
-                fnHandler: 'handleClear9'
+                btnName: "巡回护士1",
+                fnHandler: "handleClear9",
               },
               {
-                btnName: '巡回护士2',
-                fnHandler: 'handleClear10'
+                btnName: "巡回护士2",
+                fnHandler: "handleClear10",
               },
               {
-                btnName: '巡回护士3',
-                fnHandler: 'handleClear11'
-              }
-            ]
+                btnName: "巡回护士3",
+                fnHandler: "handleClear11",
+              },
+            ],
           },
           {
-            btnName: '更换手术间',
-            fnHandler: 'handleChangeRoom'
-          }
-        ]
+            btnName: "更换手术间",
+            fnHandler: "handleChangeRoom",
+          },
+        ],
       },
       recordsList: [], // 分配操作记录列表
       currentId: null, // 当前手术间
       roomList: [], // 房态图列表数据
       form: {
-        name: '',
-        region: '',
-        date: ''
+        name: "",
+        region: "",
+        date: "",
       },
-      date: '',
-      type: '',
+      date: "",
+      type: "",
       h: 0,
       previewVisible: false, // 控制预览弹窗显示隐藏
-      currentApplyDoc: '', // 当前待分配医生的手术申请,
+      currentApplyDoc: "", // 当前待分配医生的手术申请,
       detailVisible: false, // 控制详情页显示隐藏
-      selectValue: '', // 选择搜索类型
+      selectValue: "", // 选择搜索类型
       doctorList: [], // 医生列表
       nurseList: [], // 护士列表
       anaesList: [], // 麻醉方法列表
-      timeDate: moment(new Date()).format('yyyy-MM-DD'), // 时间
+      timeDate: moment(new Date()).format("yyyy-MM-DD"), // 时间
       allocatedList: [], // 当前手术间申请
       tableData: [],
-      search: '',
-      searchContent: '', // 待分配区搜索内容,
+      search: "",
+      searchContent: "", // 待分配区搜索内容,
       detailForm: {},
       currentDocOrNur: {}, // 单击选中当前医护
       contextMenuData3: {
-        menuName: 'demo3',
+        menuName: "demo3",
         axis: {
           x: null,
-          y: null
+          y: null,
         },
         menulists: [
           {
-            btnName: '医生设置',
-            fnHandler: 'handleDocConfig'
-          }
-        ]
+            btnName: "医生设置",
+            fnHandler: "handleDocConfig",
+          },
+        ],
       },
       contextMenuData4: {
-        menuName: 'demo4',
+        menuName: "demo4",
         axis: {
           x: null,
-          y: null
+          y: null,
         },
         menulists: [
           {
-            btnName: '医生设置',
-            fnHandler: 'handleDocConfig'
-          }
-        ]
+            btnName: "医生设置",
+            fnHandler: "handleDocConfig",
+          },
+        ],
       },
       contextMenuData5: {
-        menuName: 'demo5',
+        menuName: "demo5",
         axis: {
           x: null,
-          y: null
+          y: null,
         },
         menulists: [
           {
-            btnName: '护士设置',
-            fnHandler: 'handleDocConfig'
-          }
-        ]
+            btnName: "护士设置",
+            fnHandler: "handleDocConfig",
+          },
+        ],
       },
       contextMenuData6: {
-        menuName: 'demo6',
+        menuName: "demo6",
         axis: {
           x: null,
-          y: null
+          y: null,
         },
         menulists: [
           {
-            btnName: '护士设置',
-            fnHandler: 'handleDocConfig'
-          }
-        ]
+            btnName: "护士设置",
+            fnHandler: "handleDocConfig",
+          },
+        ],
       },
       selectAllocated: {},
-      configTitle: '医生配置',
-      userId: '',
-      changeType: '1',
+      configTitle: "医生配置",
+      userId: "",
+      changeType: "1",
       currentPage: 1,
       maxCount: null, // 最大
       deptList: [],
-      detailTime: '',
+      detailTime: "",
       list: [],
       opeList: [],
-      patientBasBasicInfo: {} // 患者基本信息--new
-    }
+      patientBasBasicInfo: {}, // 患者基本信息--new
+    };
   },
   components: {
     Unallocated,
@@ -560,188 +535,189 @@ export default {
     OperationDoc,
     WithDraw,
     Option,
-    Preview
+    Preview,
   },
   computed: {
-    ...mapGetters('Schedule', ['currentRoom'])
+    ...mapGetters("Schedule", ["currentRoom"]),
   },
 
   watch: {
     defaultCollapse: {
-      handler (newValue, oldValue) {
-        if (newValue !== 'A') {
-          document.querySelector('.el-input-group__prepend').style.display =
-            'none'
+      handler(newValue, oldValue) {
+        if (newValue !== "A") {
+          document.querySelector(".el-input-group__prepend").style.display =
+            "none";
         } else {
-          document.querySelector('.el-input-group__prepend').style.display =
-            'table-cell'
+          document.querySelector(".el-input-group__prepend").style.display =
+            "table-cell";
         }
-        if (newValue === 'B' || newValue === 'C') {
-          this.configTitle = '医生配置'
-        } else if (newValue === 'D' || newValue === 'E') {
-          this.configTitle = '护士配置'
+        if (newValue === "B" || newValue === "C") {
+          this.configTitle = "医生配置";
+        } else if (newValue === "D" || newValue === "E") {
+          this.configTitle = "护士配置";
         }
       },
-      deep: true
-    }
+      deep: true,
+    },
     // immediate: true
   },
   methods: {
-    ...mapActions('Schedule', ['setTime']),
+    ...mapActions("Schedule", ["setTime"]),
     // 切换患者基本信息
-    changePatientDetail (row) {
-      this.patientBasBasicInfo = row
+    changePatientDetail(row) {
+      this.patientBasBasicInfo = row;
     },
     // 切换折叠面板
-    handleChangeCollapse (activeName) {
-      this.searchContent = ''
+    handleChangeCollapse(activeName) {
+      this.searchContent = "";
     },
     // 批量排班操作
-    handleEditBatch () {
-      this.$refs.allocated.handleBatchVisible()
-      console.log('批量操作触发')
+    handleEditBatch() {
+      this.$refs.allocated.handleBatchVisible();
     },
-    getOpeData () {
+    getOpeData() {
       request({
-        url: getOpeApply + '/' + this.timeDate + '/' + this.floor
-      }).then(res => {
-        const data = res.data.data
-        data.forEach(value => {
-
-        })
-        this.opeList = data
-      })
+        url: getOpeApply + "/" + this.timeDate + "/" + this.floor,
+      }).then((res) => {
+        const data = res.data.data;
+        data.forEach((value) => {});
+        this.opeList = data;
+      });
     },
-    handleSearch () {
+    handleSearch() {
       switch (this.defaultCollapse) {
-        case 'A':
-          this.search = this.searchContent
-          break
-        case 'B':
-          this.getDoctorList()
-          break
-        case 'C':
-          this.getDoctorList()
-          break
-        case 'D':
-          this.getNurseList()
-          break
-        case 'E':
-          this.getNurseList()
-          break
+        case "A":
+          this.search = this.searchContent;
+          break;
+        case "B":
+          this.getDoctorList();
+          break;
+        case "C":
+          this.getDoctorList();
+          break;
+        case "D":
+          this.getNurseList();
+          break;
+        case "E":
+          this.getNurseList();
+          break;
       }
       // console.log(this.searchContent, this.select)
     },
     // 获取当前排班列表数据
-    getData () {
+    getData() {
       request({
-        url: getAllocatedList + `/${this.currentRoom.roomNo}/${this.timeDate}`
+        url: getAllocatedList + `/${this.currentRoom.roomNo}/${this.timeDate}`,
       }).then((res) => {
-        const data = res.data.data
+        const data = res.data.data;
         data.forEach((item) => {
-          item.opeScheduleTime = moment(item.opeScheduleTime).format('YYYY-MM-DD HH:mm')
+          item.opeScheduleTime = moment(item.opeScheduleTime).format(
+            "YYYY-MM-DD"
+          );
           item.subDoc = (
             item.firstAnesDocName +
-            ',' +
+            "," +
             item.secAnesDocName +
-            ',' +
+            "," +
             item.thirdAnesDocName
           )
-            .replace(/^,+/, '')
-            .replace(/,+$/, '')
+            .replace(/^,+/, "")
+            .replace(/,+$/, "");
           item.washNurse = (
             item.firstOpeNurseName +
-            ',' +
+            "," +
             item.secOpeNurseName +
-            ',' +
+            "," +
             item.thirdOpeNurseName
           )
-            .replace(/^,+/, '')
-            .replace(/,+$/, '')
+            .replace(/^,+/, "")
+            .replace(/,+$/, "");
           item.hangNurse = (
             item.firstSupplyNurseName +
-            ',' +
+            "," +
             item.secSupplyNurseName +
-            ',' +
+            "," +
             item.thirdSupplyNurseName
           )
-            .replace(/^,+/, '')
-            .replace(/,+$/, '')
-        })
-        this.$eventHub.$emit('clearSelectAllocation')
-        this.allacatedList = data
-      })
+            .replace(/^,+/, "")
+            .replace(/,+$/, "");
+        });
+        this.$eventHub.$emit("clearSelectAllocation");
+        this.allacatedList = data;
+      });
     },
-    getDepartmentList () {
-      const formData = new FormData()
-      formData.append('start', this.currentPage)
-      formData.append('pageSize', 10)
+    getDepartmentList() {
+      const formData = new FormData();
+      formData.append("start", this.currentPage);
+      formData.append("pageSize", 10);
       getDepartmentList(formData).then((res) => {
-        this.deptList = res.deptDictList
+        this.deptList = res.deptDictList;
         // this.allCount = res.count;
-      })
+      });
     },
-    handleCheckAllChange (val) {
-      const arr = []
+    handleCheckAllChange(val) {
+      const arr = [];
       this.changeContent.forEach((value) => {
-        arr.push(value.value)
-      })
-      this.checkedContent = val ? arr : []
-      this.isIndeterminate = false
+        arr.push(value.value);
+      });
+      this.checkedContent = val ? arr : [];
+      this.isIndeterminate = false;
     },
-    handleCheckedContentChange (value) {
-      console.log(value.length)
-      const checkedCount = value.length
-      this.checkAll = checkedCount === this.changeContent.length
+    handleCheckedContentChange(value) {
+      console.log(value.length);
+      const checkedCount = value.length;
+      this.checkAll = checkedCount === this.changeContent.length;
       this.isIndeterminate =
-        checkedCount > 0 && checkedCount < this.changeContent.length
+        checkedCount > 0 && checkedCount < this.changeContent.length;
     },
     // 切换楼层获取数据
-    changeFloor () {
-      this.$eventHub.$emit('get-unallocated')
+    changeFloor() {
+      this.$eventHub.$emit("get-unallocated");
     },
     // 切换时间获取数据
-    changeData (val) {
-      this.timeDate = val
-      this.setTime(val)
+    changeData(val) {
+      this.timeDate = val;
+      this.setTime(val);
       setTimeout(() => {
-        this.$eventHub.$emit('get-unallocated')
-        this.$eventHub.$emit('get-allocated')
-        this.$eventHub.$emit('get-room')
-        this.$eventHub.$emit('get-records')
-        this.getNurseList()
-        this.getDoctorList()
-      })
+        this.$eventHub.$emit("get-unallocated");
+        if (this.currentRoom.roomNo) {
+          this.$eventHub.$emit("get-allocated");
+        }
+        this.$eventHub.$emit("get-room");
+        this.$eventHub.$emit("get-records");
+        this.getNurseList();
+        this.getDoctorList();
+      });
     },
     // 获取护士列表
-    getNurseList () {
-      let content = -1
-      if (this.searchContent === '') {
-        content = -1
+    getNurseList() {
+      let content = -1;
+      if (this.searchContent === "") {
+        content = -1;
       } else {
-        content = this.searchContent
+        content = this.searchContent;
       }
       request({
-        url: getNurseList + '/' + this.timeDate + '/' + content
+        url: getNurseList + "/" + this.timeDate + "/" + content,
       }).then((res) => {
-        const data = res.data.data
-        this.nurseList = data
-      })
+        const data = res.data.data;
+        this.nurseList = data;
+      });
     },
     // 获取医生列表
-    getDoctorList () {
-      let content = -1
-      if (this.searchContent === '') {
-        content = -1
+    getDoctorList() {
+      let content = -1;
+      if (this.searchContent === "") {
+        content = -1;
       } else {
-        content = this.searchContent
+        content = this.searchContent;
       }
       request({
-        url: getDocList + '/' + this.timeDate + '/' + content
+        url: getDocList + "/" + this.timeDate + "/" + content,
       }).then((res) => {
-        const data = res.data.data
-        this.doctorList = data
-      })
+        const data = res.data.data;
+        this.doctorList = data;
+      });
     },
     // 获取麻醉方法列表
     // async getAnaesMethods () {
@@ -754,419 +730,416 @@ export default {
     //   this.anaesList = res
     // },
     // 双击显示详情页
-    handleDetailVisible ({ row }) {
+    handleDetailVisible({ row }) {
       if (row.state === 1) {
-        this.detailVisible = true
+        this.detailVisible = true;
       } else {
         this.$message({
-          message: '当前手术申请已提交',
-          type: 'warning'
-        })
-        return
+          message: "当前手术申请已提交",
+          type: "warning",
+        });
+        return;
       }
-      this.detailForm = JSON.parse(JSON.stringify(row))
-      this.detailTime = this.timeDate + ' ' + row.scheduledDateTime
+      this.detailForm = JSON.parse(JSON.stringify(row));
+      this.detailTime = this.timeDate + " " + row.scheduledDateTime;
       // this.detailForm.scheduledDateTime = this.timeDate + ' ' + row.scheduledDateTime;
     },
-    distribute (row) {
+    distribute(row) {
       if (row.state === 2) {
         this.$message({
-          message: '当前手术申请已提交',
-          type: 'warning'
-        })
-        return
+          message: "当前手术申请已提交",
+          type: "warning",
+        });
+        return;
       }
-      this.doctorVisible = true
-      this.detailForm = JSON.parse(JSON.stringify(row))
-      this.currentApplyDoc = row.id
+      this.doctorVisible = true;
+      this.detailForm = JSON.parse(JSON.stringify(row));
+      this.currentApplyDoc = row.id;
     },
     // 预览
-    showPreview () {
-      this.previewVisible = true
+    showPreview() {
+      this.previewVisible = true;
       // this.getPreviewList()
     },
-    handlerClearList () {
-      this.recordsList = []
+    handlerClearList() {
+      this.recordsList = [];
     },
-    showMenu7 () {
-      event.preventDefault()
-      var x = event.clientX
-      var y = event.clientY
+    showMenu7() {
+      event.preventDefault();
+      var x = event.clientX;
+      var y = event.clientY;
       this.contextMenuData7.axis = {
         x,
-        y
-      }
+        y,
+      };
     },
-
     // 双击分配护士，麻醉医生等信息 --new
-    handleDistributeDoctor (item, i) {
+    handleDistributeDoctor(item, i) {
       switch (this.defaultCollapse) {
-        case 'B':
-          this.arrangeOpeMainDoc(item.userId, item.result)
-          break
-        case 'C':
-          this.arrangeOpeSubDoc(item.userId, item.result)
-          break
-        case 'D':
-          this.arrangeWashNurse(item.userId, item.result)
-          break
-        case 'E':
-          this.arrangeHangNurse(item.userId, item.result)
+        case "B":
+          this.arrangeOpeMainDoc(item.userId, item.result);
+          break;
+        case "C":
+          this.arrangeOpeSubDoc(item.userId, item.result);
+          break;
+        case "D":
+          this.arrangeWashNurse(item.userId, item.result);
+          break;
+        case "E":
+          this.arrangeHangNurse(item.userId, item.result);
       }
     },
     // 分配主麻医生--new
-    arrangeOpeMainDoc (id, result) {
+    arrangeOpeMainDoc(id, result) {
       request({
-        method: 'PUT',
+        method: "PUT",
         url:
           distributeMainAnaes +
-          `/${this.currentRoom.roomNo}/${id}/${result}/${this.timeDate}`
+          `/${this.currentRoom.roomNo}/${id}/${result}/${this.timeDate}`,
       }).then((res) => {
         if (res.data.code === 200) {
-          this.$eventHub.$emit('get-unallocated')
-          this.$eventHub.$emit('get-allocated')
-          this.$eventHub.$emit('get-room')
-          this.$eventHub.$emit('get-records')
-          this.getNurseList()
-          this.getDoctorList()
-          this.$message({ type: 'success', message: '分配成功' })
+          this.$eventHub.$emit("get-unallocated");
+          this.$eventHub.$emit("get-allocated");
+          this.$eventHub.$emit("get-room");
+          this.$eventHub.$emit("get-records");
+          this.getNurseList();
+          this.getDoctorList();
+          this.$message({ type: "success", message: "分配成功" });
         } else {
-          this.$message({ type: 'error', message: res.data.msg })
+          this.$message({ type: "error", message: res.data.msg });
         }
-      })
+      });
     },
     // 分配副麻医生--new
-    arrangeOpeSubDoc (id, result) {
+    arrangeOpeSubDoc(id, result) {
       request({
-        method: 'PUT',
+        method: "PUT",
         url:
           distributeSubAnaes +
-          `/${this.currentRoom.roomNo}/${id}/${result}/${this.timeDate}`
+          `/${this.currentRoom.roomNo}/${id}/${result}/${this.timeDate}`,
       }).then((res) => {
         if (res.data.code === 200) {
-          this.$eventHub.$emit('get-unallocated')
-          this.$eventHub.$emit('get-allocated')
-          this.$eventHub.$emit('get-room')
-          this.$eventHub.$emit('get-records')
-          this.getNurseList()
-          this.getDoctorList()
-          this.$message({ type: 'success', message: '分配成功' })
+          this.$eventHub.$emit("get-unallocated");
+          this.$eventHub.$emit("get-allocated");
+          this.$eventHub.$emit("get-room");
+          this.$eventHub.$emit("get-records");
+          this.getNurseList();
+          this.getDoctorList();
+          this.$message({ type: "success", message: "分配成功" });
         } else {
-          this.$message({ type: 'error', message: res.data.msg })
+          this.$message({ type: "error", message: res.data.msg });
         }
-      })
+      });
     },
     // 分配巡回护士--new
-    arrangeHangNurse (id, result) {
+    arrangeHangNurse(id, result) {
       request({
-        method: 'PUT',
+        method: "PUT",
         url:
           distributeHangNurse +
-          `/${this.currentRoom.roomNo}/${id}/${result}/${this.timeDate}`
+          `/${this.currentRoom.roomNo}/${id}/${result}/${this.timeDate}`,
       }).then((res) => {
         if (res.data.code === 200) {
-          this.$eventHub.$emit('get-unallocated')
-          this.$eventHub.$emit('get-allocated')
-          this.$eventHub.$emit('get-room')
-          this.$eventHub.$emit('get-records')
-          this.getNurseList()
-          this.getDoctorList()
-          this.$message({ type: 'success', message: '分配成功' })
+          this.$eventHub.$emit("get-unallocated");
+          this.$eventHub.$emit("get-allocated");
+          this.$eventHub.$emit("get-room");
+          this.$eventHub.$emit("get-records");
+          this.getNurseList();
+          this.getDoctorList();
+          this.$message({ type: "success", message: "分配成功" });
         } else {
-          this.$message({ type: 'error', message: res.data.msg })
+          this.$message({ type: "error", message: res.data.msg });
         }
-      })
+      });
     },
     // 分配洗手护士--new
-    arrangeWashNurse (id, result) {
+    arrangeWashNurse(id, result) {
       request({
-        method: 'PUT',
+        method: "PUT",
         url:
           distributeWashNurse +
-          `/${this.currentRoom.roomNo}/${id}/${result}/${this.timeDate}`
+          `/${this.currentRoom.roomNo}/${id}/${result}/${this.timeDate}`,
       }).then((res) => {
         if (res.data.code === 200) {
-          this.$eventHub.$emit('get-unallocated')
-          this.$eventHub.$emit('get-allocated')
-          this.$eventHub.$emit('get-room')
-          this.$eventHub.$emit('get-records')
-          this.getNurseList()
-          this.getDoctorList()
-          this.$message({ type: 'success', message: '分配成功' })
+          this.$eventHub.$emit("get-unallocated");
+          this.$eventHub.$emit("get-allocated");
+          this.$eventHub.$emit("get-room");
+          this.$eventHub.$emit("get-records");
+          this.getNurseList();
+          this.getDoctorList();
+          this.$message({ type: "success", message: "分配成功" });
         } else {
-          this.$message({ type: 'error', message: res.data.msg })
+          this.$message({ type: "error", message: res.data.msg });
         }
-      })
+      });
     },
     // 撤销操作--new
-    async handleWithdraw (sysno) {
-      request({ url: cancelClearDistribute + '/' + sysno, method: 'PUT' }).then(
+    async handleWithdraw(sysno) {
+      request({ url: cancelClearDistribute + "/" + sysno, method: "PUT" }).then(
         (res) => {
           if (res.data.code === 200) {
-            this.$eventHub.$emit('get-unallocated')
-            this.$eventHub.$emit('get-allocated')
-            this.$eventHub.$emit('get-room')
-            this.$eventHub.$emit('get-records')
-            this.getNurseList()
-            this.getDoctorList()
-            this.$message({ type: 'success', message: '撤销成功' })
+            this.$eventHub.$emit("get-unallocated");
+            this.$eventHub.$emit("get-allocated");
+            this.$eventHub.$emit("get-room");
+            this.$eventHub.$emit("get-records");
+            this.getNurseList();
+            this.getDoctorList();
+            this.$message({ type: "success", message: "撤销成功" });
           } else {
-            this.$message({ type: 'error', message: '撤销失败' })
+            this.$message({ type: "error", message: "撤销失败" });
           }
         }
-      )
+      );
     },
-    handleShowDetail ({ row, column }) {
-      console.log('单击')
-      this.detail = JSON.parse(JSON.stringify(row))
+    handleShowDetail({ row, column }) {
+      console.log("单击");
+      this.detail = JSON.parse(JSON.stringify(row));
     },
-    getSelectEvent () {
-      const selectRecords = this.$refs.xTable1.getCheckboxRecords()
-      this.$XModal.alert(selectRecords.length)
+    getSelectEvent() {
+      const selectRecords = this.$refs.xTable1.getCheckboxRecords();
+      this.$XModal.alert(selectRecords.length);
     },
-    getCurrentDate () {
-      const d = new Date()
-      this.date = d.getTime()
+    getCurrentDate() {
+      const d = new Date();
+      this.date = d.getTime();
     },
     // 选择当前医护信息
-    selectCurrentPerson (param) {
-      this.currentDocOrNur = param
+    selectCurrentPerson(param) {
+      this.currentDocOrNur = param;
     },
-    handleShowSwitch () {
+    handleShowSwitch() {
       // this.getSwitchList()
-      this.showSwitch = !this.showSwitch
+      this.showSwitch = !this.showSwitch;
     },
     // 获取切换列表信息
-    getSwitchList () {
-      const formData = new FormData()
-      formData.append('date', this.timeDate)
+    getSwitchList() {
+      const formData = new FormData();
+      formData.append("date", this.timeDate);
       getSwitchList(formData).then((res) => {
-        this.switchList = res
-      })
+        this.switchList = res;
+      });
     },
     // 提交手术间所有
-    submitRoomAll () {
-      this.$eventHub.$emit('submit-all')
+    submitRoomAll() {
+      this.$eventHub.$emit("submit-all");
     },
     // 提交手术间单条手术申请---new
-    submitSimple () {
+    submitSimple() {
       if (this.allocatedList.length > 0) {
-        if (this.selectAllocated.state === '2') {
+        if (this.selectAllocated.state === "2") {
           this.$message({
-            message: '该手术申请已提交',
-            type: 'warning'
-          })
-        } else if (this.selectAllocated.state === '1') {
-          const formData = new FormData()
-          formData.append('patientId', this.selectAllocated.patientId)
-          formData.append('visitId', this.selectAllocated.visitId)
-          formData.append('scheduleId', this.selectAllocated.scheduleId)
+            message: "该手术申请已提交",
+            type: "warning",
+          });
+        } else if (this.selectAllocated.state === "1") {
+          const formData = new FormData();
+          formData.append("patientId", this.selectAllocated.patientId);
+          formData.append("visitId", this.selectAllocated.visitId);
+          formData.append("scheduleId", this.selectAllocated.scheduleId);
           submitSimpleApply(formData).then((res) => {
-            this.getAllocatedList()
-            this.getRoomList()
-          })
+            this.getAllocatedList();
+            this.getRoomList();
+          });
         } else {
           this.$message({
-            message: '请选择需要提交的手术',
-            type: 'warning'
-          })
+            message: "请选择需要提交的手术",
+            type: "warning",
+          });
         }
       } else {
         this.$message({
-          message: '请分配手术到手术间',
-          type: 'warning'
-        })
+          message: "请分配手术到手术间",
+          type: "warning",
+        });
       }
     },
-
     // 选中单条手术申请
-    handleSimpleApply (row) {
-      this.selectAllocated = row
+    handleSimpleApply(row) {
+      this.selectAllocated = row;
     },
     // 清空操作 1~2 --new
-    handleClear (param) {
-      const arr = []
+    handleClear(param) {
+      const arr = [];
       this.allacatedList.forEach((item) => {
-        if (item.state === '1') {
+        if (item.state === "1") {
           arr.push({
             opeScheduleTime: item.opeScheduleTime,
             opeRoom: item.opeRoom,
             operationId: item.operationId,
-            patientId: item.patientId
-          })
+            patientId: item.patientId,
+          });
         }
-      })
+      });
       if (arr.length > 0) {
         request({
-          method: 'POST',
-          url: clearAllRoomData + '/' + param,
-          data: arr
+          method: "POST",
+          url: clearAllRoomData + "/" + param,
+          data: arr,
         }).then((res) => {
           if (res.data.code === 200) {
-            this.$eventHub.$emit('get-unallocated')
-            this.$eventHub.$emit('get-allocated')
-            this.$eventHub.$emit('get-room')
-            this.$eventHub.$emit('get-records')
-            this.getNurseList()
-            this.getDoctorList()
-            this.$message({ type: 'success', message: '清空成功' })
+            this.$eventHub.$emit("get-unallocated");
+            this.$eventHub.$emit("get-allocated");
+            this.$eventHub.$emit("get-room");
+            this.$eventHub.$emit("get-records");
+            this.getNurseList();
+            this.getDoctorList();
+            this.$message({ type: "success", message: "清空成功" });
           } else {
-            this.$message({ type: 'error', message: '清空失败' })
+            this.$message({ type: "error", message: "清空失败" });
           }
-        })
+        });
       } else {
-        this.$message({ type: 'warning', message: '当前手术间无待提交申请' })
+        this.$message({ type: "warning", message: "当前手术间无待提交申请" });
       }
     },
     // 开启医生配置弹框--new
-    handleDocConfig (param) {
-      this.configVisible = true
-      this.configForm.userId = param.userId
-      this.configForm.name = param.result
-      if (param.defaultOperoomNo === '') {
-        this.configForm.room = []
+    handleDocConfig(param) {
+      this.configVisible = true;
+      this.configForm.userId = param.userId;
+      this.configForm.name = param.result;
+      if (param.defaultOperoomNo === "") {
+        this.configForm.room = [];
       } else {
-        this.configForm.room = param.defaultOperoomNo.split(',')
+        this.configForm.room = param.defaultOperoomNo.split(",");
       }
-      this.configForm.max = param.maxOperoomCount
+      this.configForm.max = param.maxOperoomCount;
     },
     // 清除部分区域右击事件
-    clearContextMenu () {
-      const detail = this.$refs.detail
-      const title = this.$refs.title
+    clearContextMenu() {
+      const detail = this.$refs.detail;
+      const title = this.$refs.title;
       detail.oncontextmenu = function (e) {
-        return false
-      }
+        return false;
+      };
       title.oncontextmenu = function (e) {
-        return false
-      }
+        return false;
+      };
     },
     // 提交配置信息
-    submitConfig () {
-      const formData = new FormData()
-      formData.append('userId', this.userId)
-      formData.append('number', this.configForm.no)
-      formData.append('maxOperatingRoom', this.configForm.max)
-      formData.append('defaultOperatingRoom', this.configForm.room)
+    submitConfig() {
+      const formData = new FormData();
+      formData.append("userId", this.userId);
+      formData.append("number", this.configForm.no);
+      formData.append("maxOperatingRoom", this.configForm.max);
+      formData.append("defaultOperatingRoom", this.configForm.room);
       configMaxDefalut(formData).then((res) => {
-        this.configVisible = false
-        this.getDoctorList()
-        this.getNurseList()
+        this.configVisible = false;
+        this.getDoctorList();
+        this.getNurseList();
         this.$message({
-          message: '配置成功',
-          type: 'success'
-        })
-      })
+          message: "配置成功",
+          type: "success",
+        });
+      });
     },
     // 清空当前选中手术列表
-    clearSelectAllocation () {
-      this.selectAllocated = {}
+    clearSelectAllocation() {
+      this.selectAllocated = {};
     },
     // 手术间内容更换操作
-    handleChangeRoom (param) {
-      this.changeType = param
-      if (param === '1') {
+    handleChangeRoom(param) {
+      this.changeType = param;
+      if (param === "1") {
         if (this.allacatedList.length > 0) {
           if (this.selectAllocated.operationId) {
-            if (this.selectAllocated.state === '2') {
-              this.$message({ type: 'warning', message: '该手术申请已提交' })
-              return
+            if (this.selectAllocated.state === "2") {
+              this.$message({ type: "warning", message: "该手术申请已提交" });
+              return;
             } else {
             }
           } else {
-            this.$message({ type: 'warning', message: '请选择手术申请' })
-            return
+            this.$message({ type: "warning", message: "请选择手术申请" });
+            return;
           }
         } else {
-          this.$message({ type: 'warning', message: '当前手术间无申请信息' })
-          return
+          this.$message({ type: "warning", message: "当前手术间无申请信息" });
+          return;
         }
-        this.changeTitle = '更换手术间'
+        this.changeTitle = "更换手术间";
       } else {
-        this.changeTitle = '更换内容'
+        this.changeTitle = "更换内容";
       }
-      this.changeVisible = true
+      this.changeVisible = true;
     },
-    roomConfig () {
-      this.roomVisible = true
+    roomConfig() {
+      this.roomVisible = true;
     },
     // 关闭弹窗
-    handleClose () {
-      this.previewVisible = false
-      this.configVisible = false
-      this.roomVisible = false
-      this.changeVisible = false
+    handleClose() {
+      this.previewVisible = false;
+      this.configVisible = false;
+      this.roomVisible = false;
+      this.changeVisible = false;
     },
     // 左侧高度自适应
-    getH () {
+    getH() {
       this.$nextTick(() => {
         // 获取外层框
-        const oH = this.$refs.unallocated
+        const oH = this.$refs.unallocated;
         // 获取其宽度
-        const h = oH.getBoundingClientRect().height
+        const h = oH.getBoundingClientRect().height;
         // let h = oH.style.height;
-        const odiv = document.querySelectorAll('.collapse-height')
+        const odiv = document.querySelectorAll(".collapse-height");
         // 设置其高度（以宽度的60%为例）
         for (let i = 0; i < odiv.length; i++) {
-          odiv[i].style.height = h - 150 + 'px'
+          odiv[i].style.height = h - 150 + "px";
         }
-      })
+      });
       // 2、挂载 reisze 事件 → 屏幕缩放时监听宽度变化
       window.onresize = () => {
         return (() => {
           this.$nextTick(() => {
-            const oH = this.$refs.unallocated
+            const oH = this.$refs.unallocated;
             // 获取其宽度
             if (oH) {
-              const h = oH.getBoundingClientRect().height
+              const h = oH.getBoundingClientRect().height;
               // let h = oH.style.height;
-              const odiv = document.querySelectorAll('.collapse-height')
+              const odiv = document.querySelectorAll(".collapse-height");
               for (let i = 0; i < odiv.length; i++) {
-                odiv[i].style.height = h - 150 + 'px'
+                odiv[i].style.height = h - 150 + "px";
                 // odiv.height = (h - 150)  + 'px';
               }
             }
-          })
-        })()
-      }
-    }
+          });
+        })();
+      };
+    },
   },
 
-  created () {},
-  async mounted () {
-    this.getNurseList()
-    this.getDoctorList()
-    this.getData()
-    this.getOpeData()
-    $bus.$on('getApplyData', this.getOpeData)
-    this.$eventHub.$on('get-allocated', () => {
-      this.getData()
-    })
-    this.$eventHub.$on('clearSelectAllocation', () => {
-      this.clearSelectAllocation()
-    })
-    this.$eventHub.$on('get-DocNurse', () => {
-      this.getNurseList()
-      this.getDoctorList()
-    })
-    this.$eventHub.$on('get-unallocated', () => {
+  created() {},
+  async mounted() {
+    this.getNurseList();
+    this.getDoctorList();
+    this.getOpeData();
+    $bus.$on("getApplyData", this.getOpeData);
+    this.$eventHub.$on("get-allocated", () => {
+      this.getData();
+    });
+    this.$eventHub.$on("clearSelectAllocation", () => {
+      this.clearSelectAllocation();
+    });
+    this.$eventHub.$on("get-DocNurse", () => {
+      this.getNurseList();
+      this.getDoctorList();
+    });
+    this.$eventHub.$on("get-unallocated", () => {
       // 获取数据
-      this.getOpeData()
-    })
-    this.$eventHub.$on('handle-close', () => {
-      this.handleClose()
-    })
-    this.getH()
+      this.getOpeData();
+    });
+    this.$eventHub.$on("handle-close", () => {
+      this.handleClose();
+    });
+    this.getH();
   },
-  beforeDestroy () {
-    $bus.$off('getApplyData')
-    this.$eventHub.$off('get-allocated')
-    this.$eventHub.$off('clearSelectAllocation')
-    this.$eventHub.$off('get-DocNurse')
-    this.$eventHub.$off('get-unallocated')
-    this.$eventHub.$off('handle-close')
-  }
-}
+  beforeDestroy() {
+    $bus.$off("getApplyData");
+    this.$eventHub.$off("get-allocated");
+    this.$eventHub.$off("clearSelectAllocation");
+    this.$eventHub.$off("get-DocNurse");
+    this.$eventHub.$off("get-unallocated");
+    this.$eventHub.$off("handle-close");
+  },
+};
 </script>
 <style lang="scss" scoped>
 @import "@/styles/theme";
@@ -1183,7 +1156,7 @@ export default {
     // box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
     border-radius: 5px;
     overflow: hidden;
-    .left-label{
+    .left-label {
       @include theme-property("color", $color-text-regular);
       font-size: 14px;
       line-height: 28px;
@@ -1203,13 +1176,13 @@ export default {
     .unallocated {
       height: calc(100% - 86px);
     }
-    /deep/ .el-input-group__prepend{
-      width:80px;
+    /deep/ .el-input-group__prepend {
+      width: 80px;
       @include theme-property("color", $color-text-regular);
       @include theme-property("background", $background-schedule-list);
-      cursor:pointer;
+      cursor: pointer;
     }
-    /deep/ .el-select .el-input__inner:focus{
+    /deep/ .el-select .el-input__inner:focus {
       @include theme-property("border-color", $background-schedule-list);
     }
   }
@@ -1251,10 +1224,10 @@ export default {
         // color: #d0dae5;
         @include theme-property("color", $patient-detail-color);
       }
-      .detail-content{
+      .detail-content {
         width: calc(100% - 16px);
         white-space: nowrap;
-        padding:0 10px;
+        padding: 0 10px;
       }
     }
     .room {
@@ -1275,7 +1248,7 @@ export default {
 // .schedule /deep/ .el-input-group__prepend {
 //   background: #252c40;
 // }
-.schedule /deep/ .el-input-group__append{
+.schedule /deep/ .el-input-group__append {
   @include theme-property("background", $color-text-primary);
   // @include theme-property("color", $color-text-regular);
   color: #ffffff;
@@ -1284,6 +1257,7 @@ export default {
 }
 .schedule /deep/ .el-collapse-item__header {
   height: 30px;
+  position: relative;
   // background: #252c40;
   @include theme-property("background", $background-schedule-list);
   @include theme-property("color", $color-text-regular);
@@ -1291,9 +1265,33 @@ export default {
   // border-bottom: 1px solid #000;
   @include theme-property("border-color", $background-schedule);
   padding: 0 0 0 10px;
-  &.is-active{
+  &.is-active {
     color: #fff;
-    @include theme-property("background", $color-text-primary);
+    // @include theme-property("background", $color-text-primary);
+    // @include theme-property("background", rgb(226, 227, 232));
+    background: rgb(226, 227, 232);
+  }
+}
+.color-diff {
+  position: absolute;
+  left: 120px;
+  top: 0;
+  height: 100%;
+  ul {
+    display: flex;
+    height: 100%;
+    li {
+      line-height: 30px;
+      display: flex;
+      span {
+        margin-right: 10px;
+        &:nth-child(2) {
+          height: 20px;
+          width: 30px;
+          margin-top: 5px;
+        }
+      }
+    }
   }
 }
 .schedule /deep/ .el-collapse-item__wrap {
@@ -1308,16 +1306,16 @@ export default {
 }
 .schedule /deep/ .vue-contextmenu-listWrapper {
   width: 180px;
-  @include theme-property('background', $dateTimePicker-color-background);
-  @include theme-property('border-color', $dateTimePicker-color-border);
+  @include theme-property("background", $dateTimePicker-color-background);
+  @include theme-property("border-color", $dateTimePicker-color-border);
   box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
   border-radius: 5px;
   padding-left: 30px;
   .context-menu-list {
     // background: #39425c;
-    @include theme-property('background', $background-dialog);
+    @include theme-property("background", $background-dialog);
     line-height: 28px;
-    @include theme-property('color', $color-text-regular);
+    @include theme-property("color", $color-text-regular);
     margin: unset;
     .btn-wrapper-simple {
       height: 28px;
@@ -1334,7 +1332,7 @@ export default {
     .no-child-btn {
       padding: unset;
       &:hover {
-        @include theme-property('color', $color-text-primary);
+        @include theme-property("color", $color-text-primary);
       }
     }
     .has-child {
@@ -1343,8 +1341,8 @@ export default {
   }
 }
 .schedule /deep/ .child-ul-wrapper {
-  @include theme-property('background', $dateTimePicker-color-background);
-  @include theme-property('border-color', $dateTimePicker-color-border);
+  @include theme-property("background", $dateTimePicker-color-background);
+  @include theme-property("border-color", $dateTimePicker-color-border);
   box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
   border-radius: 5px;
   .child-li-wrapper {

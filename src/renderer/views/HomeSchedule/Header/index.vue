@@ -4,7 +4,7 @@
       <div class="title">
         <p>Dandelion智慧手术中心<i />智能排班</p>
       </div>
-      <div class="logo-img">
+      <div class="logo-img" @click="hanldeJump">
         <img src="@/assets/hs_logo.png" alt="" />
       </div>
     </div>
@@ -94,13 +94,13 @@ export default {
           name: "ScheduleReport",
           index: 2,
         },
-        // {
-        //   title: 'HIS同步',
-        //   icon: 'el-icon-s-data',
-        //   route: '/schedule-home/report',
-        //   name: 'ScheduleReport',
-        //   index: 3
-        // }
+        {
+          title: "排班修改",
+          icon: "el-icon-s-data",
+          route: "/schedule-home/schedule-change",
+          name: "ScheduleChange",
+          index: 3,
+        },
       ],
       activeIndex: 1,
       iconMax: "icon-icon_max",
@@ -118,6 +118,9 @@ export default {
     // this.synchro()
   },
   methods: {
+    hanldeJump() {
+      this.$router.push("/login");
+    },
     synchro() {
       this.fullscreenLoading = true;
       request({
@@ -167,9 +170,10 @@ export default {
       this.activeIndex = item.index;
       if (item.index === 1) {
         this.$router.push("/schedule-home/schedule");
-      }
-      if (item.index === 2) {
+      } else if (item.index === 2) {
         this.$router.push("/schedule-home/report");
+      } else if (item.index === 3) {
+        this.$router.push("/schedule-home/schedule-change");
       }
     },
     miniWindow() {

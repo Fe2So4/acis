@@ -1,9 +1,6 @@
 <template>
   <div class="notice">
-    <el-form
-      :inline="true"
-      size="mini"
-    >
+    <el-form :inline="true" size="mini">
       <el-form-item>
         <el-date-picker
           v-model="time"
@@ -40,115 +37,135 @@
         <el-button>搜索</el-button>
       </el-form-item>-->
       <el-form-item>
-        <el-button @click="print">
-          打印
-        </el-button>
+        <el-button @click="handleSearch"> 查询 </el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button @click="print"> 打印 </el-button>
       </el-form-item>
     </el-form>
     <div class="notice-content">
-      <notice-print
-        :notice-data="noticeData"
-        id="print-notice"
-      />
+      <div class="nc-left">
+        <vxe-table
+          border
+          round
+          auto-resize
+          keep-source
+          export-config
+          ref="xTable"
+          height="100%"
+          width="100%"
+          :data="ptList"
+          align="center"
+          size="mini"
+          :edit-config="{ trigger: 'dblclick', mode: 'cell', showStatus: true }"
+          :header-cell-class-name="cellClassName"
+        >
+          <vxe-table-column field="operationId" title="手术申请单号" />
+          <vxe-table-column field="ptName" title="患者" />
+        </vxe-table>
+      </div>
+      <div class="nc-right">
+        <notice-print :notice-data="noticeData" id="print-notice" />
+      </div>
     </div>
   </div>
 </template>
 <script>
-import moment from 'moment'
-import NoticePrint from '../print-notice'
-import { getNoticeData, getNoticePtList } from '@/api/schedule'
-import request from '@/utils/requestForMock'
-import { ipcRenderer } from 'electron'
+import moment from "moment";
+import NoticePrint from "../print-notice";
+import { getNoticeData, getNoticePtList } from "@/api/schedule";
+import request from "@/utils/requestForMock";
+import { ipcRenderer } from "electron";
 export default {
-  name: 'Notice',
-  data () {
+  name: "Notice",
+  data() {
     return {
-      value: '',
-      time: moment(new Date()).format('yyyy-MM-DD'),
+      value: "",
+      time: moment(new Date()).format("yyyy-MM-DD"),
       noticeData: {
-        opeRoom: '',
-        sequence: '',
-        opeScheduleTime: '',
-        ptName: '',
-        gender: '',
-        age: '',
-        diagnoseBefore: '',
-        deptName: '',
-        bedId: '',
-        visitId: '',
-        operationName: '',
-        surgeon: '',
-        surgeonAssist1: '',
-        surgeonAssist2: '',
-        surgeonAssist3: '',
-        anesMethod: '',
-        anesDoc: '',
-        memo: ''
+        opeRoom: "",
+        sequence: "",
+        opeScheduleTime: "",
+        ptName: "",
+        gender: "",
+        age: "",
+        diagnoseBefore: "",
+        deptName: "",
+        bedId: "",
+        visitId: "",
+        operationName: "",
+        surgeon: "",
+        surgeonAssist1: "",
+        surgeonAssist2: "",
+        surgeonAssist3: "",
+        anesMethod: "",
+        anesDoc: "",
+        memo: "",
       },
-      ptList: []
-    }
+      ptList: [],
+    };
   },
   components: { NoticePrint },
   computed: {},
   methods: {
-    print () {
-      // this.$router.push('/print-notice')
-      if (this.noticeData.ptName !== '') {
-        const printHtml = document.querySelector('#print-notice').outerHTML
-        // const options = { silent: false }
-        ipcRenderer.send('printChannel', printHtml)
+    handleSearch() {},
+    cellClassName() {},
+    print() {
+      if (this.noticeData.ptName !== "") {
+        const printHtml = document.querySelector("#print-notice").outerHTML;
+        ipcRenderer.send("printChannel", printHtml);
       } else {
-        this.$message({ type: 'warning', message: '请先选择患者' })
+        this.$message({ type: "warning", message: "请先选择患者" });
       }
     },
-    getData () {
-      if (this.value === '') {
-        this.noticeData.opeRoom = ''
-        this.noticeData.sequence = ''
-        this.noticeData.opeScheduleTime = ''
-        this.noticeData.ptName = ''
-        this.noticeData.gender = ''
-        this.noticeData.age = ''
-        this.noticeData.diagnoseBefore = ''
-        this.noticeData.deptName = ''
-        this.noticeData.bedId = ''
-        this.noticeData.visitId = ''
-        this.noticeData.operationName = ''
-        this.noticeData.surgeon = ''
-        this.noticeData.surgeonAssist1 = ''
-        this.noticeData.surgeonAssist2 = ''
-        this.noticeData.surgeonAssist3 = ''
-        this.noticeData.anesMethod = ''
-        this.noticeData.anesDoc = ''
-        this.noticeData.memo = ''
+    getData() {
+      if (this.value === "") {
+        this.noticeData.opeRoom = "";
+        this.noticeData.sequence = "";
+        this.noticeData.opeScheduleTime = "";
+        this.noticeData.ptName = "";
+        this.noticeData.gender = "";
+        this.noticeData.age = "";
+        this.noticeData.diagnoseBefore = "";
+        this.noticeData.deptName = "";
+        this.noticeData.bedId = "";
+        this.noticeData.visitId = "";
+        this.noticeData.operationName = "";
+        this.noticeData.surgeon = "";
+        this.noticeData.surgeonAssist1 = "";
+        this.noticeData.surgeonAssist2 = "";
+        this.noticeData.surgeonAssist3 = "";
+        this.noticeData.anesMethod = "";
+        this.noticeData.anesDoc = "";
+        this.noticeData.memo = "";
       } else {
         request({
-          url: getNoticeData + '/' + this.value,
-          method: 'GET'
+          url: getNoticeData + "/" + this.value,
+          method: "GET",
         }).then((res) => {
-          this.noticeData = res.data.data
-        })
+          this.noticeData = res.data.data;
+        });
       }
     },
-    getPtData () {
+    getPtData() {
       request({
         url: getNoticePtList,
         params: {
-          opeScheduleTime: this.time
-        }
+          opeScheduleTime: this.time,
+        },
       }).then((res) => {
-        this.ptList = res.data.data
-      })
-    }
+        this.ptList = res.data.data;
+      });
+    },
   },
-  mounted () {
+  mounted() {
     // this.getData()
-    this.getPtData()
-  }
-}
+    this.getPtData();
+  },
+};
 </script>
 <style lang="scss" scoped>
-.notice{
+.notice {
   height: 100%;
 }
 .notice /deep/ .el-select .el-select-dropdown,
@@ -166,9 +183,16 @@ export default {
     box-sizing: border-box;
   }
 }
-.notice-content{
-  // background: #1E1F22;
+.notice-content {
   height: calc(100% - 48px);
+  display: flex;
+  .nc-left {
+    margin-right: 20px;
+    width: 30%;
+  }
+  .nc-right {
+    flex: 1;
+  }
 }
 .notice /deep/ .el-select .el-select-dropdown,
 .el-select-dropdown .el-select-dropdown__item {
