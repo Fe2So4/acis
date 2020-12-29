@@ -1,6 +1,9 @@
 <template>
   <div class="notice">
-    <el-form :inline="true" size="mini">
+    <el-form
+      :inline="true"
+      size="mini"
+    >
       <el-form-item>
         <el-date-picker
           v-model="time"
@@ -13,34 +16,25 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-select
-          v-model="value"
-          placeholder="请选择"
+        <el-input
+          v-model="search"
           clearable
-          @change="getData"
-        >
-          <el-option
-            v-for="item in ptList"
-            :key="item.operationId"
-            :label="item.ptName"
-            :value="item.operationId"
-          >
-            <div class="content">
-              <span>{{ item.operationId }}</span>
-              <span>{{ item.ptName }}</span>
-              <span>{{ item.inputCode }}</span>
-            </div>
-          </el-option>
-        </el-select>
+          placeholder="请输入患者手术申请单号"
+          @clear="getPtData"
+        />
       </el-form-item>
       <!-- <el-form-item>
         <el-button>搜索</el-button>
       </el-form-item>-->
       <el-form-item>
-        <el-button @click="handleSearch"> 查询 </el-button>
+        <el-button @click="handleSearch">
+          查询
+        </el-button>
       </el-form-item>
       <el-form-item>
-        <el-button @click="print"> 打印 </el-button>
+        <el-button @click="print">
+          打印
+        </el-button>
       </el-form-item>
     </el-form>
     <div class="notice-content">
@@ -57,112 +51,133 @@
           :data="ptList"
           align="center"
           size="mini"
+          highlight-current-row
+          @cell-click="handleClick"
           :edit-config="{ trigger: 'dblclick', mode: 'cell', showStatus: true }"
           :header-cell-class-name="cellClassName"
         >
-          <vxe-table-column field="operationId" title="手术申请单号" />
-          <vxe-table-column field="ptName" title="患者" />
+          <vxe-table-column
+            field="operationId"
+            title="手术申请单号"
+          />
+          <vxe-table-column
+            field="ptName"
+            title="患者"
+          />
         </vxe-table>
       </div>
       <div class="nc-right">
-        <notice-print :notice-data="noticeData" id="print-notice" />
+        <notice-print
+          :notice-data="noticeData"
+          id="print-notice"
+        />
       </div>
     </div>
   </div>
 </template>
 <script>
-import moment from "moment";
-import NoticePrint from "../print-notice";
-import { getNoticeData, getNoticePtList } from "@/api/schedule";
-import request from "@/utils/requestForMock";
-import { ipcRenderer } from "electron";
+import moment from 'moment'
+import NoticePrint from '../print-notice'
+import { getNoticeData, getNoticePtList } from '@/api/schedule'
+import request from '@/utils/requestForMock'
+import { ipcRenderer } from 'electron'
 export default {
-  name: "Notice",
-  data() {
+  name: 'Notice',
+  data () {
     return {
-      value: "",
-      time: moment(new Date()).format("yyyy-MM-DD"),
+      value: '',
+      search: '',
+      time: moment(new Date()).format('yyyy-MM-DD'),
       noticeData: {
-        opeRoom: "",
-        sequence: "",
-        opeScheduleTime: "",
-        ptName: "",
-        gender: "",
-        age: "",
-        diagnoseBefore: "",
-        deptName: "",
-        bedId: "",
-        visitId: "",
-        operationName: "",
-        surgeon: "",
-        surgeonAssist1: "",
-        surgeonAssist2: "",
-        surgeonAssist3: "",
-        anesMethod: "",
-        anesDoc: "",
-        memo: "",
+        opeRoom: '',
+        sequence: '',
+        opeScheduleTime: '',
+        ptName: '',
+        gender: '',
+        age: '',
+        diagnoseBefore: '',
+        deptName: '',
+        bedId: '',
+        visitId: '',
+        operationName: '',
+        surgeon: '',
+        surgeonAssist1: '',
+        surgeonAssist2: '',
+        surgeonAssist3: '',
+        anesMethod: '',
+        anesDoc: '',
+        memo: ''
       },
-      ptList: [],
-    };
+      ptList: []
+    }
   },
   components: { NoticePrint },
   computed: {},
   methods: {
-    handleSearch() {},
-    cellClassName() {},
-    print() {
-      if (this.noticeData.ptName !== "") {
-        const printHtml = document.querySelector("#print-notice").outerHTML;
-        ipcRenderer.send("printChannel", printHtml);
+    handleClick ({ row }) {
+      this.value = row.operationId
+      this.getData()
+    },
+    handleSearch () {
+      this.getPtData()
+    },
+    cellClassName () {},
+    print () {
+      if (this.noticeData.ptName !== '') {
+        const printHtml = document.querySelector('#print-notice').outerHTML
+        ipcRenderer.send('printChannel', printHtml)
       } else {
-        this.$message({ type: "warning", message: "请先选择患者" });
+        this.$message({ type: 'warning', message: '请先选择患者' })
       }
     },
-    getData() {
-      if (this.value === "") {
-        this.noticeData.opeRoom = "";
-        this.noticeData.sequence = "";
-        this.noticeData.opeScheduleTime = "";
-        this.noticeData.ptName = "";
-        this.noticeData.gender = "";
-        this.noticeData.age = "";
-        this.noticeData.diagnoseBefore = "";
-        this.noticeData.deptName = "";
-        this.noticeData.bedId = "";
-        this.noticeData.visitId = "";
-        this.noticeData.operationName = "";
-        this.noticeData.surgeon = "";
-        this.noticeData.surgeonAssist1 = "";
-        this.noticeData.surgeonAssist2 = "";
-        this.noticeData.surgeonAssist3 = "";
-        this.noticeData.anesMethod = "";
-        this.noticeData.anesDoc = "";
-        this.noticeData.memo = "";
+    getData () {
+      if (this.value === '') {
+        this.noticeData.opeRoom = ''
+        this.noticeData.sequence = ''
+        this.noticeData.opeScheduleTime = ''
+        this.noticeData.ptName = ''
+        this.noticeData.gender = ''
+        this.noticeData.age = ''
+        this.noticeData.diagnoseBefore = ''
+        this.noticeData.deptName = ''
+        this.noticeData.bedId = ''
+        this.noticeData.visitId = ''
+        this.noticeData.operationName = ''
+        this.noticeData.surgeon = ''
+        this.noticeData.surgeonAssist1 = ''
+        this.noticeData.surgeonAssist2 = ''
+        this.noticeData.surgeonAssist3 = ''
+        this.noticeData.anesMethod = ''
+        this.noticeData.anesDoc = ''
+        this.noticeData.memo = ''
       } else {
         request({
-          url: getNoticeData + "/" + this.value,
-          method: "GET",
+          url: getNoticeData + '/' + this.value,
+          method: 'GET'
         }).then((res) => {
-          this.noticeData = res.data.data;
-        });
+          this.noticeData = res.data.data
+        })
       }
     },
-    getPtData() {
+    getPtData () {
+      const obj = {}
+      obj.opeScheduleTime = this.time
+      if (this.search !== '') {
+        obj.operationId = this.search
+      }
       request({
         url: getNoticePtList,
-        params: {
-          opeScheduleTime: this.time,
-        },
+        params: obj
       }).then((res) => {
-        this.ptList = res.data.data;
-      });
-    },
+        this.ptList = res.data.data
+      })
+    }
   },
-  mounted() {
+  mounted () {
     // this.getData()
-    this.getPtData();
-  },
-};
+    this.getPtData()
+  }
+}
 </script>
 <style lang="scss" scoped>
 .notice {

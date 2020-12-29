@@ -8,17 +8,30 @@
           <!-- 围手术期临床信息系统 -->
           <span>临床麻醉</span>
           <span>手术排班</span>
-          <span>1.1.2</span>
+          <span>1.1.3</span>
         </p>
-        <img src="../../assets/welcome.png" alt />
+        <img
+          src="../../assets/welcome.png"
+          alt
+        >
       </div>
       <div class="right">
         <div class="form-icon">
-          <img src="../../assets/dandelion.png" alt />
+          <img
+            src="../../assets/dandelion.png"
+            alt
+          >
         </div>
-        <div class="title">账 户 登 录</div>
+        <div class="title">
+          账 户 登 录
+        </div>
         <div class="line" />
-        <el-form :rules="rules" ref="form" :model="form" hide-required-asterisk>
+        <el-form
+          :rules="rules"
+          ref="form"
+          :model="form"
+          hide-required-asterisk
+        >
           <el-form-item prop="username">
             <el-input
               prefix-icon="el-icon-s-custom"
@@ -39,14 +52,32 @@
           </el-form-item>
         </el-form>
         <div class="option clearfix">
-          <div class="button" @click="login">确定</div>
-          <div class="button" @click="close">取消</div>
+          <div
+            class="button"
+            @click="login"
+          >
+            确定
+          </div>
+          <div
+            class="button"
+            @click="close"
+          >
+            取消
+          </div>
         </div>
       </div>
-      <div class="copyright">Copyright©{{ time }}蓝想数科版权所有</div>
+      <div class="copyright">
+        Copyright©{{ time }}蓝想数科版权所有
+      </div>
       <div class="close">
-        <i class="el-icon-minus" @click="mini" />
-        <i class="el-icon-close" @click="close" />
+        <i
+          class="el-icon-minus"
+          @click="mini"
+        />
+        <i
+          class="el-icon-close"
+          @click="close"
+        />
       </div>
     </div>
     <UpdaterPage
@@ -57,106 +88,106 @@
 </template>
 
 <script>
-import { login } from "@/api/login";
-import request from "@/utils/requestForMock";
-import { setUserToken, setCurrentAccount } from "../../utils/storage";
-import UpdaterPage from "@/components/UpdaterPage/updater-page";
-const { BrowserWindow } = require("electron").remote;
-import { ipcRenderer } from "electron";
-import moment from "moment";
+import { login } from '@/api/login'
+import request from '@/utils/requestForMock'
+import { setUserToken, setCurrentAccount } from '../../utils/storage'
+import UpdaterPage from '@/components/UpdaterPage/updater-page'
+import { ipcRenderer } from 'electron'
+import moment from 'moment'
+const { BrowserWindow } = require('electron').remote
 
 export default {
-  name: "Login",
-  data() {
+  name: 'Login',
+  data () {
     return {
       form: {
-        username: "",
-        password: "",
+        username: '',
+        password: ''
       },
       time: moment(new Date()),
       centerDialogVisible: false,
       rules: {
         username: [
-          { required: true, message: "请正确填写用户名", trigger: "blur" },
+          { required: true, message: '请正确填写用户名', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: "请正确填写密码", trigger: "blur" },
-        ],
-      },
-    };
+          { required: true, message: '请正确填写密码', trigger: 'blur' }
+        ]
+      }
+    }
   },
   components: {
-    UpdaterPage,
+    UpdaterPage
   },
-  created() {
-    const win = BrowserWindow.getFocusedWindow();
+  created () {
+    const win = BrowserWindow.getFocusedWindow()
     if (win) {
-      win.unmaximize();
+      win.unmaximize()
     }
-    this.autoUpdate();
-    ipcRenderer.on("message", (event, { message, data }) => {
-      if (message === "update-available") {
-        this.centerDialogVisible = true;
+    this.autoUpdate()
+    ipcRenderer.on('message', (event, { message, data }) => {
+      if (message === 'update-available') {
+        this.centerDialogVisible = true
       }
-    });
+    })
   },
   methods: {
-    jumpHome() {},
-    handleInputPass() {
-      let pass = this.$refs.password;
-      pass.focus();
+    jumpHome () {},
+    handleInputPass () {
+      const pass = this.$refs.password
+      pass.focus()
     },
-    login() {
+    login () {
       this.$refs.form.validate((valid) => {
         if (valid) {
           request({
-            method: "post",
+            method: 'post',
             url: login,
             data: {
               loginName: this.form.username,
-              loginPwd: this.form.password,
-            },
-          }).then((res) => {
-            if (res.data.code === "0") {
-              setUserToken(res.data.data);
-              setCurrentAccount(this.form.username);
-              this.$router.push("/schedule-home");
-            } else {
-              this.$message({ type: "error", message: res.data.message });
+              loginPwd: this.form.password
             }
-          });
+          }).then((res) => {
+            if (res.data.code === '0') {
+              setUserToken(res.data.data)
+              setCurrentAccount(this.form.username)
+              this.$router.push('/schedule-home')
+            } else {
+              this.$message({ type: 'error', message: res.data.message })
+            }
+          })
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
-    enter(e) {
+    enter (e) {
       if (e.keyCode === 13) {
-        this.login();
+        this.login()
       }
     },
-    handleCloseUpdate() {
-      this.centerDialogVisible = false;
+    handleCloseUpdate () {
+      this.centerDialogVisible = false
     },
-    close() {
-      const win = BrowserWindow.getFocusedWindow();
-      win.close();
+    close () {
+      const win = BrowserWindow.getFocusedWindow()
+      win.close()
     },
-    mini() {
-      const win = BrowserWindow.getFocusedWindow();
-      win.minimize();
+    mini () {
+      const win = BrowserWindow.getFocusedWindow()
+      win.minimize()
     },
-    autoUpdate() {
-      ipcRenderer.send("update");
-    },
+    autoUpdate () {
+      ipcRenderer.send('update')
+    }
   },
-  mounted() {
-    ipcRenderer.send("open-main");
+  mounted () {
+    ipcRenderer.send('open-main')
   },
-  beforeDestroy() {
-    ipcRenderer.removeAllListeners(["message", "update"]);
-  },
-};
+  beforeDestroy () {
+    ipcRenderer.removeAllListeners(['message', 'update'])
+  }
+}
 </script>
 
 <style lang="scss" scoped>

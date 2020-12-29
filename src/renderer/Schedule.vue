@@ -109,4 +109,7 @@ export default {
 
 <style>
 /* CSS */
+  #app /deep/ .el-dialog__headerbtn{
+    font-size: 30px;
+  }
 </style>

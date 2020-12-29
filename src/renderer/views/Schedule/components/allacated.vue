@@ -12,8 +12,14 @@
       highlight-current-row
       :data="data"
       class="mytable-style scroll"
-      :checkbox-config="{trigger: 'row', highlight: true, range: true, checkMethod:handleCheckFilter}"
+      :checkbox-config="{
+        trigger: 'row',
+        highlight: true,
+        range: true,
+        checkMethod: handleCheckFilter,
+      }"
       :row-style="rowStyle"
+      :cell-class-name="cellClassName"
       @checkbox-change="selectChangeEvent"
       @cell-dblclick="handleDetailVisible"
       @cell-click="handleSimpleApply"
@@ -35,7 +41,7 @@
       <vxe-table-column
         field="bedId"
         title="床位"
-        width="70"
+        width="50"
       />
       <vxe-table-column
         field="visitId"
@@ -46,7 +52,7 @@
       <vxe-table-column
         field="surgeonName"
         title="主刀"
-        width="70"
+        width="140"
       />
       <vxe-table-column
         field="opeScheduleTime"
@@ -57,41 +63,41 @@
         field="operationName"
         title="手术名称"
         width="230"
-        show-overflow="title"
       />
+      <!-- show-overflow="title" -->
       <vxe-table-column
         field="anesMethod"
         title="麻醉方法"
-        width="120"
+        width="80"
       />
       <vxe-table-column
         field="anesDocName"
-        title="主麻医师"
-        width="70"
+        title="主麻"
+        width="60"
         show-overflow="title"
       />
       <vxe-table-column
         field="subDoc"
-        title="副麻医师"
+        title="副麻"
         width="140"
         show-overflow="title"
       />
       <vxe-table-column
         field="washNurse"
         title="洗手护士"
-        width="120"
+        width="170"
         show-overflow="title"
       />
       <vxe-table-column
         field="hangNurse"
         title="巡回护士"
-        width="120"
+        width="170"
         show-overflow="title"
       />
       <vxe-table-column
         field="memo"
         title="备注"
-        width="82"
+        width="80"
       />
       <vxe-table-column
         title="操作"
@@ -147,7 +153,8 @@ export default {
     }
   },
   components: {
-    AllocatedDetail, DetailBatch
+    AllocatedDetail,
+    DetailBatch
   },
   computed: {
     ...mapGetters('Schedule', ['currentRoom', 'time'])
@@ -165,7 +172,7 @@ export default {
         request({
           method: 'PUT',
           url: cancelOpeApply + `/${row.operationId}`
-        }).then(res => {
+        }).then((res) => {
           this.$eventHub.$emit('get-unallocated')
           this.$eventHub.$emit('get-room')
           this.$eventHub.$emit('get-records')
@@ -180,10 +187,7 @@ export default {
     handleCheckFilter ({ row }) {
       return row.state === '1'
     },
-    rowStyle ({
-      row,
-      rowIndex
-    }) {
+    rowStyle ({ row, rowIndex }) {
       if (row.state === '1') {
         return {
           color: 'red'
@@ -192,6 +196,11 @@ export default {
         return {
           color: 'green'
         }
+      }
+    },
+    cellClassName ({ row, column }) {
+      if (column.title === '手术名称') {
+        return 'opeTitle'
       }
     },
     handleDetailVisible ({ row }) {
@@ -234,12 +243,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .allacated{
-    height: 100%;
-    width: 100%;
-    /deep/ .el-button.el-button--text{
-      padding-top: unset !important;
-      padding-bottom: unset !important;
-    }
+.allacated {
+  height: 100%;
+  width: 100%;
+  /deep/ .el-button.el-button--text {
+    padding-top: unset !important;
+    padding-bottom: unset !important;
   }
+}
 </style>

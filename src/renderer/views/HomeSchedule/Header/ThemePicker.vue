@@ -21,6 +21,7 @@
       <i
         class="el-icon-magic-stick icon"
         slot="reference"
+        style="font-size:20px;"
       />
     </el-popover>
   </div>

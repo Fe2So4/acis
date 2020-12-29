@@ -23,59 +23,62 @@
           <vxe-table-column
             field="opeRoom"
             title="手术间"
-            width="82"
+            width="60"
           />
           <vxe-table-column
             field="sequence"
             title="台次"
-            width="82"
+            width="50"
           />
           <vxe-table-column
             field="ptName"
             title="姓名"
-            width="120"
+            width="80"
           />
           <vxe-table-column
             field="inpatientWard"
             title="病区"
-            width="82"
+            width="50"
           />
           <vxe-table-column
             field="bedId"
             title="床位"
-            width="120"
+            width="50"
           />
           <vxe-table-column
             field="visitId"
             title="住院号"
-            width="120"
+            width="80"
             show-overflow="title"
           />
           <vxe-table-column
             field="operationName"
             title="手术名称"
-            width="120"
           />
+          <!-- width="120" -->
           <vxe-table-column
             field="surgeon"
             title="手术医师"
-            width="82"
+            width="140"
           />
           <vxe-table-column
             field="anesDoc"
             title="麻醉医师"
-            show-overflow="title"
+            width="160"
           />
+          <!-- show-overflow="title" -->
           <vxe-table-column
             field="opeNurse"
             title="洗手护士"
-            show-overflow="title"
+            width="170"
           />
+          <!-- show-overflow="title" -->
           <vxe-table-column
             field="supplyNurse"
             title="巡回护士"
-            show-overflow="title"
+            width="170"
           />
+          <!-- show-overflow="title" -->
         </vxe-table>
       </div>
       <div
@@ -85,10 +88,14 @@
         <el-button
           size="mini"
           type="primary"
+          @click="handleSubmit"
         >
           提 交
         </el-button>
-        <el-button size="mini">
+        <el-button
+          size="mini"
+          @click="handleClose"
+        >
           关 闭
         </el-button>
       </div>
@@ -121,14 +128,19 @@ export default {
     ...mapGetters('Schedule', ['time'])
   },
   methods: {
+    handleSubmit () {
+      this.$eventHub.$emit('submit-all')
+      this.handleClose()
+    },
     rowStyle ({ row, rowIndex }) {
-      if (row.state === '1') {
+      if (row.state === '1' && row.index % 2 === 0) {
         return {
-          color: 'red'
+          // color: "red",
+          background: '#fff3e0'
         }
       } else {
         return {
-          color: 'green'
+          // color: "green",
         }
       }
     },
