@@ -104,6 +104,14 @@ export default {
       }
     });
   },
+  mounted() {
+    ipcRenderer.send("open-main");
+    document.addEventListener("keyup", this.keyUpListener);
+  },
+  beforeDestroy() {
+    ipcRenderer.removeAllListeners(["message", "update"]);
+    document.removeEventListener("keyup", this.keyUpListener);
+  },
   methods: {
     jumpHome() {},
     handleInputPass() {
@@ -154,12 +162,11 @@ export default {
     autoUpdate() {
       ipcRenderer.send("update");
     },
-  },
-  mounted() {
-    ipcRenderer.send("open-main");
-  },
-  beforeDestroy() {
-    ipcRenderer.removeAllListeners(["message", "update"]);
+    keyUpListener(e) {
+      if (e.keyCode === 112) {
+        this.$electron.ipcRenderer.send("open-config-file");
+      }
+    },
   },
 };
 </script>

@@ -3,6 +3,7 @@
 import { app, BrowserWindow, Menu, ipcMain } from 'electron'
 // import { type } from 'process'
 import '../renderer/store'
+import './ip'
 const { autoUpdater } = require('electron-updater')
 const fs = require('fs')
 const Path = require('path')
@@ -21,7 +22,7 @@ const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`
 
-function createInitialWindow() {
+function createInitialWindow () {
   initialWindow = new BrowserWindow({
     width: 880,
     height: 560,
@@ -38,7 +39,7 @@ function createInitialWindow() {
   })
   initialWindow.loadURL(Path.resolve(__static, './loading/index.html'))
 }
-function createWindow() {
+function createWindow () {
   /**
    * Initial window options
    */
@@ -120,7 +121,7 @@ function createWindow() {
     autoUpdater.checkForUpdates()
   }
   // 主进程主动发送消息给渲染进程函数
-  function sendUpdateMessage(message, data) {
+  function sendUpdateMessage (message, data) {
     mainWindow.webContents.send('message', { message, data })
   }
   mainWindow.on('closed', () => {
@@ -141,20 +142,20 @@ app.on('ready', () => {
 //   createWindow()
 // })
 
-//窗口最小化
+// 窗口最小化
 ipcMain.on('window-min', function () {
-  mainWindow.minimize();
+  mainWindow.minimize()
 })
-//窗口最大化
+// 窗口最大化
 ipcMain.on('window-max', function () {
   if (mainWindow.isMaximized()) {
-    mainWindow.restore();
+    mainWindow.restore()
   } else {
-    mainWindow.maximize();
+    mainWindow.maximize()
   }
 })
 ipcMain.on('window-close', function () {
-  mainWindow.close();
+  mainWindow.close()
 })
 
 ipcMain.once('open-main', () => {

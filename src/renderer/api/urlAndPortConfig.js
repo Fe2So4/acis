@@ -1,12 +1,13 @@
+import { ipcRenderer } from 'electron'
+const prodIp = ipcRenderer.sendSync('get-prod-ip')
+
 const mock =
   process.env.NODE_ENV === 'development'
     ? !(process.env.MOCK === 'none')
     : false
 
 const IP = {
-  // SERVER: '47.103.105.200',
-  SERVER: '192.168.1.58',
-  // SERVER: 'localhost',
+  SERVER: prodIp, // 谢佳辰公司ip
   LOCAL: 'localhost',
   XIE: '192.168.1.175',
   LI: '192.168.1.177',
@@ -14,7 +15,7 @@ const IP = {
 }
 const PORT = {
   BASE: '8090',
-  SCOKET: '9099'
+  SOCKET: '9099'
 }
 const productIpType = 'SERVER' // 'SERVER' / 'LOCAL'
 const developmentIpType = 'SERVER' // 'SERVER' / ''
@@ -34,8 +35,8 @@ const baseLi =
     : URL_PRODUCT
 const socketLi =
   process.env.NODE_ENV === 'development'
-    ? `http://${IP_LI}:${PORT.SCOKET}/`
-    : `http://${IP_BASE}:${PORT.SCOKET}/`
+    ? `http://${IP_LI}:${PORT.SOCKET}/`
+    : `http://${IP_BASE}:${PORT.SOCKET}/`
 
 // 谢
 const baseXie =
