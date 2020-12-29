@@ -36,7 +36,7 @@
           <vxe-table-column
             field="opeRoom"
             title="手术间"
-            width="80"
+            width="90"
             :edit-render="{}"
           >
             <template v-slot:edit="scope">
@@ -50,7 +50,7 @@
               </el-select>
             </template>
             <template v-slot="{ row }">
-              {{ getSelectLabel(row.opeRoom, roomList) }}
+              <span>{{ getSelectLabel(row.opeRoom, roomList) }}</span>
             </template>
           </vxe-table-column>
           <vxe-table-column
@@ -65,7 +65,7 @@
           </vxe-table-column>
           <vxe-table-column field="ptName" title="病人信息" />
           <vxe-table-column field="inpatientWard" title="病区" />
-          <vxe-table-column field="bedId" title="床号" width="60" />
+          <vxe-table-column field="bedId" title="床号" width="50" />
           <vxe-table-column field="visitId" title="住院号" width="80" />
           <vxe-table-column field="diagnoseBefore" title="诊断" width="100" />
           <vxe-table-column
@@ -122,13 +122,21 @@ export default {
   computed: {},
   methods: {
     cancelSchedule(row) {
-      request({
-        url: cancelScheduleSubmit + `?operationId=` + row.operationId,
-        method: "put",
-      }).then((res) => {
-        this.$message({ type: "success", message: "撤销成功" });
-        this.getData();
-      });
+      this.$confirm("是否撤销当前手术?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          request({
+            url: cancelScheduleSubmit + `?operationId=` + row.operationId,
+            method: "put",
+          }).then((res) => {
+            this.$message({ type: "success", message: "撤销成功" });
+            this.getData();
+          });
+        })
+        .catch(() => {});
     },
     printEvent() {
       // this.$router.push('/print-notice')

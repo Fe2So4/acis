@@ -13,25 +13,7 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-select
-          v-model="value"
-          placeholder="请选择"
-          clearable
-          @change="getData"
-        >
-          <el-option
-            v-for="item in ptList"
-            :key="item.operationId"
-            :label="item.ptName"
-            :value="item.operationId"
-          >
-            <div class="content">
-              <span>{{ item.operationId }}</span>
-              <span>{{ item.ptName }}</span>
-              <span>{{ item.inputCode }}</span>
-            </div>
-          </el-option>
-        </el-select>
+        <el-input v-model="search" clearable @clear="getPtData"> </el-input>
       </el-form-item>
       <!-- <el-form-item>
         <el-button>搜索</el-button>
@@ -57,6 +39,8 @@
           :data="ptList"
           align="center"
           size="mini"
+          highlight-current-row
+          @cell-click="handleClick"
           :edit-config="{ trigger: 'dblclick', mode: 'cell', showStatus: true }"
           :header-cell-class-name="cellClassName"
         >
@@ -81,6 +65,7 @@ export default {
   data() {
     return {
       value: "",
+      search: "",
       time: moment(new Date()).format("yyyy-MM-DD"),
       noticeData: {
         opeRoom: "",
@@ -108,7 +93,13 @@ export default {
   components: { NoticePrint },
   computed: {},
   methods: {
-    handleSearch() {},
+    handleClick({ row }) {
+      this.value = row.operationId;
+      this.getData();
+    },
+    handleSearch() {
+      this.getPtData();
+    },
     cellClassName() {},
     print() {
       if (this.noticeData.ptName !== "") {
@@ -148,11 +139,14 @@ export default {
       }
     },
     getPtData() {
+      let obj = {};
+      obj.opeScheduleTime = this.time;
+      if (this.search !== "") {
+        obj.operationId = this.search;
+      }
       request({
         url: getNoticePtList,
-        params: {
-          opeScheduleTime: this.time,
-        },
+        params: obj,
       }).then((res) => {
         this.ptList = res.data.data;
       });

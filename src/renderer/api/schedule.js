@@ -1,4 +1,4 @@
-const config = require('@/config/urlConfig')
+const config = require('../config/urlConfig')
 
 // 手术申请列表查询
 export const getOpeApply = `${config.default.api.baseURL}/acis/operation/getOpeApplyInfo`
@@ -110,3 +110,6 @@ export const updateScheduledRoomPlatform = `${config.default.api.baseURL}/acis/o
 
 // 排班已提交撤销操作
 export const cancelScheduleSubmit = `${config.default.api.baseURL}/acis/operation/repealOperation`
+
+// 获取当前用户默认手术间
+export const getCurrentRoom = `${config.default.api.baseURL}/acis/operation/getDefaultFloor`

@@ -94,7 +94,7 @@
 <script>
 import request from "@/utils/requestForMock";
 import { getRoomList } from "@/api/schedule";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 
 export default {
   data() {
@@ -171,10 +171,23 @@ export default {
       type: String,
       default: "",
     },
+    floor: {
+      type: String,
+      required: true,
+    },
+  },
+  watch: {
+    floor: {
+      handler(newVal) {
+        this.getData();
+      },
+      immediate: true,
+    },
   },
   computed: {
     // ...mapGetters('Schedule', ['time'])
     ...mapState("Base", ["theme"]),
+    ...mapGetters("Schedule", ["currentRoom"]),
     progressBackground() {
       switch (this.theme) {
         case "dark-gray":
@@ -188,32 +201,34 @@ export default {
     },
   },
   mounted() {
-    this.getData();
-    this.$eventHub.$on("get-room", () => {
-      this.getData();
-    });
+    this.$eventHub.$on("get-room", this.getData);
+    if (this.currentRoom.roomIndex || this.currentRoom.roomIndex === 0) {
+      this.roomIndex = this.currentRoom.roomIndex;
+    }
     // this.changeRoom(this.roomList[0])
   },
   methods: {
     ...mapActions("Schedule", ["setCurrentRoom", "setAllCount"]),
     getData() {
-      request({
-        url: getRoomList + "/" + this.time + "/" + "6",
-      }).then((res) => {
-        const data = res.data.data;
-        let count = 0;
-        data.forEach((item) => {
-          item.tip = item.number + "/" + item.maxCount;
-          count = count + parseInt(item.number);
-          if (item.number === "0") {
-            item.process = 0;
-          } else {
-            item.process = (item.number / item.maxCount) * 100;
-          }
+      if (this.floor !== "") {
+        request({
+          url: getRoomList + "/" + this.time + "/" + this.floor,
+        }).then((res) => {
+          const data = res.data.data;
+          let count = 0;
+          data.forEach((item) => {
+            item.tip = item.number + "/" + item.maxCount;
+            count = count + parseInt(item.number);
+            if (item.number === "0") {
+              item.process = 0;
+            } else {
+              item.process = (item.number / item.maxCount) * 100;
+            }
+          });
+          this.roomList = data;
+          this.setAllCount(count);
         });
-        this.roomList = data;
-        this.setAllCount(count);
-      });
+      }
     },
     async changeRoom(item, i) {
       this.roomIndex = i;
@@ -221,8 +236,8 @@ export default {
         roomNo: item.roomNo,
         maxCount: item.maxCount,
         count: item.number,
+        roomIndex: i,
       });
-      // this.$emit('changeRoom', item)
       setTimeout(() => {
         this.$eventHub.$emit("get-allocated");
       });
@@ -256,6 +271,9 @@ export default {
     handleChangeRoom(param) {
       this.$emit("handleChangeRoom", param);
     },
+  },
+  beforeDestroy() {
+    this.$eventHub.$off("get-room");
   },
 };
 </script>

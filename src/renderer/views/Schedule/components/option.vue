@@ -2,25 +2,30 @@
   <div class="option">
     <span>共排班{{ allCount }}台</span>
     <span>
-      <el-radio-group v-model="room" size="mini" @change="handleChange">
-        <el-radio-button label="全部"></el-radio-button>
-        <el-radio-button label="6"></el-radio-button>
-        <el-radio-button label="7"></el-radio-button>
-        <el-radio-button label="8"></el-radio-button>
-      </el-radio-group>
-    </span>
-    <span>
-      <el-button type="primary" size="mini" @click="showPreview"
-        >排班预览</el-button
-      >
-      <el-button type="primary" size="mini" @click="handleRefresh"
-        >刷新</el-button
-      >
-      <!-- <el-button
-        type="text"
-        size="mini"
-      >切换</el-button> -->
-      <el-button type="primary" size="mini" @click="submitAll">提交</el-button>
+      <span style="margin-right: 10px">
+        楼层：
+        <el-radio-group v-model="room" size="mini" @change="handleChange">
+          <el-radio-button label="全部"></el-radio-button>
+          <el-radio-button label="6"></el-radio-button>
+          <el-radio-button label="7"></el-radio-button>
+          <el-radio-button label="8"></el-radio-button>
+        </el-radio-group>
+      </span>
+      <span>
+        <el-button type="primary" size="mini" @click="showPreview"
+          >排班预览</el-button
+        >
+        <el-button type="primary" size="mini" @click="handleRefresh"
+          >刷新</el-button
+        >
+        <!-- <el-button
+          type="text"
+          size="mini"
+        >切换</el-button> -->
+        <el-button type="primary" size="mini" @click="submitAll"
+          >提交</el-button
+        >
+      </span>
     </span>
   </div>
 </template>
@@ -31,8 +36,26 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      room: "6",
+      room: "",
     };
+  },
+  props: {
+    roomFloor: {
+      type: String,
+      required: true,
+    },
+  },
+  watch: {
+    roomFloor: {
+      handler(val) {
+        if (val === "0") {
+          this.room = "全部";
+        } else {
+          this.room = val;
+        }
+      },
+      immediate: true,
+    },
   },
   computed: {
     ...mapGetters("Schedule", ["time", "allCount"]),
@@ -58,19 +81,26 @@ export default {
         }
       });
     },
-    handleChange() {},
+    handleChange(val) {
+      let value = "0";
+      if (val === "全部") {
+      } else {
+        value = val;
+      }
+      this.$emit("update:roomFloor", value);
+    },
     handleRefresh() {
-      this.$eventHub.$emit("get-unallocated");
       this.$eventHub.$emit("get-allocated");
-      this.$eventHub.$emit("get-room");
+      this.$eventHub.$emit("get-unallocated");
       this.$eventHub.$emit("get-records");
       this.$eventHub.$emit("get-DocNurse");
     },
   },
   mounted() {
-    this.$eventHub.$on("submit-all", () => {
-      this.submitAll();
-    });
+    this.$eventHub.$on("submit-all", this.submitAll);
+  },
+  beforeDestroy() {
+    this.$eventHub.$off("submit-all");
   },
 };
 </script>

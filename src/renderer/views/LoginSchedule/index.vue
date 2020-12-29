@@ -8,7 +8,7 @@
           <!-- 围手术期临床信息系统 -->
           <span>临床麻醉</span>
           <span>手术排班</span>
-          <span>1.1.2</span>
+          <span>1.1.3</span>
         </p>
         <img src="../../assets/welcome.png" alt />
       </div>
@@ -64,6 +64,7 @@ import UpdaterPage from "@/components/UpdaterPage/updater-page";
 const { BrowserWindow } = require("electron").remote;
 import { ipcRenderer } from "electron";
 import moment from "moment";
+import { mapActions } from "vuex";
 
 export default {
   name: "Login",
@@ -87,6 +88,9 @@ export default {
   },
   components: {
     UpdaterPage,
+  },
+  computed: {
+    ...mapActions("Schedule", ["setDefaultRoom"]),
   },
   created() {
     const win = BrowserWindow.getFocusedWindow();
@@ -121,6 +125,7 @@ export default {
               setUserToken(res.data.data);
               setCurrentAccount(this.form.username);
               this.$router.push("/schedule-home");
+              // this.setDefaultRoom();
             } else {
               this.$message({ type: "error", message: res.data.message });
             }
