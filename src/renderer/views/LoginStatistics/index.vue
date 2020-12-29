@@ -112,6 +112,13 @@ export default {
       win.unmaximize()
     }
   },
+  mounted () {
+    this.$electron.ipcRenderer.send('open-main')
+    document.addEventListener('keyup', this.keyUpListener)
+  },
+  beforeDestroy () {
+    document.removeEventListener('keyup', this.keyUpListener)
+  },
   methods: {
     jumpHome () {},
     login () {
@@ -150,6 +157,11 @@ export default {
     mini () {
       const win = BrowserWindow.getFocusedWindow()
       win.minimize()
+    },
+    keyUpListener (e) {
+      if (e.keyCode === 112) {
+        this.$electron.ipcRenderer.send('open-config-file')
+      }
     }
   }
 }

@@ -1,8 +1,8 @@
 {
-  "name": "acis-schedule",
+  "name": "acis",
   "version": "1.1.2",
   "author": "dyw-design <1875742887@qq.com>",
-  "description": "acis-schedule",
+  "description": "acis",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
@@ -82,6 +82,7 @@
     "echarts": "^4.8.0",
     "electron-updater": "^4.3.5",
     "element-ui": "^2.13.2",
+    "fs-extra": "^9.0.1",
     "json-server": "^0.16.1",
     "lodash": "^4.17.20",
     "mockjs": "^1.1.0",
