@@ -3,12 +3,12 @@ const state = {
   time: moment(new Date()).format('yyyy-MM-DD'),
   currentRoom:
   {
-    roomNo: '601',
+    roomNo: null,
     maxCount: '',
     count: '',
     listLength: 0
   },
-  allCount: '' // 分配手术总数
+  allCount: 0 // 分配手术总数
 }
 const getters = {
   time: state => state.time,

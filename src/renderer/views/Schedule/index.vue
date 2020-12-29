@@ -8,13 +8,13 @@
         >
           <el-col
             :span="12"
-            style="display:flex;"
+            style="display: flex"
           >
             <span class="left-label">日期：</span>
             <el-date-picker
               v-model="timeDate"
               type="date"
-              style="flex:1;"
+              style="flex: 1"
               placeholder="选择日期"
               format="yyyy-MM-dd"
               value-format="yyyy-MM-dd"
@@ -25,18 +25,20 @@
           </el-col>
           <el-col
             :span="11"
-            style="display:flex;"
+            style="display: flex"
           >
-            <span class="left-label">
-              楼层：
-            </span>
+            <span class="left-label"> 楼层： </span>
             <el-select
               v-model="floor"
-              style="flex:1"
+              style="flex: 1"
               placeholder="楼层"
               size="mini"
               @change="changeFloor"
             >
+              <el-option
+                value="0"
+                label="全部"
+              />
               <el-option value="6" />
               <el-option value="7" />
               <el-option value="8" />
@@ -50,7 +52,7 @@
               placeholder="请输入内容"
               v-model="searchContent"
               class="input-with-select"
-              style="overflow:hidden;"
+              style="overflow: hidden"
               @keyup.enter.native="handleSearch"
             >
               <el-select
@@ -78,7 +80,12 @@
               </el-select>
               <span
                 slot="append"
-                style="cursor:pointer;height:100%;width:100%;display:inline-block;"
+                style="
+                  cursor: pointer;
+                  height: 100%;
+                  width: 100%;
+                  display: inline-block;
+                "
               >
                 <!-- icon="el-icon-search" -->
                 <i
@@ -105,6 +112,31 @@
               <!-- <div class="collapse-title"> -->
               手术({{ opeList.length }})
               <!-- </div> -->
+              <div class="color-diff">
+                <ul>
+                  <li>
+                    <span>急诊</span>
+                    <span
+                      class="cd-color"
+                      style="background: rgb(250, 175, 255)"
+                    />
+                  </li>
+                  <li>
+                    <span>加台</span>
+                    <span
+                      class="cd-color"
+                      style="background: rgb(225, 126, 126)"
+                    />
+                  </li>
+                  <li>
+                    <span>紧急</span>
+                    <span
+                      class="cd-color"
+                      style="background: rgb(171, 220, 255)"
+                    />
+                  </li>
+                </ul>
+              </div>
             </template>
             <div class="collapse-height">
               <Unallocated
@@ -195,7 +227,7 @@
           </div>
           <div class="patient-detail">
             <el-scrollbar
-              style="width:100%;"
+              style="width: 100%"
               class="scrollbar"
             >
               <div class="detail-content">
@@ -599,16 +631,13 @@ export default {
     // 批量排班操作
     handleEditBatch () {
       this.$refs.allocated.handleBatchVisible()
-      console.log('批量操作触发')
     },
     getOpeData () {
       request({
         url: getOpeApply + '/' + this.timeDate + '/' + this.floor
-      }).then(res => {
+      }).then((res) => {
         const data = res.data.data
-        data.forEach(value => {
-
-        })
+        data.forEach((value) => {})
         this.opeList = data
       })
     },
@@ -639,7 +668,9 @@ export default {
       }).then((res) => {
         const data = res.data.data
         data.forEach((item) => {
-          item.opeScheduleTime = moment(item.opeScheduleTime).format('YYYY-MM-DD HH:mm')
+          item.opeScheduleTime = moment(item.opeScheduleTime).format(
+            'YYYY-MM-DD'
+          )
           item.subDoc = (
             item.firstAnesDocName +
             ',' +
@@ -706,7 +737,9 @@ export default {
       this.setTime(val)
       setTimeout(() => {
         this.$eventHub.$emit('get-unallocated')
-        this.$eventHub.$emit('get-allocated')
+        if (this.currentRoom.roomNo) {
+          this.$eventHub.$emit('get-allocated')
+        }
         this.$eventHub.$emit('get-room')
         this.$eventHub.$emit('get-records')
         this.getNurseList()
@@ -797,7 +830,6 @@ export default {
         y
       }
     },
-
     // 双击分配护士，麻醉医生等信息 --new
     handleDistributeDoctor (item, i) {
       switch (this.defaultCollapse) {
@@ -978,7 +1010,6 @@ export default {
         })
       }
     },
-
     // 选中单条手术申请
     handleSimpleApply (row) {
       this.selectAllocated = row
@@ -1136,7 +1167,6 @@ export default {
   async mounted () {
     this.getNurseList()
     this.getDoctorList()
-    this.getData()
     this.getOpeData()
     $bus.$on('getApplyData', this.getOpeData)
     this.$eventHub.$on('get-allocated', () => {
@@ -1183,7 +1213,7 @@ export default {
     // box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
     border-radius: 5px;
     overflow: hidden;
-    .left-label{
+    .left-label {
       @include theme-property("color", $color-text-regular);
       font-size: 14px;
       line-height: 28px;
@@ -1203,13 +1233,13 @@ export default {
     .unallocated {
       height: calc(100% - 86px);
     }
-    /deep/ .el-input-group__prepend{
-      width:80px;
+    /deep/ .el-input-group__prepend {
+      width: 80px;
       @include theme-property("color", $color-text-regular);
       @include theme-property("background", $background-schedule-list);
-      cursor:pointer;
+      cursor: pointer;
     }
-    /deep/ .el-select .el-input__inner:focus{
+    /deep/ .el-select .el-input__inner:focus {
       @include theme-property("border-color", $background-schedule-list);
     }
   }
@@ -1251,10 +1281,10 @@ export default {
         // color: #d0dae5;
         @include theme-property("color", $patient-detail-color);
       }
-      .detail-content{
+      .detail-content {
         width: calc(100% - 16px);
         white-space: nowrap;
-        padding:0 10px;
+        padding: 0 10px;
       }
     }
     .room {
@@ -1275,7 +1305,7 @@ export default {
 // .schedule /deep/ .el-input-group__prepend {
 //   background: #252c40;
 // }
-.schedule /deep/ .el-input-group__append{
+.schedule /deep/ .el-input-group__append {
   @include theme-property("background", $color-text-primary);
   // @include theme-property("color", $color-text-regular);
   color: #ffffff;
@@ -1284,6 +1314,7 @@ export default {
 }
 .schedule /deep/ .el-collapse-item__header {
   height: 30px;
+  position: relative;
   // background: #252c40;
   @include theme-property("background", $background-schedule-list);
   @include theme-property("color", $color-text-regular);
@@ -1291,9 +1322,33 @@ export default {
   // border-bottom: 1px solid #000;
   @include theme-property("border-color", $background-schedule);
   padding: 0 0 0 10px;
-  &.is-active{
+  &.is-active {
     color: #fff;
-    @include theme-property("background", $color-text-primary);
+    // @include theme-property("background", $color-text-primary);
+    // @include theme-property("background", rgb(226, 227, 232));
+    background: rgb(226, 227, 232);
+  }
+}
+.color-diff {
+  position: absolute;
+  left: 120px;
+  top: 0;
+  height: 100%;
+  ul {
+    display: flex;
+    height: 100%;
+    li {
+      line-height: 30px;
+      display: flex;
+      span {
+        margin-right: 10px;
+        &:nth-child(2) {
+          height: 20px;
+          width: 30px;
+          margin-top: 5px;
+        }
+      }
+    }
   }
 }
 .schedule /deep/ .el-collapse-item__wrap {
@@ -1308,16 +1363,16 @@ export default {
 }
 .schedule /deep/ .vue-contextmenu-listWrapper {
   width: 180px;
-  @include theme-property('background', $dateTimePicker-color-background);
-  @include theme-property('border-color', $dateTimePicker-color-border);
+  @include theme-property("background", $dateTimePicker-color-background);
+  @include theme-property("border-color", $dateTimePicker-color-border);
   box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
   border-radius: 5px;
   padding-left: 30px;
   .context-menu-list {
     // background: #39425c;
-    @include theme-property('background', $background-dialog);
+    @include theme-property("background", $background-dialog);
     line-height: 28px;
-    @include theme-property('color', $color-text-regular);
+    @include theme-property("color", $color-text-regular);
     margin: unset;
     .btn-wrapper-simple {
       height: 28px;
@@ -1334,7 +1389,7 @@ export default {
     .no-child-btn {
       padding: unset;
       &:hover {
-        @include theme-property('color', $color-text-primary);
+        @include theme-property("color", $color-text-primary);
       }
     }
     .has-child {
@@ -1343,8 +1398,8 @@ export default {
   }
 }
 .schedule /deep/ .child-ul-wrapper {
-  @include theme-property('background', $dateTimePicker-color-background);
-  @include theme-property('border-color', $dateTimePicker-color-border);
+  @include theme-property("background", $dateTimePicker-color-background);
+  @include theme-property("border-color", $dateTimePicker-color-border);
   box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
   border-radius: 5px;
   .child-li-wrapper {

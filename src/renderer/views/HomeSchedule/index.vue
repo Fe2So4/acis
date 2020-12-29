@@ -14,7 +14,10 @@
           </el-aside>
         </transition> -->
         <el-main :class="{ 'no-border': noBorder }">
-          <transition name="fade" mode="out-in">
+          <transition
+            name="fade"
+            mode="out-in"
+          >
             <!-- <keep-alive include="scheduling"> -->
             <router-view />
             <!-- </keep-alive> -->
@@ -85,25 +88,25 @@
 </template>
 
 <script>
-import Header from "./Header/index";
+import Header from './Header/index'
 // import UserInfo from './UserInfo/index'
 // import Navs from './navs'
 // import { debounce } from '@/utils/index'
 // import { login } from '../../api/login'
-import { getCurrentAccount } from "@/utils/storage";
-const { BrowserWindow } = require("electron").remote;
-const win = BrowserWindow.getAllWindows()[0];
+import { getCurrentAccount } from '@/utils/storage'
+const { BrowserWindow } = require('electron').remote
+const win = BrowserWindow.getAllWindows()[0]
 
 export default {
-  name: "AppMain",
-  data() {
+  name: 'AppMain',
+  data () {
     return {
       hasNavs: true,
       noBorder: false,
       dialogVisible: false,
       username: getCurrentAccount(),
-      password: "",
-    };
+      password: ''
+    }
   },
   computed: {
     // key () {
@@ -112,38 +115,38 @@ export default {
   },
   watch: {
     $route: {
-      handler(route) {
+      handler (route) {
         if (route.meta && route.meta.noNavs) {
-          this.hasNavs = false;
+          this.hasNavs = false
         } else {
-          this.hasNavs = true;
+          this.hasNavs = true
         }
 
         if (route.meta && route.meta.noBorder) {
-          this.noBorder = true;
+          this.noBorder = true
         } else {
-          this.noBorder = false;
+          this.noBorder = false
         }
       },
-      immediate: true,
-    },
+      immediate: true
+    }
   },
   components: {
-    Header,
+    Header
     // UserInfo,
     // Navs
   },
-  beforeRouteEnter(to, from, next) {
-    if (from.path === "/login") {
-      const { BrowserWindow } = require("electron").remote;
-      const wins = BrowserWindow.getAllWindows();
+  beforeRouteEnter (to, from, next) {
+    if (from.path === '/login') {
+      const { BrowserWindow } = require('electron').remote
+      const wins = BrowserWindow.getAllWindows()
       if (wins.length > 0) {
-        wins[0].maximize();
+        wins[0].maximize()
       }
     }
-    next();
+    next()
   },
-  mounted() {
+  mounted () {
     // const time = 10 * 60 * 1000
     // let timer
     // const lock = debounce(() => {
@@ -166,19 +169,19 @@ export default {
     //     this.password = ''
     //   })
     // },
-    enter(e) {
+    enter (e) {
       if (e.keyCode === 13) {
         // this.login()
       }
     },
-    close() {
-      win.close();
+    close () {
+      win.close()
     },
-    lock() {
-      this.dialogVisible = true;
-    },
-  },
-};
+    lock () {
+      this.dialogVisible = true
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
