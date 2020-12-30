@@ -25,26 +25,26 @@ const getters = {
   defaultRoom: state => state.defaultRoom
 }
 const mutations = {
-  SET_TIME (state, payload) {
+  SET_TIME(state, payload) {
     state.time = payload
   },
-  SET_CURRENT_ROOM (state, payload) {
+  SET_CURRENT_ROOM(state, payload) {
     state.currentRoom = payload
   },
-  SET_ALL_COUNT (state, payload) {
+  SET_ALL_COUNT(state, payload) {
     state.allCount = payload
   },
-  SET_DEFAULT_ROOM (state, payload) {
+  SET_DEFAULT_ROOM(state, payload) {
     state.defaultRoom.room1 = payload
     state.defaultRoom.room2 = payload
   },
-  SET_DEFAULT_ROOM1 (state, payload) {
+  SET_DEFAULT_ROOM1(state, payload) {
     state.defaultRoom.room1 = payload
   },
-  SET_DEFAULT_ROOM2 (state, payload) {
+  SET_DEFAULT_ROOM2(state, payload) {
     state.defaultRoom.room2 = payload
   },
-  CLEAR_CURRENT_ROOM (state, payload) {
+  CLEAR_CURRENT_ROOM(state, payload) {
     state.currentRoom = {
       roomNo: null,
       maxCount: '',
@@ -55,19 +55,19 @@ const mutations = {
   }
 }
 const actions = {
-  setTime ({ commit }, payload) {
+  setTime({ commit }, payload) {
     commit('SET_TIME', payload)
   },
-  setCurrentRoom ({ commit }, payload) {
+  setCurrentRoom({ commit }, payload) {
     commit('SET_CURRENT_ROOM', payload)
   },
-  clearCurrentRoom ({ commit }) {
+  clearCurrentRoom({ commit }) {
     commit('CLEAR_CURRENT_ROOM')
   },
-  setAllCount ({ commit }, payload) {
+  setAllCount({ commit }, payload) {
     commit('SET_ALL_COUNT', payload)
   },
-  setDefaultRoom ({ commit }) {
+  setDefaultRoom({ commit }) {
     console.log('12345')
     request({
       method: 'get',
