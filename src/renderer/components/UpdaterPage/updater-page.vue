@@ -9,11 +9,19 @@
       :before-close="handleClose"
     >
       <span>{{ remark }}</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button size="mini" type="primary" @click="updateApp"
-          >立即升级</el-button
-        >
-        <el-button size="mini" @click="handleClose">稍 后</el-button>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          size="mini"
+          type="primary"
+          @click="updateApp"
+        >立即升级</el-button>
+        <el-button
+          size="mini"
+          @click="handleClose"
+        >稍 后</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -33,84 +41,89 @@
           :percentage="downloadPercent"
           v-if="!downloadError"
         />
-        <div v-else style="color: red">下载失败</div>
+        <div
+          v-else
+          style="color: red"
+        >
+          下载失败
+        </div>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
-import { ipcRenderer } from "electron";
+import { ipcRenderer } from 'electron'
 export default {
   props: {
     centerDialogVisible: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
-  data() {
+  data () {
     return {
       downloadPercent: 0,
       downloadError: false,
       // centerDialogVisible: false,
       downloadDialogVisible: false,
-      title: "更新", // titile和remark需要使用axios方法远程去调用才行，这里只是做测试使用，所以这两个值是写固定的
-      remark: "当前检测到最新版本！是否立即更新？",
-    };
+      title: '更新', // titile和remark需要使用axios方法远程去调用才行，这里只是做测试使用，所以这两个值是写固定的
+      remark: '当前检测到最新版本！是否立即更新？'
+    }
   },
   watch: {
     downloadPercent: {
-      handler(newVal) {
-        return newVal;
+      handler (newVal) {
+        return newVal
       },
-      imediate: true,
-    },
+      imediate: true
+    }
   },
-  mounted() {
+  mounted () {
     // this.checkForUpdate()
   },
   methods: {
-    updateApp() {
-      this.$emit("handleClose");
-      this.downloadDialogVisible = true;
-      this.downloadUpdate();
+    updateApp () {
+      this.$emit('handleClose')
+      this.downloadDialogVisible = true
+      this.downloadUpdate()
     },
-    handleCloseDownloadProgress() {
-      this.downloadDialogVisible = false;
+    handleCloseDownloadProgress () {
+      this.downloadDialogVisible = false
     },
-    handleClose() {
-      this.$emit("handleClose");
+    handleClose () {
+      this.$emit('handleClose')
     },
-    checkForUpdate() {
-      ipcRenderer.send("checkForUpdate");
+    checkForUpdate () {
+      ipcRenderer.send('checkForUpdate')
     },
-    downloadUpdate() {
-      ipcRenderer.send("downloadUpdate");
+    downloadUpdate () {
+      ipcRenderer.send('downloadUpdate')
       // 注意："download-progress”事件可能存在无法触发的问题，只需要限制一下下载网速就好了
-      ipcRenderer.on("message", (event, { message, data }) => {
-        if (message === "download-progress") {
-          this.downloadPercent = Math.trunc(data.percent) || 0;
+      ipcRenderer.on('message', (event, { message, data }) => {
+        if (message === 'download-progress') {
+          this.downloadPercent = Math.trunc(data.percent) || 0
           if (this.downloadPercent === 100) {
-            console.log("触发了没");
+            console.log('触发了没')
           }
-        } else if (message === "isUpdateNow") {
-          console.log("下载完成开始退出安装");
-          ipcRenderer.send("updateNow");
-        } else if (message === "error") {
-          console.log("下载失败", message);
-          this.downloadError = true;
+        } else if (message === 'isUpdateNow') {
+          console.log('下载完成开始退出安装')
+          ipcRenderer.send('updateNow')
+        } else if (message === 'error') {
+          console.log('下载失败', message)
+          this.downloadError = true
         }
-      });
-    },
+      })
+    }
   },
-  beforeDestroy() {
+  beforeDestroy () {
     ipcRenderer.removeAllListeners([
-      "message",
-      "isUpdateNow",
-      "checkForUpdate",
-      "downloadUpdate",
-    ]);
-  },
-};
+      'message',
+      'isUpdateNow',
+      'checkForUpdate',
+      'downloadUpdate'
+    ])
+  }
+}
 </script>
 <style lang="scss" scoped>
 @import "@/styles/theme";

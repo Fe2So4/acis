@@ -7,7 +7,10 @@
       @wheel.native.prevent="handleScroll"
     >
       <div class="content">
-        <div class="allRoom" ref="Room">
+        <div
+          class="allRoom"
+          ref="Room"
+        >
           <div
             v-for="(item, i) in roomList"
             :key="i"
@@ -26,7 +29,9 @@
                 placement="bottom"
                 effect="light"
               >
-                <div class="room-info-item">台数：{{ item.number }} 台</div>
+                <div class="room-info-item">
+                  台数：{{ item.number }} 台
+                </div>
               </el-tooltip>
               <el-tooltip
                 :content="item.surgeon"
@@ -34,7 +39,9 @@
                 effect="light"
                 :open-delay="1000"
               >
-                <div class="room-info-item">主刀：{{ item.surgeon }}</div>
+                <div class="room-info-item">
+                  主刀：{{ item.surgeon }}
+                </div>
               </el-tooltip>
               <el-tooltip
                 :content="item.anesthesiaDoctors"
@@ -52,7 +59,9 @@
                 effect="light"
                 :open-delay="1000"
               >
-                <div class="room-info-item">护士：{{ item.nurses }}</div>
+                <div class="room-info-item">
+                  护士：{{ item.nurses }}
+                </div>
               </el-tooltip>
               <div class="room-info-item">
                 <el-tooltip
@@ -92,197 +101,197 @@
   </div>
 </template>
 <script>
-import request from "@/utils/requestForMock";
-import { getRoomList } from "@/api/schedule";
-import { mapActions, mapGetters, mapState } from "vuex";
+import request from '@/utils/requestForMock'
+import { getRoomList } from '@/api/schedule'
+import { mapActions, mapGetters, mapState } from 'vuex'
 
 export default {
-  data() {
+  data () {
     return {
       roomIndex: -1,
       contextMenuData1: {
-        menuName: "demo",
+        menuName: 'demo',
         axis: {
           x: null,
-          y: null,
+          y: null
         },
         menulists: [
           {
-            btnName: "设置",
-            fnHandler: "roomConfig",
+            btnName: '设置',
+            fnHandler: 'roomConfig'
           },
           {
-            btnName: "提交",
-            fnHandler: "submitRoomAll",
+            btnName: '提交',
+            fnHandler: 'submitRoomAll'
           },
           {
-            btnName: "清空",
+            btnName: '清空',
             children: [
               {
-                btnName: "清空全部",
-                fnHandler: "handleClear1",
+                btnName: '清空全部',
+                fnHandler: 'handleClear1'
               },
               {
-                btnName: "主麻医师",
-                fnHandler: "handleClear2",
+                btnName: '主麻医师',
+                fnHandler: 'handleClear2'
               },
               {
-                btnName: "副麻医师1",
-                fnHandler: "handleClear3",
+                btnName: '副麻医师1',
+                fnHandler: 'handleClear3'
               },
               {
-                btnName: "副麻医师2",
-                fnHandler: "handleClear4",
+                btnName: '副麻医师2',
+                fnHandler: 'handleClear4'
               },
               {
-                btnName: "副麻医师3",
-                fnHandler: "handleClear5",
+                btnName: '副麻医师3',
+                fnHandler: 'handleClear5'
               },
               {
-                btnName: "洗手护士1",
-                fnHandler: "handleClear6",
+                btnName: '洗手护士1',
+                fnHandler: 'handleClear6'
               },
               {
-                btnName: "洗手护士2",
-                fnHandler: "handleClear7",
+                btnName: '洗手护士2',
+                fnHandler: 'handleClear7'
               },
               {
-                btnName: "巡回护士1",
-                fnHandler: "handleClear8",
+                btnName: '巡回护士1',
+                fnHandler: 'handleClear8'
               },
               {
-                btnName: "巡回护士2",
-                fnHandler: "handleClear9",
-              },
-            ],
+                btnName: '巡回护士2',
+                fnHandler: 'handleClear9'
+              }
+            ]
           },
           {
-            btnName: "数据交换",
-            fnHandler: "handleChangeRoom",
-          },
-        ],
+            btnName: '数据交换',
+            fnHandler: 'handleChangeRoom'
+          }
+        ]
       },
       transferIndex: null,
-      roomList: [],
-    };
+      roomList: []
+    }
   },
   props: {
     time: {
       type: String,
-      default: "",
+      default: ''
     },
     floor: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
   watch: {
     floor: {
-      handler(newVal) {
-        this.getData();
+      handler (newVal) {
+        this.getData()
       },
-      immediate: true,
+      immediate: true
     },
     currentRoom: {
-      handler(newVal) {
-        return newVal;
+      handler (newVal) {
+        return newVal
       },
       immediate: true,
-      deep: true,
-    },
+      deep: true
+    }
   },
   computed: {
     // ...mapGetters('Schedule', ['time'])
-    ...mapState("Base", ["theme"]),
-    ...mapGetters("Schedule", ["currentRoom"]),
-    progressBackground() {
+    ...mapState('Base', ['theme']),
+    ...mapGetters('Schedule', ['currentRoom']),
+    progressBackground () {
       switch (this.theme) {
-        case "dark-gray":
-          return "#FB6816";
-        case "light-white":
-          return "#0094FF";
-        case "dark-blue":
+        case 'dark-gray':
+          return '#FB6816'
+        case 'light-white':
+          return '#0094FF'
+        case 'dark-blue':
         default:
-          return "#0094FF";
+          return '#0094FF'
       }
-    },
+    }
   },
-  mounted() {
-    this.$eventHub.$on("get-room", this.getData);
+  mounted () {
+    this.$eventHub.$on('get-room', this.getData)
     if (this.currentRoom.roomIndex || this.currentRoom.roomIndex === 0) {
-      this.roomIndex = this.currentRoom.roomIndex;
+      this.roomIndex = this.currentRoom.roomIndex
     }
     // this.changeRoom(this.roomList[0])
   },
   methods: {
-    ...mapActions("Schedule", ["setCurrentRoom", "setAllCount"]),
-    getData() {
-      if (this.floor !== "") {
+    ...mapActions('Schedule', ['setCurrentRoom', 'setAllCount']),
+    getData () {
+      if (this.floor !== '') {
         request({
-          url: getRoomList + "/" + this.time + "/" + this.floor,
+          url: getRoomList + '/' + this.time + '/' + this.floor
         }).then((res) => {
-          const data = res.data.data;
-          let count = 0;
+          const data = res.data.data
+          let count = 0
           data.forEach((item) => {
-            item.tip = item.number + "/" + item.maxCount;
-            count = count + parseInt(item.number);
-            if (item.number === "0") {
-              item.process = 0;
+            item.tip = item.number + '/' + item.maxCount
+            count = count + parseInt(item.number)
+            if (item.number === '0') {
+              item.process = 0
             } else {
-              item.process = (item.number / item.maxCount) * 100;
+              item.process = (item.number / item.maxCount) * 100
             }
-          });
-          this.roomList = data;
-          this.setAllCount(count);
-        });
+          })
+          this.roomList = data
+          this.setAllCount(count)
+        })
       }
     },
-    async changeRoom(item, i) {
-      this.roomIndex = i;
+    async changeRoom (item, i) {
+      this.roomIndex = i
       await this.setCurrentRoom({
         roomNo: item.roomNo,
         maxCount: item.maxCount,
         count: item.number,
-        roomIndex: i,
-      });
+        roomIndex: i
+      })
       setTimeout(() => {
-        this.$eventHub.$emit("get-allocated");
-      });
+        this.$eventHub.$emit('get-allocated')
+      })
     },
-    handleScroll(e) {
-      const eventDelta = e.wheelDelta || -e.deltaY * 40;
-      const $scrollWrapper = this.$refs.scrollContainer.$refs.wrap;
-      $scrollWrapper.scrollTop = $scrollWrapper.scrollTop - eventDelta / 4;
+    handleScroll (e) {
+      const eventDelta = e.wheelDelta || -e.deltaY * 40
+      const $scrollWrapper = this.$refs.scrollContainer.$refs.wrap
+      $scrollWrapper.scrollTop = $scrollWrapper.scrollTop - eventDelta / 4
     },
-    showMenu(index) {
+    showMenu (index) {
       if (this.roomIndex === index) {
-        this.transferIndex = index; // tranfer index to child component
-        event.preventDefault();
-        var x = event.clientX;
-        var y = event.clientY;
+        this.transferIndex = index // tranfer index to child component
+        event.preventDefault()
+        var x = event.clientX
+        var y = event.clientY
         this.contextMenuData1.axis = {
           x,
-          y,
-        };
+          y
+        }
       }
     },
-    submitRoomAll() {
-      this.$emit("submitRoomAll");
+    submitRoomAll () {
+      this.$emit('submitRoomAll')
     },
-    handleClear(index) {
-      this.$emit("handleClear", index);
+    handleClear (index) {
+      this.$emit('handleClear', index)
     },
-    roomConfig() {
-      this.$emit("roomConfig");
+    roomConfig () {
+      this.$emit('roomConfig')
     },
-    handleChangeRoom(param) {
-      this.$emit("handleChangeRoom", param);
-    },
+    handleChangeRoom (param) {
+      this.$emit('handleChangeRoom', param)
+    }
   },
-  beforeDestroy() {
-    this.$eventHub.$off("get-room");
-  },
-};
+  beforeDestroy () {
+    this.$eventHub.$off('get-room')
+  }
+}
 </script>
 <style lang="scss" scoped>
 @import "@/styles/theme";

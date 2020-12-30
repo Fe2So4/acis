@@ -8,7 +8,7 @@
           <!-- 围手术期临床信息系统 -->
           <span>临床麻醉</span>
           <span>手术排班</span>
-          <span>1.1.4</span>
+          <span>1.1.6</span>
         </p>
         <img src="../../assets/welcome.png" alt />
       </div>

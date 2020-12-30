@@ -7,13 +7,15 @@
       round
       ref="xTable2"
       auto-resize
+      keep-source
       size="mini"
       align="center"
       highlight-current-row
       :data="data"
       class="mytable-style scroll"
+      :edit-config="{ trigger: 'click', mode: 'cell', showStatus: false }"
       :checkbox-config="{
-        trigger: 'row',
+        labelField: 'name',
         highlight: true,
         range: true,
         checkMethod: handleCheckFilter,
@@ -25,12 +27,27 @@
       @cell-click="handleSimpleApply"
     >
       <vxe-table-column type="checkbox" width="50" />
-      <vxe-table-column field="sequence" title="台次" width="50" />
+      <vxe-table-column
+        field="sequence"
+        title="台次"
+        width="60"
+        :edit-render="{}"
+      >
+        <template v-slot:edit="scope">
+          <el-input
+            autofocus
+            @focus="handleFocusSequence"
+            v-model="scope.row.sequence"
+            size="mini"
+            @blur="handleChangeSequence"
+          />
+        </template>
+      </vxe-table-column>
       <vxe-table-column field="ptName" title="患者" width="70" />
       <vxe-table-column field="bedId" title="床位" width="50" />
       <vxe-table-column field="visitId" title="住院号" width="80" />
       <!-- <vxe-table-column field="diagBeforeOperation" title="诊断" width="120"></vxe-table-column> -->
-      <vxe-table-column field="surgeonName" title="主刀" width="140" />
+      <vxe-table-column field="surgeonName" title="医师" width="140" />
       <vxe-table-column field="opeScheduleTime" title="手术时间" width="120" />
       <vxe-table-column field="operationName" title="手术名称" width="230" />
       <!-- show-overflow="title" -->
@@ -85,7 +102,7 @@
 
 <script>
 import request from "@/utils/requestForMock";
-import { cancelOpeApply } from "@/api/schedule";
+import { cancelOpeApply, updateScheduledRoomPlatform } from "@/api/schedule";
 import { mapGetters } from "vuex";
 import AllocatedDetail from "./allocated-detail";
 import DetailBatch from "./allocated-detail-batch";
@@ -117,6 +134,36 @@ export default {
     // }
   },
   methods: {
+    handleChangeSequence() {
+      console.log("blur");
+      const updateRecords = this.$refs.xTable2.getUpdateRecords();
+      const arr = [];
+      if (updateRecords.length > 0) {
+        updateRecords.forEach((item) => {
+          arr.push({
+            operationId: item.operationId,
+            opeRoom: this.currentRoom.roomNo,
+            sequence: item.sequence,
+          });
+        });
+        request({
+          method: "put",
+          url: updateScheduledRoomPlatform,
+          data: arr,
+        }).then((res) => {
+          if (res.data.code === 200) {
+            this.$message({ type: "success", message: "修改成功" });
+            // this.getData();
+            this.$eventHub.$emit("get-allocated");
+          } else {
+            this.$message({ type: "success", message: res.data.msg });
+          }
+        });
+      }
+    },
+    handleFocusSequence(e) {
+      e.currentTarget.select();
+    },
     cancelSingle(row) {
       if (row.state === "2") {
         this.$message({ type: "warning", message: "当前手术申请已提交" });
@@ -136,7 +183,7 @@ export default {
     distribute(row) {
       this.$emit("distribute", row);
     },
-    handleCheckFilter({ row }) {
+    handleCheckFilter({ row, column }) {
       return row.state === "1";
     },
     rowStyle({ row, rowIndex }) {
@@ -155,12 +202,14 @@ export default {
         return "opeTitle";
       }
     },
-    handleDetailVisible({ row }) {
-      if (row.state === "2") {
-        this.$message({ type: "warning", message: "当前手术申请已提交" });
-      } else {
-        this.detailVisible = true;
-        this.detailApply = JSON.parse(JSON.stringify(row));
+    handleDetailVisible({ row, column }) {
+      if (column.title !== "台次") {
+        if (row.state === "2") {
+          this.$message({ type: "warning", message: "当前手术申请已提交" });
+        } else {
+          this.detailVisible = true;
+          this.detailApply = JSON.parse(JSON.stringify(row));
+        }
       }
     },
     handleBatchVisible() {
@@ -170,9 +219,11 @@ export default {
         this.$message({ type: "warning", message: "请勾选要修改的手术" });
       }
     },
-    handleSimpleApply({ row }) {
+    handleSimpleApply({ row, column }) {
+      if (column.title !== "台次") {
+        this.$emit("handleSimpleApply", row);
+      }
       // console.log(row)
-      this.$emit("handleSimpleApply", row);
     },
     handleClose() {
       this.detailVisible = false;

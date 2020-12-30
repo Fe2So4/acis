@@ -1308,6 +1308,7 @@ export default {
     }
     .room {
       height: calc(100% - 500px);
+      height: 400px;
       // flex: 1;
       @include theme-property("border", $border-event-left);
       border-radius: 5px;

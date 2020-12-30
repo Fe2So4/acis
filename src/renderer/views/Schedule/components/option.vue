@@ -4,7 +4,11 @@
     <span>
       <span style="margin-right: 10px">
         楼层：
-        <el-radio-group v-model="room" size="mini" @change="handleChange">
+        <el-radio-group
+          v-model="room"
+          size="mini"
+          @change="handleChange"
+        >
           <el-radio-button label="全部" />
           <el-radio-button label="6" />
           <el-radio-button label="7" />
@@ -12,117 +16,123 @@
         </el-radio-group>
       </span>
       <span>
-        <el-button type="primary" size="mini" @click="showPreview"
-          >排班预览</el-button
-        >
-        <el-button type="primary" size="mini" @click="handleRefresh"
-          >刷新</el-button
-        >
+        <el-button
+          type="primary"
+          size="mini"
+          @click="showPreview"
+        >排班预览</el-button>
+        <el-button
+          type="primary"
+          size="mini"
+          @click="handleRefresh"
+        >刷新</el-button>
         <!-- <el-button
           type="text"
           size="mini"
         >切换</el-button> -->
-        <el-button type="primary" size="mini" @click="submitAll"
-          >提交</el-button
-        >
+        <el-button
+          type="primary"
+          size="mini"
+          @click="submitAll"
+        >提交</el-button>
       </span>
     </span>
   </div>
 </template>
 <script>
-import request from "@/utils/requestForMock";
-import { submitAllApply } from "@/api/schedule";
-import { mapActions, mapGetters } from "vuex";
+import request from '@/utils/requestForMock'
+import { submitAllApply } from '@/api/schedule'
+import { mapActions, mapGetters } from 'vuex'
 export default {
-  data() {
+  data () {
     return {
-      room: "",
-    };
+      room: ''
+    }
   },
   props: {
     roomFloor: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
   watch: {
     roomFloor: {
-      handler(val) {
-        if (val === "0") {
-          this.room = "全部";
+      handler (val) {
+        if (val === '0') {
+          this.room = '全部'
         } else {
-          this.room = val;
+          this.room = val
         }
       },
-      immediate: true,
-    },
+      immediate: true
+    }
   },
   props: {
     roomFloor: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
   watch: {
     roomFloor: {
-      handler(val) {
-        if (val === "0") {
-          this.room = "全部";
+      handler (val) {
+        if (val === '0') {
+          this.room = '全部'
         } else {
-          this.room = val;
+          this.room = val
         }
       },
-      immediate: true,
-    },
+      immediate: true
+    }
   },
   computed: {
-    ...mapGetters("Schedule", ["time", "allCount"]),
+    ...mapGetters('Schedule', ['time', 'allCount'])
   },
   methods: {
-    ...mapActions("Schedule", ["clearCurrentRoom"]),
-    showPreview() {
-      this.$emit("showPreview");
+    ...mapActions('Schedule', ['clearCurrentRoom']),
+    showPreview () {
+      this.$emit('showPreview')
     },
-    submitAll() {
+    submitAll () {
       request({
-        url: submitAllApply + "/" + this.time,
-        method: "PUT",
+        url: submitAllApply + '/' + this.time,
+        method: 'PUT'
       }).then((res) => {
         if (res.data.code === 200) {
-          this.$message({ type: "success", message: "提交成功" });
-          this.$eventHub.$emit("get-unallocated");
-          this.$eventHub.$emit("get-allocated");
-          this.$eventHub.$emit("get-room");
-          this.$eventHub.$emit("get-records");
-          this.$eventHub.$emit("get-DocNurse");
+          this.$message({ type: 'success', message: '提交成功' })
+          this.$eventHub.$emit('get-unallocated')
+          this.$eventHub.$emit('get-allocated')
+          this.$eventHub.$emit('get-room')
+          this.$eventHub.$emit('get-records')
+          this.$eventHub.$emit('get-DocNurse')
         } else {
-          this.$message({ type: "warning", message: "提交失败" });
+          this.$message({ type: 'warning', message: '提交失败' })
         }
-      });
+      })
     },
-    handleChange(val) {
-      let value = "0";
-      if (val === "全部") {
+    handleChange (val) {
+      let value = '0'
+      if (val === '全部') {
       } else {
-        value = val;
+        value = val
       }
-      this.$emit("update:roomFloor", value);
-      this.clearCurrentRoom();
+      this.$emit('update:roomFloor', value)
+      this.clearCurrentRoom()
     },
-    handleRefresh() {
-      this.$eventHub.$emit("get-allocated");
-      this.$eventHub.$emit("get-unallocated");
-      this.$eventHub.$emit("get-records");
-      this.$eventHub.$emit("get-DocNurse");
-    },
+    handleRefresh () {
+      this.$eventHub.$emit('get-allocated')
+      this.$eventHub.$emit('get-unallocated')
+      this.$eventHub.$emit('get-records')
+      this.$eventHub.$emit('get-DocNurse')
+    }
   },
-  mounted() {
-    this.$eventHub.$on("submit-all", this.submitAll);
+  mounted () {
+    this.$eventHub.$on('submit-all', this.submitAll)
   },
-  beforeDestroy() {
-    this.$eventHub.$off("submit-all");
-  },
-};
+  beforeDestroy () {
+    this.$eventHub.$off('submit-all')
+  }
+}
 </script>
 <style lang="scss" scoped>
 @import "@/styles/theme";
