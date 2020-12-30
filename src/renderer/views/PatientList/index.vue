@@ -93,6 +93,7 @@
                 v-model="searchForm.date"
                 type="date"
                 placeholder
+                :clearable="false"
                 format="yyyy-MM-dd"
                 value-format="yyyy-MM-dd"
                 popper-class="dateTimePicker"
