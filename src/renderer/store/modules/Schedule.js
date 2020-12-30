@@ -1,5 +1,4 @@
 import moment from 'moment'
-import request from '../../utils/requestForMock'
 const state = {
   time: moment(new Date()).format('yyyy-MM-DD'),
   currentRoom:
@@ -33,6 +32,16 @@ const mutations = {
   SET_ALL_COUNT(state, payload) {
     state.allCount = payload
   },
+  SET_DEFAULT_ROOM(state, payload) {
+    state.defaultRoom.room1 = payload
+    state.defaultRoom.room2 = payload
+  },
+  SET_DEFAULT_ROOM1(state, payload) {
+    state.defaultRoom.room1 = payload
+  },
+  SET_DEFAULT_ROOM2(state, payload) {
+    state.defaultRoom.room2 = payload
+  },
   CLEAR_CURRENT_ROOM(state, payload) {
     state.currentRoom = {
       roomNo: null,
@@ -56,6 +65,18 @@ const actions = {
   setAllCount({ commit }, payload) {
     commit('SET_ALL_COUNT', payload)
   }
+  // setDefaultRoom ({ commit }) {
+  //   console.log('12345')
+  //   request({
+  //     method: 'get',
+  //     url: getCurrentRoom
+  //   }).then(res => {
+  //     console.log(res)
+  //     if (res.data.code === 200) {
+  //       commit('SET_DEFAULT_ROOM', res.data.data)
+  //     }
+  //   })
+  // }
 }
 export default {
   namespaced: true,

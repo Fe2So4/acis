@@ -3,7 +3,7 @@
 import { app, BrowserWindow, Menu, ipcMain } from 'electron'
 // import { type } from 'process'
 import '../renderer/store'
-import './ip'
+import { filePath as configJsonFilePath } from './ip'
 const { autoUpdater } = require('electron-updater')
 const fs = require('fs')
 const Path = require('path')
@@ -31,6 +31,7 @@ function createInitialWindow () {
     resizable: false,
     movable: false,
     transparent: true,
+    focusable: false,
     alwaysOnTop: true,
     webPreferences: {
       devTools: false,
@@ -129,7 +130,7 @@ function createWindow () {
   })
 
   // 隐藏菜单
-  Menu.setApplicationMenu(null)
+  // Menu.setApplicationMenu(null)
 }
 
 app.on('ready', () => {
@@ -137,10 +138,9 @@ app.on('ready', () => {
   createWindow()
 })
 
-// app.on('ready', () => {
-//   createInitialWindow()
-//   createWindow()
-// })
+app.on('will-quit', () => {
+  watcher.close()
+})
 
 // 窗口最小化
 ipcMain.on('window-min', function () {
@@ -372,4 +372,12 @@ ipcMain.on('download', (evt, args) => {
   console.log(downloadUrl)
   // const saveUrl = url.saveUrl
   mainWindow.webContents.downloadURL(downloadUrl)
+})
+
+// 监听配置文件修改
+const chokidar = require('chokidar')
+const watcher = chokidar.watch(configJsonFilePath)
+watcher.on('change', (path) => {
+  console.log(`File ${path} has been changed`)
+  mainWindow.reload()
 })
