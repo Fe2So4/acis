@@ -31,3 +31,7 @@ ipcMain.on('get-prod-ip', async e => {
 ipcMain.on('open-config-file', () => {
   shell.showItemInFolder(filePath)
 })
+
+export {
+  filePath
+}

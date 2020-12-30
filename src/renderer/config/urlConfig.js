@@ -5,7 +5,7 @@ let api
 if (process.env.NODE_ENV === 'production') {
   /// 生产环境api接口地址
   api = {
-    baseURL: `${prodIp}:8090`
+    baseURL: `http://${prodIp}:8090`
     // baseURL: 'http://47.103.105.200:8090'
     // baseURL: 'http://128.0.18.38:8090'
     // baseURL: 'http://192.168.8.170:8090' // 冬雷
