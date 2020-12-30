@@ -1,7 +1,7 @@
 <template>
   <div class="page-withdraw">
     <el-scrollbar
-      style="height:100%;"
+      style="height: 100%"
       class="scrollbar"
       ref="scrollContainer"
       @wheel.native.prevent="handleScroll"
@@ -96,7 +96,7 @@ export default {
 .page-withdraw {
   height: 100%;
   width: 100%;
-  // background: #f3f6f9;
+  background: #ffffff;
   // overflow-y: auto;
   .box {
     width: 100%;

@@ -1,6 +1,9 @@
 <template>
   <div class="document">
-    <el-form :inline="true" size="mini">
+    <el-form
+      :inline="true"
+      size="mini"
+    >
       <el-form-item>
         <el-date-picker
           v-model="time"
@@ -13,8 +16,12 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="getData"> 刷新 </el-button>
-        <el-button @click="handleSubmit"> 提交修改 </el-button>
+        <el-button @click="getData">
+          刷新
+        </el-button>
+        <el-button @click="handleSubmit">
+          提交修改
+        </el-button>
       </el-form-item>
     </el-form>
     <div class="content">
@@ -30,13 +37,14 @@
           :data="tableData"
           align="center"
           size="mini"
+          :row-style="rowStyle"
           :edit-config="{ trigger: 'dblclick', mode: 'cell', showStatus: true }"
           :header-cell-class-name="cellClassName"
         >
           <vxe-table-column
             field="opeRoom"
             title="手术间"
-            width="80"
+            width="90"
             :edit-render="{}"
           >
             <template v-slot:edit="scope">
@@ -50,7 +58,7 @@
               </el-select>
             </template>
             <template v-slot="{ row }">
-              {{ getSelectLabel(row.opeRoom, roomList) }}
+              <span>{{ getSelectLabel(row.opeRoom, roomList) }}</span>
             </template>
           </vxe-table-column>
           <vxe-table-column
@@ -63,25 +71,73 @@
               <el-input v-model="scope.row.sequence" />
             </template>
           </vxe-table-column>
-          <vxe-table-column field="ptName" title="病人信息" />
-          <vxe-table-column field="inpatientWard" title="病区" />
-          <vxe-table-column field="bedId" title="床号" width="60" />
-          <vxe-table-column field="visitId" title="住院号" width="80" />
-          <vxe-table-column field="diagnoseBefore" title="诊断" width="100" />
+          <vxe-table-column
+            field="ptName"
+            title="病人信息"
+          />
+          <vxe-table-column
+            field="inpatientWard"
+            title="病区"
+            width="60"
+          />
+          <vxe-table-column
+            field="bedId"
+            title="床号"
+            width="50"
+          />
+          <vxe-table-column
+            field="visitId"
+            title="住院号"
+            width="80"
+          />
+          <vxe-table-column
+            field="diagnoseBefore"
+            title="诊断"
+            width="100"
+          />
           <vxe-table-column
             field="operationName"
             title="手术名称"
-            width="220"
           />
-          <vxe-table-column field="surgeonName" title="手术医师" width="80" />
-          <vxe-table-column field="anesMethod" title="麻醉方法" />
-          <vxe-table-column field="anesDoc" title="麻醉医师" width="80" />
-          <vxe-table-column field="opeNurse" title="洗手护士" />
-          <vxe-table-column field="supplyNurse" title="巡回护士" />
-          <vxe-table-column field="memo" title="备注" />
-          <vxe-table-column title="操作">
+          <!-- width="220" -->
+          <vxe-table-column
+            field="surgeonName"
+            title="手术医师"
+            width="140"
+          />
+          <vxe-table-column
+            field="anesMethod"
+            title="麻醉方法"
+            width="70"
+          />
+          <vxe-table-column
+            field="anesDoc"
+            title="麻醉医师"
+            width="170"
+          />
+          <vxe-table-column
+            field="opeNurse"
+            title="洗手护士"
+            width="170"
+          />
+          <vxe-table-column
+            field="supplyNurse"
+            title="巡回护士"
+            width="170"
+          />
+          <vxe-table-column
+            field="memo"
+            title="备注"
+          />
+          <vxe-table-column
+            title="操作"
+            width="60"
+          >
             <template v-slot="{ row }">
-              <el-button type="text" @click="cancelSchedule(row)">
+              <el-button
+                type="text"
+                @click="cancelSchedule(row)"
+              >
                 撤销
               </el-button>
             </template>
@@ -92,117 +148,137 @@
   </div>
 </template>
 <script>
-import moment from "moment";
+import moment from 'moment'
 import {
   getTableList,
   updateScheduledRoomPlatform,
-  cancelScheduleSubmit,
-} from "@/api/schedule";
-import { roomNoList } from "@/api/dictionary";
-import request from "@/utils/requestForMock";
-import Report from "./report";
-import { ipcRenderer } from "electron";
-import XEUtils from "xe-utils";
+  cancelScheduleSubmit
+} from '@/api/schedule'
+import { roomNoList } from '@/api/dictionary'
+import request from '@/utils/requestForMock'
+// import Report from './report'
+import { ipcRenderer } from 'electron'
+import XEUtils from 'xe-utils'
 export default {
-  name: "Document",
-  data() {
+  name: 'Document',
+  data () {
     return {
-      value: "",
-      time: moment(new Date()).format("yyyy-MM-DD"),
+      value: '',
+      time: moment(new Date()).format('yyyy-MM-DD'),
       ptList: [],
       tableData: [],
-      floor: "",
+      floor: '',
       roomList: [],
-      reportVisible: true,
-    };
+      reportVisible: true
+    }
   },
   components: {
-    Report,
+    // Report
   },
   computed: {},
   methods: {
-    cancelSchedule(row) {
-      request({
-        url: cancelScheduleSubmit + `?operationId=` + row.operationId,
-        method: "put",
-      }).then((res) => {
-        this.$message({ type: "success", message: "撤销成功" });
-        this.getData();
-      });
+    rowStyle ({ row, rowIndex }) {
+      if (row.index % 2 === 0) {
+        return {
+          // color: "red",
+          background: '#fff3e0'
+        }
+      } else {
+        return {
+          // color: "green",
+        }
+      }
     },
-    printEvent() {
+    cancelSchedule (row) {
+      this.$confirm('是否撤销当前手术?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          request({
+            url: cancelScheduleSubmit + '?operationId=' + row.operationId,
+            method: 'put'
+          }).then((res) => {
+            this.$message({ type: 'success', message: '撤销成功' })
+            this.getData()
+          })
+        })
+        .catch(() => {})
+    },
+    printEvent () {
       // this.$router.push('/print-notice')
       if (this.tableData.length > 0) {
-        const printHtml = document.querySelector("#print-report").outerHTML;
-        const options = { silent: true };
+        const printHtml = document.querySelector('#print-report').outerHTML
+        const options = { silent: true }
         ipcRenderer.send(
-          "printChannel",
+          'printChannel',
           printHtml,
-          "schedule-report.css",
+          'schedule-report.css',
           options
-        );
+        )
       } else {
-        this.$message({ type: "warning", message: "请选择正确排班日期" });
+        this.$message({ type: 'warning', message: '请选择正确排班日期' })
       }
     },
-    handleEdit() {
+    handleEdit () {
       // const updateRecords = this.$refs.xTable.getUpdateRecords()
-      this.reportVisible = !this.reportVisible;
+      this.reportVisible = !this.reportVisible
     },
-    getRoomList() {
+    getRoomList () {
       request({
-        method: "get",
-        url: roomNoList,
+        method: 'get',
+        url: roomNoList
       }).then((res) => {
-        this.roomList = res.data.data;
-      });
+        this.roomList = res.data.data
+      })
     },
-    getSelectLabel(value, list, valueProp = "value", labelField = "label") {
-      const item = XEUtils.find(list, (item) => item === value);
-      return item || null;
+    getSelectLabel (value, list, valueProp = 'value', labelField = 'label') {
+      const item = XEUtils.find(list, (item) => item === value)
+      return item || null
     },
-    cellClassName({ row, column }) {
-      if (column === "title") {
-        return "header-title";
+    cellClassName ({ row, column }) {
+      if (column === 'title') {
+        return 'header-title'
       }
     },
-    handleSubmit() {
-      const updateRecords = this.$refs.xTable.getUpdateRecords();
-      const arr = [];
+    handleSubmit () {
+      const updateRecords = this.$refs.xTable.getUpdateRecords()
+      const arr = []
       updateRecords.forEach((item) => {
         arr.push({
           operationId: item.operationId,
           opeRoom: item.opeRoom,
-          sequence: item.sequence,
-        });
-      });
+          sequence: item.sequence
+        })
+      })
       request({
-        method: "put",
+        method: 'put',
         url: updateScheduledRoomPlatform,
-        data: arr,
+        data: arr
       }).then((res) => {
         if (res.data.code === 200) {
-          this.$message({ type: "success", message: "修改成功" });
-          this.getData();
+          this.$message({ type: 'success', message: '修改成功' })
+          this.getData()
         } else {
-          this.$message({ type: "success", message: res.data.msg });
+          this.$message({ type: 'success', message: res.data.msg })
         }
-      });
+      })
     },
-    getData() {
+    getData () {
       request({
-        url: getTableList + "/" + this.time,
-        method: "GET",
+        url: getTableList + '/' + this.time,
+        method: 'GET'
       }).then((res) => {
-        this.tableData = res.data.data || [];
-      });
-    },
+        this.tableData = res.data.data || []
+      })
+    }
   },
-  mounted() {
-    this.getData();
-    this.getRoomList();
-  },
-};
+  mounted () {
+    this.getData()
+    this.getRoomList()
+  }
+}
 </script>
 <style lang="scss" scoped>
 .document {

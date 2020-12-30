@@ -1,8 +1,8 @@
 <template>
   <div class="unallacated">
     <vxe-table
-      ref="unTable"
       resizable
+      ref="unTable"
       round
       width="100%"
       height="100%"
@@ -21,29 +21,27 @@
       <vxe-table-column
         field="sequence"
         title="台次"
-        width="50px"
-        show-overflow="title"
+        width="50"
       />
       <vxe-table-column
         field="ptName"
         title="姓名"
-        width="70px"
+        width="70"
       />
       <vxe-table-column
         field="inpatientWard"
         title="病区"
-        width="50px"
+        width="50"
       />
       <vxe-table-column
         field="bedId"
         title="床位"
-        width="50px"
+        width="60"
       />
       <vxe-table-column
         field="visitId"
         title="住院号"
-        width="80px"
-        show-overflow="title"
+        width="80"
       />
       <vxe-table-column
         field="surgeon"
@@ -53,6 +51,7 @@
       <vxe-table-column
         field="operation"
         title="手术"
+        width="204"
       />
     </vxe-table>
   </div>
@@ -177,15 +176,15 @@ export default {
       switch (row.opeClassNo) {
         case '1':
           return {
-            backgroundColor: 'rgb(250,175,255)'
+            backgroundColor: 'rgb(0,195,255)'
           }
         case '2':
           return {
-            backgroundColor: 'rgb(171,220,255)'
+            backgroundColor: 'rgb(239,130,239)'
           }
         case '3':
           return {
-            backgroundColor: 'rgb(225,126,126)'
+            backgroundColor: 'rgb(148,243,148)'
           }
       }
     },
@@ -241,9 +240,10 @@ export default {
   width: 100%;
 }
 </style>
-<style>
+<style >
 .opeTitle {
   /* color: #fff; */
   text-align: left !important;
+  white-space: wrap !important;
 }
 </style>

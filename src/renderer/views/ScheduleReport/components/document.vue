@@ -1,6 +1,9 @@
 <template>
   <div class="document">
-    <el-form :inline="true" size="mini">
+    <el-form
+      :inline="true"
+      size="mini"
+    >
       <el-form-item>
         <el-date-picker
           v-model="time"
@@ -13,147 +16,163 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button @click="printEvent" :disabled="!reportVisible">
+        <el-button
+          @click="printEvent"
+          :disabled="!reportVisible"
+        >
           打印
         </el-button>
-        <el-button @click="getData"> 刷新 </el-button>
-        <el-button @click="handleEdit" v-show="!reportVisible">
+        <el-button @click="getData">
+          刷新
+        </el-button>
+        <el-button
+          @click="handleEdit"
+          v-show="!reportVisible"
+        >
           返回
         </el-button>
       </el-form-item>
     </el-form>
     <div class="content">
-      <el-scrollbar style="height: 100%" class="scrollbar">
+      <el-scrollbar
+        style="height: 100%"
+        class="scrollbar"
+      >
         <div class="print-document">
-          <Report id="print-report" :table-data="tableData" :time="time" />
+          <Report
+            id="print-report"
+            :table-data="tableData"
+            :time="time"
+          />
         </div>
       </el-scrollbar>
     </div>
   </div>
 </template>
 <script>
-import moment from "moment";
+import moment from 'moment'
 import {
   getTableList,
   updateScheduledRoomPlatform,
-  cancelScheduleSubmit,
-} from "@/api/schedule";
-import { roomNoList } from "@/api/dictionary";
-import request from "@/utils/requestForMock";
-import Report from "./report";
-import { ipcRenderer } from "electron";
-import XEUtils from "xe-utils";
+  cancelScheduleSubmit
+} from '@/api/schedule'
+import { roomNoList } from '@/api/dictionary'
+import request from '@/utils/requestForMock'
+import Report from './report'
+import { ipcRenderer } from 'electron'
+import XEUtils from 'xe-utils'
 export default {
-  name: "Document",
-  data() {
+  name: 'Document',
+  data () {
     return {
-      value: "",
-      time: moment(new Date()).format("yyyy-MM-DD"),
+      value: '',
+      time: moment(new Date()).format('yyyy-MM-DD'),
       ptList: [],
       tableData: [],
-      floor: "",
+      floor: '',
       roomList: [],
-      reportVisible: true,
-    };
+      reportVisible: true
+    }
   },
   components: {
-    Report,
+    Report
   },
   computed: {},
   methods: {
-    cancelSchedule(row) {
+    cancelSchedule (row) {
       request({
-        url: cancelScheduleSubmit + `?operationId=` + row.operationId,
-        method: "put",
+        url: cancelScheduleSubmit + '?operationId=' + row.operationId,
+        method: 'put'
       }).then((res) => {
-        this.$message({ type: "success", message: "撤销成功" });
-        this.getData();
-      });
+        this.$message({ type: 'success', message: '撤销成功' })
+        this.getData()
+      })
     },
-    printEvent() {
+    printEvent () {
       // this.$router.push('/print-notice')
       if (this.tableData.length > 0) {
-        const printHtml = document.querySelector("#print-report").outerHTML;
-        const options = { silent: true };
+        const printHtml = document.querySelector('#print-report').outerHTML
+        const options = { silent: true }
         ipcRenderer.send(
-          "printChannel",
+          'printChannel',
           printHtml,
-          "schedule-report.css",
+          'schedule-report.css',
           options
-        );
+        )
       } else {
-        this.$message({ type: "warning", message: "请选择正确排班日期" });
+        this.$message({ type: 'warning', message: '请选择正确排班日期' })
       }
     },
-    handleEdit() {
+    handleEdit () {
       // const updateRecords = this.$refs.xTable.getUpdateRecords()
-      this.reportVisible = !this.reportVisible;
+      this.reportVisible = !this.reportVisible
     },
-    getRoomList() {
+    getRoomList () {
       request({
-        method: "get",
-        url: roomNoList,
+        method: 'get',
+        url: roomNoList
       }).then((res) => {
-        this.roomList = res.data.data;
-      });
+        this.roomList = res.data.data
+      })
     },
-    getSelectLabel(value, list, valueProp = "value", labelField = "label") {
-      const item = XEUtils.find(list, (item) => item === value);
-      return item || null;
+    getSelectLabel (value, list, valueProp = 'value', labelField = 'label') {
+      const item = XEUtils.find(list, (item) => item === value)
+      return item || null
     },
-    cellClassName({ row, column }) {
-      if (column === "title") {
-        return "header-title";
+    cellClassName ({ row, column }) {
+      if (column === 'title') {
+        return 'header-title'
       }
     },
-    handleSubmit() {
-      const updateRecords = this.$refs.xTable.getUpdateRecords();
-      const arr = [];
+    handleSubmit () {
+      const updateRecords = this.$refs.xTable.getUpdateRecords()
+      const arr = []
       updateRecords.forEach((item) => {
         arr.push({
           operationId: item.operationId,
           opeRoom: item.opeRoom,
-          sequence: item.sequence,
-        });
-      });
+          sequence: item.sequence
+        })
+      })
       request({
-        method: "put",
+        method: 'put',
         url: updateScheduledRoomPlatform,
-        data: arr,
+        data: arr
       }).then((res) => {
         if (res.data.code === 200) {
-          this.$message({ type: "success", message: "修改成功" });
-          this.getData();
+          this.$message({ type: 'success', message: '修改成功' })
+          this.getData()
         } else {
-          this.$message({ type: "success", message: res.data.msg });
+          this.$message({ type: 'success', message: res.data.msg })
         }
-      });
+      })
     },
-    getData() {
+    getData () {
       request({
-        url: getTableList + "/" + this.time,
-        method: "GET",
+        url: getTableList + '/' + this.time,
+        method: 'GET'
       }).then((res) => {
-        this.tableData = res.data.data || [];
-      });
-    },
+        this.tableData = res.data.data || []
+      })
+    }
   },
-  mounted() {
-    this.getData();
-    this.getRoomList();
-  },
-};
+  mounted () {
+    this.getData()
+    this.getRoomList()
+  }
+}
 </script>
 <style lang="scss" scoped>
 .document {
   height: 100%;
   .content {
     height: calc(100% - 46px);
+    background: #e3e3e3;
+    border-radius: 5px;
+    padding-bottom:20px;
   }
   .print-document {
-    background: #e3e3e3;
-    box-shadow: 1px 20px 45px 5px rgba(0, 0, 0, 0.5);
-    border-radius: 5px;
+    // box-shadow: 1px 20px 45px 5px rgba(0, 0, 0, 0.5);
     padding: 0 50px;
     height: 100%;
     h3 {

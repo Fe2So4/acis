@@ -8,7 +8,7 @@
           <!-- 围手术期临床信息系统 -->
           <span>临床麻醉</span>
           <span>手术排班</span>
-          <span>1.1.2</span>
+          <span>1.1.3</span>
         </p>
         <img
           src="../../assets/welcome.png"
@@ -66,7 +66,9 @@
           </div>
         </div>
       </div>
-      <div class="copyright">Copyright©{{ time }}蓝想数科版权所有</div>
+      <div class="copyright">
+        Copyright©{{ time }}蓝想数科版权所有
+      </div>
       <div class="close">
         <i
           class="el-icon-minus"
@@ -86,13 +88,13 @@
 </template>
 
 <script>
-import { login } from "@/api/login";
-import request from "@/utils/requestForMock";
-import { setUserToken, setCurrentAccount } from "../../utils/storage";
-import UpdaterPage from "@/components/UpdaterPage/updater-page";
-const { BrowserWindow } = require("electron").remote;
-import { ipcRenderer } from "electron";
-import moment from "moment";
+import { login } from '@/api/login'
+import request from '@/utils/requestForMock'
+import { setUserToken, setCurrentAccount } from '../../utils/storage'
+import UpdaterPage from '@/components/UpdaterPage/updater-page'
+import { ipcRenderer } from 'electron'
+import moment from 'moment'
+const { BrowserWindow } = require('electron').remote
 
 export default {
   name: 'Login',
@@ -129,21 +131,13 @@ export default {
       }
     })
   },
-  mounted () {
-    ipcRenderer.send('open-main')
-    document.addEventListener('keyup', this.keyUpListener)
-  },
-  beforeDestroy () {
-    ipcRenderer.removeAllListeners(['message', 'update'])
-    document.removeEventListener('keyup', this.keyUpListener)
-  },
   methods: {
-    jumpHome() {},
-    handleInputPass() {
-      let pass = this.$refs.password;
-      pass.focus();
+    jumpHome () {},
+    handleInputPass () {
+      const pass = this.$refs.password
+      pass.focus()
     },
-    login() {
+    login () {
       this.$refs.form.validate((valid) => {
         if (valid) {
           request({
@@ -185,12 +179,13 @@ export default {
     },
     autoUpdate () {
       ipcRenderer.send('update')
-    },
-    keyUpListener (e) {
-      if (e.keyCode === 112) {
-        this.$electron.ipcRenderer.send('open-config-file')
-      }
     }
+  },
+  mounted () {
+    ipcRenderer.send('open-main')
+  },
+  beforeDestroy () {
+    ipcRenderer.removeAllListeners(['message', 'update'])
   }
 }
 </script>

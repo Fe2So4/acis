@@ -1,5 +1,8 @@
 <template>
-  <div class="print-content" style="width: 960px">
+  <div
+    class="print-content"
+    style="width: 960px"
+  >
     <table
       style="
         width: 880px;
@@ -325,16 +328,16 @@
 
 <script>
 export default {
-  data() {
-    return {};
+  data () {
+    return {}
   },
   props: {
     noticeData: {
       type: Object,
-      required: true,
-    },
-  },
-};
+      required: true
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

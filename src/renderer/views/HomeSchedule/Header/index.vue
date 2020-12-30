@@ -56,9 +56,9 @@
       />
       <i
         class="iconfont icon-icon_min"
+        :class="iconMax"
         @click="maxWindow"
       />
-      <!-- :class="iconMax" -->
       <i
         class="el-icon-close"
         @click="closeWindow"
@@ -75,7 +75,7 @@ import throttle from 'lodash/throttle'
 import $bus from '@/utils/bus'
 // const { ipcRenderer } = require('electron')
 const { BrowserWindow, dialog } = require('electron').remote
-const win = BrowserWindow.getFocusedWindow()
+const win = BrowserWindow.getAllWindows()[0]
 
 export default {
   components: {
@@ -368,7 +368,7 @@ export default {
     align-items: center;
     i {
       -webkit-app-region: no-drag;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: bold;
       @include theme-property("color", $color-primary);
       margin-right: 20px;
