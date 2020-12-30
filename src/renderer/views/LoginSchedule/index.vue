@@ -8,7 +8,7 @@
           <!-- 围手术期临床信息系统 -->
           <span>临床麻醉</span>
           <span>手术排班</span>
-          <span>1.1.3</span>
+          <span>1.1.4</span>
         </p>
         <img src="../../assets/welcome.png" alt />
       </div>
@@ -61,10 +61,9 @@ import { login } from "@/api/login";
 import request from "@/utils/requestForMock";
 import { setUserToken, setCurrentAccount } from "../../utils/storage";
 import UpdaterPage from "@/components/UpdaterPage/updater-page";
-const { BrowserWindow } = require("electron").remote;
 import { ipcRenderer } from "electron";
 import moment from "moment";
-import { mapActions } from "vuex";
+const { BrowserWindow } = require("electron").remote;
 
 export default {
   name: "Login",
@@ -89,9 +88,6 @@ export default {
   components: {
     UpdaterPage,
   },
-  computed: {
-    ...mapActions("Schedule", ["setDefaultRoom"]),
-  },
   created() {
     const win = BrowserWindow.getFocusedWindow();
     if (win) {
@@ -115,7 +111,7 @@ export default {
   methods: {
     jumpHome() {},
     handleInputPass() {
-      let pass = this.$refs.password;
+      const pass = this.$refs.password;
       pass.focus();
     },
     login() {
@@ -133,7 +129,6 @@ export default {
               setUserToken(res.data.data);
               setCurrentAccount(this.form.username);
               this.$router.push("/schedule-home");
-              // this.setDefaultRoom();
             } else {
               this.$message({ type: "error", message: res.data.message });
             }
@@ -162,11 +157,12 @@ export default {
     autoUpdate() {
       ipcRenderer.send("update");
     },
-    keyUpListener(e) {
-      if (e.keyCode === 112) {
-        this.$electron.ipcRenderer.send("open-config-file");
-      }
-    },
+  },
+  mounted() {
+    ipcRenderer.send("open-main");
+  },
+  beforeDestroy() {
+    ipcRenderer.removeAllListeners(["message", "update"]);
   },
 };
 </script>

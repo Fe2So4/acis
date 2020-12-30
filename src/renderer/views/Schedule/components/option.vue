@@ -5,10 +5,10 @@
       <span style="margin-right: 10px">
         楼层：
         <el-radio-group v-model="room" size="mini" @change="handleChange">
-          <el-radio-button label="全部"></el-radio-button>
-          <el-radio-button label="6"></el-radio-button>
-          <el-radio-button label="7"></el-radio-button>
-          <el-radio-button label="8"></el-radio-button>
+          <el-radio-button label="全部" />
+          <el-radio-button label="6" />
+          <el-radio-button label="7" />
+          <el-radio-button label="8" />
         </el-radio-group>
       </span>
       <span>
@@ -32,7 +32,7 @@
 <script>
 import request from "@/utils/requestForMock";
 import { submitAllApply } from "@/api/schedule";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -57,10 +57,29 @@ export default {
       immediate: true,
     },
   },
+  props: {
+    roomFloor: {
+      type: String,
+      required: true,
+    },
+  },
+  watch: {
+    roomFloor: {
+      handler(val) {
+        if (val === "0") {
+          this.room = "全部";
+        } else {
+          this.room = val;
+        }
+      },
+      immediate: true,
+    },
+  },
   computed: {
     ...mapGetters("Schedule", ["time", "allCount"]),
   },
   methods: {
+    ...mapActions("Schedule", ["clearCurrentRoom"]),
     showPreview() {
       this.$emit("showPreview");
     },
@@ -88,6 +107,7 @@ export default {
         value = val;
       }
       this.$emit("update:roomFloor", value);
+      this.clearCurrentRoom();
     },
     handleRefresh() {
       this.$eventHub.$emit("get-allocated");

@@ -13,7 +13,12 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-input v-model="search" clearable @clear="getPtData"> </el-input>
+        <el-input
+          v-model="search"
+          clearable
+          placeholder="请输入患者手术申请单号"
+          @clear="getPtData"
+        />
       </el-form-item>
       <!-- <el-form-item>
         <el-button>搜索</el-button>
@@ -139,7 +144,7 @@ export default {
       }
     },
     getPtData() {
-      let obj = {};
+      const obj = {};
       obj.opeScheduleTime = this.time;
       if (this.search !== "") {
         obj.operationId = this.search;

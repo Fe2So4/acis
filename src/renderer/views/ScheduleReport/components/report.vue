@@ -52,7 +52,7 @@
           <th style="border-bottom:1px solid #444444;border-top:1px solid #444444;border-right:1px solid #444444;padding:9px 0;">
             诊断
           </th>
-          <th style="border-bottom:1px solid #444444;border-top:1px solid #444444;border-right:1px solid #444444;padding:9px 0;">
+          <th style="border-bottom:1px solid #444444;border-top:1px solid #444444;border-right:1px solid #444444;padding:9px 0;width:202px;">
             手术名称
           </th>
           <th style="border-bottom:1px solid #444444;border-top:1px solid #444444;border-right:1px solid #444444;padding:9px 0;">
@@ -80,46 +80,88 @@
           v-for="(item,index) in tableData"
           :key="index"
         >
-          <td style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;">
+          <td
+            style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;"
+            :class="{'bg-schedule':item.index%2===0}"
+          >
             {{ item.opeRoom }}
           </td>
-          <td style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;">
+          <td
+            style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;"
+            :class="{'bg-schedule':item.index%2===0}"
+          >
             {{ item.sequence }}
           </td>
-          <td style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;">
+          <td
+            style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;"
+            :class="{'bg-schedule':item.index%2===0}"
+          >
             {{ item.ptName }}
           </td>
-          <td style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;">
+          <td
+            style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;"
+            :class="{'bg-schedule':item.index%2===0}"
+          >
             {{ item.inpatientWard }}
           </td>
-          <td style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;">
+          <td
+            style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;"
+            :class="{'bg-schedule':item.index%2===0}"
+          >
             {{ item.bedId }}
           </td>
-          <td style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;">
+          <td
+            style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;"
+            :class="{'bg-schedule':item.index%2===0}"
+          >
             {{ item.visitId }}
           </td>
-          <td style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;">
+          <td
+            style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;"
+            :class="{'bg-schedule':item.index%2===0}"
+          >
             {{ item.diagnoseBefore }}
           </td>
-          <td style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;">
+          <td
+            style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;"
+            :class="{'bg-schedule':item.index%2===0}"
+          >
             {{ item.operationName }}
           </td>
-          <td style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;">
+          <td
+            style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;"
+            :class="{'bg-schedule':item.index%2===0}"
+          >
             {{ item.surgeonName }}
           </td>
-          <td style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;">
+          <td
+            style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;"
+            :class="{'bg-schedule':item.index%2===0}"
+          >
             {{ item.anesMethod }}
           </td>
-          <td style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;">
+          <td
+            style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;"
+            :class="{'bg-schedule':item.index%2===0}"
+          >
             {{ item.anesDoc }}
           </td>
-          <td style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;">
+          <td
+            style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;"
+            :class="{'bg-schedule':item.index%2===0}"
+          >
             {{ item.opeNurse }}
           </td>
-          <td style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;">
+          <td
+            style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;"
+            :class="{'bg-schedule':item.index%2===0}"
+          >
             {{ item.supplyNurse }}
           </td>
-          <td style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;">
+          <td
+            style="border-bottom:1px solid #444444;border-right:1px solid #444444;padding:9px 0;"
+            :class="{'bg-schedule':item.index%2===0}"
+          >
             {{ item.memo }}
           </td>
         </tr>
@@ -165,6 +207,9 @@ export default {
       tbody{
         tr{
           td{
+            &.bg-schedule{
+              background-color:#fff3e0 !important;
+            }
             &:first-child{
               border-left: 1px solid #444444;
             }

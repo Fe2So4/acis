@@ -30,6 +30,7 @@
           :data="tableData"
           align="center"
           size="mini"
+          :row-style="rowStyle"
           :edit-config="{ trigger: 'dblclick', mode: 'cell', showStatus: true }"
           :header-cell-class-name="cellClassName"
         >
@@ -64,22 +65,19 @@
             </template>
           </vxe-table-column>
           <vxe-table-column field="ptName" title="病人信息" />
-          <vxe-table-column field="inpatientWard" title="病区" />
+          <vxe-table-column field="inpatientWard" title="病区" width="60" />
           <vxe-table-column field="bedId" title="床号" width="50" />
           <vxe-table-column field="visitId" title="住院号" width="80" />
           <vxe-table-column field="diagnoseBefore" title="诊断" width="100" />
-          <vxe-table-column
-            field="operationName"
-            title="手术名称"
-            width="220"
-          />
-          <vxe-table-column field="surgeonName" title="手术医师" width="80" />
-          <vxe-table-column field="anesMethod" title="麻醉方法" />
-          <vxe-table-column field="anesDoc" title="麻醉医师" width="80" />
-          <vxe-table-column field="opeNurse" title="洗手护士" />
-          <vxe-table-column field="supplyNurse" title="巡回护士" />
+          <vxe-table-column field="operationName" title="手术名称" />
+          <!-- width="220" -->
+          <vxe-table-column field="surgeonName" title="手术医师" width="140" />
+          <vxe-table-column field="anesMethod" title="麻醉方法" width="70" />
+          <vxe-table-column field="anesDoc" title="麻醉医师" width="170" />
+          <vxe-table-column field="opeNurse" title="洗手护士" width="170" />
+          <vxe-table-column field="supplyNurse" title="巡回护士" width="170" />
           <vxe-table-column field="memo" title="备注" />
-          <vxe-table-column title="操作">
+          <vxe-table-column title="操作" width="60">
             <template v-slot="{ row }">
               <el-button type="text" @click="cancelSchedule(row)">
                 撤销
@@ -100,7 +98,7 @@ import {
 } from "@/api/schedule";
 import { roomNoList } from "@/api/dictionary";
 import request from "@/utils/requestForMock";
-import Report from "./report";
+// import Report from './report'
 import { ipcRenderer } from "electron";
 import XEUtils from "xe-utils";
 export default {
@@ -117,10 +115,22 @@ export default {
     };
   },
   components: {
-    Report,
+    // Report
   },
   computed: {},
   methods: {
+    rowStyle({ row, rowIndex }) {
+      if (row.index % 2 === 0) {
+        return {
+          // color: "red",
+          background: "#fff3e0",
+        };
+      } else {
+        return {
+          // color: "green",
+        };
+      }
+    },
     cancelSchedule(row) {
       this.$confirm("是否撤销当前手术?", "提示", {
         confirmButtonText: "确定",
@@ -129,7 +139,7 @@ export default {
       })
         .then(() => {
           request({
-            url: cancelScheduleSubmit + `?operationId=` + row.operationId,
+            url: cancelScheduleSubmit + "?operationId=" + row.operationId,
             method: "put",
           }).then((res) => {
             this.$message({ type: "success", message: "撤销成功" });

@@ -352,7 +352,7 @@ export default {
     align-items: center;
     i {
       -webkit-app-region: no-drag;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: bold;
       @include theme-property("color", $color-primary);
       margin-right: 20px;

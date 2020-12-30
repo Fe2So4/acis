@@ -87,20 +87,30 @@ export default {
   },
   props: {
     title: {
-      type: String
+      type: String,
+      default: ''
     },
     textList: {
-      type: Array
+      type: Array,
+      default: function () {
+        return []
+      }
     },
     dialogVisible: {
       type: Boolean,
       default: false
     },
     basicData: {
-      type: Array
+      type: Array,
+      default: function () {
+        return []
+      }
     },
     detailData: {
-      type: Object
+      type: Object,
+      default: function () {
+        return {}
+      }
     }
   },
   computed: {

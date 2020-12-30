@@ -183,6 +183,13 @@ export default {
       },
       immediate: true,
     },
+    currentRoom: {
+      handler(newVal) {
+        return newVal;
+      },
+      immediate: true,
+      deep: true,
+    },
   },
   computed: {
     // ...mapGetters('Schedule', ['time'])

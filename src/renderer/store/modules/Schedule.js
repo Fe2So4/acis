@@ -43,6 +43,15 @@ const mutations = {
   },
   SET_DEFAULT_ROOM2(state, payload) {
     state.defaultRoom.room2 = payload
+  },
+  CLEAR_CURRENT_ROOM(state, payload) {
+    state.currentRoom = {
+      roomNo: null,
+      maxCount: '',
+      count: '',
+      roomIndex: null,
+      listLength: 0
+    }
   }
 }
 const actions = {
@@ -51,6 +60,9 @@ const actions = {
   },
   setCurrentRoom({ commit }, payload) {
     commit('SET_CURRENT_ROOM', payload)
+  },
+  clearCurrentRoom({ commit }) {
+    commit('CLEAR_CURRENT_ROOM')
   },
   setAllCount({ commit }, payload) {
     commit('SET_ALL_COUNT', payload)

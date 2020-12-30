@@ -19,6 +19,7 @@
         checkMethod: handleCheckFilter,
       }"
       :row-style="rowStyle"
+      :cell-class-name="cellClassName"
       @checkbox-change="selectChangeEvent"
       @cell-dblclick="handleDetailVisible"
       @cell-click="handleSimpleApply"
@@ -26,43 +27,39 @@
       <vxe-table-column type="checkbox" width="50" />
       <vxe-table-column field="sequence" title="台次" width="50" />
       <vxe-table-column field="ptName" title="患者" width="70" />
-      <vxe-table-column field="bedId" title="床位" width="70" />
+      <vxe-table-column field="bedId" title="床位" width="50" />
       <vxe-table-column field="visitId" title="住院号" width="80" />
       <!-- <vxe-table-column field="diagBeforeOperation" title="诊断" width="120"></vxe-table-column> -->
       <vxe-table-column field="surgeonName" title="主刀" width="140" />
       <vxe-table-column field="opeScheduleTime" title="手术时间" width="120" />
-      <vxe-table-column
-        field="operationName"
-        title="手术名称"
-        width="230"
-        show-overflow="title"
-      />
-      <vxe-table-column field="anesMethod" title="麻醉方法" width="120" />
+      <vxe-table-column field="operationName" title="手术名称" width="230" />
+      <!-- show-overflow="title" -->
+      <vxe-table-column field="anesMethod" title="麻醉方法" width="80" />
       <vxe-table-column
         field="anesDocName"
-        title="主麻医师"
-        width="70"
+        title="主麻"
+        width="60"
         show-overflow="title"
       />
       <vxe-table-column
         field="subDoc"
-        title="副麻医师"
+        title="副麻"
         width="140"
         show-overflow="title"
       />
       <vxe-table-column
         field="washNurse"
         title="洗手护士"
-        width="120"
+        width="170"
         show-overflow="title"
       />
       <vxe-table-column
         field="hangNurse"
         title="巡回护士"
-        width="120"
+        width="170"
         show-overflow="title"
       />
-      <vxe-table-column field="memo" title="备注" width="82" />
+      <vxe-table-column field="memo" title="备注" width="80" />
       <vxe-table-column title="操作" width="80" fixed="right">
         <template v-slot="{ row }">
           <template>
@@ -151,6 +148,11 @@ export default {
         return {
           color: "green",
         };
+      }
+    },
+    cellClassName({ row, column }) {
+      if (column.title === "手术名称") {
+        return "opeTitle";
       }
     },
     handleDetailVisible({ row }) {

@@ -6,7 +6,6 @@
       width="40%"
       v-dialogDrag
       :before-close="handleClose"
-      :modal="false"
     >
       <el-row>
         {{ changeType !== '2' ? '把该手术重新分配到' : '需要把' }}{{ changeType === '2' ? currentRoom.roomNo + '号手术间的数据与' : '' }}

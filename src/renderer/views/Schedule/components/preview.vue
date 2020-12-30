@@ -34,11 +34,11 @@
           <vxe-table-column field="operationName" title="手术名称" />
           <!-- width="120" -->
           <vxe-table-column field="surgeon" title="手术医师" width="140" />
-          <vxe-table-column field="anesDoc" title="麻醉医师" width="80" />
+          <vxe-table-column field="anesDoc" title="麻醉医师" width="160" />
           <!-- show-overflow="title" -->
-          <vxe-table-column field="opeNurse" title="洗手护士" width="80" />
+          <vxe-table-column field="opeNurse" title="洗手护士" width="170" />
           <!-- show-overflow="title" -->
-          <vxe-table-column field="supplyNurse" title="巡回护士" width="80" />
+          <vxe-table-column field="supplyNurse" title="巡回护士" width="170" />
           <!-- show-overflow="title" -->
         </vxe-table>
       </div>
@@ -79,6 +79,7 @@ export default {
   methods: {
     handleSubmit() {
       this.$eventHub.$emit("submit-all");
+      this.handleClose();
     },
     rowStyle({ row, rowIndex }) {
       if (row.state === "1" && row.index % 2 === 0) {

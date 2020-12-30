@@ -8,18 +8,18 @@
 </template>
 <script>
 // import Notice from "./components/notice";
-import Document from "./components/document";
+import Document from './components/document'
 export default {
-  data() {
+  data () {
     return {
-      activeName: "first",
-    };
+      activeName: 'first'
+    }
   },
   components: { Document },
   methods: {
-    handleClick() {},
-  },
-};
+    handleClick () {}
+  }
+}
 </script>
 <style lang="scss" scoped>
 @import "@/styles/theme";

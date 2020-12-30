@@ -178,7 +178,11 @@
             />
           </div>
           <div class="patient-detail">
-            <el-scrollbar style="width: 100%" class="scrollbar">
+            <el-scrollbar
+              style="width: 100%"
+              class="scrollbar"
+              :vertical="true"
+            >
               <div class="detail-content">
                 申请手术时间：
                 <span>{{ patientBasBasicInfo.opeScheduleTime }}</span> 病区：
@@ -203,7 +207,7 @@
               @handleChangeRoom="handleChangeRoom('2')"
               @roomConfig="roomConfig"
             />
-            <Option @showPreview="showPreview" :roomFloor.sync="roomFloor" />
+            <Option @showPreview="showPreview" :room-floor.sync="roomFloor" />
           </div>
         </div>
         <div v-show="showSwitch" class="switch">
@@ -235,7 +239,7 @@
                 'el-icon-d-arrow-right': true,
                 'record-arrow': recordVisible,
               }"
-            ></i>
+            />
           </span>
         </div>
         <div class="record-content" v-show="recordVisible">
@@ -585,6 +589,20 @@ export default {
     // 切换患者基本信息
     changePatientDetail(row) {
       this.patientBasBasicInfo = row;
+    },
+    handleShowRecord() {
+      this.recordVisible = !this.recordVisible;
+    },
+    // 获取默认楼层
+    getDefaultRoom() {
+      request({
+        method: "get",
+        url: getCurrentRoom,
+      }).then((res) => {
+        this.floor = res.data.data;
+        this.roomFloor = res.data.data;
+        this.getOpeData();
+      });
     },
     handleShowRecord() {
       this.recordVisible = !this.recordVisible;
@@ -1262,7 +1280,7 @@ export default {
       }
     }
     .allocated {
-      height: 220px;
+      height: 420px;
       // @include theme-property("border", $border-event-left);
       // border: 1px solid rgba(57, 66, 92, 1);
       border-radius: 5px;
@@ -1289,7 +1307,7 @@ export default {
       }
     }
     .room {
-      height: calc(100% - 280px);
+      height: calc(100% - 500px);
       // flex: 1;
       @include theme-property("border", $border-event-left);
       border-radius: 5px;

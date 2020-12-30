@@ -18,13 +18,13 @@
       @cell-click="handleCellClick"
       @cell-dblclick="handleDistributeRoom"
     >
-      <vxe-table-column field="sequence" title="台次" width="50px" />
-      <vxe-table-column field="ptName" title="姓名" width="70px" />
-      <vxe-table-column field="inpatientWard" title="病区" width="50px" />
-      <vxe-table-column field="bedId" title="床位" width="60px" />
-      <vxe-table-column field="visitId" title="住院号" width="80px" />
+      <vxe-table-column field="sequence" title="台次" width="50" />
+      <vxe-table-column field="ptName" title="姓名" width="70" />
+      <vxe-table-column field="inpatientWard" title="病区" width="50" />
+      <vxe-table-column field="bedId" title="床位" width="60" />
+      <vxe-table-column field="visitId" title="住院号" width="80" />
       <vxe-table-column field="surgeon" title="医师" width="140" />
-      <vxe-table-column field="operation" title="手术" />
+      <vxe-table-column field="operation" title="手术" width="204" />
     </vxe-table>
   </div>
 </template>
