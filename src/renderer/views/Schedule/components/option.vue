@@ -67,24 +67,6 @@ export default {
       immediate: true
     }
   },
-  props: {
-    roomFloor: {
-      type: String,
-      required: true
-    }
-  },
-  watch: {
-    roomFloor: {
-      handler (val) {
-        if (val === '0') {
-          this.room = '全部'
-        } else {
-          this.room = val
-        }
-      },
-      immediate: true
-    }
-  },
   computed: {
     ...mapGetters('Schedule', ['time', 'allCount'])
   },

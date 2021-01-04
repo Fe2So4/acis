@@ -113,3 +113,6 @@ export const cancelScheduleSubmit = `${config.default.api.baseURL}/acis/operatio
 
 // 获取当前用户默认手术间
 export const getCurrentRoom = `${config.default.api.baseURL}/acis/operation/getDefaultFloor`
+
+// 取消当前手术
+export const cancelCurrentOperation = `${config.default.api.baseURL}/acis/operation/deleteOperation`

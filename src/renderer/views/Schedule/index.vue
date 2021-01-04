@@ -667,20 +667,6 @@ export default {
         this.getOpeData()
       })
     },
-    handleShowRecord () {
-      this.recordVisible = !this.recordVisible
-    },
-    // 获取默认楼层
-    getDefaultRoom () {
-      request({
-        method: 'get',
-        url: getCurrentRoom
-      }).then((res) => {
-        this.floor = res.data.data
-        this.roomFloor = res.data.data
-        this.getOpeData()
-      })
-    },
     // 切换折叠面板
     handleChangeCollapse (activeName) {
       this.searchContent = ''

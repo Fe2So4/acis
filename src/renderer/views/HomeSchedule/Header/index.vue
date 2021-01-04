@@ -4,14 +4,8 @@
       <div class="title">
         <p>Dandelion智慧手术中心<i />智能排班</p>
       </div>
-      <div
-        class="logo-img"
-        @click="hanldeJump"
-      >
-        <img
-          src="@/assets/hs_logo.png"
-          alt=""
-        >
+      <div class="logo-img" @click="hanldeJump">
+        <img src="@/assets/hs_logo.png" alt="" />
       </div>
     </div>
     <div class="header-navs">
@@ -50,192 +44,182 @@
     </div>
     <div class="options">
       <theme-picker />
-      <i
-        class="el-icon-minus"
-        @click="miniWindow"
-      />
-      <i
-        class="iconfont icon-icon_min"
-        :class="iconMax"
-        @click="maxWindow"
-      />
-      <i
-        class="el-icon-close"
-        @click="closeWindow"
-      />
+      <i class="el-icon-minus" @click="miniWindow" />
+      <i class="iconfont icon-icon_min" :class="iconMax" @click="maxWindow" />
+      <i class="el-icon-close" @click="closeWindow" />
     </div>
   </div>
 </template>
 
 <script>
-import ThemePicker from './ThemePicker'
-import { synchroApply } from '@/api/schedule'
-import request from '@/utils/requestForMock'
-import throttle from 'lodash/throttle'
-import $bus from '@/utils/bus'
+import ThemePicker from "./ThemePicker";
+import { synchroApply } from "@/api/schedule";
+import request from "@/utils/requestForMock";
+import throttle from "lodash/throttle";
+import $bus from "@/utils/bus";
 // const { ipcRenderer } = require('electron')
-const { BrowserWindow, dialog } = require('electron').remote
-const win = BrowserWindow.getAllWindows()[0]
+const { BrowserWindow, dialog } = require("electron").remote;
+const win = BrowserWindow.getAllWindows()[0];
 
 export default {
   components: {
-    ThemePicker
+    ThemePicker,
   },
-  data () {
-    win.on('maximize', () => {
-      this.isMax = true
-    })
-    win.on('unmaximize', () => {
-      this.isMax = false
-    })
+  data() {
+    win.on("maximize", () => {
+      this.isMax = true;
+    });
+    win.on("unmaximize", () => {
+      this.isMax = false;
+    });
     return {
       active: 0,
       fullscreenLoading: false,
       isMax: false,
       parentInfo: {
-        secMenus: []
+        secMenus: [],
       },
       navs: [
         {
-          title: '手术排班',
-          route: '/schedule-home/schedule',
-          name: 'Schedule',
-          index: 1
+          title: "手术排班",
+          route: "/schedule-home/schedule",
+          name: "Schedule",
+          index: 1,
         },
         {
-          title: '手术排班表',
-          route: '/schedule-home/report',
-          name: 'ScheduleReport',
-          index: 2
+          title: "手术排班表",
+          route: "/schedule-home/report",
+          name: "ScheduleReport",
+          index: 2,
         },
         {
-          title: '排班修改',
-          route: '/schedule-home/schedule-change',
-          name: 'ScheduleChange',
-          index: 3
-        }
+          title: "排班修改",
+          route: "/schedule-home/schedule-change",
+          name: "ScheduleChange",
+          index: 3,
+        },
       ],
       activeIndex: 1,
-      iconMax: 'icon-icon_max'
-    }
+      iconMax: "icon-icon_max",
+    };
   },
   props: {
     lock: {
-      type: Boolean
-    }
+      type: Boolean,
+    },
   },
   watch: {},
   computed: {},
-  created () {},
-  mounted () {
-    // this.synchro()
+  created() {},
+  mounted() {
+    this.synchro();
   },
   methods: {
-    hanldeJump () {
-      this.$router.push('/login')
+    hanldeJump() {
+      this.$router.push("/login");
     },
-    synchro () {
-      this.fullscreenLoading = true
+    synchro() {
+      this.fullscreenLoading = true;
       request({
         url: synchroApply,
         params: {
           start: 1,
-          end: 5
-        }
+          end: 5,
+        },
       }).then((res) => {
         if (res.data.code === 200) {
-          this.fullscreenLoading = false
-          this.$confirm('同步成功', '提示', {
-            confirmButtonText: '确定',
-            type: 'success',
-            customClass: 'messageBox',
-            confirmButtonClass: 'el-button--mini',
+          this.fullscreenLoading = false;
+          this.$confirm("同步成功", "提示", {
+            confirmButtonText: "确定",
+            type: "success",
+            customClass: "messageBox",
+            confirmButtonClass: "el-button--mini",
             showCancelButton: false,
             showClose: false,
-            closeOnClickModal: false
+            closeOnClickModal: false,
           }).then(() => {
-            $bus.$emit('getApplyData')
-          })
+            $bus.$emit("getApplyData");
+          });
         } else {
-          this.$confirm('同步失败', '提示', {
-            confirmButtonText: '确定',
-            type: 'error',
-            customClass: 'messageBox',
-            confirmButtonClass: 'el-button--mini',
+          this.$confirm("同步失败", "提示", {
+            confirmButtonText: "确定",
+            type: "error",
+            customClass: "messageBox",
+            confirmButtonClass: "el-button--mini",
             showCancelButton: false,
             showClose: false,
-            closeOnClickModal: false
-          }).then(() => {})
+            closeOnClickModal: false,
+          }).then(() => {});
         }
-      })
+      });
     },
     handleAsync: throttle(
       function () {
-        this.synchro()
+        this.synchro();
       },
       5000,
       {
         leading: true,
-        trailing: false
+        trailing: false,
       }
     ),
-    handleChange (item) {
-      this.activeIndex = item.index
+    handleChange(item) {
+      this.activeIndex = item.index;
       if (item.index === 1) {
-        this.$router.push('/schedule-home/schedule')
+        this.$router.push("/schedule-home/schedule");
       } else if (item.index === 2) {
-        this.$router.push('/schedule-home/report')
+        this.$router.push("/schedule-home/report");
       } else if (item.index === 3) {
-        this.$router.push('/schedule-home/schedule-change')
+        this.$router.push("/schedule-home/schedule-change");
       }
     },
-    miniWindow () {
+    miniWindow() {
       // 最小化窗口
       // ipcRenderer.send("window-min");
-      win.minimize()
+      win.minimize();
     },
-    maxWindow () {
-      const isMax = win.isMaximized()
+    maxWindow() {
+      const isMax = win.isMaximized();
       if (isMax) {
-        win.unmaximize()
-        this.iconMax = 'icon-icon_min2'
+        win.unmaximize();
+        this.iconMax = "icon-icon_min2";
       } else {
-        win.maximize()
-        this.iconMax = 'icon-icon_max'
+        win.maximize();
+        this.iconMax = "icon-icon_max";
       }
       // ipcRenderer.send("window-min");
     },
-    closeWindow () {
+    closeWindow() {
       dialog
         .showMessageBox({
-          type: 'warning',
+          type: "warning",
           // 按钮文字
-          buttons: ['确认', '取消'],
+          buttons: ["确认", "取消"],
           // 默认选择的按钮索引值
           defaultId: 1,
-          title: '警告',
-          message: '是否确认退出当前程序',
+          title: "警告",
+          message: "是否确认退出当前程序",
           // 触发退出的索引值
-          cancelId: 1
+          cancelId: 1,
         })
         .then((res) => {
           if (res.response === 0) {
             // ipcRenderer.send("window-close");
-            win.close()
+            win.close();
           }
-        })
+        });
     },
-    jumpstatistics (item, i) {
-      this.activeIndex = i
+    jumpstatistics(item, i) {
+      this.activeIndex = i;
       if (item.index === 1) {
-        this.$router.push('/schedule-home/schedule')
+        this.$router.push("/schedule-home/schedule");
       }
       if (item.index === 2) {
-        this.$router.push('/schedule-home/report')
+        this.$router.push("/schedule-home/report");
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
