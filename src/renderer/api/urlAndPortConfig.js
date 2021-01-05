@@ -7,7 +7,7 @@ const mock =
     : false
 
 const IP = {
-  SERVER: prodIp, // 谢佳辰公司ip
+  SERVER: prodIp,
   LOCAL: 'localhost',
   XIE: '192.168.1.139',
   LI: '192.168.1.177',
