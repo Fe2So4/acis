@@ -1,17 +1,18 @@
 import {
   mock,
-  baseLi
+  baseLi,
+  baseXie
 } from './urlAndPortConfig'
 
 // 检验信息查询 - 李 - 2020-07-23
-export const getTestInfo = mock
-  ? ''
-  : baseLi + 'acis/sysIntegration/getTestInfo'
+// export const getTestInfo = mock
+//   ? ''
+//   : baseLi + 'acis/sysIntegration/getTestInfo'
 
 // 同步检验信息 - 李 - 2020-07-23
-export const syncTestInfo = mock
-  ? ''
-  : baseLi + 'acis/sysIntegration/syncTestInfo'
+// export const syncTestInfo = mock
+//   ? ''
+//   : baseLi + 'acis/sysIntegration/syncTestInfo'
 
 // 同步检验信息 - 李 - 2020-07-23
 export const getTestInfoLine = mock
@@ -47,3 +48,13 @@ export const getEmrInfo = mock
 export const syncEmrInfo = mock
   ? ''
   : baseLi + 'acis/sysIntegration/syncEmrInfo'
+
+// 检验申请单信息 - 谢 - 2021-01-05
+export const getBDGInspectionApply = mock
+  ? ''
+  : baseXie + 'acis/sysIntegration/getBDGInspectionApply'
+
+// 检验申请单信息详情 - 谢 - 2021-01-05
+export const getBEGInspectionReport = mock
+  ? ''
+  : baseXie + 'acis/sysIntegration/getBEGInspectionReport'

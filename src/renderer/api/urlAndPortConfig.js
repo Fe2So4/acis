@@ -9,7 +9,7 @@ const mock =
 const IP = {
   SERVER: prodIp, // 谢佳辰公司ip
   LOCAL: 'localhost',
-  XIE: '192.168.1.175',
+  XIE: '192.168.1.139',
   LI: '192.168.1.177',
   ZHONG: '192.168.1.191'
 }
@@ -18,7 +18,7 @@ const PORT = {
   SOCKET: '9099'
 }
 const productIpType = 'SERVER' // 'SERVER' / 'LOCAL'
-const developmentIpType = 'SERVER' // 'SERVER' / ''
+const developmentIpType = '' // 'SERVER' / ''
 
 const IP_BASE = IP[productIpType]
 const IP_LI = developmentIpType ? IP[developmentIpType] : IP.LI
