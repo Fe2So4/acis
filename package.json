@@ -1,11 +1,12 @@
 {
   "name": "acis-schedule",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "author": "dyw-design <1875742887@qq.com>",
   "description": "acis-schedule",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
+    "build32:schedule": "cross-env BUILD_TARGET=schedule node .electron-vue/build.js && electron-builder --win --ia32",
     "build:schedule": "cross-env BUILD_TARGET=schedule node .electron-vue/build.js && electron-builder",
     "build:statistics": "cross-env BUILD_TARGET=statistics node .electron-vue/build.js && electron-builder",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
@@ -25,15 +26,15 @@
     "mock": "node ./mock/server.js"
   },
   "build": {
-    "productName": "acis-schedule",
-    "appId": "acis-schedule",
+    "productName": "acis-schedule32",
+    "appId": "acis-schedule32",
     "directories": {
       "output": "build"
     },
     "publish": [
       {
         "provider": "generic",
-        "url": "http://128.0.18.38:8080/operation/operation_schedule"
+        "url": "http://128.0.18.38:8080/operation/operation_schedule32"
       }
     ],
     "files": [
@@ -73,7 +74,7 @@
       "installerHeaderIcon": "build/icons/schedule.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "acis-schedule"
+      "shortcutName": "acis-schedule32"
     }
   },
   "dependencies": {

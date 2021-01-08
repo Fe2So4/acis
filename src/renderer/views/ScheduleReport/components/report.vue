@@ -22,10 +22,16 @@
           </th>
         </tr>
         <tr>
-          <th colspan="7" style="text-align: left; padding: 9px 0">
+          <th
+            colspan="7"
+            style="text-align: left; padding: 9px 0"
+          >
             时间：{{ time }}
           </th>
-          <th colspan="7" style="text-align: right; padding: 9px 0">
+          <th
+            colspan="7"
+            style="text-align: right; padding: 9px 0"
+          >
             台数：{{ tableData.length }} 台
           </th>
         </tr>
@@ -162,7 +168,7 @@
           >
             巡回护士
           </th>
-          <!-- <th
+          <th
             style="
               border-bottom: 1px solid #444444;
               border-top: 1px solid #444444;
@@ -171,7 +177,7 @@
             "
           >
             备注
-          </th> -->
+          </th>
           <th
             style="
               border-bottom: 1px solid #444444;
@@ -185,7 +191,10 @@
         </tr>
       </thead>
       <tbody style="text-align: center">
-        <tr v-for="(item, index) in tableData" :key="index">
+        <tr
+          v-for="(item, index) in tableData"
+          :key="index"
+        >
           <td
             style="
               border-bottom: 1px solid #444444;
@@ -316,7 +325,7 @@
           >
             {{ item.supplyNurse }}
           </td>
-          <!-- <td
+          <td
             style="
               border-bottom: 1px solid #444444;
               border-right: 1px solid #444444;
@@ -325,7 +334,7 @@
             :class="{ 'bg-schedule': item.index % 2 === 0 }"
           >
             {{ item.memo }}
-          </td> -->
+          </td>
           <td
             style="
               border-bottom: 1px solid #444444;
@@ -342,28 +351,28 @@
   </div>
 </template>
 <script>
-import moment from "moment";
+import moment from 'moment'
 export default {
-  name: "ScheduleReport",
-  data() {
-    return {};
+  name: 'ScheduleReport',
+  data () {
+    return {}
   },
   props: {
     tableData: {
       default: function () {
-        return [];
+        return []
       },
-      type: Array,
+      type: Array
     },
     time: {
       type: String,
-      default: moment(new Date()).format("YYYY-MM-DD"),
-    },
+      default: moment(new Date()).format('YYYY-MM-DD')
+    }
   },
   computed: {},
   methods: {},
-  mounted() {},
-};
+  mounted () {}
+}
 </script>
 <style lang="scss" scoped>
 .schedule-report {

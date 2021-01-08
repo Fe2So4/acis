@@ -141,10 +141,24 @@
           >
             巡回
           </th>
+          <th
+            style="
+              border-bottom: 1px solid #444444;
+              border-top: 1px solid #444444;
+              border-right: 1px solid #444444;
+              padding: 0 0;
+              width: 100px;
+            "
+          >
+            备注
+          </th>
         </tr>
       </thead>
       <tbody style="text-align: center">
-        <tr v-for="(item, index) in tableData" :key="index">
+        <tr
+          v-for="(item, index) in tableData"
+          :key="index"
+        >
           <td
             style="
               border-bottom: 1px solid #000000;
@@ -245,54 +259,64 @@
           >
             {{ item.supplyNurse }}
           </td>
+          <td
+            style="
+              border-bottom: 1px solid #444444;
+              border-right: 1px solid #444444;
+              padding: 0 0;
+            "
+          >
+            {{ item.memo }}
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
 </template>
 <script>
-import moment from "moment";
+import moment from 'moment'
 export default {
-  name: "ScheduleReport",
-  data() {
-    return {};
+  name: 'ScheduleReport',
+  data () {
+    return {}
   },
   props: {
     tableData: {
       default: function () {
-        return [];
+        return []
       },
-      type: Array,
+      type: Array
     },
     time: {
       type: String,
-      default: moment(new Date()).format("YYYY-MM-DD"),
-    },
+      default: moment(new Date()).format('YYYY-MM-DD')
+    }
   },
   computed: {
-    date() {
-      let week = moment(this.time).day();
+    // eslint-disable-next-line vue/return-in-computed-property
+    date () {
+      const week = moment(this.time).day()
       switch (week) {
         case 1:
-          return "星期一";
+          return '星期一'
         case 2:
-          return "星期二";
+          return '星期二'
         case 3:
-          return "星期三";
+          return '星期三'
         case 4:
-          return "星期四";
+          return '星期四'
         case 5:
-          return "星期五";
+          return '星期五'
         case 6:
-          return "星期六";
+          return '星期六'
         case 0:
-          return "星期日";
+          return '星期日'
       }
-    },
+    }
   },
   methods: {},
-  mounted() {},
-};
+  mounted () {}
+}
 </script>
 <style lang="scss" scoped>
 .schedule-report {
