@@ -116,3 +116,6 @@ export const getCurrentRoom = `${config.default.api.baseURL}/acis/operation/getD
 
 // 取消当前手术
 export const cancelCurrentOperation = `${config.default.api.baseURL}/acis/operation/deleteOperation`
+
+// 导出排版表exceL
+export const exportScheduleReport = `${config.default.api.baseURL}/acis/operation/downExcel`

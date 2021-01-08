@@ -22,7 +22,7 @@ const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`
 
-function createInitialWindow () {
+function createInitialWindow() {
   initialWindow = new BrowserWindow({
     width: 880,
     height: 560,
@@ -40,7 +40,7 @@ function createInitialWindow () {
   })
   initialWindow.loadURL(Path.resolve(__static, './loading/index.html'))
 }
-function createWindow () {
+function createWindow() {
   /**
    * Initial window options
    */
@@ -122,7 +122,7 @@ function createWindow () {
     autoUpdater.checkForUpdates()
   }
   // 主进程主动发送消息给渲染进程函数
-  function sendUpdateMessage (message, data) {
+  function sendUpdateMessage(message, data) {
     mainWindow.webContents.send('message', { message, data })
   }
   mainWindow.on('closed', () => {
@@ -369,7 +369,7 @@ ipcMain.on('print-content', (e, options) => {
 ipcMain.on('download', (evt, args) => {
   const url = JSON.parse(args)
   const downloadUrl = url.downloadUrl
-  console.log(downloadUrl)
+  // console.log(downloadUrl)
   // const saveUrl = url.saveUrl
   mainWindow.webContents.downloadURL(downloadUrl)
 })

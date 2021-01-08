@@ -162,7 +162,7 @@
           >
             巡回护士
           </th>
-          <th
+          <!-- <th
             style="
               border-bottom: 1px solid #444444;
               border-top: 1px solid #444444;
@@ -171,6 +171,16 @@
             "
           >
             备注
+          </th> -->
+          <th
+            style="
+              border-bottom: 1px solid #444444;
+              border-top: 1px solid #444444;
+              border-right: 1px solid #444444;
+              padding: 9px 0;
+            "
+          >
+            执行
           </th>
         </tr>
       </thead>
@@ -306,7 +316,7 @@
           >
             {{ item.supplyNurse }}
           </td>
-          <td
+          <!-- <td
             style="
               border-bottom: 1px solid #444444;
               border-right: 1px solid #444444;
@@ -315,6 +325,16 @@
             :class="{ 'bg-schedule': item.index % 2 === 0 }"
           >
             {{ item.memo }}
+          </td> -->
+          <td
+            style="
+              border-bottom: 1px solid #444444;
+              border-right: 1px solid #444444;
+              padding: 9px 0;
+            "
+            :class="{ 'bg-schedule': item.index % 2 === 0 }"
+          >
+            {{ item.isExecute === "0" ? "未执行" : "已执行" }}
           </td>
         </tr>
       </tbody>
@@ -348,6 +368,7 @@ export default {
 <style lang="scss" scoped>
 .schedule-report {
   height: 100%;
+  // 1191px * 842px
   // background: #E3E3E3;
   // box-shadow: 1px 20px 45px 5px rgba(0, 0, 0, 0.5);
   // border-radius: 5px;

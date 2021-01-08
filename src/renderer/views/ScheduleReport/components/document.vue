@@ -1,9 +1,6 @@
 <template>
   <div class="document">
-    <el-form
-      :inline="true"
-      size="mini"
-    >
+    <el-form :inline="true" size="mini">
       <el-form-item>
         <el-date-picker
           v-model="time"
@@ -15,152 +12,224 @@
           @change="getData"
         />
       </el-form-item>
+      <el-form-item label="楼层：">
+        <el-radio-group v-model="floor" @change="handleChange">
+          <el-radio-button label="全部" />
+          <el-radio-button label="6" />
+          <el-radio-button label="7" />
+          <el-radio-button label="8" />
+        </el-radio-group>
+      </el-form-item>
       <el-form-item>
-        <el-button
-          @click="printEvent"
-          :disabled="!reportVisible"
-        >
+        <el-button @click="handleShowPrint" :disabled="!reportVisible">
           打印
         </el-button>
-        <el-button @click="getData">
-          刷新
-        </el-button>
-        <el-button
-          @click="handleEdit"
-          v-show="!reportVisible"
-        >
+        <el-button @click="getData"> 刷新 </el-button>
+        <el-button @click="handleExport"> 导出 </el-button>
+        <el-button @click="handleEdit" v-show="!reportVisible">
           返回
         </el-button>
       </el-form-item>
     </el-form>
     <div class="content">
-      <el-scrollbar
-        style="height: 100%"
-        class="scrollbar"
-      >
+      <el-scrollbar style="height: 100%" class="scrollbar">
         <div class="print-document">
-          <Report
+          <Report :table-data="tableData" :time="time" />
+        </div>
+      </el-scrollbar>
+    </div>
+    <el-dialog
+      :visible.sync="dialogVisible"
+      class="dialog-notice"
+      title="打印预览"
+      width="350mm"
+      @opened="onOpened"
+    >
+      <div style="height: 800px">
+        <el-scrollbar style="height: 100%" class="scrollbar">
+          <report-print
             id="print-report"
             :table-data="tableData"
             :time="time"
           />
-        </div>
-      </el-scrollbar>
-    </div>
+        </el-scrollbar>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="dialogVisible = false">取 消</el-button>
+        <el-button size="mini" type="primary" @click="printEvent"
+          >打印</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
-import moment from 'moment'
+import moment from "moment";
 import {
   getTableList,
   updateScheduledRoomPlatform,
-  cancelScheduleSubmit
-} from '@/api/schedule'
-import { roomNoList } from '@/api/dictionary'
-import request from '@/utils/requestForMock'
-import Report from './report'
-import { ipcRenderer } from 'electron'
-import XEUtils from 'xe-utils'
+  cancelScheduleSubmit,
+  exportScheduleReport,
+  getCurrentRoom,
+} from "@/api/schedule";
+import { roomNoList } from "@/api/dictionary";
+import request from "@/utils/requestForMock";
+import Report from "./report";
+import ReportPrint from "./report-print";
+import { ipcRenderer } from "electron";
+import XEUtils from "xe-utils";
 export default {
-  name: 'Document',
-  data () {
+  name: "Document",
+  data() {
     return {
-      value: '',
-      time: moment(new Date()).format('yyyy-MM-DD'),
+      value: "",
+      time: moment(new Date()).add(1, "day").format("YYYY-MM-DD"),
       ptList: [],
       tableData: [],
-      floor: '',
+      floor: 0,
       roomList: [],
-      reportVisible: true
-    }
+      reportVisible: true,
+      dialogVisible: false,
+    };
   },
   components: {
-    Report
+    Report,
+    ReportPrint,
   },
   computed: {},
   methods: {
-    cancelSchedule (row) {
+    onOpened() {},
+    // 获取默认楼层
+    getDefaultRoom() {
       request({
-        url: cancelScheduleSubmit + '?operationId=' + row.operationId,
-        method: 'put'
+        method: "get",
+        url: getCurrentRoom,
       }).then((res) => {
-        this.$message({ type: 'success', message: '撤销成功' })
-        this.getData()
-      })
+        if (res.data.data === "0") {
+          this.floor = "全部";
+        } else {
+          this.floor = res.data.data;
+        }
+        this.getData();
+        // this.roomFloor = res.data.data;
+        // this.getOpeData();
+      });
     },
-    printEvent () {
+    handleExport() {
+      let url = exportScheduleReport + `?date=${this.time}`;
+      ipcRenderer.send(
+        "download",
+        JSON.stringify({
+          downloadUrl: url,
+        })
+      );
+    },
+    handleChange(val) {
+      let value = "0";
+      if (val === "全部") {
+        value = "全部";
+      } else {
+        value = val;
+      }
+      this.floor = value;
+      this.getData();
+      // this.$emit('update:roomFloor', value)
+      // this.clearCurrentRoom()
+    },
+    cancelSchedule(row) {
+      request({
+        url: cancelScheduleSubmit + "?operationId=" + row.operationId,
+        method: "put",
+      }).then((res) => {
+        this.$message({ type: "success", message: "撤销成功" });
+        this.getData();
+      });
+    },
+    handleShowPrint() {
+      this.dialogVisible = true;
+    },
+    printEvent() {
       // this.$router.push('/print-notice')
       if (this.tableData.length > 0) {
-        const printHtml = document.querySelector('#print-report').outerHTML
-        const options = { silent: true }
+        const printHtml = document.querySelector("#print-report").outerHTML;
+        const options = { silent: true };
         ipcRenderer.send(
-          'printChannel',
+          "printChannel",
           printHtml,
-          'schedule-report.css',
+          "schedule-report.css",
           options
-        )
+        );
       } else {
-        this.$message({ type: 'warning', message: '请选择正确排班日期' })
+        this.$message({ type: "warning", message: "请选择正确排班日期" });
       }
     },
-    handleEdit () {
+    handleEdit() {
       // const updateRecords = this.$refs.xTable.getUpdateRecords()
-      this.reportVisible = !this.reportVisible
+      this.reportVisible = !this.reportVisible;
     },
-    getRoomList () {
+    getRoomList() {
       request({
-        method: 'get',
-        url: roomNoList
+        method: "get",
+        url: roomNoList,
       }).then((res) => {
-        this.roomList = res.data.data
-      })
+        this.roomList = res.data.data;
+      });
     },
-    getSelectLabel (value, list, valueProp = 'value', labelField = 'label') {
-      const item = XEUtils.find(list, (item) => item === value)
-      return item || null
+    getSelectLabel(value, list, valueProp = "value", labelField = "label") {
+      const item = XEUtils.find(list, (item) => item === value);
+      return item || null;
     },
-    cellClassName ({ row, column }) {
-      if (column === 'title') {
-        return 'header-title'
+    cellClassName({ row, column }) {
+      if (column === "title") {
+        return "header-title";
       }
     },
-    handleSubmit () {
-      const updateRecords = this.$refs.xTable.getUpdateRecords()
-      const arr = []
+    handleSubmit() {
+      const updateRecords = this.$refs.xTable.getUpdateRecords();
+      const arr = [];
       updateRecords.forEach((item) => {
         arr.push({
           operationId: item.operationId,
           opeRoom: item.opeRoom,
-          sequence: item.sequence
-        })
-      })
+          sequence: item.sequence,
+        });
+      });
       request({
-        method: 'put',
+        method: "put",
         url: updateScheduledRoomPlatform,
-        data: arr
+        data: arr,
       }).then((res) => {
         if (res.data.code === 200) {
-          this.$message({ type: 'success', message: '修改成功' })
-          this.getData()
+          this.$message({ type: "success", message: "修改成功" });
+          this.getData();
         } else {
-          this.$message({ type: 'success', message: res.data.msg })
+          this.$message({ type: "success", message: res.data.msg });
         }
-      })
+      });
     },
-    getData () {
+    getData() {
+      let floor = "";
+      if (this.floor === "全部") {
+        floor = "0";
+      } else {
+        floor = this.floor;
+      }
       request({
-        url: getTableList + '/' + this.time,
-        method: 'GET'
+        url: getTableList + "/" + this.time + "/" + floor,
+        method: "GET",
       }).then((res) => {
-        this.tableData = res.data.data || []
-      })
-    }
+        this.tableData = res.data.data || [];
+      });
+    },
   },
-  mounted () {
-    this.getData()
-    this.getRoomList()
-  }
-}
+  created() {
+    this.getDefaultRoom();
+  },
+  mounted() {
+    // this.getData();
+    this.getRoomList();
+  },
+};
 </script>
 <style lang="scss" scoped>
 .document {
@@ -169,7 +238,7 @@ export default {
     height: calc(100% - 46px);
     background: #e3e3e3;
     border-radius: 5px;
-    padding-bottom:20px;
+    padding-bottom: 20px;
   }
   .print-document {
     // box-shadow: 1px 20px 45px 5px rgba(0, 0, 0, 0.5);
