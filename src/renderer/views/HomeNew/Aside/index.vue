@@ -239,7 +239,7 @@ export default {
         {
           name: '检验信息',
           componentName: 'InspectionInformation',
-          necessary: false
+          necessary: true
         },
         {
           name: '医嘱信息',

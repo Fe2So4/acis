@@ -7,18 +7,18 @@
           el-date-picker(
             size="mini"
             v-model="date"
-            type="datetimerange"
+            type="daterange"
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            value-format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd"
             @change="onSearch"
             popper-class="dateTimePicker"
             )
         el-form-item
           //- el-button(type="primary" @click="onSearch") 搜索
-        el-form-item
-          el-button(@click="onSync") 同步检验信息
+        //el-form-item
+        //  el-button(@click="onSync") 同步检验信息
     .content(class="clearfix")
       .left
         vxe-table(
@@ -27,6 +27,7 @@
           show-header-overflow
           show-overflow
           highlight-hover-row
+          highlight-current-row
           align="center"
           height="100%"
           auto-resize
@@ -35,10 +36,17 @@
           :data="testList"
           @cell-click="onLeftTableCellClick"
         )
-          vxe-table-column(field="testCode" title="检验号" width="120")
-          vxe-table-column(field="testName" title="检验名称" width="120")
-          vxe-table-column(field="sample" title="检验类别" width="120")
-          vxe-table-column(field="spcmReceivedTime" title="检验日期" width="120")
+          vxe-table-column(field="inspectionNo" title="报告编号" width="80")
+          vxe-table-column(field="patId" title="患者ID" width="80")
+          vxe-table-column(field="patName" title="患者姓名" width="80")
+          vxe-table-column(field="inspectionCategory" title="检验项目" width="80")
+          vxe-table-column(field="clinicDiag" title="诊断" width="80")
+          vxe-table-column(field="inspectionSpecimen" title="标本" width="80")
+          vxe-table-column(field="inspectionSpecimendate" title="样本时间" width="140")
+          vxe-table-column(field="inspectionStatus" title="执行状态" width="80")
+          vxe-table-column(field="inspectionRptdate" title="完成时间" width="140")
+          vxe-table-column(field="inspectionRptby" title="报告人" width="80")
+          vxe-table-column(field="inspectionAuditorby" title="审核人" width="80")
       el-divider(direction="vertical")
       .right
         vxe-table(
@@ -55,10 +63,11 @@
           :data="testItemList"
           @cell-dblclick="onRightTableCellDblclick"
         )
-          vxe-table-column(field="itemName" title="项目名称" width="120")
-          vxe-table-column(field="value" title="测试结果" width="120")
-          vxe-table-column(field="unit" title="单位" width="120")
-          vxe-table-column(field="referenceRanges" title="参考值" width="120")
+          vxe-table-column(field="reportItemName" title="项目名称" width="80")
+          vxe-table-column(field="reportResult" title="检验结果" width="80")
+          vxe-table-column(field="reportAbnormal" title="标志" width="80")
+          vxe-table-column(field="reportUnits" title="单位" width="80")
+          vxe-table-column(field="inspectionRefrange" title="参考值" width="80")
     DialogChart(
       v-if="dialogVisible"
       @handleClose="handleClose"
@@ -72,7 +81,7 @@
 <script>
 import DialogChart from './DialogChart'
 import request from '@/utils/requestForMock'
-import { getTestInfo, syncTestInfo } from '@/api/systemIntegration'
+import { getBDGInspectionApply, getBEGInspectionReport } from '@/api/systemIntegration'
 import { createNamespacedHelpers } from 'vuex'
 import moment from 'moment'
 const { mapState } = createNamespacedHelpers('Base')
@@ -83,9 +92,9 @@ export default {
   },
   data () {
     let _moment = moment()
-    const endTime = _moment.format('YYYY-MM-DD HH:mm:ss')
+    const endTime = _moment.format('YYYY-MM-DD')
     _moment.subtract(1, 'months')
-    const startTime = _moment.format('YYYY-MM-DD HH:mm:ss')
+    const startTime = _moment.format('YYYY-MM-DD')
     _moment = null
     return {
       dialogVisible: false,
@@ -123,19 +132,7 @@ export default {
     onSearch () {
       const { length } = this.date
       if (length) {
-        this.getTestInfo()
-      } else {
-        this.$message({
-          showClose: true,
-          message: '请输入开始时间和结束时间',
-          type: 'warning'
-        })
-      }
-    },
-    onSync () {
-      const { length } = this.date
-      if (length) {
-        this.syncTestInfo()
+        this.getBDGInspectionApply()
       } else {
         this.$message({
           showClose: true,
@@ -145,8 +142,8 @@ export default {
       }
     },
     onLeftTableCellClick ({ row }) {
-      if (row.testItemList) {
-        this.testItemList = row.testItemList
+      if (row.inspectionNo) {
+        this.getBEGInspectionReport(row.inspectionNo)
       }
     },
     onRightTableCellDblclick ({ row }) {
@@ -154,10 +151,10 @@ export default {
       this.title = row.itemName
       this.itemCode = row.itemCode
     },
-    getTestInfo () {
+    getBDGInspectionApply () {
       return request({
-        url: getTestInfo,
-        method: 'get',
+        url: getBDGInspectionApply,
+        method: 'post',
         params: {
           startTime: this.startTime,
           endTime: this.endTime,
@@ -170,22 +167,20 @@ export default {
         }
       })
     },
-    syncTestInfo () {
+    getBEGInspectionReport (inspectionNo) {
       return request({
-        url: syncTestInfo,
-        method: 'get',
+        url: getBEGInspectionReport,
+        method: 'post',
         params: {
-          startTime: this.startTime,
-          endTime: this.endTime,
-          patientId: this.patientId
+          inspectionNo
         }
       }).then(res => {
         if (res.data && res.data.success) {
-          this.testList = res.data.data
-          this.testItemList = []
+          this.testItemList = res.data.data
         }
       })
     }
+
   }
 }
 </script>
