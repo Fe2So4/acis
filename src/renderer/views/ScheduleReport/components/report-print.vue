@@ -1,22 +1,24 @@
 <template>
-  <div class="schedule-report">
+  <div
+    class="schedule-report"
+  >
     <table
       width="100%"
       cellspacing="0"
       cellpadding="0"
       align="center"
-      style="color: #000000; font-size: 14px;"
+      style="color: #000000; font-size: 14px;font-family:'宋体';"
     >
       <thead style="display: table-header-group; font-weight: bold">
         <tr>
           <th
-            colspan="3"
+            colspan="4"
             style="text-align: center; padding: 0; border: 0;font-size: 14px;"
           >
             {{ time }} {{ date }} 共{{ tableData.length }}台
           </th>
           <th
-            colspan="6"
+            colspan="4"
             style="
               text-align: center;
               font-size: 26px;
@@ -174,6 +176,7 @@
               padding: 0 0;
               width:60px;
             "
+            :style="{ 'background-color': item.index % 2 === 0 ? '#eeeeee' : '' }"
           >
             <div style="width:60px;overflow:hidden;white-space:nowrap;">
               {{ item.opeRoom }}
@@ -186,6 +189,7 @@
               padding: 0 0;
               width:50px;
             "
+            :style="{ 'background-color': item.index % 2 === 0 ? '#eeeeee' : '' }"
           >
             {{ item.sequence }}
           </td>
@@ -196,6 +200,7 @@
               padding: 0 0;
               width:70px;
             "
+            :style="{ 'background-color': item.index % 2 === 0 ? '#eeeeee' : '' }"
           >
             <div style="width:70px;overflow:hidden;white-space:nowrap;">
               {{ item.ptNamePrint }}
@@ -208,6 +213,7 @@
               padding: 0 0;
               width:60px;
             "
+            :style="{ 'background-color': item.index % 2 === 0 ? '#eeeeee' : '' }"
           >
             <div style="width:60px;overflow:hidden;white-space:nowrap;">
               {{ item.inpatientWard }}
@@ -220,6 +226,7 @@
               padding: 0 0;
               width:60px;
             "
+            :style="{ 'background-color': item.index % 2 === 0 ? '#eeeeee' : '' }"
           >
             {{ item.bedId }}
           </td>
@@ -230,6 +237,7 @@
               padding: 0 0;
               width:80px;
             "
+            :style="{ 'background-color': item.index % 2 === 0 ? '#eeeeee' : '' }"
           >
             {{ item.visitId }}
           </td>
@@ -241,6 +249,7 @@
               font-weight:bold;
               text-align:left;
             "
+            :style="{ 'background-color': item.index % 2 === 0 ? '#eeeeee' : '' }"
           >
             <div
               style="
@@ -249,6 +258,7 @@
               overflow:hidden;
               padding-left:2px;
               "
+              :style="{ 'background-color': item.index % 2 === 0 ? '#eeeeee' : '' }"
             >
               {{ item.operationName }}
             </div>
@@ -260,6 +270,7 @@
               padding: 0 0;
               width: 140px;
             "
+            :style="{ 'background-color': item.index % 2 === 0 ? '#eeeeee' : '' }"
           >
             <div style="min-width:140px;">
               {{ item.surgeonName }}
@@ -271,6 +282,7 @@
               border-right: 1px solid #000000;
               padding: 0 0;
             "
+            :style="{ 'background-color': item.index % 2 === 0 ? '#eeeeee' : '' }"
           >
             <div
               style="overflow:hidden;
@@ -287,6 +299,7 @@
               padding: 0 0;
               width: 70px;
             "
+            :style="{ 'background-color': item.index % 2 === 0 ? '#eeeeee' : '' }"
           >
             {{ item.opeNurse }}
           </td>
@@ -297,6 +310,7 @@
               padding: 0 0;
               width: 70px;
             "
+            :style="{ 'background-color': item.index % 2 === 0 ? '#eeeeee' : '' }"
           >
             {{ item.supplyNurse }}
           </td>
@@ -306,6 +320,7 @@
               border-right: 1px solid #000000;
               padding: 0 0;
               width: 110px;"
+            :style="{ 'background-color': item.index % 2 === 0 ? '#eeeeee' : '' }"
           >
             <span>
               {{ item.memo }}
@@ -367,8 +382,10 @@ export default {
   margin: 0 auto;
   width: 297mm;
   height: 210mm;
+  background: #ffffff;
 
   table {
+    background:#ffffff;
     thead{
       tr{
         th{
@@ -381,7 +398,7 @@ export default {
         td {
           height:22px;
           &.bg-schedule {
-            background-color: gray !important;
+            background-color: #eeeeee !important;
           }
           &:first-child {
             border-left: 1px solid #000000;
