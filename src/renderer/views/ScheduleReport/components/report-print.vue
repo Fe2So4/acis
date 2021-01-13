@@ -5,26 +5,26 @@
       cellspacing="0"
       cellpadding="0"
       align="center"
-      style="color: #000000; font-size: 14px"
+      style="color: #000000; font-size: 14px;"
     >
       <thead style="display: table-header-group; font-weight: bold">
         <tr>
           <th
-            colspan="9"
+            colspan="3"
+            style="text-align: center; padding: 0; border: 0;font-size: 14px;"
+          >
+            {{ time }} {{ date }} 共{{ tableData.length }}台
+          </th>
+          <th
+            colspan="6"
             style="
               text-align: center;
-              font-size: 20px;
+              font-size: 26px;
               padding: 0 0 8px 0;
               border: 0;
             "
           >
             手术排班表
-          </th>
-          <th
-            colspan="2"
-            style="text-align: center; padding: 0 0 8px 0; border: 0"
-          >
-            {{ time }} {{ date }}
           </th>
         </tr>
         <tr>
@@ -35,6 +35,7 @@
               border-right: 1px solid #000000;
               border-left: 1px solid #000000;
               padding: 0 0;
+              width:60px;
             "
           >
             手术间
@@ -44,6 +45,7 @@
               border-bottom: 1px solid #000000;
               border-top: 1px solid #000000;
               border-right: 1px solid #000000;
+              width:50px;
             "
           >
             台次
@@ -54,6 +56,7 @@
               border-top: 1px solid #000000;
               border-right: 1px solid #000000;
               padding: 0 0;
+              width:70px;
             "
           >
             病人姓名
@@ -64,6 +67,7 @@
               border-top: 1px solid #000000;
               border-right: 1px solid #000000;
               padding: 0 0;
+              width:60px;
             "
           >
             病区
@@ -74,6 +78,7 @@
               border-top: 1px solid #000000;
               border-right: 1px solid #000000;
               padding: 0 0;
+              width:60px;
             "
           >
             床号
@@ -84,6 +89,7 @@
               border-top: 1px solid #000000;
               border-right: 1px solid #000000;
               padding: 0 0;
+              width:80px;
             "
           >
             住院号
@@ -94,7 +100,7 @@
               border-top: 1px solid #000000;
               border-right: 1px solid #000000;
               padding: 0 0;
-              width: 302px;
+              width: 280px;
             "
           >
             诊断或手术名称
@@ -116,7 +122,7 @@
               border-top: 1px solid #000000;
               border-right: 1px solid #000000;
               padding: 0 0;
-              width: 100px;
+              width: 80px;
             "
           >
             麻醉方式
@@ -127,6 +133,7 @@
               border-top: 1px solid #000000;
               border-right: 1px solid #000000;
               padding: 0 0;
+              width: 60px;
             "
           >
             洗手
@@ -137,15 +144,16 @@
               border-top: 1px solid #000000;
               border-right: 1px solid #000000;
               padding: 0 0;
+              width: 60px;
             "
           >
             巡回
           </th>
           <th
             style="
-              border-bottom: 1px solid #444444;
-              border-top: 1px solid #444444;
-              border-right: 1px solid #444444;
+              border-bottom: 1px solid #000000;
+              border-top: 1px solid #000000;
+              border-right: 1px solid #000000;
               padding: 0 0;
               width: 100px;
             "
@@ -164,15 +172,19 @@
               border-bottom: 1px solid #000000;
               border-right: 1px solid #000000;
               padding: 0 0;
+              width:60px;
             "
           >
-            {{ item.opeRoom }}
+            <div style="width:60px;overflow:hidden;white-space:nowrap;">
+              {{ item.opeRoom }}
+            </div>
           </td>
           <td
             style="
               border-bottom: 1px solid #000000;
               border-right: 1px solid #000000;
               padding: 0 0;
+              width:50px;
             "
           >
             {{ item.sequence }}
@@ -182,24 +194,31 @@
               border-bottom: 1px solid #000000;
               border-right: 1px solid #000000;
               padding: 0 0;
+              width:70px;
             "
           >
-            {{ item.ptNamePrint }}
+            <div style="width:70px;overflow:hidden;white-space:nowrap;">
+              {{ item.ptNamePrint }}
+            </div>
           </td>
           <td
             style="
               border-bottom: 1px solid #000000;
               border-right: 1px solid #000000;
               padding: 0 0;
+              width:60px;
             "
           >
-            {{ item.inpatientWard }}
+            <div style="width:60px;overflow:hidden;white-space:nowrap;">
+              {{ item.inpatientWard }}
+            </div>
           </td>
           <td
             style="
               border-bottom: 1px solid #000000;
               border-right: 1px solid #000000;
               padding: 0 0;
+              width:60px;
             "
           >
             {{ item.bedId }}
@@ -209,6 +228,7 @@
               border-bottom: 1px solid #000000;
               border-right: 1px solid #000000;
               padding: 0 0;
+              width:80px;
             "
           >
             {{ item.visitId }}
@@ -218,10 +238,32 @@
               border-bottom: 1px solid #000000;
               border-right: 1px solid #000000;
               padding: 0 0;
-              text-align: left;
+              font-weight:bold;
+              text-align:left;
             "
           >
-            {{ item.operationName }}
+            <div
+              style="
+              width:280px;
+              white-space:nowrap;
+              overflow:hidden;
+              padding-left:2px;
+              "
+            >
+              {{ item.operationName }}
+            </div>
+          </td>
+          <td
+            style="
+              border-bottom: 1px solid #000000;
+              border-right: 1px solid #000000;
+              padding: 0 0;
+              width: 140px;
+            "
+          >
+            <div style="min-width:140px;">
+              {{ item.surgeonName }}
+            </div>
           </td>
           <td
             style="
@@ -230,22 +272,20 @@
               padding: 0 0;
             "
           >
-            {{ item.surgeonName }}
+            <div
+              style="overflow:hidden;
+              white-space:nowrap;
+              width:80px;"
+            >
+              {{ item.anesMethod }}
+            </div>
           </td>
           <td
             style="
               border-bottom: 1px solid #000000;
               border-right: 1px solid #000000;
               padding: 0 0;
-            "
-          >
-            {{ item.anesMethod }}
-          </td>
-          <td
-            style="
-              border-bottom: 1px solid #000000;
-              border-right: 1px solid #000000;
-              padding: 0 0;
+              width: 70px;
             "
           >
             {{ item.opeNurse }}
@@ -255,18 +295,21 @@
               border-bottom: 1px solid #000000;
               border-right: 1px solid #000000;
               padding: 0 0;
+              width: 70px;
             "
           >
             {{ item.supplyNurse }}
           </td>
           <td
             style="
-              border-bottom: 1px solid #444444;
-              border-right: 1px solid #444444;
+              border-bottom: 1px solid #000000;
+              border-right: 1px solid #000000;
               padding: 0 0;
-            "
+              width: 110px;"
           >
-            {{ item.memo }}
+            <span>
+              {{ item.memo }}
+            </span>
           </td>
         </tr>
       </tbody>
@@ -326,11 +369,19 @@ export default {
   height: 210mm;
 
   table {
+    thead{
+      tr{
+        th{
+          height:22px;
+        }
+      }
+    }
     tbody {
       tr {
         td {
+          height:22px;
           &.bg-schedule {
-            background-color: #fff3e0 !important;
+            background-color: gray !important;
           }
           &:first-child {
             border-left: 1px solid #000000;

@@ -228,7 +228,8 @@ export default {
       this.$emit('distribute', row)
     },
     handleCheckFilter ({ row, column }) {
-      return row.state === '1'
+      // return row.state === '1'
+      return true
     },
     rowStyle ({ row, rowIndex }) {
       if (row.state === '1') {
@@ -296,6 +297,9 @@ export default {
   /deep/ .el-button.el-button--text {
     padding-top: unset !important;
     padding-bottom: unset !important;
+  }
+  /deep/ .vxe-checkbox--label{
+    padding-left: unset !important;
   }
 }
 </style>

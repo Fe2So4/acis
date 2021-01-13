@@ -1,6 +1,6 @@
 {
   "name": "acis-schedule",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "author": "dyw-design <1875742887@qq.com>",
   "description": "acis-schedule",
   "main": "./dist/electron/main.js",
@@ -26,15 +26,15 @@
     "mock": "node ./mock/server.js"
   },
   "build": {
-    "productName": "acis-schedule32",
-    "appId": "acis-schedule32",
+    "productName": "acis-schedule",
+    "appId": "acis-schedule",
     "directories": {
       "output": "build"
     },
     "publish": [
       {
         "provider": "generic",
-        "url": "http://128.0.18.38:8080/operation/operation_schedule32"
+        "url": "http://128.0.18.38:8080/operation/operation_schedule"
       }
     ],
     "files": [
@@ -74,7 +74,7 @@
       "installerHeaderIcon": "build/icons/schedule.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "acis-schedule32"
+      "shortcutName": "acis-schedule"
     }
   },
   "dependencies": {

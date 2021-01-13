@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'production') {
   api = {
     baseURL: 'http://128.0.18.38:8090'
     // baseURL: 'http://192.168.8.170:8090'
-    // baseURL: 'http://192.168.1.106:8090' // 谢佳辰公司ip
+    // baseURL: 'http://192.168.1.18:8090' // 谢佳辰公司ip
     // baseURL: 'http://192.168.1.58:8090'
     // baseURL: 'http://47.103.105.200:8090'
     // baseURL: 'http://192.168.1.106:7090'

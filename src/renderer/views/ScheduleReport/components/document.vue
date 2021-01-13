@@ -149,7 +149,13 @@ export default {
       })
     },
     handleExport () {
-      const url = exportScheduleReport + `?date=${this.time}`
+      let floor = ''
+      if (this.floor === '全部') {
+        floor = '0'
+      } else {
+        floor = this.floor
+      }
+      const url = exportScheduleReport + `?date=${this.time}&&floor=${floor}`
       ipcRenderer.send(
         'download',
         JSON.stringify({

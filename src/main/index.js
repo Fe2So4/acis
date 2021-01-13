@@ -22,7 +22,7 @@ const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`
 
-function createInitialWindow() {
+function createInitialWindow () {
   initialWindow = new BrowserWindow({
     width: 880,
     height: 560,
@@ -40,7 +40,7 @@ function createInitialWindow() {
   })
   initialWindow.loadURL(Path.resolve(__static, './loading/index.html'))
 }
-function createWindow() {
+function createWindow () {
   /**
    * Initial window options
    */
@@ -122,7 +122,7 @@ function createWindow() {
     autoUpdater.checkForUpdates()
   }
   // 主进程主动发送消息给渲染进程函数
-  function sendUpdateMessage(message, data) {
+  function sendUpdateMessage (message, data) {
     mainWindow.webContents.send('message', { message, data })
   }
   mainWindow.on('closed', () => {
@@ -309,6 +309,33 @@ const createEMRWindow = (name) => {
 
 ipcMain.on('show-EMR', (e, name) => {
   printWin = createEMRWindow(name)
+})
+
+const createEMRWebWindow = (operationId) => {
+  let newWindow = new BrowserWindow({
+    title: 'EMR',
+    webPreferences: {
+      webSecurity: false
+    }
+  })
+  newWindow.maximize()
+  const filePath = `http://192.168.10.18:8089/Default.aspx?inpatientID=${operationId}&out=0`
+  newWindow.loadURL(filePath)
+  newWindow.once('ready-to-show', () => {
+    newWindow.show()
+  })
+
+  newWindow.on('closed', () => {
+    newWindow = null
+    // fs.unlink(filePath, (err) => {
+    //   if (err) throw err
+    //   console.log(`${filePath} was deleted`)
+    // })
+  })
+  return newWindow
+}
+ipcMain.on('WEB-EMR', (e, operationId) => {
+  printWin = createEMRWebWindow(operationId)
 })
 // ---------------------------------显示病历功能 end--------------
 

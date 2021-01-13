@@ -39,13 +39,14 @@
           @click="handleAsync"
           type="primary"
           size="mini"
-          icon="el-icon-refresh"
-          v-loading.fullscreen.lock="fullscreenLoading"
-          element-loading-background="rgba(255, 255, 255, 0.5)"
-          element-loading-text="数据同步中"
+          :loading="fullscreenLoading"
         >
           HIS同步
         </el-button>
+        <!-- icon="el-icon-refresh" -->
+        <!-- element-loading-background="rgba(255, 255, 255, 0.5)"
+          element-loading-text="数据同步中" -->
+        <!-- v-loading.fullscreen.lock="fullscreenLoading" -->
       </ul>
     </div>
     <div class="options">
@@ -132,7 +133,8 @@ export default {
   },
   methods: {
     hanldeJump () {
-      this.$router.push('/login')
+      // this.$router.push('/login')
+      // ipcRenderer.send('WEB-EMR')
     },
     synchro () {
       this.fullscreenLoading = true

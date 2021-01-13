@@ -270,6 +270,8 @@
               border-bottom: 1px solid #444444;
               border-right: 1px solid #444444;
               padding: 9px 0;
+              text-align:left;
+              padding-left:2px;
             "
             :class="{ 'bg-schedule': item.index % 2 === 0 }"
           >

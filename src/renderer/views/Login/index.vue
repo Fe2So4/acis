@@ -9,25 +9,40 @@
           <span>临床麻醉</span>
           <span>v1.0.0</span>
         </p>
-        <img src="../../assets/welcome.png" alt />
+        <img
+          src="../../assets/welcome.png"
+          alt
+        >
       </div>
       <div class="right">
         <div class="form-icon">
-          <img src="../../assets/dandelion.png" alt />
+          <img
+            src="../../assets/dandelion.png"
+            alt
+          >
         </div>
-        <div class="title">账 户 密 码 登 录</div>
+        <div class="title">
+          账 户 密 码 登 录
+        </div>
         <div class="line" />
-        <el-form :rules="rules" ref="form" :model="form" hide-required-asterisk>
+        <el-form
+          :rules="rules"
+          ref="form"
+          :model="form"
+          hide-required-asterisk
+        >
           <el-form-item prop="username">
             <el-input
               prefix-icon="el-icon-s-custom"
               v-model="form.username"
               placeholder="请输入用户名"
+              @keydown.enter.native="handleInputPass"
             />
           </el-form-item>
           <el-form-item prop="password">
             <el-input
               prefix-icon="el-icon-lock"
+              ref="password"
               placeholder="请输入密码"
               v-model="form.password"
               @keydown.native="enter"
@@ -36,103 +51,125 @@
           </el-form-item>
         </el-form>
         <div class="option clearfix">
-          <div class="button" @click="login">确定</div>
-          <div class="button" @click="close">取消</div>
+          <div
+            class="button"
+            @click="login"
+          >
+            确定
+          </div>
+          <div
+            class="button"
+            @click="close"
+          >
+            取消
+          </div>
         </div>
       </div>
-      <div class="copyright">Copyright©2020蓝想数科版权所有</div>
+      <div class="copyright">
+        Copyright©2020蓝想数科版权所有
+      </div>
       <div class="close">
-        <i class="el-icon-minus" @click="mini" />
-        <i class="el-icon-close" @click="close" />
+        <i
+          class="el-icon-minus"
+          @click="mini"
+        />
+        <i
+          class="el-icon-close"
+          @click="close"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { login } from "@/api/login";
-import request from "@/utils/requestForMock";
-import { setUserToken, setCurrentAccount } from "../../utils/storage";
+import { login } from '@/api/login'
+import request from '@/utils/requestForMock'
+import { setUserToken, setCurrentAccount } from '../../utils/storage'
 
-const { BrowserWindow } = require("electron").remote;
+const { BrowserWindow } = require('electron').remote
 
 export default {
-  name: "Login",
-  data() {
+  name: 'Login',
+  data () {
     return {
       form: {
-        username: "",
-        password: "",
+        username: '',
+        password: ''
       },
       rules: {
         username: [
-          { required: true, message: "请正确填写用户名", trigger: "blur" },
+          { required: true, message: '请正确填写用户名', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: "请正确填写密码", trigger: "blur" },
-        ],
-      },
-    };
-  },
-  created() {
-    const win = BrowserWindow.getFocusedWindow();
-    if (win) {
-      win.unmaximize();
+          { required: true, message: '请正确填写密码', trigger: 'blur' }
+        ]
+      }
     }
   },
-  mounted() {
-    this.$electron.ipcRenderer.send("open-main");
-    document.addEventListener("keyup", this.keyUpListener);
+  created () {
+    const win = BrowserWindow.getFocusedWindow()
+    if (win) {
+      win.unmaximize()
+    }
   },
-  beforeDestroy() {
-    document.removeEventListener("keyup", this.keyUpListener);
+  mounted () {
+    this.$electron.ipcRenderer.send('open-main')
+    document.addEventListener('keyup', this.keyUpListener)
+  },
+  beforeDestroy () {
+    document.removeEventListener('keyup', this.keyUpListener)
   },
   methods: {
-    jumpHome() {},
-    login() {
+    jumpHome () {},
+    handleInputPass () {
+      const pass = this.$refs.password
+      pass.focus()
+    },
+    login () {
       this.$refs.form.validate((valid) => {
         if (valid) {
           request({
-            method: "post",
+            method: 'post',
             url: login,
             data: {
               loginName: this.form.username,
-              loginPwd: this.form.password,
-            },
-          }).then((res) => {
-            if (res.data.code === "0") {
-              setUserToken(res.data.data);
-              setCurrentAccount(this.form.username);
-              this.$router.push("/home");
-            } else {
-              this.$message({ type: "error", message: res.data.message });
+              loginPwd: this.form.password
             }
-          });
+          }).then((res) => {
+            if (res.data.code === '0') {
+              setUserToken(res.data.data)
+              setCurrentAccount(this.form.username)
+              this.$router.push('/home')
+            } else {
+              this.$message({ type: 'error', message: res.data.message })
+            }
+          })
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
-    enter(e) {
+    enter (e) {
       if (e.keyCode === 13) {
-        this.login();
+        this.login()
       }
     },
-    close() {
-      const win = BrowserWindow.getFocusedWindow();
-      win.close();
+    close () {
+      const win = BrowserWindow.getFocusedWindow()
+      win.close()
     },
-    mini() {
-      const win = BrowserWindow.getFocusedWindow();
-      win.minimize();
+    mini () {
+      const win = BrowserWindow.getFocusedWindow()
+      win.minimize()
     },
-    keyUpListener(e) {
+    keyUpListener (e) {
       if (e.keyCode === 112) {
-        this.$electron.ipcRenderer.send("open-config-file");
+        this.$electron.ipcRenderer.send('open-config-file')
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
