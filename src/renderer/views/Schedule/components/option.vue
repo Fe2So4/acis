@@ -34,6 +34,7 @@
           type="primary"
           size="mini"
           @click="submitAll"
+          :disabled="room==='全部'"
         >提交</el-button>
       </span>
     </span>
@@ -76,8 +77,12 @@ export default {
       this.$emit('showPreview')
     },
     submitAll () {
+      // if (this.roomFloor === '全部') {
+      //   this.$message({ message: '当前为全部楼层，请选择正确楼层', type: 'warning' })
+      //   return
+      // }
       request({
-        url: submitAllApply + '/' + this.time,
+        url: submitAllApply + '/' + this.time + '/' + this.roomFloor,
         method: 'PUT'
       }).then((res) => {
         if (res.data.code === 200) {

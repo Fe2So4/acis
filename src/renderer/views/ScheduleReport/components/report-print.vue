@@ -12,21 +12,30 @@
       <thead style="display: table-header-group; font-weight: bold">
         <tr>
           <th
-            colspan="4"
-            style="text-align: center; padding: 0; border: 0;font-size: 14px;"
+            colspan="5"
+            style="text-align: left; padding: 0 0 0 15px; border: 0;font-size: 14px;line-height:47px;"
           >
-            {{ time }} {{ date }} 共{{ tableData.length }}台
+            共{{ tableData.length }}台
           </th>
           <th
-            colspan="4"
+            colspan="2"
             style="
-              text-align: center;
+              text-align: left;
               font-size: 26px;
-              padding: 0 0 8px 0;
+              padding: 0 0 0 70px;
               border: 0;
+              line-height:47px;
             "
           >
             手术排班表
+          </th>
+          <th
+            colspan="2"
+            style="text-align:left;padding: 0; border: 0;font-size: 14px;line-height:47px;"
+          >
+            <span style="margin-left:-130px;">
+              {{ time }} {{ date }}
+            </span>
           </th>
         </tr>
         <tr>
@@ -102,7 +111,7 @@
               border-top: 1px solid #000000;
               border-right: 1px solid #000000;
               padding: 0 0;
-              width: 280px;
+              width: 320px;
             "
           >
             诊断或手术名称
@@ -157,7 +166,7 @@
               border-top: 1px solid #000000;
               border-right: 1px solid #000000;
               padding: 0 0;
-              width: 100px;
+              width: 60px;
             "
           >
             备注
@@ -253,7 +262,7 @@
           >
             <div
               style="
-              width:280px;
+              width:320px;
               white-space:nowrap;
               overflow:hidden;
               padding-left:2px;
@@ -319,7 +328,7 @@
               border-bottom: 1px solid #000000;
               border-right: 1px solid #000000;
               padding: 0 0;
-              width: 110px;"
+              width: 70px;"
             :style="{ 'background-color': item.index % 2 === 0 ? '#eeeeee' : '' }"
           >
             <span>

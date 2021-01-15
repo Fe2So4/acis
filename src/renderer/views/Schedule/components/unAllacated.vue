@@ -192,7 +192,7 @@ export default {
     // },
     contextMenuClickEvent ({ menu, row, column }) {
       console.log(123)
-      const xTable = this.$refs.unTable
+      // const xTable = this.$refs.unTable
       switch (menu.code) {
         case 'cancelOperation':
           this.$confirm('是否取消当前手术申请?', '提示', {

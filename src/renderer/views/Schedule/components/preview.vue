@@ -88,6 +88,7 @@
         <el-button
           size="mini"
           type="primary"
+          :disabled="roomFloor==='0'"
           @click="handleSubmit"
         >
           提 交
@@ -117,6 +118,12 @@ export default {
       type: String,
       default: function () {
         return ''
+      }
+    },
+    roomFloor: {
+      type: String,
+      default: function () {
+        return '0'
       }
     },
     previewVisible: {

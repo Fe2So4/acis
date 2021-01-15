@@ -333,6 +333,7 @@
     <Preview
       v-if="previewVisible"
       :time-data="timeDate"
+      :room-floor="roomFloor"
       :preview-visible="previewVisible"
       @handleClose="handleClose"
     />
