@@ -188,6 +188,7 @@ export default {
   watch: {
     floor: {
       handler (newVal) {
+        this.roomIndex = -1
         this.getData()
       },
       immediate: true

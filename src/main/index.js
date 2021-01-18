@@ -17,7 +17,7 @@ if (process.env.NODE_ENV !== 'development') {
 
 let mainWindow
 let initialWindow
-const feedUrl = 'http://128.0.18.38:8080/operation/operation_schedule'
+const feedUrl = 'http://128.0.18.38:8080/operation/operation_schedule32'
 const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`

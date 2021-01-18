@@ -645,6 +645,11 @@ export default {
         }
       },
       deep: true
+    },
+    roomFloor: {
+      handler (val) {
+        this.allacatedList = []
+      }
     }
     // immediate: true
   },
