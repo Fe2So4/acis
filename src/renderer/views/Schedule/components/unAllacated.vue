@@ -191,7 +191,6 @@ export default {
     //   this.$emit('handleShowDetail')
     // },
     contextMenuClickEvent ({ menu, row, column }) {
-      console.log(123)
       // const xTable = this.$refs.unTable
       switch (menu.code) {
         case 'cancelOperation':

@@ -22,6 +22,11 @@ const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`
 
+const os = require('os')
+const isWin7 = os.release().startsWith('6.1')
+// win7 下关闭硬件加速
+if (isWin7) app.disableHardwareAcceleration()
+
 function createInitialWindow () {
   initialWindow = new BrowserWindow({
     width: 880,
