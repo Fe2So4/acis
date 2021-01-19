@@ -16,7 +16,7 @@ import VueContextMenu from 'vue-contextmenu'
 
 import 'xe-utils'
 import VXETable from 'vxe-table'
-import 'vxe-table/lib/index.css'
+import 'vxe-table/lib/style.css'
 
 import VXETablePluginElement from 'vxe-table-plugin-element'
 import 'vxe-table-plugin-element/dist/style.css'

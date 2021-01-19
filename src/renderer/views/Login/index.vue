@@ -7,7 +7,7 @@
         <p>
           <!-- 围手术期临床信息系统 -->
           <span>临床麻醉</span>
-          <span>v1.0.0</span>
+          <span>v2.0.0</span>
         </p>
         <img
           src="../../assets/welcome.png"

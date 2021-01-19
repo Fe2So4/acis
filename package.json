@@ -1,8 +1,8 @@
 {
-  "name": "acis-schedule32",
-  "version": "1.2.6",
+  "name": "acis",
+  "version": "2.0.0",
   "author": "dyw-design <1875742887@qq.com>",
-  "description": "acis-schedule32",
+  "description": "acis",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
@@ -26,8 +26,8 @@
     "mock": "node ./mock/server.js"
   },
   "build": {
-    "productName": "acis-schedule32",
-    "appId": "acis-schedule32",
+    "productName": "acis",
+    "appId": "acis",
     "directories": {
       "output": "build"
     },
@@ -59,7 +59,7 @@
       "icon": "build/icons/icon.icns"
     },
     "win": {
-      "icon": "build/icons/schedule.ico"
+      "icon": "build/icons/favicon.ico"
     },
     "linux": {
       "icon": "build/icons"
@@ -69,12 +69,12 @@
       "oneClick": false,
       "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
-      "installerIcon": "build/icons/schedule.ico",
-      "uninstallerIcon": "build/icons/schedule.ico",
-      "installerHeaderIcon": "build/icons/schedule.ico",
+      "installerIcon": "build/icons/favicon.ico",
+      "uninstallerIcon": "build/icons/favicon.ico",
+      "installerHeaderIcon": "build/icons/favicon.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "acis-schedule32"
+      "shortcutName": "acis"
     }
   },
   "dependencies": {
