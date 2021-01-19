@@ -34,7 +34,7 @@ function createInitialWindow () {
     frame: false,
     center: true,
     resizable: false,
-    movable: false,
+    movable: true,
     transparent: true,
     focusable: false,
     alwaysOnTop: true,
