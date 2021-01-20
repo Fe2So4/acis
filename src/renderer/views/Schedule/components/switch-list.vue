@@ -13,23 +13,67 @@
       highlight-current-row
       :data="switchList"
     >
-      <vxe-table-column field="opeRoom" title="手术间" width="60" />
-      <vxe-table-column field="sequence" title="台次" width="50" />
-      <vxe-table-column field="operationId" title="病人ID" width="60" />
-      <vxe-table-column field="ptName" title="姓名" width="60" />
-      <vxe-table-column field="age" title="年龄" width="60" />
-      <vxe-table-column field="bedId" title="床位" width="100" />
+      <vxe-table-column
+        field="opeRoom"
+        title="手术间"
+        width="60"
+      />
+      <vxe-table-column
+        field="sequence"
+        title="台次"
+        width="50"
+      />
+      <vxe-table-column
+        field="operationId"
+        title="病人ID"
+        width="60"
+      />
+      <vxe-table-column
+        field="ptName"
+        title="姓名"
+        width="60"
+      />
+      <vxe-table-column
+        field="age"
+        title="年龄"
+        width="60"
+      />
+      <vxe-table-column
+        field="bedId"
+        title="床位"
+        width="100"
+      />
       <vxe-table-column
         field="visitId"
         title="住院号"
         width="80"
         show-overflow="title"
       />
-      <vxe-table-column field="operationName" title="手术名称" width="220" />
-      <vxe-table-column field="surgeonName" title="手术医师" width="70" />
-      <vxe-table-column field="assist1" title="助手1" width="60" />
-      <vxe-table-column field="assist2" title="助手2" width="60" />
-      <vxe-table-column field="assist3" title="助手3" width="60" />
+      <vxe-table-column
+        field="operationName"
+        title="手术名称"
+        width="220"
+      />
+      <vxe-table-column
+        field="surgeonName"
+        title="手术医师"
+        width="70"
+      />
+      <vxe-table-column
+        field="assist1"
+        title="助手1"
+        width="60"
+      />
+      <vxe-table-column
+        field="assist2"
+        title="助手2"
+        width="60"
+      />
+      <vxe-table-column
+        field="assist3"
+        title="助手3"
+        width="60"
+      />
       <vxe-table-column
         field="anesDocName"
         title="主麻"
@@ -76,43 +120,43 @@
   </div>
 </template>
 <script>
-import request from "@/utils/requestForMock";
-import { getSwitchList } from "@/api/schedule";
-import { mapGetters } from "vuex";
+import request from '@/utils/requestForMock'
+import { getSwitchList } from '@/api/schedule'
+import { mapGetters } from 'vuex'
 export default {
-  data() {
+  data () {
     return {
-      switchList: [],
-    };
+      switchList: []
+    }
   },
   props: {},
   computed: {
-    ...mapGetters("Schedule", ["time"]),
+    ...mapGetters('Schedule', ['time'])
   },
   methods: {
-    rowStyle({ row, rowIndex }) {
-      if (row.state === "1") {
+    rowStyle ({ row, rowIndex }) {
+      if (row.state === '1') {
         return {
-          color: "green",
-        };
+          color: 'green'
+        }
       } else {
         return {
-          color: "red",
-        };
+          color: 'red'
+        }
       }
     },
-    getSwitchList() {
+    getSwitchList () {
       request({
-        url: getSwitchList + "/" + this.time,
+        url: getSwitchList + '/' + this.time
       }).then((res) => {
-        this.switchList = res.data.data;
-      });
-    },
+        this.switchList = res.data.data
+      })
+    }
   },
-  mounted() {
-    this.getSwitchList();
-  },
-};
+  mounted () {
+    this.getSwitchList()
+  }
+}
 </script>
 <style lang="scss" scoped>
 .switch-content {

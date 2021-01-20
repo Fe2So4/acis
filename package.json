@@ -105,7 +105,7 @@
     "vuex-electron": "^1.0.0",
     "vxe-table": "^3.0.25",
     "vxe-table-plugin-element": "^1.10.2",
-    "xe-utils": "^2.8.3"
+    "xe-utils": "^3.0.0"
   },
   "devDependencies": {
     "ajv": "^6.5.0",
@@ -118,7 +118,6 @@
     "babel-preset-stage-0": "^6.24.1",
     "babel-register": "^6.26.0",
     "cfonts": "^2.1.2",
-    "chalk": "^2.4.2",
     "concurrently": "^5.2.0",
     "copy-webpack-plugin": "^4.5.1",
     "cross-env": "^5.1.6",
