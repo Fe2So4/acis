@@ -9,8 +9,8 @@ const mock =
 const IP = {
   SERVER: prodIp,
   LOCAL: 'localhost',
-  XIE: '192.168.1.139',
-  LI: '192.168.1.177',
+  XIE: '192.168.1.18',
+  LI: '192.168.1.18',
   ZHONG: '192.168.1.191'
 }
 const PORT = {

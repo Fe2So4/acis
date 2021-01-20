@@ -50,6 +50,10 @@
     </div>
     <div class="nav-list-portrait">
       <!-- :default-active="activeIndex" -->
+      <!-- <el-scrollbar
+        style="height:100%;"
+        class="scrollbar"
+      > -->
       <el-menu
         class="el-menu-demo"
         mode="horizontal"
@@ -87,6 +91,7 @@
           </el-menu-item>
         </el-submenu>
       </el-menu>
+      <!-- </el-scrollbar> -->
     </div>
     <Dialog
       @close="handleDialogClose"
@@ -107,6 +112,9 @@ import LockScreen from '../../LockScreen/index'
 import { getNavs } from '@/api/nav'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import request from '@/utils/requestForMock'
+import { exec } from 'child_process'
+import { ipcRenderer } from 'electron'
+// const { shell } = require('electron')
 
 // import Overview from '../../../components/OperationOverview/index'
 export default {
@@ -320,7 +328,7 @@ export default {
       }
     },
     logoSource () {
-      return require(`@/assets/lan_${this.theme}.png`)
+      return require(`@/assets/fj_${this.theme}.png`)
     },
     menuBackground () {
       switch (this.theme) {
@@ -385,7 +393,18 @@ export default {
         return
       }
       this.activeIndex = index
-      if (item.componentName === 'LockScreen') {
+      if (item.componentName === 'InspectionResult') {
+        const path = `D:/SOFT/HIS/PACS/PacsView.exe ${this.operationId}`
+        // const path = 'F:/PACS/LJPACS/PacsView.exe 00479520'
+        exec(path)
+        return
+      } else if (item.componentName === 'MedicalRecordCourse') {
+        // this.showWebview = true
+        ipcRenderer.send('WEB-EMR', this.operationId)
+        // const url = `http://192.168.10.18:8089/Default.aspx?inpatientID=${this.operationId}&out=0`
+        // shell.openExternal('https://github.com')
+        return
+      } else if (item.componentName === 'LockScreen') {
         this.lockVisible = true
         return
       }
@@ -475,13 +494,16 @@ export default {
   .img {
     height:48px;
     margin: 14px 0;
+    display: flex;
+    align-items: center;
     // background:#fff;
     img {
       display: block;
       // width:100%;
       // margin-left:20px;
       margin: 0 auto;
-      height: 100%;
+      height: auto;
+      width: width;
     }
   }
 

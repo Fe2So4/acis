@@ -333,6 +333,7 @@
     <Preview
       v-if="previewVisible"
       :time-data="timeDate"
+      :room-floor="roomFloor"
       :preview-visible="previewVisible"
       @handleClose="handleClose"
     />
@@ -537,7 +538,7 @@ export default {
       doctorList: [], // 医生列表
       nurseList: [], // 护士列表
       anaesList: [], // 麻醉方法列表
-      timeDate: moment(new Date()).format('yyyy-MM-DD'), // 时间
+      timeDate: moment(new Date()).add(1, 'day').format('YYYY-MM-DD'), // 时间
       allocatedList: [], // 当前手术间申请
       tableData: [],
       search: '',
@@ -644,6 +645,11 @@ export default {
         }
       },
       deep: true
+    },
+    roomFloor: {
+      handler (val) {
+        this.allacatedList = []
+      }
     }
     // immediate: true
   },
@@ -831,20 +837,20 @@ export default {
     //   this.anaesList = res
     // },
     // 双击显示详情页
-    handleDetailVisible ({ row }) {
-      if (row.state === 1) {
-        this.detailVisible = true
-      } else {
-        this.$message({
-          message: '当前手术申请已提交',
-          type: 'warning'
-        })
-        return
-      }
-      this.detailForm = JSON.parse(JSON.stringify(row))
-      this.detailTime = this.timeDate + ' ' + row.scheduledDateTime
-      // this.detailForm.scheduledDateTime = this.timeDate + ' ' + row.scheduledDateTime;
-    },
+    // handleDetailVisible ({ row }) {
+    //   if (row.state === 1) {
+    //     this.detailVisible = true
+    //   } else {
+    //     this.$message({
+    //       message: '当前手术申请已提交',
+    //       type: 'warning'
+    //     })
+    //     return
+    //   }
+    //   this.detailForm = JSON.parse(JSON.stringify(row))
+    //   this.detailTime = this.timeDate + ' ' + row.scheduledDateTime
+    //   // this.detailForm.scheduledDateTime = this.timeDate + ' ' + row.scheduledDateTime;
+    // },
     distribute (row) {
       if (row.state === 2) {
         this.$message({
@@ -1077,14 +1083,14 @@ export default {
     handleClear (param) {
       const arr = []
       this.allacatedList.forEach((item) => {
-        if (item.state === '1') {
-          arr.push({
-            opeScheduleTime: item.opeScheduleTime,
-            opeRoom: item.opeRoom,
-            operationId: item.operationId,
-            patientId: item.patientId
-          })
-        }
+        // if (item.state === '1') {
+        arr.push({
+          opeScheduleTime: item.opeScheduleTime,
+          opeRoom: this.currentRoom.roomNo,
+          operationId: item.operationId,
+          patientId: item.patientId
+        })
+        // }
       })
       if (arr.length > 0) {
         request({
@@ -1350,8 +1356,10 @@ export default {
         @include theme-property("color", $patient-detail-color);
       }
       .detail-content {
-        width: calc(100% - 16px);
+        // min-width: calc(100% - 16px);
+        // width:200%;
         white-space: nowrap;
+        overflow: visible;
         padding: 0 10px;
       }
     }
@@ -1505,5 +1513,7 @@ export default {
 <style>
 .schedule .scrollbar .el-scrollbar__wrap {
   overflow-y: hidden;
+  white-space: nowrap;
+  margin-right:unset !important;
 }
 </style>

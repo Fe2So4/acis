@@ -15,15 +15,29 @@
           @change="getData"
         />
       </el-form-item>
+      <el-form-item label="楼层：">
+        <el-radio-group
+          v-model="floor"
+          @change="handleChange"
+        >
+          <el-radio-button label="全部" />
+          <el-radio-button label="6" />
+          <el-radio-button label="7" />
+          <el-radio-button label="8" />
+        </el-radio-group>
+      </el-form-item>
       <el-form-item>
         <el-button
-          @click="printEvent"
+          @click="handleShowPrint"
           :disabled="!reportVisible"
         >
           打印
         </el-button>
         <el-button @click="getData">
           刷新
+        </el-button>
+        <el-button @click="handleExport">
+          导出
         </el-button>
         <el-button
           @click="handleEdit"
@@ -40,13 +54,46 @@
       >
         <div class="print-document">
           <Report
-            id="print-report"
             :table-data="tableData"
             :time="time"
           />
         </div>
       </el-scrollbar>
     </div>
+    <el-dialog
+      :visible.sync="dialogVisible"
+      class="dialog-notice"
+      title="打印预览"
+      width="350mm"
+      @opened="onOpened"
+    >
+      <div style="height: 600px">
+        <el-scrollbar
+          style="height: 100%"
+          class="scrollbar"
+        >
+          <report-print
+            id="print-report"
+            :table-data="tableData"
+            :time="time"
+          />
+        </el-scrollbar>
+      </div>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          size="mini"
+          @click="dialogVisible = false"
+        >取 消</el-button>
+        <el-button
+          size="mini"
+          type="primary"
+          @click="printEvent"
+        >打印</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -54,11 +101,14 @@ import moment from 'moment'
 import {
   getTableList,
   updateScheduledRoomPlatform,
-  cancelScheduleSubmit
+  cancelScheduleSubmit,
+  exportScheduleReport,
+  getCurrentRoom
 } from '@/api/schedule'
 import { roomNoList } from '@/api/dictionary'
 import request from '@/utils/requestForMock'
 import Report from './report'
+import ReportPrint from './report-print'
 import { ipcRenderer } from 'electron'
 import XEUtils from 'xe-utils'
 export default {
@@ -66,19 +116,65 @@ export default {
   data () {
     return {
       value: '',
-      time: moment(new Date()).format('yyyy-MM-DD'),
+      time: moment(new Date()).add(1, 'day').format('YYYY-MM-DD'),
       ptList: [],
       tableData: [],
-      floor: '',
+      floor: 0,
       roomList: [],
-      reportVisible: true
+      reportVisible: true,
+      dialogVisible: false
     }
   },
   components: {
-    Report
+    Report,
+    ReportPrint
   },
   computed: {},
   methods: {
+    onOpened () {},
+    // 获取默认楼层
+    getDefaultRoom () {
+      request({
+        method: 'get',
+        url: getCurrentRoom
+      }).then((res) => {
+        if (res.data.data === '0') {
+          this.floor = '全部'
+        } else {
+          this.floor = res.data.data
+        }
+        this.getData()
+        // this.roomFloor = res.data.data;
+        // this.getOpeData();
+      })
+    },
+    handleExport () {
+      let floor = ''
+      if (this.floor === '全部') {
+        floor = '0'
+      } else {
+        floor = this.floor
+      }
+      const url = exportScheduleReport + `?date=${this.time}&&floor=${floor}`
+      ipcRenderer.send(
+        'download',
+        JSON.stringify({
+          downloadUrl: url
+        })
+      )
+    },
+    handleChange (val) {
+      let value = '0'
+      if (val === '全部') {
+        value = '全部'
+      } else {
+        value = val
+      }
+      this.floor = value
+      this.getData()
+      // this.$emit('update:roomFloor', value)
+      // this.clearCurrentRoom()
+    },
     cancelSchedule (row) {
       request({
         url: cancelScheduleSubmit + '?operationId=' + row.operationId,
@@ -87,6 +183,9 @@ export default {
         this.$message({ type: 'success', message: '撤销成功' })
         this.getData()
       })
+    },
+    handleShowPrint () {
+      this.dialogVisible = true
     },
     printEvent () {
       // this.$router.push('/print-notice')
@@ -99,6 +198,7 @@ export default {
           'schedule-report.css',
           options
         )
+        this.dialogVisible = false
       } else {
         this.$message({ type: 'warning', message: '请选择正确排班日期' })
       }
@@ -148,16 +248,25 @@ export default {
       })
     },
     getData () {
+      let floor = ''
+      if (this.floor === '全部') {
+        floor = '0'
+      } else {
+        floor = this.floor
+      }
       request({
-        url: getTableList + '/' + this.time,
+        url: getTableList + '/' + this.time + '/' + floor,
         method: 'GET'
       }).then((res) => {
         this.tableData = res.data.data || []
       })
     }
   },
+  created () {
+    this.getDefaultRoom()
+  },
   mounted () {
-    this.getData()
+    // this.getData();
     this.getRoomList()
   }
 }
@@ -169,7 +278,7 @@ export default {
     height: calc(100% - 46px);
     background: #e3e3e3;
     border-radius: 5px;
-    padding-bottom:20px;
+    padding-bottom: 20px;
   }
   .print-document {
     // box-shadow: 1px 20px 45px 5px rgba(0, 0, 0, 0.5);

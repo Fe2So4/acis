@@ -15,6 +15,17 @@
           @change="getData"
         />
       </el-form-item>
+      <el-form-item label="楼层：">
+        <el-radio-group
+          v-model="floor"
+          @change="handleChange"
+        >
+          <el-radio-button label="全部" />
+          <el-radio-button label="6" />
+          <el-radio-button label="7" />
+          <el-radio-button label="8" />
+        </el-radio-group>
+      </el-form-item>
       <el-form-item>
         <el-button @click="getData">
           刷新
@@ -152,7 +163,8 @@ import moment from 'moment'
 import {
   getTableList,
   updateScheduledRoomPlatform,
-  cancelScheduleSubmit
+  cancelScheduleSubmit,
+  getCurrentRoom
 } from '@/api/schedule'
 import { roomNoList } from '@/api/dictionary'
 import request from '@/utils/requestForMock'
@@ -164,7 +176,7 @@ export default {
   data () {
     return {
       value: '',
-      time: moment(new Date()).format('yyyy-MM-DD'),
+      time: moment(new Date()).add(1, 'day').format('yyyy-MM-DD'),
       ptList: [],
       tableData: [],
       floor: '',
@@ -189,6 +201,18 @@ export default {
         }
       }
     },
+    handleChange (val) {
+      let value = '0'
+      if (val === '全部') {
+        value = '全部'
+      } else {
+        value = val
+      }
+      this.floor = value
+      this.getData()
+      // this.$emit('update:roomFloor', value)
+      // this.clearCurrentRoom()
+    },
     cancelSchedule (row) {
       this.$confirm('是否撤销当前手术?', '提示', {
         confirmButtonText: '确定',
@@ -205,6 +229,20 @@ export default {
           })
         })
         .catch(() => {})
+    },
+    // 获取默认楼层
+    getDefaultRoom () {
+      request({
+        method: 'get',
+        url: getCurrentRoom
+      }).then((res) => {
+        if (res.data.data === '0') {
+          this.floor = '全部'
+        } else {
+          this.floor = res.data.data
+        }
+        this.getData()
+      })
     },
     printEvent () {
       // this.$router.push('/print-notice')
@@ -266,16 +304,22 @@ export default {
       })
     },
     getData () {
+      let floor = '0'
+      if (this.floor === '全部') {
+        floor = '0'
+      } else {
+        floor = this.floor
+      }
       request({
-        url: getTableList + '/' + this.time,
+        url: getTableList + '/' + this.time + '/' + floor,
         method: 'GET'
       }).then((res) => {
         this.tableData = res.data.data || []
       })
     }
   },
-  mounted () {
-    this.getData()
+  async mounted () {
+    await this.getDefaultRoom()
     this.getRoomList()
   }
 }

@@ -7,11 +7,21 @@
       :before-close="handleClose"
     >
       <div class="detail">
-        <el-form :label-position="labelPosition" label-width="80px" size="mini">
-          <el-row type="flex" justify="space-between">
+        <el-form
+          :label-position="labelPosition"
+          label-width="80px"
+          size="mini"
+        >
+          <el-row
+            type="flex"
+            justify="space-between"
+          >
             <el-col :span="10">
               <el-form-item label="手术间号">
-                <el-input v-model="currentRoom.roomNo" disabled />
+                <el-input
+                  v-model="currentRoom.roomNo"
+                  disabled
+                />
               </el-form-item>
             </el-col>
             <el-col :span="10">
@@ -20,7 +30,10 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row type="flex" justify="space-between">
+          <el-row
+            type="flex"
+            justify="space-between"
+          >
             <el-col :span="10">
               <el-form-item label="申请时间">
                 <el-date-picker
@@ -33,15 +46,27 @@
               </el-form-item>
             </el-col>
             <el-col :span="10">
-              <el-form-item label="手术名称" disabled>
-                <el-input v-model="detailApply.operationName" disabled />
+              <el-form-item
+                label="手术名称"
+                disabled
+              >
+                <el-input
+                  v-model="detailApply.operationName"
+                  disabled
+                />
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row type="flex" justify="space-between">
+          <el-row
+            type="flex"
+            justify="space-between"
+          >
             <el-col :span="10">
               <el-form-item label="手术医师">
-                <el-input v-model="detailApply.surgeonName" disabled />
+                <el-input
+                  v-model="detailApply.surgeonName"
+                  disabled
+                />
               </el-form-item>
             </el-col>
             <el-col :span="10">
@@ -68,7 +93,10 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row type="flex" justify="space-between">
+          <el-row
+            type="flex"
+            justify="space-between"
+          >
             <el-col :span="10">
               <el-form-item label="主麻">
                 <el-select
@@ -116,7 +144,10 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row type="flex" justify="space-between">
+          <el-row
+            type="flex"
+            justify="space-between"
+          >
             <el-col :span="10">
               <el-form-item label="副麻2">
                 <!-- <Select
@@ -176,7 +207,10 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row type="flex" justify="space-between">
+          <el-row
+            type="flex"
+            justify="space-between"
+          >
             <el-col :span="10">
               <el-form-item label="洗手护士1">
                 <el-select
@@ -224,7 +258,10 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row type="flex" justify="space-between">
+          <el-row
+            type="flex"
+            justify="space-between"
+          >
             <el-col :span="10">
               <el-form-item label="巡回护士1">
                 <el-select
@@ -273,19 +310,37 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row type="flex" justify="space-between">
+          <el-row
+            type="flex"
+            justify="space-between"
+          >
             <el-col :span="24">
               <el-form-item label="备注">
-                <el-input type="textarea" rows="2" v-model="detailApply.memo" />
+                <el-input
+                  type="textarea"
+                  rows="2"
+                  v-model="detailApply.memo"
+                />
               </el-form-item>
             </el-col>
           </el-row>
         </el-form>
-        <div class="option" style="display: flex; justify-content: center">
-          <el-button type="primary" @click="updateSimpleApply" size="mini">
+        <div
+          class="option"
+          style="display: flex; justify-content: center"
+        >
+          <el-button
+            type="primary"
+            @click="updateSimpleApply"
+            size="mini"
+          >
             确定
           </el-button>
-          <el-button size="mini" type="primary" @click="handleClose">
+          <el-button
+            size="mini"
+            type="primary"
+            @click="handleClose"
+          >
             取消
           </el-button>
         </div>
@@ -295,18 +350,18 @@
 </template>
 <script>
 // import Select from './select'
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex'
 import {
   getDetailDocList,
   getDetailNurseList,
   getAnaesMethod,
-  updateSimpleApply,
-} from "@/api/schedule";
-import request from "@/utils/requestForMock";
+  updateSimpleApply
+} from '@/api/schedule'
+import request from '@/utils/requestForMock'
 export default {
-  data() {
+  data () {
     return {
-      labelPosition: "right",
+      labelPosition: 'right',
       roomNoList: [],
       configForm: {},
       detailForm: {},
@@ -314,19 +369,19 @@ export default {
       loading: false,
       nurseList: [],
       anaesList: [],
-      detailApply: JSON.parse(JSON.stringify(this.detail)),
-    };
+      detailApply: JSON.parse(JSON.stringify(this.detail))
+    }
   },
   watch: {
     detail: {
-      handler(newVal) {
-        this.detailApply = newVal;
+      handler (newVal) {
+        this.detailApply = newVal
       },
-      deep: true,
-    },
+      deep: true
+    }
   },
   computed: {
-    ...mapGetters("Schedule", ["currentRoom"]),
+    ...mapGetters('Schedule', ['currentRoom'])
     // detailApply () {
     //   return JSON.parse(JSON.stringify(this.detail))
     // },
@@ -334,82 +389,82 @@ export default {
   props: {
     detailVisible: {
       type: Boolean,
-      default: false,
+      default: false
     },
     detail: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   components: {},
   methods: {
-    handleClose() {
-      this.$emit("close");
+    handleClose () {
+      this.$emit('close')
     },
-    handleChangeDetail() {},
+    handleChangeDetail () {},
     // filterNurse (query) {
     //   this.getNurseList(query)
     // },
-    getDocList() {
+    getDocList () {
       request({
-        url: getDetailDocList,
+        url: getDetailDocList
       }).then((res) => {
-        this.doctorList = res.data.data;
-      });
+        this.doctorList = res.data.data
+      })
     },
-    getNurseList() {
+    getNurseList () {
       request({
-        url: getDetailNurseList,
+        url: getDetailNurseList
       }).then((res) => {
-        this.nurseList = res.data.data;
-      });
+        this.nurseList = res.data.data
+      })
     },
-    getAnaesMethod() {
+    getAnaesMethod () {
       request({
-        url: getAnaesMethod,
+        url: getAnaesMethod
       }).then((res) => {
-        const data = res.data.data;
+        const data = res.data.data
         data.forEach((item) => {
-          item.userName = item.anesName;
-          item.userId = item.anesCode;
-        });
-        this.anaesList = data;
-      });
+          item.userName = item.anesName
+          item.userId = item.anesCode
+        })
+        this.anaesList = data
+      })
     },
-    selectOperaion(param) {},
-    updateSimpleApply() {
-      const obj = {};
-      obj.anesMethod = this.detailApply.anaesthesiaCode;
-      obj.anesDoc = this.detailApply.anesDocId;
-      obj.firstAnesDoc = this.detailApply.firstDoctorCode;
-      obj.secAnesDoc = this.detailApply.secAnesDocId;
-      obj.thirdAnesDoc = this.detailApply.thirdAnesDocId;
-      obj.sequence = this.detailApply.sequence;
-      obj.opeScheduledTime = this.detailApply.opeScheduledTime;
-      obj.operationId = this.detailApply.operationId;
-      obj.firstOpeNurse = this.detailApply.firstOpeNurseId;
-      obj.secOpeNurse = this.detailApply.secOpeNurseId;
-      obj.firstSupplyNurse = this.detailApply.firstSupplyNurseId;
-      obj.secSupplyNurse = this.detailApply.secSupplyNurseId;
-      obj.thirdOpeNurse = this.detailApply.thirdOpeNurseId;
-      obj.thirdSupplyNurse = this.detailApply.thirdSupplyNurseId;
+    selectOperaion (param) {},
+    updateSimpleApply () {
+      const obj = {}
+      obj.anesMethod = this.detailApply.anesMethod
+      obj.anesDoc = this.detailApply.anesDocId
+      obj.firstAnesDoc = this.detailApply.firstAnesDocId
+      obj.secAnesDoc = this.detailApply.secAnesDocId
+      obj.thirdAnesDoc = this.detailApply.thirdAnesDocId
+      obj.sequence = this.detailApply.sequence
+      obj.opeScheduledTime = this.detailApply.opeScheduleTime
+      obj.operationId = this.detailApply.operationId
+      obj.firstOpeNurse = this.detailApply.firstOpeNurseId
+      obj.secOpeNurse = this.detailApply.secOpeNurseId
+      obj.firstSupplyNurse = this.detailApply.firstSupplyNurseId
+      obj.secSupplyNurse = this.detailApply.secSupplyNurseId
+      obj.thirdOpeNurse = this.detailApply.thirdOpeNurseId
+      obj.thirdSupplyNurse = this.detailApply.thirdSupplyNurseId
       request({
         url: updateSimpleApply,
-        method: "PUT",
-        data: obj,
+        method: 'PUT',
+        data: obj
       }).then((res) => {
-        this.$eventHub.$emit("get-allocated");
-        this.$emit("close");
-      });
-    },
+        this.$eventHub.$emit('get-allocated')
+        this.$emit('close')
+      })
+    }
   },
-  created() {
-    this.getDocList();
-    this.getNurseList();
-    this.getAnaesMethod();
+  created () {
+    this.getDocList()
+    this.getNurseList()
+    this.getAnaesMethod()
   },
-  mounted() {},
-};
+  mounted () {}
+}
 </script>
 <style lang="scss" scoped>
 .detail {

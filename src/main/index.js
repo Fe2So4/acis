@@ -17,10 +17,15 @@ if (process.env.NODE_ENV !== 'development') {
 
 let mainWindow
 let initialWindow
-const feedUrl = 'http://128.0.18.38:8080/operation/operation_schedule'
+const feedUrl = 'http://128.0.18.38:8080/operation/operation_schedule32'
 const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`
+
+const os = require('os')
+const isWin7 = os.release().startsWith('6.1')
+// win7 下关闭硬件加速
+if (isWin7) app.disableHardwareAcceleration()
 
 function createInitialWindow () {
   initialWindow = new BrowserWindow({
@@ -29,7 +34,7 @@ function createInitialWindow () {
     frame: false,
     center: true,
     resizable: false,
-    movable: false,
+    movable: true,
     transparent: true,
     focusable: false,
     alwaysOnTop: true,
@@ -310,6 +315,33 @@ const createEMRWindow = (name) => {
 ipcMain.on('show-EMR', (e, name) => {
   printWin = createEMRWindow(name)
 })
+
+const createEMRWebWindow = (operationId) => {
+  let newWindow = new BrowserWindow({
+    title: 'EMR',
+    webPreferences: {
+      webSecurity: false
+    }
+  })
+  newWindow.maximize()
+  const filePath = `http://192.168.10.18:8089/Default.aspx?inpatientID=${operationId}&out=0`
+  newWindow.loadURL(filePath)
+  newWindow.once('ready-to-show', () => {
+    newWindow.show()
+  })
+
+  newWindow.on('closed', () => {
+    newWindow = null
+    // fs.unlink(filePath, (err) => {
+    //   if (err) throw err
+    //   console.log(`${filePath} was deleted`)
+    // })
+  })
+  return newWindow
+}
+ipcMain.on('WEB-EMR', (e, operationId) => {
+  printWin = createEMRWebWindow(operationId)
+})
 // ---------------------------------显示病历功能 end--------------
 
 // 打印手术通知单
@@ -369,7 +401,7 @@ ipcMain.on('print-content', (e, options) => {
 ipcMain.on('download', (evt, args) => {
   const url = JSON.parse(args)
   const downloadUrl = url.downloadUrl
-  console.log(downloadUrl)
+  // console.log(downloadUrl)
   // const saveUrl = url.saveUrl
   mainWindow.webContents.downloadURL(downloadUrl)
 })

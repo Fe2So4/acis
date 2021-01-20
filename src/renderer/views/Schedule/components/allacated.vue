@@ -228,16 +228,17 @@ export default {
       this.$emit('distribute', row)
     },
     handleCheckFilter ({ row, column }) {
-      return row.state === '1'
+      // return row.state === '1'
+      return true
     },
     rowStyle ({ row, rowIndex }) {
       if (row.state === '1') {
         return {
-          color: 'red'
+          color: 'green'
         }
       } else {
         return {
-          color: 'green'
+          color: 'red'
         }
       }
     },
@@ -248,12 +249,12 @@ export default {
     },
     handleDetailVisible ({ row, column }) {
       if (column.title !== '台次') {
-        if (row.state === '2') {
-          this.$message({ type: 'warning', message: '当前手术申请已提交' })
-        } else {
-          this.detailVisible = true
-          this.detailApply = JSON.parse(JSON.stringify(row))
-        }
+        // if (row.state === '2') {
+        //   this.$message({ type: 'warning', message: '当前手术申请已提交' })
+        // } else {
+        this.detailVisible = true
+        this.detailApply = JSON.parse(JSON.stringify(row))
+        // }
       }
     },
     handleBatchVisible () {
@@ -296,6 +297,9 @@ export default {
   /deep/ .el-button.el-button--text {
     padding-top: unset !important;
     padding-bottom: unset !important;
+  }
+  /deep/ .vxe-checkbox--label{
+    padding-left: unset !important;
   }
 }
 </style>

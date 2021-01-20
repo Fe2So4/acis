@@ -14,9 +14,10 @@ import './iconfont/iconfont.css'
 import './utils/dialog'
 import 'xe-utils'
 import VXETable from 'vxe-table'
-import 'vxe-table/lib/index.css'
+import 'vxe-table/lib/style.css'
 import Tooltip from './components/Tooltip/main'
 import CtxMenu from './components/CtxMenu/main'
+import VXETablePluginMenus from 'vxe-table-plugin-menus'
 import VXETablePluginElement from 'vxe-table-plugin-element'
 import 'vxe-table-plugin-element/dist/style.css'
 // import './styles/vxe-table-variable-gray.scss' // 修改vxe-table默认样式
@@ -24,6 +25,7 @@ import 'vxe-table-plugin-element/dist/style.css'
 // 解决vxe - table与element - ui兼容性问题
 // ...
 VXETable.use(VXETablePluginElement)
+VXETable.use(VXETablePluginMenus)
 Vue.use(VXETable)
 Vue.use(ElementUI)
 if (!process.env.IS_WEB) { Vue.use(require('vue-electron')) }

@@ -2,7 +2,7 @@
   <div class="ope-room">
     <el-scrollbar
       style="height: 100%"
-      class="scrollbar"
+      class="scrollbarRoom"
       ref="scrollContainer"
       @wheel.native.prevent="handleScroll"
     >
@@ -188,6 +188,7 @@ export default {
   watch: {
     floor: {
       handler (newVal) {
+        this.roomIndex = -1
         this.getData()
       },
       immediate: true
@@ -402,7 +403,7 @@ export default {
 }
 </style>
 <style lang="scss">
-.ope-room .scrollbar .el-scrollbar__wrap {
+.ope-room .scrollbarRoom .el-scrollbar__wrap {
   overflow-x: hidden;
 }
 </style>
