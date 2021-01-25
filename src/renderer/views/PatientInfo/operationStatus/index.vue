@@ -19,7 +19,7 @@
           ul
             li(v-for="(item, index) in opeStatusList", :key="index")
               .img
-                img(:src="getImg(item.state)")
+                img(:src="getImg(item.state)" @dblclick="handleShowList")
                 .line(v-if="item.state == 0 && index > 0")
                 .gray(v-else-if="item.state == 2 && index > 0")
                   ol
@@ -41,6 +41,12 @@
                     li
                     li
                     li
+              .menu-list(v-if="item.conName==='出手术室'&&showVisible")
+                .menu-list-left
+                .menu-list-right
+                  .menu-list-item(@click="handleTransTo(1)") 入复苏室
+                  .menu-list-item(@click="handleTransTo(2)") 转入病房
+                  .menu-list-item(@click="handleTransTo(2)") 转入ICU
               .title {{ item.conName }}
               .time
                 el-date-picker(
@@ -77,7 +83,8 @@ export default {
       datetime: '',
       opeStatusList: [],
       // 复苏床位弹框
-      dialogResuscitationBedVisible: false
+      dialogResuscitationBedVisible: false,
+      showVisible: false
     }
   },
   computed: {
@@ -111,6 +118,12 @@ export default {
       'setOperationStateList',
       'clearBaseInfo'
     ]),
+    handleShowList () {
+      this.showVisible = true
+    },
+    handleTransTo (param) {
+
+    },
     getStatusList () {
       if (this.operationId === '') {
         return
@@ -349,6 +362,7 @@ export default {
 
           li {
             margin-right: 38px;
+            position: relative;
 
             &:last-child {
               margin-right: 0;
@@ -465,6 +479,38 @@ export default {
                     margin-right: 5px;
                     background: #4262b2;
                     border-radius: 1px;
+                  }
+                }
+              }
+
+            }
+            .menu-list{
+              position: absolute;
+              display: flex;
+              width: 180px;
+              left: 0;
+              top: 0;
+              z-index: 999999;
+              // height: 124px;
+              background: #1E222E;
+              border: 1px solid #39425C;
+              box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+              border-radius: 5px;
+              .menu-list-left{
+                width: 30px;
+                // height: 124px;
+                background: #2C3140;
+                // border-radius: 5px 0px 0px 5px;
+              }
+              .menu-list-right{
+                  flex: 1;
+                  padding-left: 10px;
+                .menu-list-item{
+                  color: #9BA3D5;
+                  font-size: 12px;
+                  line-height: 24px;
+                  &:hover{
+                    color: #388FF7;
                   }
                 }
               }
