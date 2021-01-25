@@ -32,6 +32,7 @@
               @select-event-time-range="onSelectEventTimeRange"
               @change="onChange($event, item)"
               @change-sign-data="onChangeSignData"
+              @dblclick-time="time => $emit('dblclick-time', time)"
             />
           </widget-wrapper>
         </div>

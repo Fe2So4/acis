@@ -92,7 +92,6 @@
                 style="width:130px"
                 v-model="searchForm.date"
                 type="date"
-                placeholder
                 :clearable="false"
                 format="yyyy-MM-dd"
                 value-format="yyyy-MM-dd"
@@ -355,7 +354,8 @@ export default {
       searchForm: {
         id: '',
         name: '',
-        date: moment().format('yyyy-MM-DD'),
+        // date: moment().format('yyyy-MM-DD'),
+        date: '2020-08-06',
         endDate: '',
         anaesDoc: '',
         anaesMethod: '',

@@ -1,4 +1,4 @@
-import { Polyline, Label } from 'spritejs'
+import { Polyline, Label, Group } from 'spritejs'
 import moment from 'moment'
 export class PhysicalSignLine {
   constructor ({
@@ -219,6 +219,44 @@ export class PhysicalSignEventTags {
 
   clear () {
     const tags = this._group.querySelectorAll('.eventTag')
+    tags.forEach((el) => this._group.removeChild(el))
+  }
+}
+
+export class PhysicalSignBloodGas {
+  constructor ({ group, startTime, endTime }) {
+    this._group = group
+    this._startMoment = +moment(startTime)
+    this._endMoment = +moment(endTime)
+  }
+
+  addRecords (list) {
+    list.forEach(item => this.addRecord(item))
+  }
+
+  addRecord ({ analysisTime: time, detail }) {
+    const timestamp = +moment(time, 'YYYY-MM-DD HH:mm:ss')
+    const x = this._group.attr('width') / (this._endMoment - this._startMoment) * (timestamp - this._startMoment)
+    const group = new Group({
+      pos: [x, 0],
+      className: 'blood-gas-group'
+    })
+    detail.filter(({ bloodValue }) => bloodValue).forEach(({ bloodName, bloodValue }, idx) => {
+      const label = new Label(`${bloodName}=${bloodValue}`)
+      label.attr({
+        pos: [0, 14 * idx],
+        fontSize: 12,
+        fontFamily: '宋体',
+        fillColor: 'blue',
+        className: 'blood-gas-label'
+      })
+      group.append(label)
+    })
+    this._group.append(group)
+  }
+
+  clear () {
+    const tags = this._group.querySelectorAll('.blood-gas-group')
     tags.forEach((el) => this._group.removeChild(el))
   }
 }

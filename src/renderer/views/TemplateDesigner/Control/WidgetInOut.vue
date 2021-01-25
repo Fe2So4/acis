@@ -19,7 +19,11 @@
       @handleClose="handleCloseDrugDetail"
       @handleSubmit="handleSubmit"
     />
-    <canvas id="canvas" />
+    <canvas
+      id="canvas"
+      width="0"
+      height="0"
+    />
   </div>
 </template>
 

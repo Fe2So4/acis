@@ -20,6 +20,7 @@
       @select-event-time-range="onSelectEventTimeRange"
       @change-sign-data="onChangeSignData"
       @get-info="onGetInfo"
+      @dblclick-time="onDblclickTime"
     />
     <bottom-buttons
       :rescue-mode="rescueMode"
@@ -48,6 +49,11 @@
       :template-id="$route.params.templateId"
       @update-successfully="onUpdateSuccessfully"
     />
+    <DialogAddBloodGas
+      :visible.sync="visibleBloodGas"
+      :default-time="addBloodGasTime"
+      @confirm="onAddBloodGas"
+    />
   </div>
 </template>
 
@@ -62,12 +68,17 @@ import {
   getTestInfo,
   changeDisplayMode
 } from '@/api/medicalDocument'
+import {
+  addBloodGasAnalysisRecord
+} from '@/api/blood'
 import request from '@/utils/requestForMock'
 import MainContent from './MainContent'
 import BottomButtons from './BottomButtons'
 import DialogEventTimeRange from './DialogEventTimeRange'
 import DialogDesigner from './DialogDesigner'
+import DialogAddBloodGas from './DialogAddBloodGas'
 import { createNamespacedHelpers } from 'vuex'
+import moment from 'moment'
 const { mapState } = createNamespacedHelpers('Base')
 export default {
   name: 'MedicalDocument',
@@ -75,7 +86,8 @@ export default {
     MainContent,
     BottomButtons,
     DialogEventTimeRange,
-    DialogDesigner
+    DialogDesigner,
+    DialogAddBloodGas
   },
   data () {
     return {
@@ -96,7 +108,9 @@ export default {
       opePhase: '', // 文书属于的手术阶段
       loadingVisible: false,
       changedSignDataList: [],
-      buttonConfig: ''
+      buttonConfig: '',
+      visibleBloodGas: false,
+      addBloodGasTime: ''
     }
   },
   computed: {
@@ -447,6 +461,11 @@ export default {
         })
       }
     },
+    // 双击某一点
+    onDblclickTime (time) {
+      this.addBloodGasTime = moment(time).format('YYYY-MM-DD HH:mm:ss')
+      this.visibleBloodGas = true
+    },
     saveChangedSignData () {
       const { length } = this.changedSignDataList
       if (length === 0) return
@@ -535,6 +554,34 @@ export default {
         method: 'put',
         url: `${changeDisplayMode}/${!this.isRescueMode}/${this.operationId}`
       })
+    },
+    addBloodGasAnalysisRecord (data) {
+      return request({
+        url: addBloodGasAnalysisRecord,
+        method: 'post',
+        data
+      }).then(
+        res => {
+          if (res.data.success) {
+            return res
+          } else {
+            return Promise.reject(new Error('保存血气分析失败'))
+          }
+        }
+      )
+    },
+    onAddBloodGas (data) {
+      this.addBloodGasAnalysisRecord(data).then(
+        res => {
+          this.$message.success('添加成功')
+          this.visibleBloodGas = false
+          this.$eventHub.$emit('document-refresh')
+        }
+      ).catch(
+        e => {
+          this.$message.error(e.message)
+        }
+      )
     }
   }
 }

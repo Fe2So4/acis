@@ -17,11 +17,15 @@ import {
   getEventData,
   getEventDictData
 } from '@/api/medicalDocument'
+import {
+  getBloodGasAnalysisRecordTime
+} from '@/api/blood'
 import request from '@/utils/requestForMock'
 import {
   PhysicalSignLine,
   PhysicalSignLegends,
-  PhysicalSignEventTags
+  PhysicalSignEventTags,
+  PhysicalSignBloodGas
 } from '@/model/PhysicalSign'
 import { Socket } from '@/model/Socket'
 const { Scene, Group, Label, Polyline } = spritejs
@@ -66,6 +70,7 @@ export default {
       lines: {},
       legends: null,
       eventTags: null,
+      bloodGas: null,
       socket: null
     }
   },
@@ -106,6 +111,8 @@ export default {
       this.setLegends()
       // 初始化事件标记区域
       this.setEventTags()
+      // 初始化血气分析区域
+      this.setBloodGas()
       // 获取数据
       this.getData()
       // 添加grid展示详情效果
@@ -127,8 +134,21 @@ export default {
         this.setContent()
         // 初始化事件标记区域
         this.setEventTags()
+        // 初始化血气分析区域
+        this.setBloodGas()
         // 获取数据
         this.getData()
+      })
+
+      const grid = this.layer.querySelector('.grid')
+      grid.addEventListener('dblclick', e => {
+        const { x, y } = e
+        const [offsetX] = grid.getOffsetPosition(x, y)
+        const startMoment = +moment(this.configuration.xAxis.startTime)
+        const endMoment = +moment(this.configuration.xAxis.endTime)
+        const width = grid.attr('width')
+        const time = (endMoment - startMoment) / width * offsetX + startMoment
+        this.$emit('dblclick-time', time)
       })
     }
   },
@@ -136,6 +156,10 @@ export default {
     if (this.editMode) {
       removeListener(this.$refs.physicalSign, this.resize)
     } else {
+      const els = this.layer.querySelectorAll('*')
+      els.forEach(el => {
+        el.removeAllListeners()
+      })
       this.layer.removeEventListener('mousedown', this.setSelectedPoint)
       document.removeEventListener('mouseup', this.getChangedPoint)
       if (this.socket) {
@@ -661,6 +685,8 @@ export default {
       this.drawEventLegends()
       // socket.io
       this.getDataBySocketIO()
+      // 获取血气分析
+      this.getBloodGasAnalysisRecordTime()
 
       this.$emit('finish')
     },
@@ -937,7 +963,8 @@ export default {
       const grid = this.layer.querySelector('.grid')
       if (grid) {
         const mousemoveHandler = e => {
-          if (e.target instanceof Label) {
+          if (e.target instanceof Label && e.target.className !== 'blood-gas-label') {
+            console.log(e.target)
             this.$tooltip({
               dangerouslyUseHTMLString: true,
               message: `
@@ -994,6 +1021,30 @@ export default {
         url: getEventDictData
       }).then(res => {
         this.eventDictList = res.data.data
+      })
+    },
+    getBloodGasAnalysisRecordTime () {
+      return request({
+        url: `${getBloodGasAnalysisRecordTime}/${this.operationId}`
+      }).then(
+        res => {
+          if (res.data.success) {
+            return res.data.data
+          } else {
+            return Promise.reject(new Error('查询血气分析记录失败'))
+          }
+        }
+      ).then(
+        res => {
+          this.bloodGas.addRecords(res)
+        }
+      )
+    },
+    setBloodGas () {
+      this.bloodGas = new PhysicalSignBloodGas({
+        group: this.layer.querySelector('.grid'),
+        startTime: this.configuration.xAxis.startTime,
+        endTime: this.configuration.xAxis.endTime
       })
     }
   }
