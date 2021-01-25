@@ -68,15 +68,17 @@
       <div class="copyright">
         Copyright©2020蓝想数科版权所有
       </div>
-      <div class="close">
-        <i
-          class="el-icon-minus"
-          @click="mini"
-        />
-        <i
-          class="el-icon-close"
-          @click="close"
-        />
+      <div class="drag-bar">
+        <div class="close">
+          <i
+            class="el-icon-minus"
+            @click="mini"
+          />
+          <i
+            class="el-icon-close"
+            @click="close"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -177,8 +179,6 @@ export default {
   height: 560px;
   width: 880px;
   position: relative;
-  // height: 100%;
-  // width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -299,10 +299,19 @@ export default {
       opacity: 0.75;
       text-align: center;
     }
+    .drag-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 30px;
+      width: 100%;
+      -webkit-app-region: drag;
+    }
     .close {
       position: absolute;
       top: 10px;
       right: 10px;
+      -webkit-app-region: no-drag;
       i {
         font-size: 14px;
         display: inline-block;
