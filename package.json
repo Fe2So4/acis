@@ -34,7 +34,7 @@
     "publish": [
       {
         "provider": "generic",
-        "url": "http://128.0.18.38:8080/operation/operation_schedule32"
+        "url": "http://128.0.18.38:8080/operation/operation_schedule"
       }
     ],
     "files": [
