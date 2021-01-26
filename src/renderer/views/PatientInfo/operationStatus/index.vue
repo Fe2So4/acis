@@ -18,7 +18,7 @@
         el-scrollbar.rowScrollbar(style="overflow-y:hidden;", ref="scrollbar")
           ul
             li(v-for="(item, index) in opeStatusList", :key="index")
-              .img
+              .img(:class="{'out-ope-room':item.conName === '出手术室'}")
                 img(:src="getImg(item.state)" @dblclick="handleShowList")
                 .line(v-if="item.state == 0 && index > 0")
                 .gray(v-else-if="item.state == 2 && index > 0")
@@ -41,12 +41,6 @@
                     li
                     li
                     li
-              .menu-list(v-if="item.conName==='出手术室'&&showVisible")
-                .menu-list-left
-                .menu-list-right
-                  .menu-list-item(@click="handleTransTo(1)") 入复苏室
-                  .menu-list-item(@click="handleTransTo(2)") 转入病房
-                  .menu-list-item(@click="handleTransTo(2)") 转入ICU
               .title {{ item.conName }}
               .time
                 el-date-picker(
@@ -64,6 +58,12 @@
                 )
       .right-arow(@click="handleChangeNav(2)")
         i.el-icon-arrow-right.arow
+    .menu-list(v-if="showVisible")
+      .menu-list-left
+      .menu-list-right
+        .menu-list-item(@click="handleTransTo(1)") 入复苏室
+        .menu-list-item(@click="handleTransTo(2)") 转入病房
+        .menu-list-item(@click="handleTransTo(2)") 转入ICU
     DialogResuscitationBed(:visible.sync="dialogResuscitationBedVisible")
 </template>
 <script>
@@ -120,6 +120,10 @@ export default {
     ]),
     handleShowList () {
       this.showVisible = true
+      this.$nextTick(() => {
+        const outOpeRoom = document.querySelector('.out-ope-room')
+        console.log(outOpeRoom)
+      })
     },
     handleTransTo (param) {
 
