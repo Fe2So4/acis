@@ -33,6 +33,7 @@
       //- //- About
       //- TemplateDisplayer
       //- Dictionary
+      //  BloodGasAnalysis
   //- .dialog-footer
 </template>
 <script>
@@ -72,23 +73,9 @@ import OperationRegisteration from '@/views/OperationRegisteration/index'
 import RecoveryRegistration from '@/views/RecoveryRegistration/index'
 import AnalgesicScore from '@/views/AnalgesicScore/index'
 import LockScreen from '@/views/LockScreen/index'
+import BloodGasAnalysis from '@/views/BloodGasAnalysis/index'
 export default {
   name: 'DialogNav',
-  data () {
-    return {
-      // componentName: 'ChangePass'
-    }
-  },
-  props: {
-    componentName: {
-      default: '',
-      type: String
-    },
-    title: {
-      default: '',
-      type: String
-    }
-  },
   components: {
     ChangePass,
     Hemodynamics,
@@ -125,7 +112,18 @@ export default {
     OperationRegisteration,
     RecoveryRegistration,
     AnalgesicScore,
-    LockScreen
+    LockScreen,
+    BloodGasAnalysis
+  },
+  props: {
+    componentName: {
+      default: '',
+      type: String
+    },
+    title: {
+      default: '',
+      type: String
+    }
   },
   methods: {
     handleClose () {
@@ -167,7 +165,7 @@ export default {
         margin-top: 7px;
         font-weight: bold;
         cursor: pointer;
-        transition: all ease 0.3;
+        transition: all ease 0.3s;
 
         &:hover {
           transform: scale(1.2);

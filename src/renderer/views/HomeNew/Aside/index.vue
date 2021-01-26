@@ -299,6 +299,11 @@ export default {
           name: '锁定系统',
           componentName: 'LockScreen',
           necessary: false
+        },
+        {
+          name: '血气分析',
+          componentName: 'BloodGasAnalysis',
+          necessary: true
         }
       ],
       overviewList: [],
@@ -503,7 +508,6 @@ export default {
       // margin-left:20px;
       margin: 0 auto;
       height: auto;
-      width: width;
     }
   }
 

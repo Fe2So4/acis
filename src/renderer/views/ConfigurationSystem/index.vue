@@ -77,7 +77,8 @@ export default {
     const wrapStyle = Object.freeze([
       {
         width: 'calc(100% + 18px)',
-        height: 'calc(100% + 18px)'
+        height: 'calc(100% + 18px)',
+        'padding-right': '1px'
       }
     ])
     const normalList = Object.freeze([
