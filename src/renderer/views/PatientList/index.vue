@@ -329,7 +329,7 @@
   </div>
 </template>
 <script>
-import moment from 'moment'
+// import moment from 'moment'
 import request from '../../utils/requestForMock'
 import { opeList, roomList } from '@/api/patientList'
 import { mapState, mapActions } from 'vuex'
@@ -466,13 +466,17 @@ export default {
     },
     handleChangeList (param) {
       const d = new Date()
+      let month = d.getMonth() + 1
+      let date = d.getDate()
+      month = month < 10 ? `0${month}` : `${month}`
+      date = date < 10 ? `0${date}` : `${date}`
       if (param === 1) {
         this.searchForm.date =
-          d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
+          d.getFullYear() + '-' + month + '-' + date
       } else {
         d.setTime(d.getTime() + 24 * 60 * 60 * 1000)
         this.searchForm.date =
-          d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
+          d.getFullYear() + '-' + month + '-' + date
       }
       this.getPatientList('')
     },
