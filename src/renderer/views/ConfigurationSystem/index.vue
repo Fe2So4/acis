@@ -77,10 +77,15 @@ export default {
     const wrapStyle = Object.freeze([
       {
         width: 'calc(100% + 18px)',
-        height: 'calc(100% + 18px)'
+        height: 'calc(100% + 18px)',
+        'padding-right': '1px'
       }
     ])
     const normalList = Object.freeze([
+      {
+        text: '体征折线',
+        path: 'SignLine'
+      },
       {
         text: '常规',
         path: 'NormalSetting'
@@ -126,6 +131,10 @@ export default {
       {
         text: '文书菜单',
         path: 'DocumentMenu'
+      },
+      {
+        text: '体征折线',
+        path: 'SignLine'
       }
     ])
     return {
@@ -175,11 +184,6 @@ export default {
       }
     }
   },
-  created () {
-    // this.$router.push({
-    //   name: this.normalList[0].path
-    // })
-  },
   methods: {
     handleOpen (key, keyPath) {},
     handleClose (key, keyPath) {},
@@ -217,6 +221,8 @@ export default {
           return '导航菜单'
         case 'DocumentMenu':
           return '文书菜单'
+        case 'SignLine':
+          return '体征折线'
         default:
           return ''
       }

@@ -10,7 +10,7 @@ const IP = {
   SERVER: prodIp,
   LOCAL: 'localhost',
   XIE: '192.168.1.18',
-  LI: '192.168.1.18',
+  LI: '192.168.1.7',
   ZHONG: '192.168.1.191'
 }
 const PORT = {
@@ -18,7 +18,7 @@ const PORT = {
   SOCKET: '9099'
 }
 const productIpType = 'SERVER' // 'SERVER' / 'LOCAL'
-const developmentIpType = '' // 'SERVER' / ''
+const developmentIpType = 'LI' // 'SERVER' / ''
 
 const IP_BASE = IP[productIpType]
 const IP_LI = developmentIpType ? IP[developmentIpType] : IP.LI

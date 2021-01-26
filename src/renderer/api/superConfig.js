@@ -83,3 +83,12 @@ export const getUploadTemplateInfo = mock
 export const saveUploadTemplateInfo = mock
   ? ''
   : baseZhong + 'acis/superConfig/saveUploadTemplateInfo'
+
+// 查询体征项配置信息 - 李 - 2021-01-26
+export const getVitalSignDict = baseLi + 'acis/superConfig/getVitalSignDict'
+
+// 编辑体征配置信息 - 李 - 2021-01-26
+export const updateVitalSignDict = baseLi + 'acis/superConfig/updateVitalSignDict'
+
+// 体征字典查询 - 李 - 2021-01-26
+export const getVitalSignDictAll = baseLi + 'acis/superConfig/getVitalSignDictAll'

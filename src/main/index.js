@@ -54,7 +54,7 @@ function createWindow () {
     useContentSize: true,
     width: 880,
     show: false,
-    frame: process.env.NODE_ENV === 'development',
+    frame: false,
     // fullscreen: true, // 是否全屏
     webPreferences: {
       // webSecurity: false, // 官方建议不要禁用

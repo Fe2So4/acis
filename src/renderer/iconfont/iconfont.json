@@ -1,10 +1,59 @@
 {
   "id": "1920243",
-  "name": "a'ci's",
+  "name": "acis",
   "font_family": "iconfont",
   "css_prefix_text": "icon-",
-  "description": "",
+  "description": "临床麻醉xi'tong",
   "glyphs": [
+    {
+      "icon_id": "15266675",
+      "name": "减去",
+      "font_class": "jianqu",
+      "unicode": "eb17",
+      "unicode_decimal": 60183
+    },
+    {
+      "icon_id": "19389770",
+      "name": "时 间",
+      "font_class": "shijian",
+      "unicode": "e638",
+      "unicode_decimal": 58936
+    },
+    {
+      "icon_id": "351771",
+      "name": "首页",
+      "font_class": "shouye",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "1546596",
+      "name": "下一页",
+      "font_class": "xiayiye",
+      "unicode": "e699",
+      "unicode_decimal": 59033
+    },
+    {
+      "icon_id": "11521406",
+      "name": "上一页",
+      "font_class": "shangyiye",
+      "unicode": "e77d",
+      "unicode_decimal": 59261
+    },
+    {
+      "icon_id": "1917122",
+      "name": "末页",
+      "font_class": "last",
+      "unicode": "e7fc",
+      "unicode_decimal": 59388
+    },
+    {
+      "icon_id": "7899762",
+      "name": "放大",
+      "font_class": "fangda",
+      "unicode": "e681",
+      "unicode_decimal": 59009
+    },
     {
       "icon_id": "3267799",
       "name": "窗口_最大化_1",
