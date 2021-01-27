@@ -271,6 +271,7 @@ export default {
         infuse_doc: '',
         anes_doc: '',
         surgeon: '',
+        first_anes_doc: '',
         sec_anes_doc: '',
         third_anes_doc: '',
         first_ope_nurse: '',
@@ -278,6 +279,8 @@ export default {
         ope_name_after: '',
         hospitalNo: '',
         room: '',
+        first_supply_nurse: '',
+        sec_supply_nurse: '',
         first_assist: '',
         second_assist: '',
         third_assist: '',
@@ -339,7 +342,13 @@ export default {
           data.info.forEach(item => {
             if (item.className === i) {
               if (item.value === '') {
-                this.form[i] = item.label
+                if (item.label === '男') {
+                  this.form[i] = '1'
+                } else if (item.label === '女') {
+                  this.form[i] = '2'
+                } else {
+                  this.form[i] = item.label
+                }
               } else {
                 this.form[i] = item.value
               }
@@ -442,7 +451,9 @@ export default {
         { className: 'memo', dict: false }, { className: 'ope_schedule_time', dict: false }, { className: 'ope_grade', dict: true },
         { className: 'anes_method', dict: true }, { className: 'surgeon', dict: true },
         { className: 'first_assist', dict: true }, { className: 'second_assist', dict: true }, { className: 'third_assist', dict: true }, { className: 'forth_assist', dict: true }]
-      const sheel3 = [{ className: 'diagnose_after', dict: false }, { className: 'sequence', dict: false },
+      const sheel3 = [
+        { className: 'diagnose_after', dict: false },
+        { className: 'sequence', dict: false },
         { className: 'ope_room', dict: true },
         { className: 'is_quarantine', dict: true },
         { className: 'notch_level', dict: false },
@@ -456,7 +467,8 @@ export default {
         { className: 'first_ope_nurse', dict: true },
         { className: 'sec_ope_nurse', dict: true },
         { className: 'first_supply_nurse', dict: true },
-        { className: 'sec_supply_nurse', dict: true }
+        { className: 'sec_supply_nurse', dict: true },
+        { className: 'ope_name_after', dict: false }
       ]
       const sheel4 = [
         { className: 'nurse_shift_record', dict: true },

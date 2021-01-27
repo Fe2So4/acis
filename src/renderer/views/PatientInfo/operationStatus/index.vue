@@ -58,7 +58,7 @@
                 )
       .right-arow(@click="handleChangeNav(2)")
         i.el-icon-arrow-right.arow
-    .menu-list(v-if="showVisible")
+    .menu-list(v-if="showVisible" ref="menuList")
       .menu-list-left
       .menu-list-right
         .menu-list-item(@click="handleTransTo(1)") 入复苏室
@@ -72,6 +72,7 @@ import { patientStatus, addStatus } from '@/api/patientList'
 import { mapGetters, mapActions, mapState } from 'vuex'
 import DialogResuscitationBed from './DialogResuscitationBed'
 import { Socket } from '@/model/Socket'
+import $bus from '@/utils/bus'
 
 export default {
   name: 'OperationStatus',
@@ -111,6 +112,12 @@ export default {
   },
   mounted () {
     this.getStatusList()
+    $bus.$on('hidenMenu', () => {
+      this.showVisible = false
+    })
+  },
+  beforeDestroy () {
+    $bus.$off('hidenMenu')
   },
   methods: {
     ...mapActions('Base', [
@@ -118,11 +125,13 @@ export default {
       'setOperationStateList',
       'clearBaseInfo'
     ]),
-    handleShowList () {
+    handleShowList (e) {
       this.showVisible = true
-      this.$nextTick(() => {
+      this.$nextTick((e) => {
         const outOpeRoom = document.querySelector('.out-ope-room')
-        console.log(outOpeRoom)
+        const scrollbarEl = this.$refs.scrollbar.wrap
+        this.$refs.menuList.style.left = (outOpeRoom.offsetLeft + 493 - scrollbarEl.scrollLeft) + 'px'
+        this.$refs.menuList.style.top = (outOpeRoom.offsetTop + 72) + 'px'
       })
     },
     handleTransTo (param) {
@@ -151,6 +160,7 @@ export default {
     },
     handleChangeNav (nav) {
       const scrollbarEl = this.$refs.scrollbar.wrap
+      this.showVisible = false
       if (nav === 1) {
         this.scrollEffect(scrollbarEl, -168)
       } else {
@@ -366,7 +376,7 @@ export default {
 
           li {
             margin-right: 38px;
-            position: relative;
+            // position: relative;
 
             &:last-child {
               margin-right: 0;
@@ -488,37 +498,6 @@ export default {
               }
 
             }
-            .menu-list{
-              position: absolute;
-              display: flex;
-              width: 180px;
-              left: 0;
-              top: 0;
-              z-index: 999999;
-              // height: 124px;
-              background: #1E222E;
-              border: 1px solid #39425C;
-              box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
-              border-radius: 5px;
-              .menu-list-left{
-                width: 30px;
-                // height: 124px;
-                background: #2C3140;
-                // border-radius: 5px 0px 0px 5px;
-              }
-              .menu-list-right{
-                  flex: 1;
-                  padding-left: 10px;
-                .menu-list-item{
-                  color: #9BA3D5;
-                  font-size: 12px;
-                  line-height: 24px;
-                  &:hover{
-                    color: #388FF7;
-                  }
-                }
-              }
-            }
           }
 
           .title {
@@ -526,6 +505,43 @@ export default {
             line-height: 26px;
             @include theme-property(color, $color-text-regular);
             text-align: center;
+          }
+        }
+      }
+    }
+    .menu-list{
+      position: absolute;
+      display: flex;
+      width: 180px;
+      left: 0;
+      top: 0;
+      z-index: 999999;
+      // height: 124px;
+      background: #1E222E;
+      border: 1px solid #39425C;
+      @include theme-property('background', $background-dialog);
+      @include theme-property('border-color', $dateTimePicker-color-border);
+      box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.4);
+      border-radius: 5px;
+      .menu-list-left{
+        width: 30px;
+        // height: 124px;
+        background: #2C3140;
+        @include theme-property('background', $dateTimePicker-color-background);
+        // border-radius: 5px 0px 0px 5px;
+      }
+      .menu-list-right{
+          flex: 1;
+          padding-left: 10px;
+        .menu-list-item{
+          color: #9BA3D5;
+          @include theme-property('color', $color-text-regular);
+          font-size: 12px;
+          cursor: pointer;
+          line-height: 24px;
+          &:hover{
+            color: #388FF7;
+            @include theme-property('color', $color-text-primary);
           }
         }
       }

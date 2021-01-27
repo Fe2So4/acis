@@ -1,6 +1,8 @@
 <template>
   <div
     id="app"
+    ref="app"
+    @click="hanldeClick"
   >
     <router-view />
   </div>
@@ -10,6 +12,7 @@
 // import '@/mock/mockData'
 import { mapState } from 'vuex'
 import { renderSync, render } from 'sass'
+import $bus from '@/utils/bus'
 export default {
   name: 'Acis',
   computed: {
@@ -103,6 +106,9 @@ export default {
           }
         )
       })
+    },
+    hanldeClick () {
+      $bus.$emit('hidenMenu')
     }
   }
 }
