@@ -85,11 +85,12 @@ export default {
       flex: 80px 0 0;
       text-align: right;
       margin-right: 10px;
+      @include theme-property(color, $color-text-regular);
     }
     .value {
       flex: 100px 0 0;
       &.date-picker {
-        flex: 160px 0 0;
+        flex: 170px 0 0;
       }
     }
   }
