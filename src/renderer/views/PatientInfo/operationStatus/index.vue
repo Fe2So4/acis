@@ -19,7 +19,7 @@
           ul
             li(v-for="(item, index) in opeStatusList", :key="index")
               .img(:class="{'out-ope-room':item.conName === '出手术室'}")
-                img(:src="getImg(item.state)" @dblclick="handleShowList")
+                img(:src="getImg(item.state)" @dblclick="handleShowList(item.conCode)")
                 .line(v-if="item.state == 0 && index > 0")
                 .gray(v-else-if="item.state == 2 && index > 0")
                   ol
@@ -61,18 +61,19 @@
     .menu-list(v-if="showVisible" ref="menuList")
       .menu-list-left
       .menu-list-right
-        .menu-list-item(@click="handleTransTo(1)") 入复苏室
-        .menu-list-item(@click="handleTransTo(2)") 转入病房
-        .menu-list-item(@click="handleTransTo(2)") 转入ICU
-    DialogResuscitationBed(:visible.sync="dialogResuscitationBedVisible")
+        .menu-list-item(@click.stop="handleTransTo(1)") 转入复苏室
+        .menu-list-item(@click.stop="handleTransTo(3)") 转入病房
+        .menu-list-item(@click.stop="handleTransTo(2)") 转入ICU
+    DialogResuscitationBed(:visible.sync="dialogResuscitationBedVisible" @handleUpdateStatus="handleUpdateStatus")
 </template>
 <script>
 import request from '@/utils/requestForMock'
-import { patientStatus, addStatus } from '@/api/patientList'
+import { patientStatus, addStatus, opeDirection } from '@/api/patientList'
 import { mapGetters, mapActions, mapState } from 'vuex'
 import DialogResuscitationBed from './DialogResuscitationBed'
 import { Socket } from '@/model/Socket'
 import $bus from '@/utils/bus'
+import moment from 'moment'
 
 export default {
   name: 'OperationStatus',
@@ -112,6 +113,7 @@ export default {
   },
   mounted () {
     this.getStatusList()
+    this.$refs.scrollbar.update()
     $bus.$on('hidenMenu', () => {
       this.showVisible = false
     })
@@ -125,17 +127,39 @@ export default {
       'setOperationStateList',
       'clearBaseInfo'
     ]),
-    handleShowList (e) {
+    handleShowList (code) {
+      if (code !== '11') return
       this.showVisible = true
-      this.$nextTick((e) => {
+      this.$nextTick(() => {
         const outOpeRoom = document.querySelector('.out-ope-room')
         const scrollbarEl = this.$refs.scrollbar.wrap
         this.$refs.menuList.style.left = (outOpeRoom.offsetLeft + 493 - scrollbarEl.scrollLeft) + 'px'
         this.$refs.menuList.style.top = (outOpeRoom.offsetTop + 72) + 'px'
       })
     },
+    // 床位触发手术状态更新
+    handleUpdateStatus () {
+      this.addStatusTimePoint({ time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'), conCode: 13 })
+      this.scrollEffect(this.$refs.scrollbar.wrap, 336)
+    },
     handleTransTo (param) {
-
+      request({
+        method: 'post',
+        url: opeDirection,
+        data: {
+          operationId: this.operationId,
+          direction: '' + param,
+          timePoint: moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
+        }
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.getStatusList()
+          if (param === 1) {
+            this.showResuscitationBed()
+          }
+          this.showVisible = false
+        }
+      })
     },
     getStatusList () {
       if (this.operationId === '') {
@@ -184,9 +208,9 @@ export default {
           this.getStatusList()
           this.$eventHub.$emit('refresh-ptlist')
           // 入复苏室状态情况下需要选择床位和增加设备信息
-          if (+param.conCode === 12) {
-            this.showResuscitationBed()
-          }
+          // if (+param.conCode === 12) {
+          //   this.showResuscitationBed()
+          // }
           // 建立socket连接
           const noNeedSocketState = [10, 11, 14, 15, 16, 17]
           if (Socket.instance) {

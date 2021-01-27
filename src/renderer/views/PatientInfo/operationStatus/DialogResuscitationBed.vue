@@ -97,6 +97,7 @@ export default {
       }).then(
         res => {
           if (res.data && res.data.success) {
+            this.$emit('handleUpdateStatus')
             this.$emit('update:visible', false)
             return this.addMonitorInfo(bedNumber)
           } else {

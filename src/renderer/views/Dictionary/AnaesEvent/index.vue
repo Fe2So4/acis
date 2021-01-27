@@ -22,12 +22,12 @@
           align="center"
           height="100%"
           size="mini"
-          class="scroll"
           @current-change="currentChangeEvent"
           :data="tableData"
           :checkbox-config="{checkStrictly: true,highlight: true}"
           :edit-config="{trigger: 'click', mode: 'cell', showStatus: true,activeMethod: activeRowMethod}"
         )
+          //- class="scroll"
           vxe-table-column(field="detailCode" title="序号" width='60')
           vxe-table-column(field="eventName" title="事件分类" width="120")
           vxe-table-column(field="detailName" title="事件名称" :edit-render="{}" width="200")

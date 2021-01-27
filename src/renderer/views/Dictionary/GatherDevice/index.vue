@@ -14,12 +14,12 @@
         size="mini"
         ref="xTable"
         auto-resize
-        class="scroll"
         :data="tableData"
         @current-change="currentChangeEvent"
         :checkbox-config="{checkStrictly: true}"
         :edit-config="{trigger: 'click', mode: 'cell', showStatus: true,activeMethod: activeRowMethod}"
       )
+        //- class="scroll"
         vxe-table-column(field="label" title="监护仪标识" :edit-render="{}" width='200')
           template(v-slot:edit="{ row }")
             el-input(v-model="row.label" size="mini" @blur="handleBlur")

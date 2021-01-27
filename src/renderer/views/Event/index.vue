@@ -77,7 +77,7 @@
           height="100%"
           auto-resize
           keep-source
-          class="anaesTable scroll"
+          class="anaesTable"
           :loading="loading"
           :data="tableData"
           highlight-hover-row

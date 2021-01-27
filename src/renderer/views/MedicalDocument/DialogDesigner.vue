@@ -66,4 +66,9 @@ export default {
 .dialogDesigner ::v-deep .templateDesignerPage {
   width: 100%;
 }
+.dialogDesigner{
+  /deep/ .el-dialog__headerbtn{
+    font-size: 26px;
+  }
+}
 </style>

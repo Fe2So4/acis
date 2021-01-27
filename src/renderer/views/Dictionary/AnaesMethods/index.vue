@@ -14,12 +14,12 @@
         height="100%"
         size="mini"
         auto-resize
-        class="scroll"
         :data="tableData"
         :checkbox-config="{checkStrictly: true}"
         @current-change="currentChangeEvent"
         :edit-config="{trigger: 'click', mode: 'cell', showStatus: true,activeMethod: activeRowMethod}"
       )
+        //- class="scroll"
         vxe-table-column(field="sort" title="序号")
         vxe-table-column(field="anesCode" title="编码" :edit-render="{}")
           template(v-slot:edit="{ row }")

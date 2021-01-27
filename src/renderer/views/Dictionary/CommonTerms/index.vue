@@ -24,7 +24,6 @@
           align="center"
           height="100%"
           size="mini"
-          class="scroll"
           :data="tableData"
           :checkbox-config="{checkStrictly: true}"
           :radio-config="{highlight: true}"
@@ -32,6 +31,7 @@
           @current-change="currentChangeEvent"
           :edit-config="{trigger: 'click', mode: 'cell', showStatus: true,activeMethod: activeRowMethod}"
         )
+          //- class="scroll"
           //- vxe-table-column(type="radio" width="60")
           //-   //- template
           //-   //-   span(class="drag-btn")

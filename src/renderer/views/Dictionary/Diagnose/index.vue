@@ -14,12 +14,12 @@
           size="mini"
           ref="xTable"
           auto-resize
-          class="scroll"
           :data="tableData"
           @current-change="currentChangeEvent"
           :checkbox-config="{checkStrictly: true}"
           :edit-config="{trigger: 'click', mode: 'cell',activeMethod: activeRowMethod, showStatus: true}"
         )
+          //- class="scroll"
           vxe-table-column(field="diagCode" title="诊断代码" :edit-render="{}")
             template(v-slot:edit="{ row }")
               el-input(v-model="row.diagCode" size="mini" @blur="handleBlur")

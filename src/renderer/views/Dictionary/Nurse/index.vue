@@ -14,12 +14,12 @@
           size="mini"
           ref="xTable"
           auto-resize
-          class="scroll"
           :data="tableData"
           @current-change="currentChangeEvent"
           :checkbox-config="{checkStrictly: true}"
           :edit-config="{trigger: 'click', mode: 'cell',activeMethod: activeRowMethod, showStatus: true}"
         )
+          //- class="scroll"
           vxe-table-column(field="userName" title="名称" :edit-render="{}")
             template(v-slot:edit="{ row }")
               el-input(v-model="row.userName" size="mini" @blur="handleBlur")

@@ -11,3 +11,5 @@ export const patientStatus = `${config.default.api.baseURL}/acis/superConfig/get
 export const addStatus = `${config.default.api.baseURL}/acis/superConfig/addTimePoint`
 // 手术排台
 export const opeSchedule = `${config.default.api.baseURL}/acis/operation/getOpeArrangeTable`
+
+export const opeDirection = `${config.default.api.baseURL}/acis/superConfig/addDirectionAfterOpeRoom`
