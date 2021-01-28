@@ -31,6 +31,7 @@
           el-form-item(label="出生日期")
             el-date-picker(
               v-model="form.birthday",
+              popper-class="dateTimePicker",
               type="date",
               value-format="yyyy-MM-dd",
               format="yyyy-MM-dd"
@@ -64,7 +65,14 @@
       el-row
         el-col(:span="6")
           el-form-item(label="手术时间")
-            el-input(v-model="form.ope_schedule_time")
+            el-date-picker(
+              v-model="form.ope_schedule_time"
+              popper-class="dateTimePicker"
+              format="yyyy-MM-dd HH:mm"
+              value-format="yyyy-MM-dd HH:mm"
+              type="datetime"
+              placeholder="选择日期时间"
+            )
         el-col(:span="6")
           el-form-item(label="台次")
             el-input(v-model="form.sequence")

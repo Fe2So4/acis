@@ -36,13 +36,13 @@
             span.white {{ item.opeRoom }}
             span.green {{ item.complete }}
             span.blue {{ item.allCount }}
+        //- el-scrollbar
       .right
-        el-scrollbar
-          .content
-            .line(ref="line")
-            ul
-              li(v-for="item in patientList", :key="item.opeRoom")
-                PatientDetail(v-for="(_item, index) in item.opeStateInfoVos" :key="index" :date="form.date" :info="_item")
+        .content
+          .line(ref="line")
+          ul
+            li(v-for="item in patientList", :key="item.opeRoom")
+              PatientDetail(v-for="(_item, index) in item.opeStateInfoVos" :key="index" :date="form.date" :info="_item")
 </template>
 <script>
 import * as spritejs from 'spritejs'
@@ -264,6 +264,7 @@ export default {
       .right {
         width: calc(100% - 200px);
         float: right;
+        overflow-x: auto;
 
         .content {
           width: 3841px;

@@ -64,7 +64,10 @@
                 size="mini"
                 @click="hanldeSearchMore"
               >
-                <i class="el-icon-d-arrow-right" />
+                <i
+                  class="el-icon-d-arrow-right"
+                  :style="{'transform':showMore?'rotate(90deg)':''}"
+                />
               </el-button>
             </el-form-item>
           </el-form>
