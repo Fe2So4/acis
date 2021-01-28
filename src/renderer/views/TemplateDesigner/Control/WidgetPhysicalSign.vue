@@ -964,7 +964,6 @@ export default {
       if (grid) {
         const mousemoveHandler = e => {
           if (e.target instanceof Label && e.target.className !== 'blood-gas-label') {
-            console.log(e.target)
             this.$tooltip({
               dangerouslyUseHTMLString: true,
               message: `

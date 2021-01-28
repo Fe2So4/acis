@@ -182,6 +182,7 @@ export class PhysicalSignLegends {
   }
 }
 
+// 事件列表
 export class PhysicalSignEventTags {
   constructor ({ group, startTime, endTime }) {
     this._group = group
@@ -192,12 +193,14 @@ export class PhysicalSignEventTags {
   addTag ({ order, label, time, color }) {
     const text = label || order + ''
     const tag = new Label(text)
+    const tagWidth = 12
+    const tagHeight = 14
     tag.attr({
       anchor: [0.5, 0.5],
       fontSize: 12,
       fontFamily: '宋体',
-      width: 12,
-      height: 14,
+      width: tagWidth,
+      height: tagHeight,
       textAlign: 'center',
       verticalAlign: 'middle',
       fillColor: color,
@@ -212,8 +215,21 @@ export class PhysicalSignEventTags {
     x = Math.round(x)
     let y = this._group.attr('height') / 2
     y = Math.round(y)
-
+    const xBoundLeft = x - tagWidth / 2
+    const xBoundRight = x + tagWidth / 2
+    const tags = this._group.querySelectorAll('.eventTag')
+    while (
+      Array.prototype.some.call(tags, (t) => {
+        const [tagX, tagY] = t.attr('pos')
+        if (Math.min(tagX - tagWidth / 2, xBoundLeft) < Math.max(tagX + tagWidth / 2, xBoundRight)) {
+          return y >= tagY
+        } return false
+      })
+    ) {
+      y -= tagHeight
+    }
     tag.attr('pos', [x, y])
+
     this._group.append(tag)
   }
 
@@ -223,6 +239,7 @@ export class PhysicalSignEventTags {
   }
 }
 
+// 血气分析
 export class PhysicalSignBloodGas {
   constructor ({ group, startTime, endTime }) {
     this._group = group
