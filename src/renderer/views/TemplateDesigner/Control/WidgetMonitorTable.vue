@@ -5,7 +5,7 @@
     //- .center(:style="{'width':centerWidth + 'px'}")
     .right
       ul
-        li(v-for="(item,index) of tableList" :key="item.name" class="rowHeight")
+        li(v-for="(item,index) of tableList" :key="index+'name'" class="rowHeight")
          .row-title(:style="{'width':centerWidth + 'px'}") {{item.name}}
          .column-content
           .column(v-for="(col,i) of item.list" :key="i" @contextmenu.prevent="handleActiveColumn(index,i)")
