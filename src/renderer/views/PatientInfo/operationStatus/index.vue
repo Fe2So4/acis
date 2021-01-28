@@ -19,7 +19,7 @@
           ul
             li(v-for="(item, index) in opeStatusList", :key="index")
               .img(:class="{'out-ope-room':item.conName === '出手术室'}")
-                img(:src="getImg(item.state)" @dblclick="handleShowList(item.conCode)")
+                img(:src="getImg(item.state)" @dblclick="handleShowList(item)")
                 .line(v-if="item.state == 0 && index > 0")
                 .gray(v-else-if="item.state == 2 && index > 0")
                   ol
@@ -127,8 +127,12 @@ export default {
       'setOperationStateList',
       'clearBaseInfo'
     ]),
-    handleShowList (code) {
-      if (code !== '11') return
+    handleShowList (item) {
+      if (item.conCode !== '11') return
+      if (item.time === '') {
+        this.$message({ type: 'success', message: '请先完成出手术室操作!' })
+        return
+      }
       this.showVisible = true
       this.$nextTick(() => {
         const outOpeRoom = document.querySelector('.out-ope-room')
@@ -143,6 +147,7 @@ export default {
       this.scrollEffect(this.$refs.scrollbar.wrap, 336)
     },
     handleTransTo (param) {
+      // if()
       request({
         method: 'post',
         url: opeDirection,
@@ -203,9 +208,9 @@ export default {
         data: formData
       }).then((res) => {
         if (res.data && res.data.success) {
-          this.scrollEffect(this.$refs.scrollbar.wrap, 168)
           this.setProcedureState(res.data.data)
           this.getStatusList()
+          this.scrollEffect(this.$refs.scrollbar.wrap, 168)
           this.$eventHub.$emit('refresh-ptlist')
           // 入复苏室状态情况下需要选择床位和增加设备信息
           // if (+param.conCode === 12) {

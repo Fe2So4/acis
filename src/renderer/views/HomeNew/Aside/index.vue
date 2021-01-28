@@ -333,7 +333,8 @@ export default {
       }
     },
     logoSource () {
-      return require(`@/assets/lan_${this.theme}.png`)
+      // return require(`@/assets/lan_${this.theme}.png`)
+      return require(`@/assets/fj_${this.theme}.png`)
     },
     menuBackground () {
       switch (this.theme) {
