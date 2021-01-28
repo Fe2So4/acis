@@ -466,13 +466,21 @@ export default {
     },
     handleChangeList (param) {
       const d = new Date()
+      let month = d.getMonth() + 1
+      let date = d.getDate()
+      month = month < 10 ? `0${month}` : `${month}`
+      date = date < 10 ? `0${date}` : `${date}`
       if (param === 1) {
         this.searchForm.date =
-          d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
+          d.getFullYear() + '-' + month + '-' + date
       } else {
         d.setTime(d.getTime() + 24 * 60 * 60 * 1000)
+        month = d.getMonth() + 1
+        date = d.getDate()
+        month = month < 10 ? `0${month}` : `${month}`
+        date = date < 10 ? `0${date}` : `${date}`
         this.searchForm.date =
-          d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
+          d.getFullYear() + '-' + month + '-' + date
       }
       this.getPatientList('')
     },
