@@ -152,11 +152,26 @@ export default {
     getData () {
       return this.getVitalSignDict().then(
         res => {
-          res.forEach((item) => {
+          const list = res.map(({
+            vitalItemCode = '',
+            vitalItemColor = '',
+            vitalItemIcon = '',
+            vitalItemIndex = '',
+            vitalItemName = '',
+            vitalItemUnit = ''
+          }) => ({
+            vitalItemCode,
+            vitalItemColor,
+            vitalItemIcon,
+            vitalItemIndex,
+            vitalItemName,
+            vitalItemUnit
+          }))
+          list.forEach((item) => {
             item._original = JSON.stringify(item)
             item.order = ++this.order
           })
-          this.list = res
+          this.list = list
         },
         e => {
           this.$message.error(e.message)
@@ -204,7 +219,7 @@ export default {
           vitalItemUnit: item.vitalItemUnit,
           vitalItemColor: item.vitalItemColor,
           vitalItemIcon: item.vitalItemIcon,
-          talItemIndex: item.talItemIndex
+          vitalItemIndex: item.vitalItemIndex
         }))
       const updateList = this.list.filter(({ _tag }) => _tag === 'modified')
         .map(item => ({
@@ -213,7 +228,7 @@ export default {
           vitalItemUnit: item.vitalItemUnit,
           vitalItemColor: item.vitalItemColor,
           vitalItemIcon: item.vitalItemIcon,
-          talItemIndex: item.talItemIndex
+          vitalItemIndex: item.vitalItemIndex
         }))
       if (addList.length + updateList.length + this.cacheDelete.length) {
         this.updateVitalSignDict({
@@ -234,7 +249,6 @@ export default {
       } else {
         this.$message.info('无修改数据')
       }
-      console.log(addList, updateList)
     },
     onAdd () {
       this.list.push({
@@ -259,7 +273,6 @@ export default {
       this.list.splice(index, 1)
     },
     validateItem (item) {
-      console.log(item)
       let { _original } = item
       if (_original) {
         _original = JSON.parse(_original)

@@ -83,10 +83,6 @@ export default {
     ])
     const normalList = Object.freeze([
       {
-        text: '体征折线',
-        path: 'SignLine'
-      },
-      {
         text: '常规',
         path: 'NormalSetting'
       },
