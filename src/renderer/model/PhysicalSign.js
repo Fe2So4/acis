@@ -212,22 +212,26 @@ export class PhysicalSignEventTags {
             ((thisMoment - this._startMoment) /
                 (this._endMoment - this._startMoment)) *
             this._group.attr('width')
-    x = Math.round(x)
     let y = this._group.attr('height') / 2
+    x = Math.round(x)
     y = Math.round(y)
-    const xBoundLeft = x - tagWidth / 2
-    const xBoundRight = x + tagWidth / 2
+    // 重叠判定尺寸是10px*10px
+    const overlap = 10
+    const xBoundMin = x - overlap / 2
+    const xBoundMax = x + overlap / 2
     const tags = this._group.querySelectorAll('.eventTag')
     while (
       Array.prototype.some.call(tags, (t) => {
         const [tagX, tagY] = t.attr('pos')
-        if (Math.min(tagX - tagWidth / 2, xBoundLeft) < Math.max(tagX + tagWidth / 2, xBoundRight)) {
-          return y >= tagY
-        }
-        return false
+        const yBoundMin = y - overlap / 2
+        const yBoundMax = y + overlap / 2
+        return (
+          Math.max(tagX - overlap / 2, xBoundMin) < Math.min(tagX + overlap / 2, xBoundMax) &&
+            Math.max(tagY - overlap / 2, yBoundMin) < Math.min(tagY + overlap / 2, yBoundMax)
+        )
       })
     ) {
-      y -= tagHeight
+      y -= overlap
     }
     tag.attr('pos', [x, y])
     this._group.append(tag)
