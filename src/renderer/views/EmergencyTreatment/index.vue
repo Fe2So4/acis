@@ -50,7 +50,14 @@
       el-row
         el-col(:span="6")
           el-form-item(label="手术时间")
-            el-input(v-model="form.ope_schedule_time")
+            el-date-picker(
+              v-model="form.ope_schedule_time"
+              popper-class="dateTimePicker"
+              format="yyyy-MM-dd HH:mm"
+              value-format="yyyy-MM-dd HH:mm"
+              type="datetime"
+              placeholder="选择日期时间"
+            )
         el-col(:span="6")
           el-form-item(label="台次")
             el-input(v-model="form.sequence")
@@ -456,7 +463,8 @@ export default {
         { className: 'first_ope_nurse', dict: true },
         { className: 'sec_ope_nurse', dict: true },
         { className: 'first_supply_nurse', dict: true },
-        { className: 'sec_supply_nurse', dict: true }
+        { className: 'sec_supply_nurse', dict: true },
+        { className: 'ope_name_after', dict: false }
       ]
       const sheel4 = [
         { className: 'nurse_shift_record', dict: true },
