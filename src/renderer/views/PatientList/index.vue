@@ -539,6 +539,7 @@ export default {
       this.setOperationId(item.operationId)
       this.setProcedureState(item.state)
       this.setRoomNo(item.roomNo)
+      console.log(item.state)
       const noNeedSocketState = [10, 11, 14, 15, 16, 17]
       if (!noNeedSocketState.includes(+item.state)) {
         Socket.create(item.operationId)

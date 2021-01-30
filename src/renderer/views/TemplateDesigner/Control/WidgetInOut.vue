@@ -797,7 +797,6 @@ export default {
             if (evt.originalEvent.button === 2) {
               if (evt.target.attr('className').indexOf('row') !== -1) {
                 this.groupNo = evt.target.attr('index')
-
                 this.drugStartTime =
                   moment(this.startTime) +
                   ((evt.x - leftPart.attr('width')) *

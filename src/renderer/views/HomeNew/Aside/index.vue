@@ -395,7 +395,8 @@ export default {
           type: 'warning',
           showCancelButton: false,
           customClass: 'messageBox'
-        }).then(() => {})
+        }).then(() => {}).catch(() => {
+        })
         return
       }
       this.activeIndex = index
