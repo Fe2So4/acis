@@ -226,7 +226,7 @@
       el-row
         el-col(:span="24")
           el-form-item(label="手术名称")
-            el-select(v-model="form.ope_name_after" placeholder="请选择")
+            el-select(v-model="form.ope_code_before" placeholder="请选择")
               el-option(
                 v-for="item in opeName"
                 :key="item.opeCode"
@@ -282,7 +282,8 @@ export default {
         third_anes_doc: '',
         first_ope_nurse: '',
         sec_ope_nurse: '',
-        ope_name_after: '',
+        ope_name_before: '',
+        ope_code_before: '',
         hospitalNo: '',
         room: '',
         first_assist: '',
@@ -323,6 +324,16 @@ export default {
       genderList: [{ value: '1', label: '男' }, { value: '2', label: '女' }]
     }
   },
+  watch: {
+    'form.ope_code_before': {
+      handler (newVal) {
+        var arr = this.opeName.filter(function (item) {
+          return item.opeCode === newVal
+        })
+        this.form.ope_name_before = arr[0].opeName
+      }
+    }
+  },
   methods: {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
@@ -346,7 +357,15 @@ export default {
           data.info.forEach(item => {
             if (item.className === i) {
               if (item.value === '') {
-                this.form[i] = item.label
+                if (item.className === 'gender') {
+                  if (item.label === '男') {
+                    this.form[i] = '1'
+                  } else {
+                    this.form[i] = '2'
+                  }
+                } else {
+                  this.form[i] = item.label
+                }
               } else {
                 this.form[i] = item.value
               }
@@ -448,7 +467,11 @@ export default {
       const sheel2 = [{ className: 'visit_id', dict: false }, { className: 'bed_id', dict: false }, { className: 'dept_code', dict: true },
         { className: 'memo', dict: false }, { className: 'ope_schedule_time', dict: false }, { className: 'ope_grade', dict: true },
         { className: 'anes_method', dict: true }, { className: 'surgeon', dict: true },
-        { className: 'first_assist', dict: true }, { className: 'second_assist', dict: true }, { className: 'third_assist', dict: true }, { className: 'forth_assist', dict: true }]
+        { className: 'first_assist', dict: true }, { className: 'second_assist', dict: true },
+        { className: 'third_assist', dict: true }, { className: 'forth_assist', dict: true },
+        { className: 'ope_name_before', dict: false },
+        { className: 'ope_code_before', dict: false }
+      ]
       const sheel3 = [{ className: 'diagnose_after', dict: false }, { className: 'sequence', dict: false },
         { className: 'ope_room', dict: true },
         { className: 'is_quarantine', dict: true },
@@ -463,8 +486,7 @@ export default {
         { className: 'first_ope_nurse', dict: true },
         { className: 'sec_ope_nurse', dict: true },
         { className: 'first_supply_nurse', dict: true },
-        { className: 'sec_supply_nurse', dict: true },
-        { className: 'ope_name_after', dict: false }
+        { className: 'sec_supply_nurse', dict: true }
       ]
       const sheel4 = [
         { className: 'nurse_shift_record', dict: true },
@@ -531,7 +553,7 @@ export default {
         if (res.data.code === 200) {
           this.$message({ type: 'success', message: '增加急诊成功' })
         } else {
-          this.$message({ type: 'error', message: '增加急诊失败' })
+          this.$message({ type: 'error', message: res.data.msg })
         }
       })
     },

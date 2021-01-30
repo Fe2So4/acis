@@ -366,7 +366,8 @@ export default {
         third_anes_doc: '',
         first_ope_nurse: '',
         sec_ope_nurse: '',
-        ope_name_after: '',
+        ope_name_before: '',
+        ope_code_before: '',
         hospitalNo: '',
         room: '',
         first_assist: '',
@@ -633,7 +634,7 @@ export default {
       })
       // console.log(obj)
       request({
-        url: register + '?operationId=10000011',
+        url: register + `?operationId=${this.operationId}`,
         method: 'POST',
         data: obj
       })
