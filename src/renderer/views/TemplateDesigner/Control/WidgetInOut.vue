@@ -290,13 +290,13 @@ export default {
       })
       // leftPart/leftTitle
       const leftTitle = leftPart.getElementsByClassName('leftTitle')[0]
-      leftTitle.attr({
-        size: [
-          this.configuration.leftTitle.width || 0,
-          leftPart.attr('height')
-        ]
-        // padding: [0, 10, 0, 10]
-      })
+      // leftTitle.attr({
+      //   size: [
+      //     this.configuration.leftTitle.width || 0,
+      //     leftPart.attr('height')
+      //   ]
+      //   // padding: [0, 10, 0, 10]
+      // })
       const leftTitleBorderRightLine = new Polyline({
         pos: [leftTitle.attr('width') - 0.5, 0],
         points: [0, 0, 0, leftPart.attr('height')],

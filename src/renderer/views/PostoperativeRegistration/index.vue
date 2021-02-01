@@ -64,7 +64,14 @@
     el-row
       el-col(:span="6")
         el-form-item(label="手术时间")
-          el-input(v-model="form.ope_schedule_time")
+          el-date-picker(
+            v-model="form.ope_schedule_time"
+            popper-class="dateTimePicker"
+            format="yyyy-MM-dd HH:mm"
+            value-format="yyyy-MM-dd HH:mm"
+            type="datetime"
+            placeholder="选择日期时间"
+          )
       el-col(:span="6")
         el-form-item(label="台次")
           el-input(v-model="form.sequence")
@@ -359,7 +366,8 @@ export default {
         third_anes_doc: '',
         first_ope_nurse: '',
         sec_ope_nurse: '',
-        ope_name_after: '',
+        ope_name_before: '',
+        ope_code_before: '',
         hospitalNo: '',
         room: '',
         first_assist: '',
@@ -626,7 +634,7 @@ export default {
       })
       // console.log(obj)
       request({
-        url: register + '?operationId=10000011',
+        url: register + `?operationId=${this.operationId}`,
         method: 'POST',
         data: obj
       })
