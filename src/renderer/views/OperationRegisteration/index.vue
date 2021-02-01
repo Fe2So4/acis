@@ -270,7 +270,7 @@
       el-row
         el-col(:span="24")
           el-form-item(label="手术名称")
-            el-select(v-model="form.ope_name_after", placeholder="请选择")
+            el-select(v-model="form.ope_code_before", placeholder="请选择")
               el-option(
                 v-for="item in opeName",
                 :key="item.opeCode",
@@ -325,7 +325,8 @@ export default {
         third_anes_doc: '',
         first_ope_nurse: '',
         sec_ope_nurse: '',
-        ope_name_after: '',
+        ope_code_before: '',
+        ope_name_before: '',
         hospitalNo: '',
         room: '',
         first_assist: '',
@@ -380,6 +381,16 @@ export default {
       ]
     }
   },
+  watch: {
+    'form.ope_code_before': {
+      handler (newVal) {
+        var arr = this.opeName.filter(function (item) {
+          return item.opeCode === newVal
+        })
+        this.form.ope_name_before = arr[0].opeName
+      }
+    }
+  },
   computed: {
     ...mapGetters('Base', ['operationId'])
   },
@@ -408,6 +419,13 @@ export default {
         const data = res.data.data
         for (var i in this.form) {
           data.forEach((item) => {
+            if (item.className === 'patient_gender') {
+              if (item.label === '男') {
+                this.form.gender = '1'
+              } else {
+                this.form.gender = '2'
+              }
+            }
             if (item.className === i) {
               if (item.value === '') {
                 this.form[i] = item.label
@@ -502,6 +520,10 @@ export default {
     updataData () {
       for (var i in this.form) {
         this.list.forEach((item) => {
+          if (item.className === 'patient_gender') {
+            item.value = this.form.gender
+            item.label = ''
+          }
           if (item.className === i) {
             if (item.value === '') {
               item.label = this.form[i]
@@ -527,7 +549,9 @@ export default {
         'first_assist',
         'second_assist',
         'third_assist',
-        'forth_assist'
+        'forth_assist',
+        'ope_code_before',
+        'ope_name_before'
       ]
       const sheel3 = [
         'diagnose_after',
@@ -545,8 +569,7 @@ export default {
         'first_ope_nurse',
         'sec_ope_nurse',
         'first_supply_nurse',
-        'sec_supply_nurse',
-        'ope_name_after'
+        'sec_supply_nurse'
       ]
       const sheel4 = [
         'nurse_shift_record',
@@ -564,11 +587,15 @@ export default {
       obj.acis_ope_schedule_info = []
       obj.acis_amount_record = []
       this.list.forEach((item) => {
-        sheel1.forEach((_item1) => {
-          if (_item1 === item.className) {
-            obj.acis_pat_master_index.push(item)
-          }
-        })
+        if (item.className === 'patient_gender') {
+          obj.acis_pat_master_index.push({ className: 'gender', value: item.value, label: item.label })
+        } else {
+          sheel1.forEach((_item1) => {
+            if (_item1 === item.className) {
+              obj.acis_pat_master_index.push(item)
+            }
+          })
+        }
         sheel2.forEach((_item2) => {
           if (_item2 === item.className) {
             obj.acis_ope_apply_info.push(item)
@@ -587,9 +614,15 @@ export default {
       })
       // console.log(obj)
       request({
-        url: register + '?operationId=10000011',
+        url: register + `?operationId=${this.operationId}`,
         method: 'POST',
         data: obj
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.$message({ type: 'success', message: '修改成功' })
+        } else {
+          this.$message({ type: 'error', message: res.data.msg })
+        }
       })
     },
     getDeptList () {

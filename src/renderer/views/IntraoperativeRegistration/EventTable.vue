@@ -101,7 +101,7 @@
           field="holdingTime"
           title="持续时间"
           width="100"
-          :edit-render="{name: '$input', props: {type: 'number'}, events: {change: onHoldingTimeChange}}"
+          :edit-render="{name: '$input', props: {type: 'number'}, events: {input: onHoldingTimeChange}}"
         />
         <vxe-table-column
           field="eventEndTime"
@@ -282,6 +282,7 @@ export default {
           }
           break
         case 'holdingTime':
+          console.log(holdingTime)
           if (+holdingTime) {
             if (eventStartTime) {
               row.isHolding = '1'

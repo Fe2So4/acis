@@ -167,7 +167,6 @@ export default {
             vitalItemName,
             vitalItemUnit
           }))
-          console.log(list)
           list.forEach((item) => {
             item._original = JSON.stringify(item)
             item.order = ++this.order
@@ -250,7 +249,6 @@ export default {
       } else {
         this.$message.info('无修改数据')
       }
-      console.log(addList, updateList)
     },
     onAdd () {
       this.list.push({
@@ -275,7 +273,6 @@ export default {
       this.list.splice(index, 1)
     },
     validateItem (item) {
-      console.log(item)
       let { _original } = item
       if (_original) {
         _original = JSON.parse(_original)
