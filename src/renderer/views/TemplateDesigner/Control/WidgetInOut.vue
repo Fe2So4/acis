@@ -290,13 +290,13 @@ export default {
       })
       // leftPart/leftTitle
       const leftTitle = leftPart.getElementsByClassName('leftTitle')[0]
-      // leftTitle.attr({
-      //   size: [
-      //     this.configuration.leftTitle.width || 0,
-      //     leftPart.attr('height')
-      //   ]
-      //   // padding: [0, 10, 0, 10]
-      // })
+      leftTitle.attr({
+        size: [
+          this.configuration.leftTitle.width || 0,
+          leftPart.attr('height')
+        ]
+        // padding: [0, 10, 0, 10]
+      })
       const leftTitleBorderRightLine = new Polyline({
         pos: [leftTitle.attr('width') - 0.5, 0],
         points: [0, 0, 0, leftPart.attr('height')],
@@ -372,32 +372,30 @@ export default {
       })
       const outPut = new Group({ className: 'outPut content' })
       drugList.append(infusion, bloodTransfusion, outPut)
-      const step = Math.round(
-        drugList.attr('height') /
+      const step = Math.round(drugList.attr('height') /
           (this.configuration.infusion.num +
             this.configuration.bloodTransfusion.num +
-            this.configuration.outPut.num)
-      )
+            this.configuration.outPut.num))
       infusion.attr({
         size: [leftMain.attr('width'), step * this.configuration.infusion.num]
-        // bgcolor: 'red'
       })
       const text1 = new Label(this.configuration.infusion.text)
       text1.attr({
         pos: [0, (step * this.configuration.infusion.num) / 2],
         anchor: [0, 0.5],
         fontSize: 12,
+        bgcolor: 'green',
         fontFamily: '宋体',
         textAlign: 'center',
         fillColor: 'black',
-        width: 30,
+        width: this.configuration.infusion.width,
         height: infusion.attr('height'),
         lineHeight: infusion.attr('height')
       })
       for (let i = 0; i < this.configuration.infusion.num; i++) {
         const infusionLine = new Polyline({
-          pos: [30, i * step - 0.5],
-          points: [0, 0, leftMain.attr('width') - 30, 0],
+          pos: [this.configuration.infusion.width, i * step - 0.5],
+          points: [0, 0, leftMain.attr('width') - this.configuration.infusion.width, 0],
           strokeColor: 'black',
           lineWidth: 1
         })
@@ -440,7 +438,9 @@ export default {
         })
         bloodTransfusion.append(centerLine)
       }
-      bloodTransfusion.append(bloodTransfusionTopLine)
+      if (this.configuration.bloodTransfusion.num) {
+        bloodTransfusion.append(bloodTransfusionTopLine)
+      }
       outPut.attr({
         size: [leftMain.attr('width'), step * this.configuration.outPut.num],
         pos: [
@@ -481,7 +481,10 @@ export default {
       if (this.configuration.outPut.num !== 0) {
         outPut.append(outPutTopLine)
       }
-      drugList.append(drugListBorderLeftLine, drugListBorderRightLine)
+      if (this.configuration.infusion.width !== 0) {
+        drugList.append(drugListBorderLeftLine)
+      }
+      drugList.append(drugListBorderRightLine)
 
       const middlePart = this.layer.getElementsByClassName('middlePart')[0]
       middlePart.attr({

@@ -16,6 +16,14 @@
         @change="onChange"
       />
     </el-form-item>
+    <el-form-item label="输液标题宽度">
+      <el-input-number
+        :value="value.width"
+        :min="0"
+        controls-position="right"
+        @change="onChangeWidth"
+      />
+    </el-form-item>
     <!-- <el-form-item label="时间标题行高">
       <el-input-number
         :value="value.lineHeight"
@@ -52,6 +60,14 @@ export default {
     onChange (currentValue, oldValue) {
       const configuration = Object.assign({}, this.value, {
         num: currentValue
+      })
+      this.$emit('change', {
+        infusion: configuration
+      })
+    },
+    onChangeWidth (currentValue, oldValue) {
+      const configuration = Object.assign({}, this.value, {
+        width: currentValue
       })
       this.$emit('change', {
         infusion: configuration

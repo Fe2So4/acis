@@ -116,11 +116,11 @@ export default function getConfigurationItems (widgetName) {
           lineInterval: 3
         },
         drugNumber: 10,
-        infusion: { text: '输液', num: 3 },
+        infusion: { text: '输液', num: 3, width: 30 },
         bloodTransfusion: {
           text: '输血', num: 2
         },
-        outPut: { text: '出量', num: 0 }
+        outPut: { text: '出量', num: 0, width: 30 }
       }
     case 'widget-anaes-table':
       return {
