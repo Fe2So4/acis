@@ -105,7 +105,11 @@ export default {
         textIndent: font.textIndent + 'pt'
       }
       const borderObj = border.position.reduce((obj, item) => {
-        obj['border-' + item] = border.width + 'px solid ' + border.color
+        let style = 'solid'
+        if (border.style) {
+          style = border.style
+        }
+        obj['border-' + item] = border.width + 'px ' + style + border.color
         return obj
       }, {})
 
