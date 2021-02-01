@@ -68,6 +68,7 @@ import BottomButtons from './BottomButtons'
 import DialogEventTimeRange from './DialogEventTimeRange'
 import DialogDesigner from './DialogDesigner'
 import { createNamespacedHelpers } from 'vuex'
+
 const { mapState } = createNamespacedHelpers('Base')
 export default {
   name: 'MedicalDocument',
@@ -139,27 +140,10 @@ export default {
     // 通用接口 - 获取模板和源数据表中查出的信息
     getTemplateAndValueData () {
       return Promise.all([
-        request({
-          url: getTemplateData,
-          method: 'POST',
-          params: {
-            templateCode: this.templateId
-          }
-        }),
-        request({
-          url: getValueData,
-          method: 'POST',
-          params: {
-            templateCode: this.templateId,
-            operationId: this.operationId,
-            patientId: this.patientId
-          }
-        })
+        this.getTemplateData(),
+        this.getValueData()
       ]).then((res) => {
-        const [widgetList, valueMap] = [
-          res[0].data.data.list,
-          res[1].data.data
-        ]
+        const [{ list: widgetList } = { list: [], isIntraoperative: false }, valueMap = {}] = res
         widgetList.forEach((widget) => {
           // 源数据赋值
           if (widget.dataSource) {
@@ -295,7 +279,8 @@ export default {
         path: `/printDocument/${this.templateId}/${this.operationId}/${this.patientId}/${this.pageIndex}/${this.isRescueMode}/${this.opePhase}/${this.pageInfo}`
       })
     },
-    onPrintAll () {},
+    onPrintAll () {
+    },
     onRefresh () {
       this.widgetList = []
       // 重置修改过的体征
@@ -398,7 +383,8 @@ export default {
       this.getData(this.pageIndex)
       this.$eventHub.$emit('document-refresh')
     },
-    showLeaveMessage (nextFn, rejectFn = () => {}) {
+    showLeaveMessage (nextFn, rejectFn = () => {
+    }) {
       const modified = this.validateModified()
       if (!modified) {
         nextFn()
@@ -535,6 +521,50 @@ export default {
         method: 'put',
         url: `${changeDisplayMode}/${!this.isRescueMode}/${this.operationId}`
       })
+    },
+    getTemplateData () {
+      return request({
+        url: getTemplateData,
+        method: 'POST',
+        params: {
+          templateCode: this.templateId
+        }
+      }).then(
+        res => {
+          if (res.data.success) {
+            return res.data.data || undefined
+          }
+          return Promise.reject(new Error('获取模板数据失败'))
+        }
+      ).catch(
+        e => {
+          this.$message.error(e.message)
+          return undefined
+        }
+      )
+    },
+    getValueData () {
+      return request({
+        url: getValueData,
+        method: 'POST',
+        params: {
+          templateCode: this.templateId,
+          operationId: this.operationId,
+          patientId: this.patientId
+        }
+      }).then(
+        res => {
+          if (res.data.success) {
+            return res.data.data || undefined
+          }
+          return Promise.reject(new Error('获取模板值失败'))
+        }
+      ).catch(
+        e => {
+          this.$message.error(e.message)
+          return undefined
+        }
+      )
     }
   }
 }

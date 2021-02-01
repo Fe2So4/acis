@@ -1,11 +1,11 @@
 import { ipcRenderer } from 'electron'
 const prodIp = ipcRenderer.sendSync('get-prod-ip')
 
-const mock =
-  process.env.NODE_ENV === 'development'
-    ? !(process.env.MOCK === 'none')
-    : false
-
+// const mock =
+//   process.env.NODE_ENV === 'development'
+//     ? !(process.env.MOCK === 'none')
+//     : false
+const mock = false
 const IP = {
   SERVER: prodIp,
   LOCAL: 'localhost',

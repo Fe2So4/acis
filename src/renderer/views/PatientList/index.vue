@@ -355,8 +355,8 @@ export default {
       searchForm: {
         id: '',
         name: '',
-        // date: moment().format('yyyy-MM-DD'),
-        date: '2020-08-06',
+        date: moment().format('yyyy-MM-DD'),
+        // date: '2020-08-06',
         endDate: '',
         anaesDoc: '',
         anaesMethod: '',
