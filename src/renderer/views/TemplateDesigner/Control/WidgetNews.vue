@@ -14,17 +14,15 @@
     <div class="newsContent">
       <div
         class="news"
-        v-for="news in newsList"
-        :key="news.order"
+        v-for="(news, idx) in newsList"
+        :key="idx"
         :style="{width: colWidth}"
       >
         <div class="order">
-          {{ news.order }}
+          {{ news.detailCode }}
         </div>
         <div>
-          {{ news.startTime | timeFilter }}
-          <span v-if="news.endTime">> {{ news.endTime | timeFilter }}</span>
-          {{ news.name }}
+          {{ news.detailName }}
         </div>
       </div>
     </div>
@@ -32,7 +30,7 @@
 </template>
 <script>
 import moment from 'moment'
-import { getEventData } from '@/api/medicalDocument'
+import { getAcisIntraoEventInfo } from '@/api/intraoperative'
 import request from '@/utils/requestForMock'
 export default {
   name: 'WidgetNews',
@@ -57,6 +55,11 @@ export default {
       type: String,
       required: false,
       default: ''
+    },
+    pageIndex: {
+      type: Number,
+      required: false,
+      default: -1
     }
   },
   watch: {
@@ -129,81 +132,36 @@ export default {
       widgetStyle = { ...widgetStyle, ...borderObj }
       this.widgetStyle = widgetStyle
     },
-    async getData () {
-      await this.getEventData()
-    },
-    getEventData () {
-      return request({
-        method: 'post',
-        url: getEventData,
-        data: {
-          startTime: this.startTime,
-          endTime: this.endTime,
-          operationId: this.operationId
+    getData () {
+      this.getAcisIntraoEventInfo().then(
+        list => {
+          this.newsList = list
+        },
+        e => {
+          this.$message.error(e.message)
         }
+      )
+    },
+    getAcisIntraoEventInfo () {
+      return request({
+        url: getAcisIntraoEventInfo,
+        data: {
+          operationId: this.operationId,
+          line: 40,
+          length: 20,
+          page: this.pageIndex + 1,
+          startTime: this.startTime,
+          endTime: this.endTime
+        },
+        method: 'post'
       }).then(
         res => {
-          this.newsList = this.convertEventData(res.data.data)
+          if (res.data.success) {
+            return res.data.data.eventList
+          }
+          return Promise.reject(new Error('获取术中事件信息失败'))
         }
       )
-    },
-    convertEventData (eventData) {
-      if (!Array.isArray(eventData)) {
-        return []
-      }
-      const startMoment = +moment(this.startTime)
-      const endMoment = +moment(this.endTime)
-      let order = 0
-      const list = eventData.reduce((arr, item) => {
-        const eventArr = []
-        const {
-          eventCode,
-          detailCode,
-          detailName: name,
-          drawIcon: label,
-          iconColor,
-          eventStartTime,
-          eventEndTime
-        } = item
-        if (eventStartTime) {
-          const eventStartMoment = +moment(eventStartTime, 'YYYY-MM-DD HH:mm:ss')
-          if (eventStartMoment >= startMoment && eventStartMoment <= endMoment) {
-            eventArr.push({
-              eventId: eventCode + '' + detailCode,
-              name: name + (eventEndTime ? '开始' : ''),
-              label,
-              color: iconColor ? '#' + iconColor : 'black',
-              time: eventStartTime,
-              startTime: eventStartTime,
-              endTime: eventEndTime
-            })
-          }
-        }
-        if (eventEndTime) {
-          const eventEndMoment = +moment(eventEndTime, 'YYYY-MM-DD HH:mm:ss')
-          if (eventEndMoment >= startMoment && eventEndMoment <= endMoment) {
-            eventArr.push({
-              eventId: eventCode + '' + detailCode,
-              name: name + '结束',
-              label,
-              color: iconColor ? '#' + iconColor : 'black',
-              time: eventEndTime,
-              startTime: eventStartTime,
-              endTime: eventEndTime
-            })
-          }
-        }
-        return arr.concat(eventArr)
-      }, [])
-      list.sort(
-        (a, b) =>
-          +moment(a.time, 'YYYY-MM-DD HH:mm:ss') -
-          +moment(b.time, 'YYYY-MM-DD HH:mm:ss')
-      )
-      list.forEach(item => {
-        item.order = ++order
-      })
-      return list
     }
   }
 }

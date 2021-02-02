@@ -272,6 +272,29 @@ export default function getConfigurationItems (widgetName) {
       }
     case 'widget-table':
       return widgetTableConfiguration
+    case 'widget-table-fj':
+      return {
+        font,
+        border,
+        columns: {
+          list: [
+            {
+              label: '表头1',
+              width: 'auto',
+              field: '字段'
+            },
+            {
+              label: '表头2',
+              width: '80',
+              field: '字段'
+            }
+          ]
+        },
+        row: {
+          height: 30,
+          length: 4
+        }
+      }
     default:
       return {}
   }

@@ -14,12 +14,12 @@ import debounce from 'lodash/debounce'
 import moment from 'moment'
 import {
   getSignData,
-  getEventData,
   getEventDictData
 } from '@/api/medicalDocument'
 import {
   getBloodGasAnalysisRecordTime
 } from '@/api/blood'
+import { getAcisIntraoEventInfo } from '@/api/intraoperative'
 import request from '@/utils/requestForMock'
 import {
   PhysicalSignLine,
@@ -59,6 +59,11 @@ export default {
     operationPhase: {
       type: [String, Number],
       default: '1'
+    },
+    pageIndex: {
+      type: Number,
+      required: false,
+      default: -1
     }
   },
   data () {
@@ -140,6 +145,7 @@ export default {
         this.getData()
       })
 
+      // 血气分析
       const grid = this.layer.querySelector('.grid')
       grid.addEventListener('dblclick', e => {
         const { x, y } = e
@@ -719,7 +725,7 @@ export default {
       if (Array.isArray(this.lineList)) {
         this.lineList.forEach(item => {
           const { min, max } = this.getYAxisValueRange(item.yindex)
-          if ((min === max) === 0) {
+          if (min === max) {
             return
           }
           const {
@@ -826,101 +832,45 @@ export default {
       this.eventTags.clear()
     },
     getPastEventData () {
-      return request({
-        method: 'post',
-        url: getEventData,
-        data: {
-          startTime: this.startTime,
-          endTime: this.endTime,
-          operationId: this.operationId
-        }
-      })
+      return this.getAcisIntraoEventInfo()
         .then(res => {
-          const requestData = res.data.data
-          this.eventList = this.convertEventData(requestData)
+          this.eventList = res
         })
-        .catch(err => {
-          console.log(err)
+        .catch(e => {
+          this.$message.error(e.message)
         })
-    },
-    convertEventData (eventData) {
-      if (!Array.isArray(eventData)) {
-        return []
-      }
-      const startMoment = +moment(this.startTime)
-      const endMoment = +moment(this.endTime)
-      let order = 0
-      const list = eventData.reduce((arr, item) => {
-        const eventArr = []
-        const {
-          eventCode,
-          detailCode,
-          detailName: name,
-          drawIcon: label,
-          iconColor,
-          eventStartTime,
-          eventEndTime
-        } = item
-        if (eventStartTime) {
-          const eventStartMoment = +moment(
-            eventStartTime,
-            'YYYY-MM-DD HH:mm:ss'
-          )
-          if (
-            eventStartMoment >= startMoment &&
-            eventStartMoment <= endMoment
-          ) {
-            eventArr.push({
-              eventId: eventCode + '' + detailCode,
-              name,
-              label,
-              color: iconColor ? '#' + iconColor : 'black',
-              time: eventStartTime,
-              startTime: eventStartTime,
-              endTime: eventEndTime
-            })
-          }
-        }
-        if (eventEndTime) {
-          const eventEndMoment = +moment(eventEndTime, 'YYYY-MM-DD HH:mm:ss')
-          if (eventEndMoment >= startMoment && eventEndMoment <= endMoment) {
-            eventArr.push({
-              eventId: eventCode + '' + detailCode,
-              name,
-              label,
-              color: iconColor ? '#' + iconColor : 'black',
-              time: eventEndTime,
-              startTime: eventStartTime,
-              endTime: eventEndTime
-            })
-          }
-        }
-        return arr.concat(eventArr)
-      }, [])
-      list.sort(
-        (a, b) =>
-          +moment(a.time, 'YYYY-MM-DD HH:mm:ss') -
-          +moment(b.time, 'YYYY-MM-DD HH:mm:ss')
-      )
-      list.forEach(item => {
-        item.order = ++order
-      })
-      return list
     },
     // 事件标识
     drawEventTags () {
       if (Array.isArray(this.eventList)) {
-        this.eventList.forEach(event => {
-          this.eventTags.addTag(event)
+        this.eventList.forEach(({
+          detailCode,
+          drawIcon,
+          eventName,
+          eventStartTime
+        }) => {
+          this.eventTags.addTag({
+            order: detailCode,
+            label: drawIcon,
+            time: eventStartTime
+          })
         })
       }
     },
     // 事件图例
     drawEventLegends () {
       if (Array.isArray(this.eventList)) {
-        this.eventList.forEach(event => {
-          if (event.label) {
-            this.legends.addLegend(event)
+        this.eventList.forEach(({
+          detailCode,
+          drawIcon,
+          eventName,
+          eventStartTime
+        }) => {
+          if (drawIcon) {
+            this.legends.addLegend({
+              label: drawIcon,
+              name: eventName
+            })
           }
         })
       }
@@ -1045,6 +995,27 @@ export default {
         startTime: this.configuration.xAxis.startTime,
         endTime: this.configuration.xAxis.endTime
       })
+    },
+    getAcisIntraoEventInfo () {
+      return request({
+        url: getAcisIntraoEventInfo,
+        data: {
+          operationId: this.operationId,
+          line: 40,
+          length: 20,
+          page: this.pageIndex + 1,
+          startTime: this.startTime,
+          endTime: this.endTime
+        },
+        method: 'post'
+      }).then(
+        res => {
+          if (res.data.success) {
+            return res.data.data.iconList
+          }
+          return Promise.reject(new Error('获取术中事件信息失败'))
+        }
+      )
     }
   }
 }

@@ -76,3 +76,6 @@ export const deleteEventTemplate = mock
 export const renameEventTemplate = mock
   ? ''
   : baseXie + 'acis/intraoperative/templete/changeAcisIntraoTempleteName'
+
+// 获取术中事件信息 - 李 - 2021-02-01
+export const getAcisIntraoEventInfo = baseLi + 'acis/intraoperative/info/getAcisIntraoEventInfo'

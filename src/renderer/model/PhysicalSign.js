@@ -160,7 +160,7 @@ export class PhysicalSignLegends {
     this.legends = []
   }
 
-  addLegend ({ label, name, color }) {
+  addLegend ({ label, name }) {
     const legend = new Label(label + name)
     legend.attr({
       anchor: [0, 0],
@@ -168,8 +168,7 @@ export class PhysicalSignLegends {
       fontFamily: '宋体',
       height: 20,
       textAlign: 'center',
-      verticalAlign: 'middle',
-      fillColor: color
+      verticalAlign: 'middle'
     })
     this.legends.push(legend)
     legend.attr('pos', [0, 20 * (this.legends.length - 1)])
@@ -190,7 +189,7 @@ export class PhysicalSignEventTags {
     this._endMoment = +moment(endTime)
   }
 
-  addTag ({ order, label, time, color }) {
+  addTag ({ order, label, time }) {
     const text = label || order + ''
     const tag = new Label(text)
     const tagWidth = 12
@@ -203,7 +202,6 @@ export class PhysicalSignEventTags {
       height: tagHeight,
       textAlign: 'center',
       verticalAlign: 'middle',
-      fillColor: color,
       className: 'eventTag'
     })
 
@@ -235,6 +233,7 @@ export class PhysicalSignEventTags {
       y -= overlap
     }
     tag.attr('pos', [x, y])
+    console.log(tag)
 
     this._group.append(tag)
   }

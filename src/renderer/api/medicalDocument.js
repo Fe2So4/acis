@@ -56,11 +56,6 @@ export const getSignData = mock
   ? '/api/getSignData'
   : baseXie + 'acis/intraoperative/info/getIntraoMonitorData'
 
-// 获取事件数据 - 谢 - 2020-07-15
-export const getEventData = mock
-  ? '/api/getEventData'
-  : baseXie + 'acis/intraoperative/info/getAcisIntraoEventInfo'
-
 // 获取事件列表 - 谢 - 2020-07-15
 export const getEventDictData = mock
   ? '/api/getEventDictData'

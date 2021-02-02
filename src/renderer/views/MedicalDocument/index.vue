@@ -41,7 +41,7 @@
       v-if="dialogEventTimeRangeVisible"
       :visible.sync="dialogEventTimeRangeVisible"
       :event-data="dialogEventData"
-      @event-added-successfully="onEventAddedSuccuessfully"
+      @event-added-successfully="onEventAddedSuccessfully"
     />
     <dialog-designer
       v-if="dialogDesignerVisible"
@@ -283,7 +283,7 @@ export default {
         this.$eventHub.$emit('document-redraw')
       }
     },
-    onEventAddedSuccuessfully () {
+    onEventAddedSuccessfully () {
       this.getData(this.pageIndex)
       this.$eventHub.$emit('document-refresh')
     },

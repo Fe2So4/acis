@@ -96,7 +96,7 @@ export default {
       },
       {
         label: '表格',
-        name: 'widget-table'
+        name: 'widget-table-fj'
       }
     ])
     const wrapStyle = Object.freeze([
