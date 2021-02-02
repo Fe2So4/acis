@@ -233,8 +233,6 @@ export class PhysicalSignEventTags {
       y -= overlap
     }
     tag.attr('pos', [x, y])
-    console.log(tag)
-
     this._group.append(tag)
   }
 

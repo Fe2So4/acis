@@ -33,6 +33,7 @@
               @change="onChange($event, item)"
               @change-sign-data="onChangeSignData"
               @dblclick-time="time => $emit('dblclick-time', time)"
+              @set-total-page="onSetTotalPage"
             />
           </widget-wrapper>
         </div>
@@ -155,6 +156,9 @@ export default {
           that.$emit('get-info', e.value)
         }
       })
+    },
+    onSetTotalPage (page) {
+      this.$emit('setTotalPage', Math.max(+this.totalPage, +page))
     }
   }
 }

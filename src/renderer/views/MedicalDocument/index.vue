@@ -21,6 +21,7 @@
       @change-sign-data="onChangeSignData"
       @get-info="onGetInfo"
       @dblclick-time="onDblclickTime"
+      @set-total-page="onSetTotalPage"
     />
     <bottom-buttons
       :rescue-mode="rescueMode"
@@ -129,6 +130,7 @@ export default {
         this.syncHis = to.params.syncHis
         this.opePhase = to.params.opePhase
         this.buttonConfig = to.params.buttonConfig
+        this.totalPage = 1
       },
       immediate: true
     }
@@ -178,20 +180,20 @@ export default {
             widget.dirty = false
             widget.value = value
           }
-          // 表格中赋值
-          if (widget.name === 'widget-table') {
-            widget.cells.forEach((row) => {
-              row.forEach((cell) => {
-                cell.value = valueMap[cell.tableName] && valueMap[cell.tableName].find(
-                  ({ className }) => className === cell.className
-                )
-                  ? valueMap[cell.tableName].find(
-                    ({ className }) => className === cell.className
-                  ).value
-                  : cell.value
-              })
-            })
-          }
+          // 表格中赋值 - 暂未使用 20210202 zwf
+          // if (widget.name === 'widget-table') {
+          //   widget.cells.forEach((row) => {
+          //     row.forEach((cell) => {
+          //       cell.value = valueMap[cell.tableName] && valueMap[cell.tableName].find(
+          //         ({ className }) => className === cell.className
+          //       )
+          //         ? valueMap[cell.tableName].find(
+          //           ({ className }) => className === cell.className
+          //         ).value
+          //         : cell.value
+          //     })
+          //   })
+          // }
         })
         let paperSettingIndex
         const paperSetting = widgetList.find((item, index) => {
@@ -254,8 +256,14 @@ export default {
     async getData (pageIndex) {
       this.loadingVisible = true
       await this.getTemplateAndValueData()
-      if (+this.pageInfo) {
-        await this.getIntraoperativeData(pageIndex)
+      // 0-没有分页 1-麻醉记录单、复苏记录单 2-药品耗材清单
+      switch (+this.pageInfo) {
+        case 1:
+          await this.getIntraoperativeData(pageIndex)
+          break
+        case 2:
+        case 0:
+        default:
       }
       const data = this.tempList
       data.forEach((item) => {
@@ -271,9 +279,15 @@ export default {
       this.dialogEventTimeRangeVisible = true
     },
     async onChangePage (pageIndex) {
-      console.log(pageIndex)
-      await this.getIntraoperativeData(pageIndex)
-      this.$eventHub.$emit('document-redraw')
+      switch (+this.pageInfo) {
+        case 1:
+          await this.getIntraoperativeData(pageIndex)
+          this.$eventHub.$emit('document-redraw')
+          break
+        case 2:
+        case 0:
+        default:
+      }
     },
     async onChangeRescueMode (rescueMode) {
       const result = await this.changeDisplayMode()
@@ -293,6 +307,9 @@ export default {
       })
     },
     onPrintAll () {
+    },
+    onSetTotalPage (page) {
+      this.totalPage = page
     },
     onRefresh () {
       this.widgetList = []

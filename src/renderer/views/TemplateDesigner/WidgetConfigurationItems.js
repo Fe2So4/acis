@@ -293,6 +293,10 @@ export default function getConfigurationItems (widgetName) {
         row: {
           height: 30,
           length: 4
+        },
+        request: {
+          api: '',
+          method: 'get'
         }
       }
     default:
