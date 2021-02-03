@@ -1450,13 +1450,10 @@ export default {
       }
     },
     setDrug () {
-      const leftPart = this.layer.getElementsByClassName('leftPart')[0]
-      const drugList = leftPart.getElementsByClassName('drugList')[0]
-
+      const leftPartOut = this.layer.getElementsByClassName('leftPart')[0]
+      const drugList = leftPartOut.getElementsByClassName('drugList')[0]
       const infusion = drugList.getElementsByClassName('infusion')[0]
-      const bloodTransfusion = drugList.getElementsByClassName(
-        'bloodTransfusion'
-      )[0]
+      const bloodTransfusion = drugList.getElementsByClassName('bloodTransfusion')[0]
       // const outPut = drugList.getElementsByClassName('outPut')[0]
       if (!this.editMode) {
         const leftPart = this.layer.getElementsByClassName('leftPart')[0]
@@ -1471,13 +1468,13 @@ export default {
           if (this.infusionDataList[i]) {
             const text = new Label(this.infusionDataList[i].eventName)
             text.attr({
-              pos: [30, lineHeight * i],
+              pos: [this.configuration.infusion.width, lineHeight * i],
               anchor: [0, 0],
               fontSize: 12,
               fontFamily: '宋体',
               textAlign: 'center',
               fillColor: 'blue',
-              width: width - 30,
+              width: width - this.configuration.infusion.width,
               height: lineHeight,
               lineHeight: lineHeight
             })
@@ -1490,13 +1487,13 @@ export default {
           if (this.bloodTransfusionDataList[i]) {
             const text = new Label(this.bloodTransfusionDataList[i].eventName)
             text.attr({
-              pos: [30, lineHeight * i],
+              pos: [this.configuration.bloodTransfusion.width, lineHeight * i],
               anchor: [0, 0],
               fontSize: 12,
               fontFamily: '宋体',
               textAlign: 'center',
               fillColor: 'blue',
-              width: width - 30,
+              width: width - this.configuration.bloodTransfusion.width,
               height: lineHeight,
               lineHeight: lineHeight
             })

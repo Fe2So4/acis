@@ -182,7 +182,7 @@ export default {
 
     .widgetContent {
       height: 100%;
-      overflow: hidden;
+      // overflow: hidden;
       position: relative;
     }
   }

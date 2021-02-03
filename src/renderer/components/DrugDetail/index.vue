@@ -138,7 +138,7 @@ export default {
     startTime: {
       handler (newVal, old) {
         this.form.startTime =
-          moment(new Date()).format('yyyy-MM-DD') +
+          moment(this.startTime).format('yyyy-MM-DD') +
           ' ' +
           moment(newVal).format('HH:mm')
         // console.log(newVal)
