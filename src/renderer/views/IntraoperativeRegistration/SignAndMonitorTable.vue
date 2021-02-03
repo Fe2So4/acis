@@ -9,13 +9,13 @@
         >
           体征数据
         </el-button>
-        <el-button
+        <!--        <el-button
           :type="state === 'monitor' ? 'primary': ''"
           size="mini"
           @click="onSelectMonitor"
         >
           监测数据
-        </el-button>
+        </el-button>-->
       </el-button-group>
       <el-button-group size="mini">
         <el-button
