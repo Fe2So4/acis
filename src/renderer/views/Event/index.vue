@@ -8,7 +8,10 @@
         <el-input
           v-model="searchName"
           placeholder
+          clearable
           size="mini"
+          @keyup.enter.native="getEventList"
+          @clear="getEventList"
         />
       </div>
       <div class="content">
@@ -731,7 +734,8 @@ export default {
         params: {
           eventCode: this.eventType.eventCode,
           pageIndex: this.currentPage,
-          pageSize: this.pageSize
+          pageSize: this.pageSize,
+          inputCode: this.searchName
         }
       }).then((res) => {
         // console.log(res.data.data)

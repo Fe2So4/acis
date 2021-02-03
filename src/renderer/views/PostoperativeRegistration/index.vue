@@ -192,8 +192,18 @@
             )
       el-col(:span="18")
         el-row
-          el-col(:span="8")
+          el-col(:span="6")
             el-form-item(label="麻醉医生")
+              el-select(v-model="form.anes_doc", placeholder="请选择")
+                el-option(
+                  v-for="item in doctorList",
+                  :key="item.userId",
+                  :label="item.userName",
+                  :value="item.userId",
+                  :disabled="form.sec_anes_doc === item.userId || form.third_anes_doc === item.userId"
+                )
+          el-col(:span="6")
+            el-form-item(label="")
               el-select(v-model="form.first_anes_doc", placeholder="请选择")
                 el-option(
                   v-for="item in doctorList",
@@ -202,7 +212,7 @@
                   :value="item.userId",
                   :disabled="form.sec_anes_doc === item.userId || form.third_anes_doc === item.userId"
                 )
-          el-col(:span="8")
+          el-col(:span="6")
             el-form-item(label="")
               el-select(v-model="form.sec_anes_doc", placeholder="请选择")
                 el-option(
@@ -212,7 +222,7 @@
                   :value="item.userId",
                   :disabled="form.first_anes_doc === item.userId || form.third_anes_doc === item.userId"
                 )
-          el-col(:span="8")
+          el-col(:span="6")
             el-form-item(label="")
               el-select(v-model="form.third_anes_doc", placeholder="请选择")
                 el-option(
@@ -319,7 +329,7 @@
         el-form-item(label="其他出量(ml)")
           el-input(v-model="form.amount_other")
   .option
-    el-button(size="mini", @click="resetForm('form')") 刷新(R)
+    el-button(size="mini", @click="handleRefresh") 刷新(R)
     el-button(size="mini", @click="submitForm('form')") 保存(S)
 </template>
 
@@ -360,9 +370,12 @@ export default {
         notch_num: '',
         is_emergency: '',
         infuse_doc: '',
+        first_supply_nurse: '',
+        sec_supply_nurse: '',
         anes_doc: '',
         surgeon: '',
         sec_anes_doc: '',
+        first_anes_doc: '',
         third_anes_doc: '',
         first_ope_nurse: '',
         sec_ope_nurse: '',
@@ -374,6 +387,7 @@ export default {
         second_assist: '',
         third_assist: '',
         forth_assist: '',
+        ope_name_after: '',
         nurse_shift_record: '',
         anesthesia_satisfaction: '',
         operative_process: '',
@@ -441,6 +455,9 @@ export default {
         }
       })
     },
+    handleRefresh () {
+      this.getData()
+    },
     resetForm (formName) {
       this.$refs[formName].resetFields()
     },
@@ -455,7 +472,13 @@ export default {
         const data = res.data.data
         for (var i in this.form) {
           data.forEach((item) => {
-            if (item.className === i) {
+            if (item.className === 'patient_gender') {
+              if (item.label === '男') {
+                this.form.gender = '1'
+              } else {
+                this.form.gender = '2'
+              }
+            } else if (item.className === i) {
               if (item.value === '') {
                 this.form[i] = item.label
               } else {
@@ -550,7 +573,19 @@ export default {
       for (var i in this.form) {
         this.list.forEach((item) => {
           if (item.className === i) {
-            if (item.value === '') {
+            const dict = ['anes_method',
+              'surgeon',
+              'first_supply_nurse',
+              'sec_supply_nurse',
+              'first_ope_nurse',
+              'sec_ope_nurse',
+              'ope_name_after',
+              'nurse_shift_record',
+              'anesthesia_satisfaction',
+              'operative_process',
+              'equipment_inventory',
+              'first_assist', 'second_assist', 'third_assist', 'forth_assist', 'infuse_doc', 'anes_doc', 'first_anes_doc', 'sec_anes_doc', 'third_anes_doc']
+            if (item.value === '' && !dict.includes(item.className)) {
               item.label = this.form[i]
             } else {
               item.value = this.form[i]
@@ -611,11 +646,15 @@ export default {
       obj.acis_ope_schedule_info = []
       obj.acis_amount_record = []
       this.list.forEach((item) => {
-        sheel1.forEach((_item1) => {
-          if (_item1 === item.className) {
-            obj.acis_pat_master_index.push(item)
-          }
-        })
+        if (item.className === 'patient_gender') {
+          obj.acis_pat_master_index.push({ value: this.form.gender, className: 'gender', label: '' })
+        } else {
+          sheel1.forEach((_item1) => {
+            if (_item1 === item.className) {
+              obj.acis_pat_master_index.push(item)
+            }
+          })
+        }
         sheel2.forEach((_item2) => {
           if (_item2 === item.className) {
             obj.acis_ope_apply_info.push(item)
@@ -637,6 +676,10 @@ export default {
         url: register + `?operationId=${this.operationId}`,
         method: 'POST',
         data: obj
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.getData()
+        }
       })
     },
     getDeptList () {
@@ -647,8 +690,7 @@ export default {
       })
     }
   },
-  mounted () {
-    this.getData()
+  created () {
     // 获取手术方法
     this.getMethodData()
     // 获取手术等级
@@ -669,6 +711,10 @@ export default {
     this.getOpeName()
     // 获取科室列表
     this.getDeptList()
+    this.getData()
+  },
+  mounted () {
+
   }
 }
 </script>
