@@ -1,19 +1,23 @@
 <template lang="pug">
   .about
     .img
-      img(src="../../assets/tq.png" alt="")
-    .title 麻醉临床信息系统
+      img(:src="logoSource" alt="蓝想数科")
+    .title 临床麻醉信息系统
     //- .title Dandelion手术中心麻醉临床信息系统
     .option
       el-button(size="mini" @click="handleClose") 确定
-    .copy-right copyright&copy;仝佥信息版权所有
+    .copy-right copyright&copy;蓝想数科版权所有
 </template>
 
 <script>
-export default {
-  data () {
-    return {
+import { mapState } from 'vuex'
 
+export default {
+  name: 'About',
+  computed: {
+    ...mapState('Base', ['theme']),
+    logoSource () {
+      return require(`@/assets/lan_${this.theme}.png`)
     }
   },
   methods: {
