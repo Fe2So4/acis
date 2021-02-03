@@ -50,7 +50,7 @@
     el-row
       el-col(:span="24")
         el-form-item(label="主要诊断")
-          el-select(v-model="form.diagnose_after", placeholder="请选择诊断")
+          el-select(v-model="form.diagnose_before", placeholder="请选择诊断")
             el-option(
               v-for="item in diagnoseList",
               :key="item.diagCode",
@@ -188,8 +188,17 @@
             )
       el-col(:span="18")
         el-row
-          el-col(:span="8")
+          el-col(:span="6")
             el-form-item(label="麻醉医生")
+              el-select(v-model="form.anes_doc", placeholder="请选择")
+                el-option(
+                  v-for="item in doctorList",
+                  :key="item.userId",
+                  :label="item.userName",
+                  :value="item.userId"
+                )
+          el-col(:span="6")
+            el-form-item(label="")
               el-select(v-model="form.first_anes_doc", placeholder="请选择")
                 el-option(
                   v-for="item in doctorList",
@@ -197,7 +206,7 @@
                   :label="item.userName",
                   :value="item.userId"
                 )
-          el-col(:span="8")
+          el-col(:span="6")
             el-form-item(label="")
               el-select(v-model="form.sec_anes_doc", placeholder="请选择")
                 el-option(
@@ -206,7 +215,7 @@
                   :label="item.userName",
                   :value="item.userId"
                 )
-          el-col(:span="8")
+          el-col(:span="6")
             el-form-item(label="")
               el-select(v-model="form.third_anes_doc", placeholder="请选择")
                 el-option(
@@ -258,7 +267,7 @@
     el-row
       el-col(:span="24")
         el-form-item(label="手术名称")
-          el-select(v-model="form.ope_name_after", placeholder="请选择")
+          el-select(v-model="form.ope_code_before", placeholder="请选择")
             el-option(
               v-for="item in opeName",
               :key="item.opeCode",
@@ -266,7 +275,7 @@
               :value="item.opeCode"
             )
   .option
-    el-button(size="mini", @click="resetForm('form')") 刷新(R)
+    el-button(size="mini", @click="handleRefresh") 刷新(R)
     el-button(size="mini", @click="submitForm('form')") 保存(S)
 </template>
 
@@ -295,7 +304,7 @@ export default {
         birthday: '',
         bed_id: '',
         dept_code: '',
-        diagnose_after: '',
+        diagnose_before: '',
         memo: '',
         ope_schedule_time: '',
         sequence: '',
@@ -311,9 +320,11 @@ export default {
         surgeon: '',
         sec_anes_doc: '',
         third_anes_doc: '',
+        first_anes_doc: '',
         first_ope_nurse: '',
         sec_ope_nurse: '',
-        ope_name_after: '',
+        ope_name_before: '',
+        ope_code_before: '',
         hospitalNo: '',
         room: '',
         first_assist: '',
@@ -328,7 +339,9 @@ export default {
         fluid_volume: '',
         blood_losses: '',
         urine_volumn: '',
-        amount_other: ''
+        amount_other: '',
+        first_supply_nurse: '',
+        sec_supply_nurse: ''
       },
       rules: {
         ptId: [{ required: true, message: '请输入患者ID', trigger: 'change' }],
@@ -368,6 +381,16 @@ export default {
       ]
     }
   },
+  watch: {
+    'form.ope_code_before': {
+      handler (newVal) {
+        var arr = this.opeName.filter(function (item) {
+          return item.opeCode === newVal
+        })
+        this.form.ope_name_before = arr[0].opeName
+      }
+    }
+  },
   computed: {
     ...mapGetters('Base', ['operationId'])
   },
@@ -383,7 +406,10 @@ export default {
       })
     },
     resetForm (formName) {
-      this.$refs[formName].resetFields()
+      // this.$refs[formName].resetFields()
+    },
+    handleRefresh () {
+      this.getData()
     },
     getData () {
       request({
@@ -497,7 +523,10 @@ export default {
       for (var i in this.form) {
         this.list.forEach((item) => {
           if (item.className === i) {
-            if (item.value === '') {
+            const dict = ['anes_method',
+              'surgeon',
+              'first_assist', 'second_assist', 'third_assist', 'forth_assist', 'infuse_doc', 'anes_doc', 'first_anes_doc', 'sec_anes_doc', 'third_anes_doc']
+            if (item.value === '' && !dict.includes(item.className)) {
               item.label = this.form[i]
             } else {
               item.value = this.form[i]
@@ -521,10 +550,12 @@ export default {
         'first_assist',
         'second_assist',
         'third_assist',
-        'forth_assist'
+        'forth_assist',
+        'diagnose_before',
+        'ope_name_before',
+        'ope_code_before'
       ]
       const sheel3 = [
-        'diagnose_after',
         'sequence',
         'ope_room',
         'is_quarantine',
@@ -539,8 +570,7 @@ export default {
         'first_ope_nurse',
         'sec_ope_nurse',
         'first_supply_nurse',
-        'sec_supply_nurse',
-        'ope_name_after'
+        'sec_supply_nurse'
       ]
       const sheel4 = [
         'nurse_shift_record',
@@ -583,6 +613,10 @@ export default {
         url: register + '?operationId=' + this.operationId,
         method: 'POST',
         data: obj
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.getData()
+        }
       })
     },
     getDeptList () {
