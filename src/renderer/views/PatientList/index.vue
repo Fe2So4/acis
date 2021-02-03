@@ -42,6 +42,7 @@
                 v-model="opeRoom"
                 size="mini"
                 placeholder
+                @change="handleRoomChange"
                 clearable
                 style="width:160px;"
               >
@@ -334,9 +335,9 @@
 <script>
 import moment from 'moment'
 import request from '../../utils/requestForMock'
-import { opeList, roomList } from '@/api/patientList'
-import { mapState, mapActions } from 'vuex'
-import { Socket } from '@/model/Socket'
+import { opeList, roomList, getDefaultRoom } from '@/api/patientList'
+import { mapState, mapActions, mapGetters } from 'vuex'
+import { Socket, SocketRoom } from '@/model/Socket'
 import {
   anaesMethodDetail,
   doctorData,
@@ -396,6 +397,7 @@ export default {
   },
   computed: {
     ...mapState('Base', ['theme']),
+    ...mapGetters('Base', ['operationId']),
     noMore () {
       return this.currentPage >= this.totalPages
     },
@@ -413,6 +415,8 @@ export default {
     this.getDoctorList()
     // 获取手术方法
     this.getMethodData()
+    // 绑定默认手术间
+    this.getDefaultRoom()
   },
   mounted () {
     this.getPatientList()
@@ -428,6 +432,62 @@ export default {
       'setProcedureState',
       'setRoomNo'
     ]),
+    getDefaultRoom () {
+      request({
+        url: getDefaultRoom
+      }).then(res => {
+        this.opeRoom = res.data.data
+        this.initSocket()
+      })
+    },
+    initSocket () {
+      if (this.opeRoom !== '') {
+        SocketRoom.create(this.opeRoom)
+        this.socket = SocketRoom.getInstance()
+        this.socket.on('push_operation_cancel_event', (res) => {
+          console.log(res)
+          if (res.length) {
+            switch (res[0].itemCode) {
+              case '2':
+                // if (res[0].operationId === this.operationId) {
+                //   this.$confirm('当前操作需先选择患者', '提示', {
+                //     confirmButtonText: '确定',
+                //     type: 'warning',
+                //     showCancelButton: false,
+                //     customClass: 'messageBox'
+                //   }).then(() => {}).catch(() => {
+                //   })
+                // }
+                this.getPatientList('')
+                break
+              case '1':
+                if (this.operationId && res[0].itemValue === this.operationId) {
+                  if (Socket.instance) {
+                    console.log(Socket.instance)
+                  }
+                  this.$confirm('当前患者已被取消', '提示', {
+                    confirmButtonText: '确定',
+                    type: 'warning',
+                    showCancelButton: false,
+                    customClass: 'messageBox'
+                  }).then(() => {
+                    this.$router.push('/home')
+                    this.getPatientList('')
+                  }).catch(() => {
+                  })
+                } else {
+                  this.getPatientList('')
+                }
+            }
+          }
+        })
+      }
+    },
+    handleRoomChange () {
+      this.socket.close()
+      this.socket = null
+      this.initSocket()
+    },
     hanldeSelectPatient (item, index) {
       this.setPatientId(item.patientId)
       this.setOperationId(item.operationId)
@@ -584,7 +644,7 @@ export default {
       }).then((res) => {
         const data = res.data.data
         this.roomList = data.roomList
-        this.opeRoom = data.defaultRoom
+        // this.opeRoom = data.defaultRoom
       })
     },
     getPatientList (param) {
