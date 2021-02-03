@@ -160,7 +160,7 @@ export class PhysicalSignLegends {
     this.legends = []
   }
 
-  addLegend ({ label, name }) {
+  addLegend ({ label, name, color }) {
     const legend = new Label(label + name)
     legend.attr({
       anchor: [0, 0],
@@ -168,7 +168,8 @@ export class PhysicalSignLegends {
       fontFamily: '宋体',
       height: 20,
       textAlign: 'center',
-      verticalAlign: 'middle'
+      verticalAlign: 'middle',
+      fillColor: color || 'black'
     })
     this.legends.push(legend)
     legend.attr('pos', [0, 20 * (this.legends.length - 1)])
