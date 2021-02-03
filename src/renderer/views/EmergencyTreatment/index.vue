@@ -112,7 +112,7 @@
       el-row
         el-col(:span="6")
           el-form-item(label="手术医师")
-            el-select(v-model="form.surgeon" placeholder="请选择手术间")
+            el-select(v-model="form.surgeon" placeholder="请选择")
               el-option(
                 v-for="item in doctorList"
                 :key="item.userId"

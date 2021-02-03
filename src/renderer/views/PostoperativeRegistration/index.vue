@@ -455,7 +455,13 @@ export default {
         const data = res.data.data
         for (var i in this.form) {
           data.forEach((item) => {
-            if (item.className === i) {
+            if (item.className === 'patient_gender') {
+              if (item.label === '男') {
+                this.form.gender = '1'
+              } else {
+                this.form.gender = '2'
+              }
+            } else if (item.className === i) {
               if (item.value === '') {
                 this.form[i] = item.label
               } else {
@@ -648,7 +654,6 @@ export default {
     }
   },
   mounted () {
-    this.getData()
     // 获取手术方法
     this.getMethodData()
     // 获取手术等级
@@ -669,6 +674,7 @@ export default {
     this.getOpeName()
     // 获取科室列表
     this.getDeptList()
+    this.getData()
   }
 }
 </script>
