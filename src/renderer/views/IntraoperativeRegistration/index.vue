@@ -432,7 +432,7 @@ export default {
   height: 80vh;
   .event {
     display: grid;
-    grid-template-columns: 80% calc(20% - 20px);
+    grid-template-columns: 70% calc(30% - 20px);
     grid-gap: 20px;
   }
   .detail {

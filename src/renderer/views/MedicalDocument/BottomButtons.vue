@@ -44,7 +44,7 @@
       </div>
     </div>
     <div class="buttons rightButtons">
-      <div
+      <!--      <div
         class="button red"
         v-if="hasSwitchRescueModeButton && !isRescueMode"
         @click="$emit('change-rescue-mode', true)"
@@ -57,7 +57,7 @@
         @click="$emit('change-rescue-mode', false)"
       >
         普通模式
-      </div>
+      </div>-->
       <!-- <div
         class="button"
         @click="$emit('print-all')"

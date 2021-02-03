@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow, Menu, ipcMain } from 'electron'
+import { app, BrowserWindow, Menu, ipcMain, dialog } from 'electron'
 // import { type } from 'process'
 import '../renderer/store'
 import { filePath as configJsonFilePath } from './ip'
@@ -245,7 +245,7 @@ ipcMain.on('open-new-window', (e, locationName, title) => {
 const printWindows = new Set()
 const createPrintWindow = (printRoute) => {
   let newPrintWindow = new BrowserWindow({
-    // show: false,
+    show: false,
     webPreferences: {
       webSecurity: false,
       nodeIntegration: true
@@ -253,9 +253,9 @@ const createPrintWindow = (printRoute) => {
   })
 
   newPrintWindow.loadURL(winURL)
-  newPrintWindow.once('ready-to-show', () => {
-    newPrintWindow.show()
-  })
+  // newPrintWindow.once('ready-to-show', () => {
+  //   newPrintWindow.show()
+  // })
 
   newPrintWindow.webContents.on('did-finish-load', () => {
     newPrintWindow.webContents.send('printRoute', printRoute)
@@ -282,6 +282,18 @@ ipcMain.on('ready-to-print', () => {
       bottom: 50,
       left: 50,
       right: 10
+    }
+  }, (success, errorType) => {
+    if (!success) {
+      console.log(errorType)
+      dialog.showMessageBox(printWin, {
+        type: 'info',
+        title: '提示',
+        message: '未完成打印'
+      })
+    }
+    if (printWin) {
+      printWin.close()
     }
   })
 })
