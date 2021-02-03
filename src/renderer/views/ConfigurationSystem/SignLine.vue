@@ -82,7 +82,7 @@
             placeholder="请选择Y轴索引"
           >
             <el-option
-              v-for="o in 5"
+              v-for="o in [0,1,2]"
               :key="o"
               :value="o"
               :label="o"
