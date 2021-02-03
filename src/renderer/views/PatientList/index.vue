@@ -450,18 +450,19 @@ export default {
           if (res.length) {
             switch (res[0].itemCode) {
               case '2':
-                if (res[0].operationId === this.operationId) {
-                  this.$confirm('当前操作需先选择患者', '提示', {
-                    confirmButtonText: '确定',
-                    type: 'warning',
-                    showCancelButton: false,
-                    customClass: 'messageBox'
-                  }).then(() => {}).catch(() => {
-                  })
-                }
+                // if (res[0].operationId === this.operationId) {
+                //   this.$confirm('当前操作需先选择患者', '提示', {
+                //     confirmButtonText: '确定',
+                //     type: 'warning',
+                //     showCancelButton: false,
+                //     customClass: 'messageBox'
+                //   }).then(() => {}).catch(() => {
+                //   })
+                // }
+                this.getPatientList('')
                 break
               case '1':
-                if (this.operationId && res[0].itemCode === this.operationId) {
+                if (this.operationId && res[0].itemValue === this.operationId) {
                   if (Socket.instance) {
                     console.log(Socket.instance)
                   }
@@ -472,6 +473,7 @@ export default {
                     customClass: 'messageBox'
                   }).then(() => {
                     this.$router.push('/home')
+                    this.getPatientList('')
                   }).catch(() => {
                   })
                 } else {
