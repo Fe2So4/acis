@@ -27,6 +27,7 @@
 </template>
 <script>
 import ThemePicker from './ThemePicker'
+import { SocketRoom } from '@/model/Socket'
 const { BrowserWindow, dialog } = require('electron').remote
 const win = BrowserWindow.getAllWindows()[0]
 export default {
@@ -38,22 +39,38 @@ export default {
     return {
       activeIndex: -1,
       isMax: win.isMaximized(),
-      iconMax: 'icon-icon_max'
+      iconMax: 'icon-icon_max',
+      socket: null
     }
   },
 
-  mounte () {
+  mounted () {
     win.on('maximize', () => {
       this.isMax = true
     })
     win.on('unmaximize', () => {
       this.isMax = false
     })
+    // this.initSocket()
+  },
+  beforeDestroy () {
+    const socket = SocketRoom.getInstance()
+    if (socket) {
+      SocketRoom.close()
+    }
+    // this.socket = null
   },
   methods: {
     miniWindow () {
       // 最小化窗口
       win.minimize()
+    },
+    initSocket () {
+      SocketRoom.create(601)
+      this.socket = SocketRoom.getInstance()
+      this.socket.on('push_operation_cancel_event', (res) => {
+        console.log(res)
+      })
     },
     maxWindow () {
       const isMax = win.isMaximized()

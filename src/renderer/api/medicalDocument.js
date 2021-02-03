@@ -3,6 +3,7 @@ import {
   baseZhong,
   baseLi,
   socketLi,
+  socketRoom,
   baseXie
 } from './urlAndPortConfig'
 
@@ -83,6 +84,9 @@ export const saveDocumentData = mock
 
 // socket.io 地址 - 李 - 2020-07-14
 export const getSocketData = socketLi
+
+// socket.io 地址 - 李 - 2020-07-14
+export const getSocketRoom = socketRoom
 
 // 保存修改过的体征 - 谢 - 2020-07-16
 export const saveChangedSignData = mock

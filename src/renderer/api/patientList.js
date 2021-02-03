@@ -13,3 +13,5 @@ export const addStatus = `${config.default.api.baseURL}/acis/superConfig/addTime
 export const opeSchedule = `${config.default.api.baseURL}/acis/operation/getOpeArrangeTable`
 
 export const opeDirection = `${config.default.api.baseURL}/acis/superConfig/addDirectionAfterOpeRoom`
+
+export const getDefaultRoom = `${config.default.api.baseURL}/acis/superConfig/getRoomByIp`

@@ -15,7 +15,8 @@ const IP = {
 }
 const PORT = {
   BASE: '8090',
-  SOCKET: '9093'
+  SOCKET: '9093',
+  SOCKETROOM: '9099'
 }
 const developmentIpType = 'LI' // 'SERVER' / ''
 const productIpType = 'SERVER' // 'SERVER' / 'LOCAL'
@@ -38,6 +39,11 @@ const socketLi =
     ? `http://${IP_LI}:${PORT.SOCKET}/`
     : `http://${IP_BASE}:${PORT.SOCKET}/`
 
+const socketRoom =
+  process.env.NODE_ENV === 'development'
+    ? `http://${IP_LI}:${PORT.SOCKETROOM}/`
+    : `http://${IP_BASE}:${PORT.SOCKETROOM}/`
+
 // 谢
 const baseXie =
   process.env.NODE_ENV === 'development'
@@ -50,4 +56,4 @@ const baseZhong =
     ? `http://${IP_ZHONG}:${PORT.BASE}/`
     : URL_PRODUCT
 
-export { mock, baseLi, socketLi, baseXie, baseZhong }
+export { mock, baseLi, socketLi, socketRoom, baseXie, baseZhong }

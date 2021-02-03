@@ -8,6 +8,7 @@
     <drug-list
       v-if="drugListVisible"
       :position="position"
+      :drug-list-visible.sync="drugListVisible"
       :menu-list="list"
       @handleClick="handleAddDrug"
     />

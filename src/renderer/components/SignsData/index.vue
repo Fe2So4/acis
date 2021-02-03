@@ -76,7 +76,6 @@ export default {
       if (!this.socket) return
       // 体征数据
       const that = this
-      console.log('触发')
       this.socket.on('push_monitor_event_realtime', (res) => {
         console.log(res)
         if (Array.isArray(res)) {
