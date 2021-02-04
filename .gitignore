@@ -13,3 +13,4 @@ thumbs.db
 .idea
 LOG_INFO/
 *.log
+plugins/
