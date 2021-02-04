@@ -233,8 +233,8 @@
                 :label="item.opeName"
                 :value="item.opeCode")
     .option
-      el-button(size="mini" @click="resetForm('form')") 刷新(R)
-      el-button(size="mini" @click="updataData") 保存(S)
+      el-button(size="mini" @click="resetForm('form')") 重置(R)
+      el-button(size="mini" @click="submitForm('form')") 保存(S)
 </template>
 
 <script>
@@ -260,7 +260,7 @@ export default {
         patient_id: '',
         visit_id: '',
         patient_name: '',
-        gender: '',
+        gender: '1',
         birthday: '',
         bed_id: '',
         dept_code: '',
@@ -338,7 +338,7 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // alert('submit!')
+          alert('submit!')
         } else {
           return false
         }
@@ -559,6 +559,50 @@ export default {
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
+      this.form = {
+        patient_id: '',
+        visit_id: '',
+        patient_name: '',
+        gender: '1',
+        birthday: '',
+        bed_id: '',
+        dept_code: '',
+        diagnose_after: '',
+        memo: '',
+        ope_schedule_time: '',
+        sequence: '',
+        ope_room: '',
+        is_quarantine: '',
+        ope_grade: '',
+        anes_method: '',
+        notch_level: '',
+        notch_num: '',
+        is_emergency: '',
+        infuse_doc: '',
+        anes_doc: '',
+        surgeon: '',
+        sec_anes_doc: '',
+        third_anes_doc: '',
+        first_ope_nurse: '',
+        sec_ope_nurse: '',
+        ope_name_before: '',
+        ope_code_before: '',
+        hospitalNo: '',
+        room: '',
+        first_assist: '',
+        second_assist: '',
+        third_assist: '',
+        forth_assist: '',
+        nurse_shift_record: '',
+        anesthesia_satisfaction: '',
+        operative_process: '',
+        equipment_inventory: '',
+        blood_transfusion_volume: '',
+        fluid_volume: '',
+        blood_losses: '',
+        urine_volumn: '',
+        amount_other: ''
+      }
     }
   },
   mounted () {

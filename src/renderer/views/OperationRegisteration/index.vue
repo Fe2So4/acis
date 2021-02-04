@@ -192,17 +192,27 @@
               )
         el-col(:span="18")
           el-row
-            el-col(:span="8")
+            el-col(:span="6")
               el-form-item(label="麻醉医生")
+                el-select(v-model="form.anes_doc", placeholder="请选择")
+                  el-option(
+                    v-for="item in doctorList",
+                    :key="item.userId",
+                    :label="item.userName",
+                    :value="item.userId",
+                    :disabled="form.sec_anes_doc === item.userId || form.first_anes_doc === item.userId ||form.third_anes_doc === item.userId"
+                  )
+            el-col(:span="6")
+              el-form-item(label="")
                 el-select(v-model="form.first_anes_doc", placeholder="请选择")
                   el-option(
                     v-for="item in doctorList",
                     :key="item.userId",
                     :label="item.userName",
                     :value="item.userId",
-                    :disabled="form.sec_anes_doc === item.userId || form.third_anes_doc === item.userId"
+                    :disabled="form.sec_anes_doc === item.userId || form.anes_doc === item.userId || form.third_anes_doc === item.userId"
                   )
-            el-col(:span="8")
+            el-col(:span="6")
               el-form-item(label="")
                 el-select(v-model="form.sec_anes_doc", placeholder="请选择")
                   el-option(
@@ -210,9 +220,9 @@
                     :key="item.userId",
                     :label="item.userName",
                     :value="item.userId",
-                    :disabled="form.first_anes_doc === item.userId || form.third_anes_doc === item.userId"
+                    :disabled="form.first_anes_doc === item.userId || form.third_anes_doc === item.userId || form.anes_doc === item.userId"
                   )
-            el-col(:span="8")
+            el-col(:span="6")
               el-form-item(label="")
                 el-select(v-model="form.third_anes_doc", placeholder="请选择")
                   el-option(
@@ -220,7 +230,7 @@
                     :key="item.userId",
                     :label="item.userName",
                     :value="item.userId",
-                    :disabled="form.sec_anes_doc === item.userId || form.first_anes_doc === item.userId"
+                    :disabled="form.sec_anes_doc === item.userId || form.first_anes_doc === item.userId || form.anes_doc === item.userId"
                   )
       el-row
         el-col(:span="12")
@@ -319,6 +329,7 @@ export default {
         is_emergency: '',
         infuse_doc: '',
         anes_doc: '',
+        first_anes_doc: '',
         surgeon: '',
         sec_anes_doc: '',
         third_anes_doc: '',
@@ -327,6 +338,8 @@ export default {
         ope_code_before: '',
         ope_name_before: '',
         hospitalNo: '',
+        sec_supply_nurse: '',
+        first_supply_nurse: '',
         room: '',
         first_assist: '',
         second_assist: '',
@@ -621,7 +634,8 @@ export default {
         data: obj
       }).then(res => {
         if (res.data.code === 200) {
-          this.$message({ type: 'success', message: '修改成功' })
+          this.$message({ type: 'success', message: '保存成功' })
+          this.getData()
         } else {
           this.$message({ type: 'error', message: res.data.msg })
         }
