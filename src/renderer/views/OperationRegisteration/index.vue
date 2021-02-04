@@ -277,7 +277,7 @@
                 :value="item.opeCode"
               )
     .option
-      el-button(size="mini", @click="resetForm('form')") 刷新(R)
+      el-button(size="mini", @click="handleRefresh") 刷新(R)
       el-button(size="mini", @click="submitForm('form')") 保存(S)
 </template>
 
@@ -406,6 +406,9 @@ export default {
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
+    },
+    handleRefresh () {
+      this.getData()
     },
     getData () {
       request({
