@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="dialog-event-template">
     <el-dialog
       title="套用模板"
       :visible="this.visible"
@@ -40,9 +40,9 @@
             height="499px"
             :data="tableData"
             :edit-config="{trigger: 'click', mode: 'cell'}"
-            class="scroll"
             size="mini"
           >
+            <!-- class="scroll" -->
             <vxe-table-column
               type="checkbox"
               width="40"
@@ -242,29 +242,32 @@ export default {
 </script>
 <style lang='scss' scoped>
   @import "@/styles/theme";
-  .content {
-    height: 100%;
-    display: grid;
-    grid-template-columns: 20% 80%;
-    border: 1px solid;
-    @include theme-property('border-color', $dateTimePicker-color-border);
-    border-radius: 5px;
-    height: 500px;
-    font-size: 14px;
-    .tree {
-      height:100%;
+    .content {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 20% 80%;
+      border: 1px solid;
+      @include theme-property('border-color', $dateTimePicker-color-border);
+      border-radius: 5px;
       height: 500px;
-      p {
-        @include theme-property('color', $color-text-primary);
-        margin: 0;
-        padding: 10px;
-      }
-      .tree-content{
-        height:calc(100% - 36px);
-      }
-      .el-tree {
-        background: unset;
+      font-size: 14px;
+      .tree {
+        height:100%;
+        height: 500px;
+        p {
+          @include theme-property('color', $color-text-primary);
+          margin: 0;
+          padding: 10px;
+        }
+        .tree-content{
+          height:calc(100% - 36px);
+        }
+        .el-tree {
+          background: unset;
+        }
       }
     }
+  /deep/ .el-dialog__headerbtn{
+    font-size: 20px !important;
   }
 </style>

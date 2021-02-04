@@ -161,14 +161,14 @@ export default {
       justify-content: space-between;
 
       i {
-        font-size: 18px;
+        font-size: 20px;
         margin-top: 7px;
         font-weight: bold;
         cursor: pointer;
         transition: all ease 0.3s;
 
         &:hover {
-          transform: scale(1.2);
+          transform: scale(1.1);
         }
       }
     }
