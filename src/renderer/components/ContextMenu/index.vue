@@ -1,5 +1,5 @@
 <template lang="pug">
-  .menu-list(:style="style" class="clearfix")
+  .menu-list(:style="style" class="clearfix" v-if="drugListVisible" @click.stop="")
     .left
     .right
       el-scrollbar(style="height: 100%"
@@ -30,6 +30,10 @@ export default {
         }
       }
     },
+    drugListVisible: {
+      type: Boolean,
+      default: false
+    },
     menuList: {
       type: Array,
       default: function () {
@@ -48,6 +52,12 @@ export default {
   methods: {
     handleClick (item) {
       this.$emit('handleClick', item)
+    }
+  },
+  mounted () {
+    const that = this
+    document.body.onclick = function () {
+      that.$emit('update:drugListVisible', false)
     }
   }
 }

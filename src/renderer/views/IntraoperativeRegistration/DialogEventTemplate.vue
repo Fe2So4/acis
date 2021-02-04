@@ -11,18 +11,25 @@
       <div class="content">
         <div class="tree">
           <p>模板名称</p>
-          <el-tree
-            :data="treeData"
-            :props="defaultProps"
-            @node-click="onNodeClick"
-            default-expand-all
-          >
-            <span
-              slot-scope="{ node, data }"
+          <div class="tree-content">
+            <el-scrollbar
+              style="height:100%;"
+              :wrap-style="wrapStyle"
             >
-              <span>{{ node.label || data.modeName }}</span>
-            </span>
-          </el-tree>
+              <el-tree
+                :data="treeData"
+                :props="defaultProps"
+                @node-click="onNodeClick"
+                default-expand-all
+              >
+                <span
+                  slot-scope="{ node, data }"
+                >
+                  <span>{{ node.label || data.modeName }}</span>
+                </span>
+              </el-tree>
+            </el-scrollbar>
+          </div>
         </div>
         <div class="table">
           <vxe-table
@@ -175,7 +182,10 @@ export default {
         children: 'list',
         label: 'name'
       },
-      tableData: []
+      tableData: [],
+      wrapStyle: [{
+        'overflow-x': 'hidden'
+      }]
     }
   },
   created () {
@@ -232,8 +242,8 @@ export default {
 </script>
 <style lang='scss' scoped>
   @import "@/styles/theme";
-
   .content {
+    height: 100%;
     display: grid;
     grid-template-columns: 20% 80%;
     border: 1px solid;
@@ -241,14 +251,17 @@ export default {
     border-radius: 5px;
     height: 500px;
     font-size: 14px;
-
     .tree {
+      height:100%;
+      height: 500px;
       p {
         @include theme-property('color', $color-text-primary);
         margin: 0;
         padding: 10px;
       }
-
+      .tree-content{
+        height:calc(100% - 36px);
+      }
       .el-tree {
         background: unset;
       }
