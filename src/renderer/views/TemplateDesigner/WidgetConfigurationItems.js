@@ -4,7 +4,8 @@ export default function getConfigurationItems (widgetName) {
   const border = {
     position: ['top', 'right', 'bottom', 'left'],
     color: '#000000',
-    width: 1
+    width: 1,
+    style: 'solid'
   }
   // 文字
   const font = {
@@ -151,7 +152,8 @@ export default function getConfigurationItems (widgetName) {
       }
     case 'widget-image':
       return {
-        imgUrl: 'http://47.103.105.200/htmlFile/056a0b71-b085-4947-a71f-6df7d0529e50_100000000.jpg'
+        border,
+        dataSource
       }
     case 'widget-physical-sign':
       return {

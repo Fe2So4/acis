@@ -7,6 +7,7 @@
   >
     <drug-list
       v-if="drugListVisible"
+      :drug-list-visible.sync="drugListVisible"
       :position="position"
       :menu-list="list"
       @handleClick="handleAddDrug"
@@ -384,7 +385,6 @@ export default {
         pos: [0, (step * this.configuration.infusion.num) / 2],
         anchor: [0, 0.5],
         fontSize: 12,
-        bgcolor: 'green',
         fontFamily: '宋体',
         textAlign: 'center',
         fillColor: 'black',
@@ -1467,13 +1467,13 @@ export default {
           if (this.infusionDataList[i]) {
             const text = new Label(this.infusionDataList[i].eventName)
             text.attr({
-              pos: [30, lineHeight * i],
+              pos: [this.configuration.infusion.width, lineHeight * i],
               anchor: [0, 0],
               fontSize: 12,
               fontFamily: '宋体',
               textAlign: 'center',
               fillColor: 'blue',
-              width: width - 30,
+              width: width - this.configuration.infusion.width,
               height: lineHeight,
               lineHeight: lineHeight
             })
