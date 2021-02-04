@@ -1466,13 +1466,13 @@ export default {
           if (this.infusionDataList[i]) {
             const text = new Label(this.infusionDataList[i].eventName)
             text.attr({
-              pos: [30, lineHeight * i],
+              pos: [this.configuration.infusion.width, lineHeight * i],
               anchor: [0, 0],
               fontSize: 12,
               fontFamily: '宋体',
               textAlign: 'center',
               fillColor: 'blue',
-              width: width - 30,
+              width: width - this.configuration.infusion.width,
               height: lineHeight,
               lineHeight: lineHeight
             })
