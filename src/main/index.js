@@ -4,6 +4,7 @@ import { app, BrowserWindow, Menu, ipcMain, dialog } from 'electron'
 // import { type } from 'process'
 import '../renderer/store'
 import { filePath as configJsonFilePath } from './ip'
+import { start as startCollectingData, stop as stopCollectingData } from './programDataCollect'
 const { autoUpdater } = require('electron-updater')
 const fs = require('fs')
 const Path = require('path')
@@ -141,10 +142,12 @@ function createWindow () {
 app.on('ready', () => {
   createInitialWindow()
   createWindow()
+  startCollectingData()
 })
 
 app.on('will-quit', () => {
   watcher.close()
+  stopCollectingData()
 })
 
 // 窗口最小化

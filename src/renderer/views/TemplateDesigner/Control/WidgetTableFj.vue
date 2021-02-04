@@ -12,7 +12,6 @@
           v-for="(col, colIndex) of configuration.columns.list"
           :key="colIndex"
           :width="col.width"
-          :height="configuration.row.height"
           :style="cellStyle"
         >
           {{ col.label }}
@@ -25,7 +24,6 @@
         <td
           v-for="(col, colIndex) of configuration.columns.list"
           :key="colIndex"
-          :height="configuration.row.height"
           :style="cellStyle"
         >
           {{ responseList[rowIndex] ? responseList[rowIndex][col.field] : '' }}
@@ -89,7 +87,7 @@ export default {
   },
   methods: {
     setStyle () {
-      const { font, border } = this.configuration
+      const { font, border, row } = this.configuration
       let styleObj = {
         fontSize: font.size + 'pt',
         fontWeight: font.weight,
@@ -103,7 +101,7 @@ export default {
 
       styleObj = { ...styleObj, ...borderObj }
       this.widgetStyle = styleObj
-      this.cellStyle = { ...styleObj }
+      this.cellStyle = { ...styleObj, height: `${row.height}px` }
     },
     getData () {
       const {
@@ -148,8 +146,8 @@ export default {
   .table {
     border-collapse: collapse;
     table-layout: fixed;
-    tr {
-      min-height: 30px;
+    th,td {
+      padding: 0 2px;
     }
   }
 }

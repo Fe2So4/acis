@@ -128,34 +128,12 @@ export default {
       this.layer.addEventListener('mousedown', this.setSelectedPoint)
       document.addEventListener('mouseup', this.getChangedPoint)
       // 注册刷新事件
-      this.$eventHub.$on('document-refresh', () => {
-        // 获取数据
-        this.getData()
-      })
+      this.$eventHub.$on('document-refresh', this.documentRefreshHandler)
       // 注册刷新事件
-      this.$eventHub.$on('document-redraw', () => {
-        // 重新绘制
-        this.setLayout()
-        this.setContent()
-        // 初始化事件标记区域
-        this.setEventTags()
-        // 初始化血气分析区域
-        this.setBloodGas()
-        // 获取数据
-        this.getData()
-      })
-
+      this.$eventHub.$on('document-redraw', this.documentRedrawHandler)
       // 血气分析
       const grid = this.layer.querySelector('.grid')
-      grid.addEventListener('dblclick', e => {
-        const { x, y } = e
-        const [offsetX] = grid.getOffsetPosition(x, y)
-        const startMoment = +moment(this.configuration.xAxis.startTime)
-        const endMoment = +moment(this.configuration.xAxis.endTime)
-        const width = grid.attr('width')
-        const time = (endMoment - startMoment) / width * offsetX + startMoment
-        this.$emit('dblclick-time', time)
-      })
+      grid.addEventListener('dblclick', this.dblclickTimeHandler)
     }
   },
   beforeDestroy () {
@@ -171,10 +149,34 @@ export default {
       if (this.socket) {
         this.socket = null
       }
+      // 取消注册刷新事件
+      this.$eventHub.$off('document-refresh', this.documentRefreshHandler)
+      // 取消注册刷新事件
+      this.$eventHub.$off('document-redraw', this.documentRedrawHandler)
+      // 血气分析
+      const grid = this.layer.querySelector('.grid')
+      grid.removeEventListener('dblclick', this.dblclickTimeHandler)
     }
     this.scene = null
   },
   methods: {
+    documentRefreshHandler () {
+      console.log('document-refresh')
+      // 获取数据
+      this.getData()
+    },
+    documentRedrawHandler () {
+      console.log('document-redraw')
+      // 重新绘制
+      this.setLayout()
+      this.setContent()
+      // 初始化事件标记区域
+      this.setEventTags()
+      // 初始化血气分析区域
+      this.setBloodGas()
+      // 获取数据
+      this.getData()
+    },
     setStyle () {
       const { border } = this.configuration
       let styleObj = {}
@@ -963,6 +965,16 @@ export default {
         }
       }
       eventTag.addEventListener('mouseup', mouseupHandler)
+    },
+    dblclickTimeHandler (e) {
+      const { x, y } = e
+      const grid = this.layer.querySelector('.grid')
+      const [offsetX] = grid.getOffsetPosition(x, y)
+      const startMoment = +moment(this.configuration.xAxis.startTime)
+      const endMoment = +moment(this.configuration.xAxis.endTime)
+      const width = grid.attr('width')
+      const time = (endMoment - startMoment) / width * offsetX + startMoment
+      this.$emit('dblclick-time', time)
     },
     getEventDictData () {
       return request({
