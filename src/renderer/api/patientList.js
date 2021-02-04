@@ -15,3 +15,9 @@ export const opeSchedule = `${config.default.api.baseURL}/acis/operation/getOpeA
 export const opeDirection = `${config.default.api.baseURL}/acis/superConfig/addDirectionAfterOpeRoom`
 
 export const getDefaultRoom = `${config.default.api.baseURL}/acis/superConfig/getRoomByIp`
+
+// 开启体征数据推送
+export const startSyncMonitorDataFJ = `${config.default.api.baseURL}/acis/signDataCollect/startSyncMonitorDataFJ`
+
+// 关闭体征数据推送
+export const endMonitorDataDocking = `${config.default.api.baseURL}/acis/signDataCollect/endMonitorDataDocking`

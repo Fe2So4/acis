@@ -68,7 +68,7 @@
 </template>
 <script>
 import request from '@/utils/requestForMock'
-import { patientStatus, addStatus, opeDirection } from '@/api/patientList'
+import { patientStatus, addStatus, opeDirection, startSyncMonitorDataFJ, endMonitorDataDocking } from '@/api/patientList'
 import { mapGetters, mapActions, mapState } from 'vuex'
 import DialogResuscitationBed from './DialogResuscitationBed'
 import { Socket } from '@/model/Socket'
@@ -196,6 +196,24 @@ export default {
         this.scrollEffect(scrollbarEl, 168)
       }
     },
+    // 开启体征推送
+    handleStartMonitorData () {
+      request({
+        method: 'get',
+        url: startSyncMonitorDataFJ + '/' + this.operationId
+      }).then(res => {
+
+      })
+    },
+    // 关闭体征推送
+    handleEndMonitorData () {
+      request({
+        method: 'get',
+        url: endMonitorDataDocking + '/' + this.operationId
+      }).then(res => {
+
+      })
+    },
     // 修改状态
     addStatusTimePoint (param) {
       const formData = new FormData()
@@ -216,6 +234,11 @@ export default {
           // if (+param.conCode === 12) {
           //   this.showResuscitationBed()
           // }
+          if (+param.conCode === 6 || +param.conCode === 13) {
+            this.handleStartMonitorData()
+          } else if (+param.conCode === 11 || +param.conCode === 14) {
+            this.handleEndMonitorData()
+          }
           // 建立socket连接
           const noNeedSocketState = [10, 11, 14, 15, 16, 17]
           if (Socket.instance) {
