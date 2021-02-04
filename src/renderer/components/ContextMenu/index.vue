@@ -7,7 +7,6 @@
         ul
           li(v-for="(item,index) in menuList" :key="index" @click.stop="handleClick(item)")
             span {{item.menuName}}
-    //- .mask
 </template>
 
 <script>
@@ -22,10 +21,6 @@ export default {
     }
   },
   props: {
-    drugListVisible: {
-      type: Boolean,
-      default: false
-    },
     position: {
       type: Object,
       default: function () {
@@ -34,6 +29,10 @@ export default {
           positionY: 0
         }
       }
+    },
+    drugListVisible: {
+      type: Boolean,
+      default: false
     },
     menuList: {
       type: Array,
@@ -60,13 +59,6 @@ export default {
     document.body.onclick = function () {
       that.$emit('update:drugListVisible', false)
     }
-    // if (this.drugListVisible) {
-    //   document.body.oncontextmenu = function () {
-    //     // console.log('触发')
-    //     window.event.returnvalue = false
-    //     return false
-    //   }
-    // }
   }
 }
 </script>
@@ -114,14 +106,6 @@ export default {
           }
         }
       }
-    }
-    .mask{
-      position: fixed;
-      top: 0;
-      bottom:0;
-      left: 0;
-      right: 0;
-      z-index: 9;
     }
   }
 </style>

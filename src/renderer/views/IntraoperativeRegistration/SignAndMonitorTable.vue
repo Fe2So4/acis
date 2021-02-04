@@ -43,10 +43,10 @@
         height="300px"
         :data="tableData"
         :edit-config="{trigger: 'click', mode: 'cell'}"
-        class="scroll"
         size="mini"
         :checkbox-config="{labelField: 'itemName'}"
       >
+        <!-- class="scroll" -->
         <vxe-table-column
           type="checkbox"
           title="名称"

@@ -9,7 +9,7 @@
         height="330px"
         :data="tableData"
         :edit-config="{trigger: 'click', mode: 'cell'}"
-        class="scroll table"
+        class="table"
         size="mini"
       >
         <vxe-table-column

@@ -29,9 +29,9 @@
         align="center"
         height="199px"
         size="mini"
-        class="scroll"
         :data="detailData"
       >
+        <!-- class="scroll" -->
         <vxe-table-column
           field="eventName"
           title="事件名称"

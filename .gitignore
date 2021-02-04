@@ -11,4 +11,4 @@ thumbs.db
 !.gitkeep
 # package-lock.json
 .idea
-DATACOLLECT/
+plugins/*
