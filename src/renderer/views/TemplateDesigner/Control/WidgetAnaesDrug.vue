@@ -7,6 +7,7 @@
   >
     <drug-list
       v-if="drugListVisible"
+      :drug-list-visible.sync="drugListVisible"
       :position="position"
       :drug-list-visible.sync="drugListVisible"
       :menu-list="list"
