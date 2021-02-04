@@ -122,18 +122,11 @@ export default {
       await this.getInfusionBloodList()
       // 注册刷新事件
       this.$eventHub.$on('document-refresh', () => {
-        // 获取数据
-        this.getDrawLineList()
-        this.getInfusionBloodList()
+        this.handleRefreshDocument()
       })
       // 注册刷新事件
       this.$eventHub.$on('document-redraw', () => {
-        // 重新绘制
-        this.setLayout()
-        this.setContent()
-        // 获取数据
-        this.getDrawLineList()
-        this.getInfusionBloodList()
+        this.handleReDrawDocument()
       })
     } else {
       addListener(this.$refs.inOut, this.resize)
@@ -141,10 +134,25 @@ export default {
     // this.setDrug()
   },
   beforeDestroy () {
+    this.$eventHub.$off('document-refresh', () => { this.handleRefreshDocument() })
+    this.$eventHub.$off('document-redraw', () => { this.handleReDrawDocument() })
     this.layer = null
     removeListener(this.$refs.inOut, this.resize)
   },
   methods: {
+    handleRefreshDocument () {
+      // 获取数据
+      this.getDrawLineList()
+      this.getInfusionBloodList()
+    },
+    handleReDrawDocument () {
+      // 重新绘制
+      this.setLayout()
+      this.setContent()
+      // 获取数据
+      this.getDrawLineList()
+      this.getInfusionBloodList()
+    },
     // 获取输血输液列表数据
     getInfusionBloodList () {
       request({

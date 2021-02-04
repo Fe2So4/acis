@@ -109,26 +109,34 @@ export default {
       await this.getDrawLineList()
       // 注册刷新事件
       this.$eventHub.$on('document-refresh', () => {
-        // 获取数据
-        this.getDrawLineList()
+        this.handleRefreshDocument()
       })
       // 注册刷新事件
       this.$eventHub.$on('document-redraw', () => {
-        // 重新绘制
-        this.setLayout()
-        this.setContent()
-        // 获取数据
-        this.getDrawLineList()
+        this.handleReDrawDocument()
       })
     } else {
       addListener(this.$refs.anaesDrug, this.resize)
     }
   },
   beforeDestroy () {
+    this.$eventHub.$off('document-refresh', () => { this.handleRefreshDocument() })
+    this.$eventHub.$off('document-redraw', () => { this.handleReDrawDocument() })
     this.layer = null
     removeListener(this.$refs.anaesDrug, this.resize)
   },
   methods: {
+    handleRefreshDocument () {
+      // 获取数据
+      this.getDrawLineList()
+    },
+    handleReDrawDocument () {
+      // 重新绘制
+      this.setLayout()
+      this.setContent()
+      // 获取数据
+      this.getDrawLineList()
+    },
     // 获取用药列表数据
     getDrugList () {
       request({

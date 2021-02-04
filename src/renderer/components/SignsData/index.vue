@@ -73,13 +73,10 @@ export default {
     getSocket () {
       const loginUserNum = this.operationId
       this.socket = Socket.getInstance()
-      console.log('触发', 'sign2')
       if (!this.socket) return
       // 体征数据
       const that = this
-      console.log('触发', 'sign')
       this.socket.on('push_monitor_event_realtime', (res) => {
-        console.log(res)
         if (Array.isArray(res)) {
           // 回应socket.io
           that.socket.emit('push_monitor_event_realtime', {
