@@ -384,7 +384,6 @@ export default {
         pos: [0, (step * this.configuration.infusion.num) / 2],
         anchor: [0, 0.5],
         fontSize: 12,
-        bgcolor: 'green',
         fontFamily: '宋体',
         textAlign: 'center',
         fillColor: 'black',
