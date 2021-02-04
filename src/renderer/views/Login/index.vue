@@ -89,8 +89,6 @@ import { login } from '@/api/login'
 import request from '@/utils/requestForMock'
 import { setUserToken, setCurrentAccount } from '../../utils/storage'
 
-const { BrowserWindow } = require('electron').remote
-
 export default {
   name: 'Login',
   data () {
@@ -110,10 +108,7 @@ export default {
     }
   },
   created () {
-    const win = BrowserWindow.getFocusedWindow()
-    if (win) {
-      win.unmaximize()
-    }
+    this.$electron.ipcRenderer.send('unmaximize-main')
   },
   mounted () {
     this.$electron.ipcRenderer.send('open-main')
@@ -158,12 +153,10 @@ export default {
       }
     },
     close () {
-      const win = BrowserWindow.getFocusedWindow()
-      win.close()
+      this.$electron.ipcRenderer.send('close-main')
     },
     mini () {
-      const win = BrowserWindow.getFocusedWindow()
-      win.minimize()
+      this.$electron.ipcRenderer.send('minimize-main')
     },
     keyUpListener (e) {
       if (e.keyCode === 112) {

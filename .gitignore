@@ -12,3 +12,4 @@ thumbs.db
 # package-lock.json
 .idea
 LOG_INFO/
+*.log
