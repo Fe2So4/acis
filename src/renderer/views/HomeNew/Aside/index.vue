@@ -432,9 +432,6 @@ export default {
         this.isCollapse = !this.isCollapse
       }
     },
-    openConfiguration (route, name) {
-      this.$electron.ipcRenderer.send('open-new-window', route, name)
-    },
     getNavList () {
       request({
         url: getNavs + '/' + 3

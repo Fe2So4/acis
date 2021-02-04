@@ -26,6 +26,7 @@
 <script>
 import Header from './Header/index'
 import Aside from './Aside/index'
+import Vue from 'vue'
 export default {
   name: 'Home',
   components: {
@@ -34,11 +35,8 @@ export default {
   },
   beforeRouteEnter (to, from, next) {
     if (from.path === '/login') {
-      const { BrowserWindow } = require('electron').remote
-      const wins = BrowserWindow.getAllWindows()
-      if (wins.length > 0) {
-        wins[0].maximize()
-      }
+      const { ipcRenderer } = require('electron')
+      ipcRenderer.send('maximize-main')
     }
     next()
   }

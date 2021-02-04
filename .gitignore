@@ -11,3 +11,6 @@ thumbs.db
 !.gitkeep
 # package-lock.json
 .idea
+LOG_INFO/
+*.log
+plugins/

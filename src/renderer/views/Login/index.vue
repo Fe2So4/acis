@@ -68,15 +68,17 @@
       <div class="copyright">
         Copyright©2020蓝想数科版权所有
       </div>
-      <div class="close">
-        <i
-          class="el-icon-minus"
-          @click="mini"
-        />
-        <i
-          class="el-icon-close"
-          @click="close"
-        />
+      <div class="drag-bar">
+        <div class="close">
+          <i
+            class="el-icon-minus"
+            @click="mini"
+          />
+          <i
+            class="el-icon-close"
+            @click="close"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -86,8 +88,6 @@
 import { login } from '@/api/login'
 import request from '@/utils/requestForMock'
 import { setUserToken, setCurrentAccount } from '../../utils/storage'
-
-const { BrowserWindow } = require('electron').remote
 
 export default {
   name: 'Login',
@@ -108,10 +108,7 @@ export default {
     }
   },
   created () {
-    const win = BrowserWindow.getFocusedWindow()
-    if (win) {
-      win.unmaximize()
-    }
+    this.$electron.ipcRenderer.send('unmaximize-main')
   },
   mounted () {
     this.$electron.ipcRenderer.send('open-main')
@@ -156,12 +153,10 @@ export default {
       }
     },
     close () {
-      const win = BrowserWindow.getFocusedWindow()
-      win.close()
+      this.$electron.ipcRenderer.send('close-main')
     },
     mini () {
-      const win = BrowserWindow.getFocusedWindow()
-      win.minimize()
+      this.$electron.ipcRenderer.send('minimize-main')
     },
     keyUpListener (e) {
       if (e.keyCode === 112) {
@@ -177,8 +172,6 @@ export default {
   height: 560px;
   width: 880px;
   position: relative;
-  // height: 100%;
-  // width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -199,9 +192,9 @@ export default {
         // text-shadow:2px 3px 1px rgba(0, 0, 0, 0.8);
         &:first-child {
           background: linear-gradient(
-            0deg,
-            rgba(0, 94, 210, 1) 0%,
-            rgba(178, 218, 255, 1) 100%
+              0deg,
+              rgba(0, 94, 210, 1) 0%,
+              rgba(178, 218, 255, 1) 100%
           );
           background-clip: text;
           -webkit-text-fill-color: transparent;
@@ -216,9 +209,9 @@ export default {
             font-size: 18px;
             color: rgba(255, 255, 255, 1);
             background: linear-gradient(
-              0deg,
-              rgba(0, 94, 210, 1) 0%,
-              rgba(178, 218, 255, 1) 100%
+                0deg,
+                rgba(0, 94, 210, 1) 0%,
+                rgba(178, 218, 255, 1) 100%
             );
             background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -299,10 +292,19 @@ export default {
       opacity: 0.75;
       text-align: center;
     }
+    .drag-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 30px;
+      width: 100%;
+      -webkit-app-region: drag;
+    }
     .close {
       position: absolute;
       top: 10px;
       right: 10px;
+      -webkit-app-region: no-drag;
       i {
         font-size: 14px;
         display: inline-block;

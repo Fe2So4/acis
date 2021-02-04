@@ -1,9 +1,10 @@
 'use strict'
 
-import { app, BrowserWindow, Menu, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, dialog } from 'electron'
 // import { type } from 'process'
 import '../renderer/store'
 import { filePath as configJsonFilePath } from './ip'
+import { start as startCollectingData, stop as stopCollectingData } from './programDataCollect'
 const { autoUpdater } = require('electron-updater')
 const fs = require('fs')
 const Path = require('path')
@@ -134,17 +135,24 @@ function createWindow () {
     mainWindow = null
   })
 
-  // 隐藏菜单
-  // Menu.setApplicationMenu(null)
+  mainWindow.on('maximize', () => {
+    mainWindow.webContents.send('change-isMaximized', true)
+  })
+
+  mainWindow.on('unmaximize', () => {
+    mainWindow.webContents.send('change-isMaximized', false)
+  })
 }
 
 app.on('ready', () => {
   createInitialWindow()
   createWindow()
+  startCollectingData()
 })
 
 app.on('will-quit', () => {
   watcher.close()
+  stopCollectingData()
 })
 
 // 窗口最小化
@@ -170,6 +178,58 @@ ipcMain.once('open-main', () => {
 
 ipcMain.once('close-initial-window', () => {
   initialWindow.destroy()
+})
+
+// 关闭主窗口
+ipcMain.on('close-main', () => {
+  dialog
+    .showMessageBox({
+      type: 'warning',
+      // 按钮文字
+      buttons: ['确认', '取消'],
+      // 默认选择的按钮索引值
+      defaultId: 1,
+      title: '警告',
+      message: '是否确认退出当前程序',
+      // 触发退出的索引值
+      cancelId: 1
+    })
+    .then((res) => {
+      if (res.response === 0) {
+        mainWindow.close()
+      }
+    })
+})
+
+// 最小化主窗口
+ipcMain.on('minimize-main', () => {
+  mainWindow.minimize()
+})
+
+// 恢复主窗口大小
+ipcMain.on('unmaximize-main', e => {
+  if (BrowserWindow.fromWebContents(e.sender) === mainWindow) {
+    mainWindow.unmaximize()
+  }
+})
+// 最大化主窗口
+ipcMain.on('maximize-main', e => {
+  if (BrowserWindow.fromWebContents(e.sender) === mainWindow) {
+    mainWindow.maximize()
+  }
+})
+
+// 是否处于最大化状态
+ipcMain.on('isMaximized-main', e => {
+  e.reply('isMaximized-main-reply', mainWindow.isMaximized())
+})
+
+ipcMain.on('change-main-isMaximized', () => {
+  if (mainWindow.isMaximized()) {
+    mainWindow.unmaximize()
+  } else {
+    mainWindow.maximize()
+  }
 })
 
 app.on('window-all-closed', () => {
@@ -204,48 +264,12 @@ app.on('ready', () => {
 })
  */
 
-const secondaryWindows = new Map()
-const createNewWindow = (locationName, title) => {
-  if (secondaryWindows.has(title)) {
-    secondaryWindows.get(title).webContents.focus()
-    return
-  }
-  let newWindow = new BrowserWindow({
-    show: false,
-    modal: true
-  })
-
-  newWindow.loadURL(winURL)
-  // newWindow.once('ready-to-show', () => {
-  //   newWindow.show()
-  // })
-
-  newWindow.on('closed', () => {
-    secondaryWindows.delete(title)
-    newWindow = null
-  })
-
-  newWindow.webContents.on('did-finish-load', () => {
-    newWindow.webContents.send('route', locationName)
-  })
-
-  ipcMain.once('show-window', (e) => {
-    newWindow.setTitle(title)
-    newWindow.show()
-  })
-
-  secondaryWindows.set(title, newWindow)
-  return newWindow
-}
-ipcMain.on('open-new-window', (e, locationName, title) => {
-  createNewWindow(locationName, title)
-})
 // ---------------------------------打印功能 start--------------
 // 新建打印窗口
 const printWindows = new Set()
 const createPrintWindow = (printRoute) => {
   let newPrintWindow = new BrowserWindow({
-    // show: false,
+    show: false,
     webPreferences: {
       webSecurity: false,
       nodeIntegration: true
@@ -253,9 +277,9 @@ const createPrintWindow = (printRoute) => {
   })
 
   newPrintWindow.loadURL(winURL)
-  newPrintWindow.once('ready-to-show', () => {
-    newPrintWindow.show()
-  })
+  // newPrintWindow.once('ready-to-show', () => {
+  //   newPrintWindow.show()
+  // })
 
   newPrintWindow.webContents.on('did-finish-load', () => {
     newPrintWindow.webContents.send('printRoute', printRoute)
@@ -282,6 +306,18 @@ ipcMain.on('ready-to-print', () => {
       bottom: 50,
       left: 50,
       right: 10
+    }
+  }, (success, errorType) => {
+    if (!success) {
+      console.log(errorType)
+      dialog.showMessageBox(printWin, {
+        type: 'info',
+        title: '提示',
+        message: '未完成打印'
+      })
+    }
+    if (printWin) {
+      printWin.close()
     }
   })
 })
@@ -347,8 +383,8 @@ ipcMain.on('WEB-EMR', (e, operationId) => {
 // 打印手术通知单
 const printPageURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080/static/print/print.html'
-  // : Path.join(__dirname, '../../static/print/print.html')
-  // `file://${__dirname}/index.html`
+// : Path.join(__dirname, '../../static/print/print.html')
+// `file://${__dirname}/index.html`
   : Path.join(__dirname, '/static/print/print.html')
 const printWindowsPage = new Set()
 const createPrintWindowPage = () => {
