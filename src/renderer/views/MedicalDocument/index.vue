@@ -139,7 +139,7 @@ export default {
     this.getData(0)
   },
   beforeRouteUpdate (to, from, next) {
-    // console.log('route update')
+    console.log('route update')
     this.showLeaveMessage(() => {
       this.changedSignDataList = []
       this.templateId = to.params.templateId
@@ -148,10 +148,10 @@ export default {
     })
   },
   beforeRouteLeave (to, from, next) {
-    // console.log('route leave')
+    console.log('route leave')
     // 导航离开该组件的对应路由时调用
     // 可以访问组件实例 `this`
-    this.showLeaveMessage(next)
+    this.showLeaveMessage(next, () => next(false))
   },
   methods: {
     // 通用接口 - 获取模板和源数据表中查出的信息
@@ -422,20 +422,20 @@ export default {
       const modified = this.validateModified()
       if (!modified) {
         nextFn()
-        return
+      } else {
+        this.$confirm('此操作将不会保存修改, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          customClass: 'messageBox'
+        })
+          .then(() => {
+            nextFn()
+          })
+          .catch(() => {
+            rejectFn()
+          })
       }
-      this.$confirm('此操作将不会保存修改, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-        customClass: 'messageBox'
-      })
-        .then(() => {
-          nextFn()
-        })
-        .catch(() => {
-          rejectFn()
-        })
     },
     onChangeSignData ({ itemCode, itemName, itemValue, timePoint }) {
       if (!itemCode) {

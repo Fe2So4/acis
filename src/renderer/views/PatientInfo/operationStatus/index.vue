@@ -181,11 +181,16 @@ export default {
       })
     },
     back () {
-      this.$router.push('/home')
-      this.clearBaseInfo()
-      if (Socket.instance) {
-        Socket.close()
-      }
+      return this.$router.push('/home').then(
+        (res) => {
+          console.log(res)
+          this.clearBaseInfo()
+          if (Socket.instance) {
+            Socket.close()
+          }
+        },
+        e => {}
+      )
     },
     handleChangeNav (nav) {
       const scrollbarEl = this.$refs.scrollbar.wrap
