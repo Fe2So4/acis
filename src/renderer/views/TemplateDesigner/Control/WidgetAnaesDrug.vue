@@ -122,8 +122,8 @@ export default {
     }
   },
   beforeDestroy () {
-    // this.$eventHub.$off('document-refresh', this.getDocumentRefresh)
-    // this.$eventHub.$off('document-redraw', this.getDocumentRedraw)
+    this.$eventHub.$off('document-refresh', this.getDocumentRefresh)
+    this.$eventHub.$off('document-redraw', this.getDocumentRedraw)
     this.layer = null
     removeListener(this.$refs.anaesDrug, this.resize)
   },
