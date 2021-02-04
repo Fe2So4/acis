@@ -40,6 +40,10 @@ module.exports = {
   linux: {
     icon: 'build/icons'
   },
+  extraResources: {
+    from: './plugins',
+    to: './'
+  },
   asar: true,
   nsis: {
     oneClick: false,

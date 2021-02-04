@@ -139,6 +139,7 @@ export default {
     this.getData(0)
   },
   beforeRouteUpdate (to, from, next) {
+    // console.log('route update')
     this.showLeaveMessage(() => {
       this.changedSignDataList = []
       this.templateId = to.params.templateId
@@ -147,6 +148,7 @@ export default {
     })
   },
   beforeRouteLeave (to, from, next) {
+    // console.log('route leave')
     // 导航离开该组件的对应路由时调用
     // 可以访问组件实例 `this`
     this.showLeaveMessage(next)
@@ -285,6 +287,8 @@ export default {
           this.$eventHub.$emit('document-redraw')
           break
         case 2:
+          this.pageIndex = pageIndex
+          break
         case 0:
         default:
       }

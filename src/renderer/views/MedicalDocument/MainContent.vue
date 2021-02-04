@@ -158,7 +158,7 @@ export default {
       })
     },
     onSetTotalPage (page) {
-      this.$emit('setTotalPage', Math.max(+this.totalPage, +page))
+      this.$emit('set-total-page', Math.max(+this.totalPage, +page))
     }
   }
 }
