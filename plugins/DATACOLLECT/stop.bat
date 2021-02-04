@@ -1,1 +1,0 @@
-taskkill /f /im DATA_COLLECT.exe
