@@ -278,7 +278,7 @@
                 </p>
                 <p>
                   <span class="label">术者</span>
-                  <span style="max-width:40px">{{ item.surgeonName }}</span>
+                  <span style="max-width:40px;white-space: nowrap">{{ item.surgeonName }}</span>
                   <span
                     class="label"
                     style="margin-left:10px;"
