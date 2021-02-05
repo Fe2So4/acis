@@ -268,7 +268,12 @@
     el-row
       el-col(:span="24")
         el-form-item(label="手术名称")
-          el-select(v-model="form.ope_code_before", placeholder="请选择")
+          el-select(v-model="form.ope_code_before", placeholder="请选择"
+            filterable
+            remote
+            clearable
+            :loading="loadingSelect"
+            :remote-method="remoteMethod")
             el-option(
               v-for="item in opeName",
               :key="item.opeCode",
@@ -297,6 +302,7 @@ export default {
   name: 'OperationInfo',
   data () {
     return {
+      loadingSelect: false,
       form: {
         patient_id: '',
         visit_id: '',
@@ -512,12 +518,24 @@ export default {
         this.nurseList = data
       })
     },
-    getOpeName () {
+    remoteMethod (query) {
+      this.loadingSelect = true
+      setTimeout(() => {
+        this.getOpeName(query)
+        this.loadingSelect = false
+      }, 200)
+    },
+    getOpeName (query = '') {
       request({
-        url: opeNameData
+        url: opeNameData,
+        params: {
+          size: 10,
+          start: 1,
+          content: query
+        }
       }).then((res) => {
         const data = res.data.data
-        this.opeName = data
+        this.opeName = data.list
       })
     },
     updataData () {

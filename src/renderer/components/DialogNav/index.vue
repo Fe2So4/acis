@@ -166,10 +166,9 @@ export default {
         font-weight: bold;
         cursor: pointer;
         transition: all ease 0.3s;
-
-        &:hover {
-          transform: scale(1.1);
-        }
+        // &:hover {
+        //   transform: scale(1.1);
+        // }
       }
     }
   }

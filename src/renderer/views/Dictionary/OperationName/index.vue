@@ -70,10 +70,15 @@ export default {
     getDetail () {
       request({
         method: 'GET',
-        url: opeNameData
+        url: opeNameData,
+        params: {
+          start: 1,
+          size: 100,
+          content: ''
+        }
       }).then(res => {
         const data = res.data.data
-        this.tableData = data
+        this.tableData = data.list
       })
     },
     activeRowMethod ({ row, rowIndex }) {

@@ -194,6 +194,11 @@
               <el-select
                 v-model="searchForm.opeName"
                 placeholder="请选择"
+                filterable
+                remote
+                clearable
+                :loading="loadingSelect"
+                :remote-method="remoteMethod"
               >
                 <el-option
                   v-for="item in opeName"
@@ -220,7 +225,7 @@
         >
           <li
             v-for="(item,index) in cardList"
-            :key="index"
+            :key="item.patientId"
             :class="{'active':index===activeIndex}"
             @dblclick="handleJump(item)"
             @click="hanldeSelectPatient(item,index)"
@@ -355,6 +360,7 @@ export default {
     return {
       wrapStyle,
       loading: false,
+      loadingSelect: false,
       searchForm: {
         id: '',
         name: '',
@@ -410,7 +416,7 @@ export default {
     // 获取科室列表
     this.getDeptList()
     // 获取手术名称
-    this.getOpeName()
+    this.getOpeName('')
     // 获取手术医生列表
     this.getDoctorList()
     // 获取手术方法
@@ -511,12 +517,24 @@ export default {
         this.doctorList = data
       })
     },
-    getOpeName () {
+    remoteMethod (query) {
+      this.loadingSelect = true
+      setTimeout(() => {
+        this.getOpeName(query)
+        this.loadingSelect = false
+      }, 200)
+    },
+    getOpeName (query = '') {
       request({
-        url: opeNameData
+        url: opeNameData,
+        params: {
+          size: 10,
+          start: 1,
+          content: query
+        }
       }).then((res) => {
         const data = res.data.data
-        this.opeName = data
+        this.opeName = data.list
       })
     },
     getDeptList () {
