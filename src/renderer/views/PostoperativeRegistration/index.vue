@@ -351,6 +351,7 @@ import {
 } from '@/api/dictionary'
 import request from '@/utils/requestForMock'
 import { mapGetters } from 'vuex'
+import _ from 'lodash'
 export default {
   name: 'PostoperativeRegistration',
   data () {
@@ -567,13 +568,11 @@ export default {
         this.nurseList = data
       })
     },
-    remoteMethod (query) {
+    remoteMethod: _.debounce(function (query) {
       this.loadingSelect = true
-      setTimeout(() => {
-        this.getOpeName(query)
-        this.loadingSelect = false
-      }, 200)
+      this.getOpeName(query)
     },
+    200),
     getOpeName (query = '') {
       request({
         url: opeNameData,
