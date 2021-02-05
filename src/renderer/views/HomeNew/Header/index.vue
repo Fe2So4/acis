@@ -15,7 +15,7 @@
       />
       <i
         class="iconfont icon-icon_min"
-        :class="iconMax"
+        :class="isMax? 'icon-icon_max':'icon-icon_min2'"
         @click="maxWindow"
       />
       <i
@@ -28,8 +28,6 @@
 <script>
 import ThemePicker from './ThemePicker'
 import { SocketRoom } from '@/model/Socket'
-const { BrowserWindow, dialog } = require('electron').remote
-const win = BrowserWindow.getAllWindows()[0]
 export default {
   name: 'Header',
   components: {
@@ -38,20 +36,18 @@ export default {
   data () {
     return {
       activeIndex: -1,
-      isMax: win.isMaximized(),
-      iconMax: 'icon-icon_max',
-      socket: null
+
+      isMax: true
     }
   },
-
   mounted () {
-    win.on('maximize', () => {
-      this.isMax = true
+    this.$electron.ipcRenderer.send('isMaximized-main')
+    this.$electron.ipcRenderer.on('isMaximized-main-reply', (e, isMax) => {
+      this.isMax = isMax
     })
-    win.on('unmaximize', () => {
-      this.isMax = false
+    this.$electron.ipcRenderer.on('change-isMaximized', (e, isMax) => {
+      this.isMax = isMax
     })
-    // this.initSocket()
   },
   beforeDestroy () {
     const socket = SocketRoom.getInstance()
@@ -63,43 +59,13 @@ export default {
   methods: {
     miniWindow () {
       // 最小化窗口
-      win.minimize()
-    },
-    initSocket () {
-      SocketRoom.create(601)
-      this.socket = SocketRoom.getInstance()
-      this.socket.on('push_operation_cancel_event', (res) => {
-        console.log(res)
-      })
+      this.$electron.ipcRenderer.send('minimize-main')
     },
     maxWindow () {
-      const isMax = win.isMaximized()
-      if (isMax) {
-        win.unmaximize()
-        this.iconMax = 'icon-icon_min2'
-      } else {
-        win.maximize()
-        this.iconMax = 'icon-icon_max'
-      }
+      this.$electron.ipcRenderer.send('change-main-isMaximized')
     },
     closeWindow () {
-      dialog
-        .showMessageBox({
-          type: 'warning',
-          // 按钮文字
-          buttons: ['确认', '取消'],
-          // 默认选择的按钮索引值
-          defaultId: 1,
-          title: '警告',
-          message: '是否确认退出当前程序',
-          // 触发退出的索引值
-          cancelId: 1
-        })
-        .then((res) => {
-          if (res.response === 0) {
-            win.close()
-          }
-        })
+      this.$electron.ipcRenderer.send('close-main')
     }
   }
 }
