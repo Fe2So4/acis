@@ -183,7 +183,6 @@ export default {
     back () {
       return this.$router.push('/home').then(
         (res) => {
-          console.log(res)
           this.clearBaseInfo()
           if (Socket.instance) {
             Socket.close()
