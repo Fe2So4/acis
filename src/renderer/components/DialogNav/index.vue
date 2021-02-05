@@ -130,6 +130,9 @@ export default {
       this.$emit('close')
     }
   }
+  // mounted(){
+
+  // }
 }
 </script>
 <style lang="scss" scoped>

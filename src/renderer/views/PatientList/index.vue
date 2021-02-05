@@ -135,7 +135,6 @@
                 v-model="searchForm.anaesMethod"
                 placeholder="请选择"
                 clearable
-                filterable
               >
                 <el-option
                   v-for="item in anaesMethod"
@@ -150,7 +149,6 @@
               <el-select
                 v-model="searchForm.anaesDoc"
                 placeholder="请选择"
-                filterable
                 clearable
               >
                 <el-option
@@ -184,7 +182,6 @@
               <el-select
                 v-model="searchForm.dept"
                 placeholder="请选择所在科室"
-                filterable
                 clearable
               >
                 <el-option
@@ -204,7 +201,7 @@
                 remote
                 clearable
                 :loading="loadingSelect"
-                :remote-method="remoteMethod"
+                :remote-method="remoteMethod2"
               >
                 <el-option
                   v-for="item in opeName"
@@ -349,6 +346,7 @@ import request from '../../utils/requestForMock'
 import { opeList, roomList, getDefaultRoom } from '@/api/patientList'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { Socket, SocketRoom } from '@/model/Socket'
+import _ from 'lodash'
 import {
   anaesMethodDetail,
   doctorData,
@@ -422,13 +420,16 @@ export default {
     // 获取科室列表
     this.getDeptList()
     // 获取手术名称
-    this.getOpeName('')
+    this.getOpeName()
     // 获取手术医生列表
     this.getDoctorList()
     // 获取手术方法
     this.getMethodData()
     // 绑定默认手术间
     this.getDefaultRoom()
+
+    // this.getOpeName = _.throttle(this.getOpeName, 2000)
+    this.getOpeName = _.debounce(this.getOpeName, 200)
   },
   mounted () {
     this.getPatientList()
@@ -525,11 +526,16 @@ export default {
     },
     remoteMethod (query) {
       this.loadingSelect = true
-      setTimeout(() => {
-        this.getOpeName(query)
-        this.loadingSelect = false
-      }, 200)
+      this.getOpeName(query)
     },
+    remoteMethod2: _.debounce(function (query) {
+      this.loadingSelect = true
+      this.getOpeName(query)
+    }, 200),
+    // remoteMethod2: _.debounce((query) =>{
+    //   this.loadingSelect = true
+    //   this.getOpeName(query)
+    // }.bind(this), 200),
     getOpeName (query = '') {
       request({
         url: opeNameData,
@@ -539,8 +545,13 @@ export default {
           content: query
         }
       }).then((res) => {
-        const data = res.data.data
-        this.opeName = data.list
+        if (res.data.code === 200) {
+          // setTimeout(() => {
+          this.loadingSelect = false
+          const data = res.data.data.list
+          this.opeName = data
+          // }, 2000)
+        }
       })
     },
     getDeptList () {
