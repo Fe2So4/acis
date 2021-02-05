@@ -145,19 +145,10 @@
               </el-select>
             </el-form-item>
             <el-form-item label="麻醉医生">
-              <!-- <el-input v-model="searchForm.anaesDoc" /> -->
-              <el-select
+              <DoctorNurse
                 v-model="searchForm.anaesDoc"
-                placeholder="请选择"
-                clearable
-              >
-                <el-option
-                  v-for="item in doctorList"
-                  :key="item.userId"
-                  :label="item.userName"
-                  :value="item.userId"
-                />
-              </el-select>
+                :type="1"
+              />
             </el-form-item>
             <el-form-item label="终止日期">
               <el-date-picker
@@ -193,7 +184,6 @@
               </el-select>
             </el-form-item>
             <el-form-item label="手术名称">
-              <!-- <el-input v-model="searchForm.opeName" /> -->
               <el-select
                 v-model="searchForm.opeName"
                 placeholder="请选择"
@@ -201,7 +191,7 @@
                 remote
                 clearable
                 :loading="loadingSelect"
-                :remote-method="remoteMethod2"
+                :remote-method="remoteMethodOperationName"
               >
                 <el-option
                   v-for="item in opeName"
@@ -349,12 +339,15 @@ import { Socket, SocketRoom } from '@/model/Socket'
 import _ from 'lodash'
 import {
   anaesMethodDetail,
-  doctorData,
   opeNameData,
   deptList
 } from '@/api/dictionary'
+import DoctorNurse from '@/components/DoctorNurse/DoctorNurse'
 export default {
   name: 'PatientList',
+  components: {
+    DoctorNurse
+  },
   data () {
     const wrapStyle = Object.freeze([
       {
@@ -399,7 +392,6 @@ export default {
       roomList: [],
       totalPages: 1,
       anaesMethod: [],
-      doctorList: [],
       opeName: [],
       deptList: [],
       activeIndex: null
@@ -421,8 +413,6 @@ export default {
     this.getDeptList()
     // 获取手术名称
     this.getOpeName()
-    // 获取手术医生列表
-    this.getDoctorList()
     // 获取手术方法
     this.getMethodData()
     // 绑定默认手术间
@@ -515,44 +505,28 @@ export default {
         this.anaesMethod = data
       })
     },
-    getDoctorList () {
-      request({
-        url: doctorData + '/1',
-        method: 'GET'
-      }).then((res) => {
-        const data = res.data.data
-        this.doctorList = data
-      })
-    },
-    remoteMethod (query) {
+    remoteMethodOperationName (query = '') {
       this.loadingSelect = true
       this.getOpeName(query)
     },
-    remoteMethod2: _.debounce(function (query) {
-      this.loadingSelect = true
-      this.getOpeName(query)
-    }, 200),
-    // remoteMethod2: _.debounce((query) =>{
-    //   this.loadingSelect = true
-    //   this.getOpeName(query)
-    // }.bind(this), 200),
-    getOpeName (query = '') {
-      request({
-        url: opeNameData,
-        params: {
-          size: 10,
-          start: 1,
-          content: query
-        }
-      }).then((res) => {
-        if (res.data.code === 200) {
-          // setTimeout(() => {
-          this.loadingSelect = false
-          const data = res.data.data.list
-          this.opeName = data
-          // }, 2000)
-        }
-      })
+    getOpeName (query) {
+      const fn = _.throttle((query) => {
+        return request({
+          url: opeNameData,
+          params: {
+            size: 10,
+            start: 1,
+            content: query
+          }
+        }).then((res) => {
+          if (res.data.code === 200) {
+            this.loadingSelect = false
+            const data = res.data.data.list
+            this.opeName = data
+          }
+        })
+      }, 200)
+      fn(query)
     },
     getDeptList () {
       request({

@@ -132,139 +132,207 @@
     el-row
       el-col(:span="6")
         el-form-item(label="手术医师")
-          el-select(v-model="form.surgeon", placeholder="请选择手术间")
-            el-option(
-              v-for="item in doctorList",
-              :key="item.userId",
-              :label="item.userName",
-              :value="item.userId"
-            )
+          DoctorNurse(
+            v-model="form.surgeon"
+            :type="1"
+          )
+          //el-select(v-model="form.surgeon", placeholder="请选择手术间")
+          //  el-option(
+          //    v-for="item in doctorList",
+          //    :key="item.userId",
+          //    :label="item.userName",
+          //    :value="item.userId"
+          //  )
       el-col(:span="18")
         el-row
           el-col(:span="6")
             el-form-item(label="手术助手")
-              el-select(v-model="form.first_assist", placeholder="请选择")
-                el-option(
-                  v-for="item in doctorList",
-                  :key="item.userId",
-                  :label="item.userName",
-                  :value="item.userId"
-                )
+              DoctorNurse(
+                v-model="form.first_assist"
+                :type="1"
+                :disabledList="[form.second_assist,form.third_assist,form.forth_assist ]"
+              )
+              //el-select(v-model="form.first_assist", placeholder="请选择")
+              //  el-option(
+              //    v-for="item in doctorList",
+              //    :key="item.userId",
+              //    :label="item.userName",
+              //    :value="item.userId"
+              //  )
           el-col(:span="6")
             el-form-item(label="")
-              el-select(v-model="form.second_assist", placeholder="请选择")
-                el-option(
-                  v-for="item in doctorList",
-                  :key="item.userId",
-                  :label="item.userName",
-                  :value="item.userId"
-                )
+              DoctorNurse(
+                v-model="form.second_assist"
+                :type="1"
+                :disabledList="[form.first_assist,form.third_assist,form.forth_assist ]"
+              )
+              //el-select(v-model="form.second_assist", placeholder="请选择")
+              //  el-option(
+              //    v-for="item in doctorList",
+              //    :key="item.userId",
+              //    :label="item.userName",
+              //    :value="item.userId"
+              //  )
           el-col(:span="6")
             el-form-item(label="")
-              el-select(v-model="form.third_assist", placeholder="请选择")
-                el-option(
-                  v-for="item in doctorList",
-                  :key="item.userId",
-                  :label="item.userName",
-                  :value="item.userId"
-                )
+              DoctorNurse(
+                v-model="form.third_assist"
+                :type="1"
+                :disabledList="[form.first_assist,form.second_assist,form.forth_assist ]"
+              )
+              //el-select(v-model="form.third_assist", placeholder="请选择")
+              //  el-option(
+              //    v-for="item in doctorList",
+              //    :key="item.userId",
+              //    :label="item.userName",
+              //    :value="item.userId"
+              //  )
           el-col(:span="6")
             el-form-item(label="")
-              el-select(v-model="form.forth_assist", placeholder="请选择")
-                el-option(
-                  v-for="item in doctorList",
-                  :key="item.userId",
-                  :label="item.userName",
-                  :value="item.userId"
-                )
+              DoctorNurse(
+                v-model="form.forth_assist"
+                :type="1"
+                :disabledList="[form.first_assist,form.second_assist,form.third_assist ]"
+              )
+              //el-select(v-model="form.forth_assist", placeholder="请选择")
+              //  el-option(
+              //    v-for="item in doctorList",
+              //    :key="item.userId",
+              //    :label="item.userName",
+              //    :value="item.userId"
+              //  )
     el-row
       el-col(:span="6")
         el-form-item(label="灌注医生")
-          el-select(v-model="form.infuse_doc", placeholder="请选择")
-            el-option(
-              v-for="item in doctorList",
-              :key="item.userId",
-              :label="item.userName",
-              :value="item.userId"
-            )
+          DoctorNurse(
+            v-model="form.infuse_doc"
+            :type="1"
+          )
+          //el-select(v-model="form.infuse_doc", placeholder="请选择")
+          //  el-option(
+          //    v-for="item in doctorList",
+          //    :key="item.userId",
+          //    :label="item.userName",
+          //    :value="item.userId"
+          //  )
       el-col(:span="18")
         el-row
           el-col(:span="6")
             el-form-item(label="麻醉医生")
-              el-select(v-model="form.anes_doc", placeholder="请选择")
-                el-option(
-                  v-for="item in doctorList",
-                  :key="item.userId",
-                  :label="item.userName",
-                  :value="item.userId"
-                )
+              DoctorNurse(
+                v-model="form.anes_doc"
+                :type="1"
+                :disabledList="[form.first_anes_doc,form.sec_anes_doc,form.third_anes_doc]"
+              )
+              //el-select(v-model="form.anes_doc", placeholder="请选择")
+              //  el-option(
+              //    v-for="item in doctorList",
+              //    :key="item.userId",
+              //    :label="item.userName",
+              //    :value="item.userId"
+              //  )
           el-col(:span="6")
             el-form-item(label="")
-              el-select(v-model="form.first_anes_doc", placeholder="请选择")
-                el-option(
-                  v-for="item in doctorList",
-                  :key="item.userId",
-                  :label="item.userName",
-                  :value="item.userId"
-                )
+              DoctorNurse(
+                v-model="form.first_anes_doc"
+                :type="1"
+                :disabledList="[form.anes_doc,form.sec_anes_doc,form.third_anes_doc]"
+              )
+              //el-select(v-model="form.first_anes_doc", placeholder="请选择")
+              //  el-option(
+              //    v-for="item in doctorList",
+              //    :key="item.userId",
+              //    :label="item.userName",
+              //    :value="item.userId"
+              //  )
           el-col(:span="6")
             el-form-item(label="")
-              el-select(v-model="form.sec_anes_doc", placeholder="请选择")
-                el-option(
-                  v-for="item in doctorList",
-                  :key="item.userId",
-                  :label="item.userName",
-                  :value="item.userId"
-                )
+              DoctorNurse(
+                v-model="form.sec_anes_doc"
+                :type="1"
+                :disabledList="[form.anes_doc,form.first_anes_doc,form.third_anes_doc]"
+              )
+              //el-select(v-model="form.sec_anes_doc", placeholder="请选择")
+              //  el-option(
+              //    v-for="item in doctorList",
+              //    :key="item.userId",
+              //    :label="item.userName",
+              //    :value="item.userId"
+              //  )
           el-col(:span="6")
             el-form-item(label="")
-              el-select(v-model="form.third_anes_doc", placeholder="请选择")
-                el-option(
-                  v-for="item in doctorList",
-                  :key="item.userId",
-                  :label="item.userName",
-                  :value="item.userId"
-                )
+              DoctorNurse(
+                v-model="form.third_anes_doc"
+                :type="1"
+                :disabledList="[form.anes_doc,form.first_anes_doc,form.sec_anes_doc]"
+              )
+              //el-select(v-model="form.third_anes_doc", placeholder="请选择")
+              //  el-option(
+              //    v-for="item in doctorList",
+              //    :key="item.userId",
+              //    :label="item.userName",
+              //    :value="item.userId"
+              //  )
     el-row
       el-col(:span="12")
         el-row
           el-col(:span="12")
             el-form-item(label="洗手护士")
-              el-select(v-model="form.first_ope_nurse", placeholder="请选择")
-                el-option(
-                  v-for="item in nurseList",
-                  :key="item.userId",
-                  :label="item.userName",
-                  :value="item.userId"
-                )
+              DoctorNurse(
+                v-model="form.first_ope_nurse"
+                :type="2"
+                :disabledList="[form.sec_ope_nurse]"
+              )
+              //el-select(v-model="form.first_ope_nurse", placeholder="请选择")
+              //  el-option(
+              //    v-for="item in nurseList",
+              //    :key="item.userId",
+              //    :label="item.userName",
+              //    :value="item.userId"
+              //  )
           el-col(:span="12")
             el-form-item(label="")
-              el-select(v-model="form.sec_ope_nurse", placeholder="请选择")
-                el-option(
-                  v-for="item in nurseList",
-                  :key="item.userId",
-                  :label="item.userName",
-                  :value="item.userId"
-                )
+              DoctorNurse(
+                v-model="form.sec_ope_nurse"
+                :type="2"
+                :disabledList="[form.first_ope_nurse]"
+              )
+              //el-select(v-model="form.sec_ope_nurse", placeholder="请选择")
+              //  el-option(
+              //    v-for="item in nurseList",
+              //    :key="item.userId",
+              //    :label="item.userName",
+              //    :value="item.userId"
+              //  )
       el-col(:span="12")
         el-form-item(label="巡回护士")
           el-row(type="flex", justify="space-between")
             el-col(:span="10")
-              el-select(v-model="form.first_supply_nurse", placeholder="请选择")
-                el-option(
-                  v-for="item in nurseList",
-                  :key="item.userId",
-                  :label="item.userName",
-                  :value="item.userId"
-                )
+              DoctorNurse(
+                v-model="form.first_supply_nurse"
+                :type="2"
+                :disabledList="[form.sec_supply_nurse]"
+              )
+              //el-select(v-model="form.first_supply_nurse", placeholder="请选择")
+              //  el-option(
+              //    v-for="item in nurseList",
+              //    :key="item.userId",
+              //    :label="item.userName",
+              //    :value="item.userId"
+              //  )
             el-col(:span="10")
-              el-select(v-model="form.sec_supply_nurse", placeholder="请选择")
-                el-option(
-                  v-for="item in nurseList",
-                  :key="item.userId",
-                  :label="item.userName",
-                  :value="item.userId"
-                )
+              DoctorNurse(
+                v-model="form.sec_supply_nurse"
+                :type="2"
+                :disabledList="[form.first_supply_nurse]"
+              )
+              //el-select(v-model="form.sec_supply_nurse", placeholder="请选择")
+              //  el-option(
+              //    v-for="item in nurseList",
+              //    :key="item.userId",
+              //    :label="item.userName",
+              //    :value="item.userId"
+              //  )
     el-row
       el-col(:span="24")
         el-form-item(label="手术名称")
@@ -299,8 +367,12 @@ import {
 import request from '@/utils/requestForMock'
 import { mapGetters } from 'vuex'
 import _ from 'lodash'
+import DoctorNurse from '@/components/DoctorNurse/DoctorNurse'
 export default {
   name: 'OperationInfo',
+  components: {
+    DoctorNurse
+  },
   data () {
     return {
       loadingSelect: false,
