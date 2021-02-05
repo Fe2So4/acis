@@ -134,6 +134,8 @@
               <el-select
                 v-model="searchForm.anaesMethod"
                 placeholder="请选择"
+                clearable
+                filterable
               >
                 <el-option
                   v-for="item in anaesMethod"
@@ -148,6 +150,8 @@
               <el-select
                 v-model="searchForm.anaesDoc"
                 placeholder="请选择"
+                filterable
+                clearable
               >
                 <el-option
                   v-for="item in doctorList"
@@ -180,6 +184,8 @@
               <el-select
                 v-model="searchForm.dept"
                 placeholder="请选择所在科室"
+                filterable
+                clearable
               >
                 <el-option
                   v-for="item in deptList"
