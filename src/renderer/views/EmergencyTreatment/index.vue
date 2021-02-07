@@ -28,12 +28,9 @@
             el-input(v-model="form.bed_id")
         el-col(:span="12")
           el-form-item(label="所在科室")
-            el-select(v-model="form.dept_code" placeholder="请选择所在科室")
-              el-option(
-                v-for="item in deptList"
-                :key="item.deptCode"
-                :label="item.deptName"
-                :value="item.deptCode")
+            SelectDepartment(
+              v-model="form.dept_code"
+            )
       el-row
         el-col(:span="24")
           el-form-item(label="主要诊断")
@@ -247,15 +244,16 @@ import {
   anaesMethodDetail,
   roomNoList,
   diagnoseData,
-  opeNameData,
-  deptList
+  opeNameData
 } from '@/api/dictionary'
 import request from '@/utils/requestForMock'
 import SelectDoctorNurse from '@/components/Dictionary/SelectDoctorNurse'
+import SelectDepartment from '@/components/Dictionary/SelectDepartment'
 export default {
   name: 'EmergencyTreatment',
   components: {
-    SelectDoctorNurse
+    SelectDoctorNurse,
+    SelectDepartment
   },
   data () {
     return {
@@ -324,7 +322,6 @@ export default {
       diagnoseList: [],
       opeName: [],
       loadingSelect: false,
-      deptList: [],
       list: [],
       genderList: [{ value: '1', label: '男' }, { value: '2', label: '女' }]
     }
@@ -431,13 +428,6 @@ export default {
       }).then(res => {
         const data = res.data.data
         this.diagnoseList = data
-      })
-    },
-    getDeptList () {
-      request({
-        url: deptList
-      }).then(res => {
-        this.deptList = res.data.data
       })
     },
     remoteMethod: _.debounce(function (query) {
@@ -575,8 +565,6 @@ export default {
     this.getDiagnoseList()
     // 获取手术名称
     this.getOpeName()
-    // 获取科室列表
-    this.getDeptList()
   }
 }
 </script>

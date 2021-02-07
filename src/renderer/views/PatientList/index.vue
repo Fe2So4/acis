@@ -169,19 +169,7 @@
             size="mini"
           >
             <el-form-item label="住院科室">
-              <!-- <el-input v-model="searchForm.dept" /> -->
-              <el-select
-                v-model="searchForm.dept"
-                placeholder="请选择所在科室"
-                clearable
-              >
-                <el-option
-                  v-for="item in deptList"
-                  :key="item.deptCode"
-                  :label="item.deptName"
-                  :value="item.deptCode"
-                />
-              </el-select>
+              <SelectDepartment v-model="searchForm.dept" />
             </el-form-item>
             <el-form-item label="手术名称">
               <el-select
@@ -339,14 +327,15 @@ import { Socket, SocketRoom } from '@/model/Socket'
 import _ from 'lodash'
 import {
   anaesMethodDetail,
-  opeNameData,
-  deptList
+  opeNameData
 } from '@/api/dictionary'
 import SelectDoctorNurse from '@/components/Dictionary/SelectDoctorNurse'
+import SelectDepartment from '@/components/Dictionary/SelectDepartment'
 export default {
   name: 'PatientList',
   components: {
-    SelectDoctorNurse
+    SelectDoctorNurse,
+    SelectDepartment
   },
   data () {
     const wrapStyle = Object.freeze([
@@ -393,7 +382,6 @@ export default {
       totalPages: 1,
       anaesMethod: [],
       opeName: [],
-      deptList: [],
       activeIndex: null
     }
   },
@@ -409,8 +397,6 @@ export default {
   },
   created () {
     this.getRoomList()
-    // 获取科室列表
-    this.getDeptList()
     // 获取手术名称
     this.getOpeName()
     // 获取手术方法
@@ -527,13 +513,6 @@ export default {
         })
       }, 200)
       fn(query)
-    },
-    getDeptList () {
-      request({
-        url: deptList
-      }).then((res) => {
-        this.deptList = res.data.data
-      })
     },
     handleChangeList (param) {
       const d = new Date()

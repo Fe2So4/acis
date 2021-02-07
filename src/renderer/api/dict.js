@@ -4,3 +4,9 @@ export const getDoctorNurseListPaging = baseLi + 'acis/dict/getDoctorNurseListPa
 
 // 医生护士字典查询 2021-02-07
 export const getDoctorNurseList = baseLi + 'acis/dict/getDoctorNurseList1'
+
+// 科室列表查询-有分页 2021-02-07
+export const getDeptList1 = baseLi + 'acis/dict/getDeptList1'
+
+// 科室列表查询-无分页 2021-02-07
+export const getDeptList = baseLi + 'acis/dict/getDeptList'
