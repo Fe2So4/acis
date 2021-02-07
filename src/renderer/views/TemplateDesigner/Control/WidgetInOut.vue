@@ -134,10 +134,10 @@ export default {
     // this.setDrug()
   },
   beforeDestroy () {
-    this.$eventHub.$off('document-refresh', () => { this.handleRefreshDocument() })
-    this.$eventHub.$off('document-redraw', () => { this.handleReDrawDocument() })
     this.layer = null
     removeListener(this.$refs.inOut, this.resize)
+    this.$eventHub.$off('document-refresh', () => { this.handleRefreshDocument() })
+    this.$eventHub.$off('document-redraw', () => { this.handleReDrawDocument() })
   },
   methods: {
     handleRefreshDocument () {
@@ -654,6 +654,7 @@ export default {
       totalTitle.append(text)
     },
     setTotalLine () {
+      console.log(this.layer, this.layer.getElementsByClassName('legend')[0])
       const legend = this.layer.getElementsByClassName('legend')[0]
       const height = legend.attr('height')
       const width = legend.attr('width')
