@@ -26,7 +26,6 @@
 <script>
 import Header from './Header/index'
 import Aside from './Aside/index'
-import Vue from 'vue'
 export default {
   name: 'Home',
   components: {

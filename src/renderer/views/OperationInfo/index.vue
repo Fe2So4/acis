@@ -136,13 +136,6 @@
             v-model="form.surgeon"
             :type="1"
           )
-          //el-select(v-model="form.surgeon", placeholder="请选择手术间")
-          //  el-option(
-          //    v-for="item in doctorList",
-          //    :key="item.userId",
-          //    :label="item.userName",
-          //    :value="item.userId"
-          //  )
       el-col(:span="18")
         el-row
           el-col(:span="6")
@@ -152,13 +145,6 @@
                 :type="1"
                 :disabledList="[form.second_assist,form.third_assist,form.forth_assist ]"
               )
-              //el-select(v-model="form.first_assist", placeholder="请选择")
-              //  el-option(
-              //    v-for="item in doctorList",
-              //    :key="item.userId",
-              //    :label="item.userName",
-              //    :value="item.userId"
-              //  )
           el-col(:span="6")
             el-form-item(label="")
               DoctorNurse(
@@ -166,13 +152,6 @@
                 :type="1"
                 :disabledList="[form.first_assist,form.third_assist,form.forth_assist ]"
               )
-              //el-select(v-model="form.second_assist", placeholder="请选择")
-              //  el-option(
-              //    v-for="item in doctorList",
-              //    :key="item.userId",
-              //    :label="item.userName",
-              //    :value="item.userId"
-              //  )
           el-col(:span="6")
             el-form-item(label="")
               DoctorNurse(
@@ -180,13 +159,6 @@
                 :type="1"
                 :disabledList="[form.first_assist,form.second_assist,form.forth_assist ]"
               )
-              //el-select(v-model="form.third_assist", placeholder="请选择")
-              //  el-option(
-              //    v-for="item in doctorList",
-              //    :key="item.userId",
-              //    :label="item.userName",
-              //    :value="item.userId"
-              //  )
           el-col(:span="6")
             el-form-item(label="")
               DoctorNurse(
@@ -194,13 +166,6 @@
                 :type="1"
                 :disabledList="[form.first_assist,form.second_assist,form.third_assist ]"
               )
-              //el-select(v-model="form.forth_assist", placeholder="请选择")
-              //  el-option(
-              //    v-for="item in doctorList",
-              //    :key="item.userId",
-              //    :label="item.userName",
-              //    :value="item.userId"
-              //  )
     el-row
       el-col(:span="6")
         el-form-item(label="灌注医生")
@@ -208,13 +173,6 @@
             v-model="form.infuse_doc"
             :type="1"
           )
-          //el-select(v-model="form.infuse_doc", placeholder="请选择")
-          //  el-option(
-          //    v-for="item in doctorList",
-          //    :key="item.userId",
-          //    :label="item.userName",
-          //    :value="item.userId"
-          //  )
       el-col(:span="18")
         el-row
           el-col(:span="6")
@@ -224,13 +182,6 @@
                 :type="1"
                 :disabledList="[form.first_anes_doc,form.sec_anes_doc,form.third_anes_doc]"
               )
-              //el-select(v-model="form.anes_doc", placeholder="请选择")
-              //  el-option(
-              //    v-for="item in doctorList",
-              //    :key="item.userId",
-              //    :label="item.userName",
-              //    :value="item.userId"
-              //  )
           el-col(:span="6")
             el-form-item(label="")
               DoctorNurse(
@@ -238,13 +189,6 @@
                 :type="1"
                 :disabledList="[form.anes_doc,form.sec_anes_doc,form.third_anes_doc]"
               )
-              //el-select(v-model="form.first_anes_doc", placeholder="请选择")
-              //  el-option(
-              //    v-for="item in doctorList",
-              //    :key="item.userId",
-              //    :label="item.userName",
-              //    :value="item.userId"
-              //  )
           el-col(:span="6")
             el-form-item(label="")
               DoctorNurse(
@@ -252,13 +196,6 @@
                 :type="1"
                 :disabledList="[form.anes_doc,form.first_anes_doc,form.third_anes_doc]"
               )
-              //el-select(v-model="form.sec_anes_doc", placeholder="请选择")
-              //  el-option(
-              //    v-for="item in doctorList",
-              //    :key="item.userId",
-              //    :label="item.userName",
-              //    :value="item.userId"
-              //  )
           el-col(:span="6")
             el-form-item(label="")
               DoctorNurse(
@@ -266,13 +203,6 @@
                 :type="1"
                 :disabledList="[form.anes_doc,form.first_anes_doc,form.sec_anes_doc]"
               )
-              //el-select(v-model="form.third_anes_doc", placeholder="请选择")
-              //  el-option(
-              //    v-for="item in doctorList",
-              //    :key="item.userId",
-              //    :label="item.userName",
-              //    :value="item.userId"
-              //  )
     el-row
       el-col(:span="12")
         el-row
@@ -283,13 +213,6 @@
                 :type="2"
                 :disabledList="[form.sec_ope_nurse]"
               )
-              //el-select(v-model="form.first_ope_nurse", placeholder="请选择")
-              //  el-option(
-              //    v-for="item in nurseList",
-              //    :key="item.userId",
-              //    :label="item.userName",
-              //    :value="item.userId"
-              //  )
           el-col(:span="12")
             el-form-item(label="")
               DoctorNurse(
@@ -297,13 +220,6 @@
                 :type="2"
                 :disabledList="[form.first_ope_nurse]"
               )
-              //el-select(v-model="form.sec_ope_nurse", placeholder="请选择")
-              //  el-option(
-              //    v-for="item in nurseList",
-              //    :key="item.userId",
-              //    :label="item.userName",
-              //    :value="item.userId"
-              //  )
       el-col(:span="12")
         el-form-item(label="巡回护士")
           el-row(type="flex", justify="space-between")
@@ -313,26 +229,12 @@
                 :type="2"
                 :disabledList="[form.sec_supply_nurse]"
               )
-              //el-select(v-model="form.first_supply_nurse", placeholder="请选择")
-              //  el-option(
-              //    v-for="item in nurseList",
-              //    :key="item.userId",
-              //    :label="item.userName",
-              //    :value="item.userId"
-              //  )
             el-col(:span="10")
               DoctorNurse(
                 v-model="form.sec_supply_nurse"
                 :type="2"
                 :disabledList="[form.first_supply_nurse]"
               )
-              //el-select(v-model="form.sec_supply_nurse", placeholder="请选择")
-              //  el-option(
-              //    v-for="item in nurseList",
-              //    :key="item.userId",
-              //    :label="item.userName",
-              //    :value="item.userId"
-              //  )
     el-row
       el-col(:span="24")
         el-form-item(label="手术名称")
@@ -360,7 +262,6 @@ import {
   anaesMethodDetail,
   roomNoList,
   diagnoseData,
-  doctorData,
   opeNameData,
   deptList
 } from '@/api/dictionary'
@@ -573,24 +474,6 @@ export default {
         this.diagnoseList = data
       })
     },
-    getDoctorList () {
-      request({
-        url: doctorData + '/1',
-        method: 'GET'
-      }).then((res) => {
-        const data = res.data.data
-        this.doctorList = data
-      })
-    },
-    getNurseList () {
-      request({
-        url: doctorData + '/2',
-        method: 'GET'
-      }).then((res) => {
-        const data = res.data.data
-        this.nurseList = data
-      })
-    },
     remoteMethod: _.debounce(function (query) {
       this.loadingSelect = true
       this.getOpeName(query)
@@ -731,10 +614,6 @@ export default {
     this.getRoomData()
     // 获取诊断列表
     this.getDiagnoseList()
-    // 获取手术医生列表
-    this.getDoctorList()
-    // 获取护士列表
-    this.getNurseList()
     // 获取手术名称
     this.getOpeName()
     // 获取科室列表

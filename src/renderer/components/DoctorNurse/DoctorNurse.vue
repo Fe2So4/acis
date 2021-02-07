@@ -9,7 +9,7 @@
     :remote-method="queryList"
     @change="(val)=> $emit('change', val)"
     ref="select"
-    @focus="()=>queryList()"
+    @focus="onFocus"
   >
     <el-option
       v-for="item in list"
@@ -23,7 +23,7 @@
 
 <script>
 import request from '@/utils/requestForMock'
-import { getDoctorNurseListPaging } from '@/api/dict'
+import { getDoctorNurseListPaging, getDoctorNurseList } from '@/api/dict'
 export default {
   name: 'DoctorNurse',
   model: {
@@ -53,12 +53,24 @@ export default {
       page: 1,
       totalPage: 1,
       query: '',
-      loading: false
+      loading: false,
+      getDefaultData: null,
+      onFocus: null
     }
   },
-  // created () {
-  //   this.getData()
-  // },
+  watch: {
+    value: {
+      handler (val, oldVal) {
+        if (!oldVal && val) {
+          this.getDefaultData(val)
+        }
+      }
+    }
+  },
+  created () {
+    this.getDefaultData = this.createInitialList()
+    this.onFocus = this.createFocusHandler()
+  },
   mounted () {
     const el = this.$refs.select.$refs.scrollbar.wrap
     el.addEventListener('scroll', this.onScroll)
@@ -66,6 +78,8 @@ export default {
   beforeDestroy () {
     const el = this.$refs.select.$refs.scrollbar.wrap
     el.removeEventListener('scroll', this.onScroll)
+    this.getDefaultData = null
+    this.onFocus = null
   },
   methods: {
     onScroll (e) {
@@ -107,6 +121,34 @@ export default {
         }
       )
     },
+    // 只对第一次聚焦进行空值搜索-目的是降低初始化查询的次数
+    createFocusHandler () {
+      let isInitial = true
+      return (e) => {
+        if (isInitial) {
+          isInitial = false
+          this.queryList()
+        }
+      }
+    },
+    // 只对第一次赋值进行查询-目的是回显选中数据
+    createInitialList () {
+      let isInitial = true
+      return (code) => {
+        if (isInitial) {
+          return this.getDoctorNurseList(code).then(
+            res => {
+              isInitial = false
+              this.list = res
+            },
+            e => {
+              this.$message.error(e.message)
+            }
+          )
+        }
+      }
+    },
+    // request
     getDoctorNurseListPaging (start, content) {
       return request({
         url: getDoctorNurseListPaging,
@@ -122,6 +164,23 @@ export default {
             return res.data.data
           } else {
             return Promise.reject(new Error('获取医护字典失败'))
+          }
+        }
+      )
+    },
+    getDoctorNurseList (code) {
+      return request({
+        url: getDoctorNurseList,
+        params: {
+          userJob: this.type,
+          code
+        }
+      }).then(
+        res => {
+          if (res.data.success) {
+            return res.data.data
+          } else {
+            return Promise.reject(new Error('医护字典查询失败'))
           }
         }
       )
