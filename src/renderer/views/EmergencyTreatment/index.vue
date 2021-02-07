@@ -246,9 +246,12 @@ import {
   diagnoseData,
   opeNameData
 } from '@/api/dictionary'
+import { addStatus } from '@/api/patientList'
 import request from '@/utils/requestForMock'
 import SelectDoctorNurse from '@/components/Dictionary/SelectDoctorNurse'
 import SelectDepartment from '@/components/Dictionary/SelectDepartment'
+import { mapGetters } from 'vuex'
+import moment from 'moment'
 export default {
   name: 'EmergencyTreatment',
   components: {
@@ -336,6 +339,9 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters('Base', ['operationId'])
+  },
   methods: {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
@@ -345,6 +351,19 @@ export default {
         } else {
           return false
         }
+      })
+    },
+    // 修改状态
+    addStatusTimePoint () {
+      const formData = new FormData()
+      formData.append('operationId', this.form.patient_id)
+      formData.append('conCode', '2')
+      formData.append('timePoint', moment(new Date()).format('YYYY-MM-DD HH:mm'))
+      request({
+        method: 'POST',
+        url: addStatus,
+        data: formData
+      }).then((res) => {
       })
     },
     getData () {
@@ -541,6 +560,7 @@ export default {
       }).then(res => {
         if (res.data.code === 200) {
           this.$message({ type: 'success', message: '增加急诊成功' })
+          this.addStatusTimePoint()
         } else {
           this.$message({ type: 'error', message: res.data.msg })
         }
