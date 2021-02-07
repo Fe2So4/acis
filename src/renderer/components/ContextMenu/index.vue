@@ -52,11 +52,33 @@ export default {
   methods: {
     handleClick (item) {
       this.$emit('handleClick', item)
+    },
+    handleMask () {
+      var mask = document.createElement('div')
+      mask.style.position = 'fixed'
+      mask.style.width = 100 + 'vw'
+      mask.style.height = 100 + 'vh'
+      mask.style.top = 0
+      mask.style.left = 0
+      mask.style.zIndex = 9999
+      mask.style.overflow = 'hidden'
+      mask.ondblclick = function (e) {
+        e.stopPropagation()
+      }
+      mask.setAttribute('class', 'drug-mask')
+      document.body.appendChild(mask)
     }
+  },
+  beforeDestroy () {
+    var mask = document.querySelector('.drug-mask')
+    document.body.removeChild(mask)
   },
   mounted () {
     const that = this
     document.body.onclick = function () {
+      that.$emit('update:drugListVisible', false)
+    }
+    document.body.ondblclick = function () {
       that.$emit('update:drugListVisible', false)
     }
   }
