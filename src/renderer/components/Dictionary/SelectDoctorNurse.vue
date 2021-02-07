@@ -2,7 +2,7 @@
   <el-select
     :value="value"
     :loading="loading"
-    placeholder="请选择"
+    :placeholder="`请选择${typeName}`"
     clearable
     filterable
     remote
@@ -25,7 +25,7 @@
 import request from '@/utils/requestForMock'
 import { getDoctorNurseListPaging, getDoctorNurseList } from '@/api/dict'
 export default {
-  name: 'DoctorNurse',
+  name: 'SelectDoctorNurse',
   model: {
     prop: 'value',
     event: 'change'
@@ -56,6 +56,11 @@ export default {
       loading: false,
       getDefaultData: null,
       onFocus: null
+    }
+  },
+  computed: {
+    typeName () {
+      return +this.type === 1 ? '医生' : '护士'
     }
   },
   watch: {

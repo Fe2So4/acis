@@ -145,7 +145,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="麻醉医生">
-              <DoctorNurse
+              <SelectDoctorNurse
                 v-model="searchForm.anaesDoc"
                 :type="1"
               />
@@ -342,11 +342,11 @@ import {
   opeNameData,
   deptList
 } from '@/api/dictionary'
-import DoctorNurse from '@/components/DoctorNurse/DoctorNurse'
+import SelectDoctorNurse from '@/components/Dictionary/SelectDoctorNurse'
 export default {
   name: 'PatientList',
   components: {
-    DoctorNurse
+    SelectDoctorNurse
   },
   data () {
     const wrapStyle = Object.freeze([

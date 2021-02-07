@@ -132,7 +132,7 @@
     el-row
       el-col(:span="6")
         el-form-item(label="手术医师")
-          DoctorNurse(
+          SelectDoctorNurse(
             v-model="form.surgeon"
             :type="1"
           )
@@ -140,28 +140,28 @@
         el-row
           el-col(:span="6")
             el-form-item(label="手术助手")
-              DoctorNurse(
+              SelectDoctorNurse(
                 v-model="form.first_assist"
                 :type="1"
                 :disabledList="[form.second_assist,form.third_assist,form.forth_assist ]"
               )
           el-col(:span="6")
             el-form-item(label="")
-              DoctorNurse(
+              SelectDoctorNurse(
                 v-model="form.second_assist"
                 :type="1"
                 :disabledList="[form.first_assist,form.third_assist,form.forth_assist ]"
               )
           el-col(:span="6")
             el-form-item(label="")
-              DoctorNurse(
+              SelectDoctorNurse(
                 v-model="form.third_assist"
                 :type="1"
                 :disabledList="[form.first_assist,form.second_assist,form.forth_assist ]"
               )
           el-col(:span="6")
             el-form-item(label="")
-              DoctorNurse(
+              SelectDoctorNurse(
                 v-model="form.forth_assist"
                 :type="1"
                 :disabledList="[form.first_assist,form.second_assist,form.third_assist ]"
@@ -169,7 +169,7 @@
     el-row
       el-col(:span="6")
         el-form-item(label="灌注医生")
-          DoctorNurse(
+          SelectDoctorNurse(
             v-model="form.infuse_doc"
             :type="1"
           )
@@ -177,28 +177,28 @@
         el-row
           el-col(:span="6")
             el-form-item(label="麻醉医生")
-              DoctorNurse(
+              SelectDoctorNurse(
                 v-model="form.anes_doc"
                 :type="1"
                 :disabledList="[form.first_anes_doc,form.sec_anes_doc,form.third_anes_doc]"
               )
           el-col(:span="6")
             el-form-item(label="")
-              DoctorNurse(
+              SelectDoctorNurse(
                 v-model="form.first_anes_doc"
                 :type="1"
                 :disabledList="[form.anes_doc,form.sec_anes_doc,form.third_anes_doc]"
               )
           el-col(:span="6")
             el-form-item(label="")
-              DoctorNurse(
+              SelectDoctorNurse(
                 v-model="form.sec_anes_doc"
                 :type="1"
                 :disabledList="[form.anes_doc,form.first_anes_doc,form.third_anes_doc]"
               )
           el-col(:span="6")
             el-form-item(label="")
-              DoctorNurse(
+              SelectDoctorNurse(
                 v-model="form.third_anes_doc"
                 :type="1"
                 :disabledList="[form.anes_doc,form.first_anes_doc,form.sec_anes_doc]"
@@ -208,14 +208,14 @@
         el-row
           el-col(:span="12")
             el-form-item(label="洗手护士")
-              DoctorNurse(
+              SelectDoctorNurse(
                 v-model="form.first_ope_nurse"
                 :type="2"
                 :disabledList="[form.sec_ope_nurse]"
               )
           el-col(:span="12")
             el-form-item(label="")
-              DoctorNurse(
+              SelectDoctorNurse(
                 v-model="form.sec_ope_nurse"
                 :type="2"
                 :disabledList="[form.first_ope_nurse]"
@@ -224,13 +224,13 @@
         el-form-item(label="巡回护士")
           el-row(type="flex", justify="space-between")
             el-col(:span="10")
-              DoctorNurse(
+              SelectDoctorNurse(
                 v-model="form.first_supply_nurse"
                 :type="2"
                 :disabledList="[form.sec_supply_nurse]"
               )
             el-col(:span="10")
-              DoctorNurse(
+              SelectDoctorNurse(
                 v-model="form.sec_supply_nurse"
                 :type="2"
                 :disabledList="[form.first_supply_nurse]"
@@ -268,11 +268,11 @@ import {
 import request from '@/utils/requestForMock'
 import { mapGetters } from 'vuex'
 import _ from 'lodash'
-import DoctorNurse from '@/components/DoctorNurse/DoctorNurse'
+import SelectDoctorNurse from '@/components/Dictionary/SelectDoctorNurse'
 export default {
   name: 'OperationInfo',
   components: {
-    DoctorNurse
+    SelectDoctorNurse
   },
   data () {
     return {
