@@ -584,6 +584,7 @@ export default {
       this.setXAxisList()
       this.setXAxis()
       this.setGrid()
+      this.setTotalLine()
       this.setTotalTitle()
     },
     setLeftTitle () {
@@ -1038,7 +1039,8 @@ export default {
                     0,
                     (group.attr('height') * 3) / 4
                   ],
-                  lineWidth: 1
+                  lineWidth: 1,
+                  strokeColor: 'blue'
                 })
                 group.append(rightLine)
               }
@@ -1394,15 +1396,9 @@ export default {
     setDrugTotal () {
       if (!this.editMode) {
         // 清空子元素
-        this.layer.getElementsByClassName('total').forEach((ref) => {
-          ref.removeAllChildren()
-        })
         const legend = this.layer.getElementsByClassName('legend')[0]
-        // const infusion = drugList.getElementsByClassName('infusion')[0]
-        // const bloodTransfusion = drugList.getElementsByClassName(
-        //   'bloodTransfusion'
-        // )[0]
-        // const outPut = drugList.getElementsByClassName('outPut')[0]
+        const labels = legend.querySelectorAll('.total')
+        labels.forEach((el) => legend.removeChild(el))
         const width = Math.round(legend.attr('width'))
         const lineNumber =
           this.configuration.infusion.num +
@@ -1421,7 +1417,9 @@ export default {
               fillColor: 'blue',
               width: width,
               height: lineHeight,
-              lineHeight: lineHeight
+              strokeWidth: 1,
+              lineHeight: lineHeight,
+              className: 'total'
             })
             legend.append(text)
           }
@@ -1454,9 +1452,7 @@ export default {
       const drugList = leftPart.getElementsByClassName('drugList')[0]
 
       const infusion = drugList.getElementsByClassName('infusion')[0]
-      const bloodTransfusion = drugList.getElementsByClassName(
-        'bloodTransfusion'
-      )[0]
+      const bloodTransfusion = drugList.getElementsByClassName('bloodTransfusion')[0]
       // const outPut = drugList.getElementsByClassName('outPut')[0]
       if (!this.editMode) {
         const leftPart = this.layer.getElementsByClassName('leftPart')[0]

@@ -70,8 +70,10 @@ export default {
     }
   },
   beforeDestroy () {
-    var mask = document.querySelector('.drug-mask')
-    document.body.removeChild(mask)
+    this.$nextTick(() => {
+      var mask = document.querySelector('.drug-mask')
+      document.body.removeChild(mask)
+    })
   },
   mounted () {
     const that = this
