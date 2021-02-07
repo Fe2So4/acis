@@ -14,6 +14,7 @@
       .right
         vxe-table(
           border
+          round
           ref="xTable"
           auto-resize
           show-header-overflow

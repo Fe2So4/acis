@@ -2,7 +2,7 @@
 el-dialog(
   title="药品详情",
   :visible.sync="drugDetailVisible",
-  width="60%",
+  width="32%",
   :before-close="handleClose",
   v-dialogDrag="true",
   :append-to-body="true"

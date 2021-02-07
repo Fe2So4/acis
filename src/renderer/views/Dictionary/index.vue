@@ -40,6 +40,7 @@ export default {
   data () {
     return {
       activeName: '1'
+      // activeName: '1'
     }
   },
   components: {

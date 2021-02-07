@@ -13,6 +13,7 @@
       .right
         vxe-table(
           border
+          round
           auto-resize
           show-header-overflow
           show-overflow

@@ -33,7 +33,7 @@
       //- //- About
       //- TemplateDisplayer
       //- Dictionary
-      //  BloodGasAnalysis
+      //-  BloodGasAnalysis
   //- .dialog-footer
 </template>
 <script>
@@ -129,10 +129,15 @@ export default {
     handleClose () {
       this.$emit('close')
     }
+  },
+  mounted () {
+    const that = this
+    document.onkeyup = function (e) {
+      if (e.keyCode === 27) {
+        that.$emit('close')
+      }
+    }
   }
-  // mounted(){
-
-  // }
 }
 </script>
 <style lang="scss" scoped>

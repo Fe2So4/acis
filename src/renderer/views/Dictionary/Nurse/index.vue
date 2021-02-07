@@ -4,6 +4,7 @@
     .content
         vxe-table(
           border
+          round
           show-header-overflow
           show-overflow
           keep-source
