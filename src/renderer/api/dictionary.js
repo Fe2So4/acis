@@ -59,6 +59,10 @@ export const deleteRoomDetail = `${config.default.api.baseURL}/acis/dict/deleteO
 
 // 医护字典查询
 export const doctorData = `${config.default.api.baseURL}/acis/dict/getDoctorNurseList`
+
+// 医护字典查询（带分页）
+export const getDoctorData = `${config.default.api.baseURL}/acis/dict/getDoctorNurseListPaging`
+
 // 医护字典删除
 export const deleteDoctorData = `${config.default.api.baseURL}/acis/dict/deleteDoctorNurseList`
 // 医护字典修改

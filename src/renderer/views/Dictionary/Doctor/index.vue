@@ -2,6 +2,9 @@
 <template lang="pug">
   .operation-room
     .content
+      .search-container
+        el-input(v-model="search" placeholder="请输入内容" @keyup.enter.native="getDetail(1)" size="mini" clearable)
+      .table-container
         vxe-table(
           border
           round
@@ -35,22 +38,27 @@
           vxe-table-column(field="userJob" title="类别" :edit-render="{}")
           vxe-table-column(field="createTime" title="创建日期")
     .option
-        el-button(size="mini" :disabled="addDisabled" @click="insertEvent(-1)") 新增(N)
+      span
+        Pagination(@getData="getDetail" :total="total" :pageSize="pageSize")
+      span
+        el-button(size="mini" :disabled="addDisabled" @click="insertEvent(0)") 新增(N)
         el-button(size="mini" :disabled="deleteDisabled" @click="deleteDetail") 删除(D)
         el-button(size="mini" :disabled="saveDisabled" @click="saveEvent") 保存(S)
         el-button(size="mini" :disabled="cancelDisabled" @click="revertEvent") 取消(C)
-        el-button(size="mini" :disabled="refreshDisabled" @click="getDetail") 刷新(R)
+        el-button(size="mini" :disabled="refreshDisabled" @click="getDetail(1)") 刷新(R)
 </template>
 <script>
 // opeRoomDetail
-import { doctorData, deleteDoctorData, addDoctorData, updateDoctorData } from '@/api/dictionary'
+import { deleteDoctorData, addDoctorData, updateDoctorData, getDoctorData } from '@/api/dictionary'
 import { getDeptList } from '@/api/anaesDrug'
+import Pagination from '@/components/Pagination/pagination'
 import request from '@/utils/requestForMock'
 import XEUtils from 'xe-utils'
 export default {
   data () {
     return {
       tableData: [],
+      search: '',
       addDisabled: false,
       deleteDisabled: true,
       saveDisabled: true,
@@ -58,8 +66,14 @@ export default {
       refreshDisabled: false,
       currentRow: {},
       defaultDept: '',
-      deptList: []
+      deptList: [],
+      currentPage: 1,
+      pageSize: 100,
+      total: 0
     }
+  },
+  components: {
+    Pagination
   },
   mounted () {
     this.getDeptList()
@@ -78,13 +92,21 @@ export default {
         this.deptList = res.data.data
       })
     },
-    getDetail () {
+    getDetail (currentPage = this.currentPage) {
       request({
         method: 'GET',
-        url: doctorData + '/1'
+        url: getDoctorData,
+        params: {
+          userJob: 1,
+          start: currentPage,
+          size: this.pageSize,
+          content: this.search
+        }
       }).then(res => {
         const data = res.data.data
-        this.tableData = data
+        this.tableData = data.list
+        this.currentPage = data.pageNum
+        this.total = data.total
       })
     },
     activeRowMethod ({ row, rowIndex }) {
@@ -231,11 +253,19 @@ export default {
   height 100%
   .content
     width 100%
-    height calc(100% - 40px)
+    height calc(100% - 50px)
+    .table-container
+      height calc(100% - 28px)
+    // .pagination-container
+    //   height 40px
   .option
     text-align right
     margin-top 10px
-    .el-button{
-      margin-right:10px;
+    display flex
+    justify-content space-between
+    span{
+      .el-button{
+        margin-right:10px;
+      }
     }
 </style>

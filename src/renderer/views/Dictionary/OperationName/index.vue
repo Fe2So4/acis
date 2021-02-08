@@ -36,7 +36,7 @@
         el-button(size="mini" :disabled="deleteDisabled" @click="deleteDetail") 删除(D)
         el-button(size="mini" :disabled="saveDisabled" @click="saveEvent") 保存(S)
         el-button(size="mini" :disabled="cancelDisabled" @click="revertEvent") 取消(C)
-        el-button(size="mini" :disabled="refreshDisabled" @click="getDetail") 刷新(R)
+        el-button(size="mini" :disabled="refreshDisabled" @click="getDetail(1)") 刷新(R)
 </template>
 <script>
 // opeRoomDetail

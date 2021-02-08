@@ -39,7 +39,7 @@ export default {
   name: 'Dictionary',
   data () {
     return {
-      activeName: '1'
+      activeName: '7'
       // activeName: '1'
     }
   },

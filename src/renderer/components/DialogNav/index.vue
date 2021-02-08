@@ -6,7 +6,7 @@
       span {{ title }}
       i.el-icon-close(@click="handleClose")
     .dialog-body
-      component(:is="componentName")
+      //- component(:is="componentName")
       //- LockScreen
       //- OperationOverview
       //- Event
@@ -32,7 +32,7 @@
       //- OperationArrangement
       //- //- About
       //- TemplateDisplayer
-      //- Dictionary
+      Dictionary
       //-  BloodGasAnalysis
   //- .dialog-footer
 </template>
