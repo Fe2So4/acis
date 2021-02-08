@@ -833,7 +833,7 @@ export default {
               })
               group.append(rightLine)
             }
-            if (moment(this.endTime).diff(moment(this.startTime), 'minute') < 5) {
+            if (moment(item.eventEndTime).diff(moment(item.eventStartTime), 'minute') < 5) {
               group.append(leftLine, dose)
             } else {
               const center = group.attr('width') / 2

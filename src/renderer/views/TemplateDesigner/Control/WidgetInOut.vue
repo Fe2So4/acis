@@ -1044,30 +1044,34 @@ export default {
                 })
                 group.append(rightLine)
               }
-              const center = group.attr('width') / 2
-              const leftCenterLine = new Polyline({
-                pos: [0, 0],
-                points: [
-                  0,
-                  group.attr('height') / 2 - 0.5,
-                  center - text / 2 - 4,
-                  group.attr('height') / 2 - 0.5
-                ],
-                lineWidth: 1,
-                strokeColor: 'blue'
-              })
-              const rightCenterLine = new Polyline({
-                pos: [0, 0],
-                points: [
-                  center + text / 2 + 4,
-                  group.attr('height') / 2 - 0.5,
-                  group.attr('width'),
-                  group.attr('height') / 2 - 0.5
-                ],
-                lineWidth: 1,
-                strokeColor: 'blue'
-              })
-              group.append(leftLine, leftCenterLine, rightCenterLine, dose)
+              if (moment(item.eventEndTime).diff(moment(item.eventStartTime), 'minute') < 5) {
+                group.append(leftLine, dose)
+              } else {
+                const center = group.attr('width') / 2
+                const leftCenterLine = new Polyline({
+                  pos: [0, 0],
+                  points: [
+                    0,
+                    group.attr('height') / 2 - 0.5,
+                    center - text / 2 - 4,
+                    group.attr('height') / 2 - 0.5
+                  ],
+                  lineWidth: 1,
+                  strokeColor: 'blue'
+                })
+                const rightCenterLine = new Polyline({
+                  pos: [0, 0],
+                  points: [
+                    center + text / 2 + 4,
+                    group.attr('height') / 2 - 0.5,
+                    group.attr('width'),
+                    group.attr('height') / 2 - 0.5
+                  ],
+                  lineWidth: 1,
+                  strokeColor: 'blue'
+                })
+                group.append(leftLine, leftCenterLine, rightCenterLine, dose)
+              }
             } else {
               group = new Group({
                 className: 'infusion_col',

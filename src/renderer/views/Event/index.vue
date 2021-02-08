@@ -282,6 +282,7 @@
                 popper-class="dateTimePicker"
                 size="mini"
                 format="MM-dd HH:mm"
+                :clearable="false"
                 value-format="yyyy-MM-dd HH:mm"
                 @change="handleDateChange(row)"
               />
@@ -331,6 +332,7 @@
                 size="mini"
                 popper-class="dateTimePicker"
                 type="datetime"
+                :clearable="false"
                 @change="handleDateChange(row)"
                 format="MM-dd HH:mm"
                 value-format="yyyy-MM-dd HH:mm"
@@ -510,11 +512,24 @@ export default {
       this.handleBlur()
       // eventStartTime eventEndTime holdingTime
       if (row.isHolding === '1') {
-        console.log(row.eventEndTime)
-        row.holdingTime = moment(row.eventEndTime).diff(
-          moment(row.eventStartTime),
-          'minute'
-        )
+        if (row.eventEndTime && row.eventStartTime) {
+          row.holdingTime = moment(row.eventEndTime).diff(
+            moment(row.eventStartTime),
+            'minute'
+          )
+        } else if (row.eventEndTime && !row.eventStartTime) {
+          row.holdingTime = moment(row.eventEndTime).minutes() - 0
+        } else if (!row.eventEndTime && !row.eventStartTime) {
+          row.holdingTime = 0
+        } else {
+          row.holdingTime = 0 - moment(row.eventStartTime).minutes()
+        }
+      }
+      if (!row.eventEndTime) {
+        row.eventEndTime = ''
+      }
+      if (!row.eventStartTime) {
+        row.eventStartTime = ''
       }
       console.log(row)
     },
@@ -615,7 +630,7 @@ export default {
         checked: false
       }
       // this.insertData = record
-      const { row: newRow } = await this.$refs.xTable.insertAt(record, -1)
+      const { row: newRow } = await this.$refs.xTable.insertAt(record, 0)
       console.log(newRow)
       this.saveVisible = false
     },
