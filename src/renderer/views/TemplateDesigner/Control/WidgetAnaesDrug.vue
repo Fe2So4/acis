@@ -109,28 +109,30 @@ export default {
       await this.getDrawLineList()
       // 注册刷新事件
       this.$eventHub.$on('document-refresh', () => {
-        this.handleRefreshDocument()
+        // 获取数据
+        this.getDocumentRefresh()
       })
       // 注册刷新事件
       this.$eventHub.$on('document-redraw', () => {
-        this.handleReDrawDocument()
+        // 重新绘制
+        this.getDocumentRedraw()
       })
     } else {
       addListener(this.$refs.anaesDrug, this.resize)
     }
   },
   beforeDestroy () {
-    this.$eventHub.$off('document-refresh', () => { this.handleRefreshDocument() })
-    this.$eventHub.$off('document-redraw', () => { this.handleReDrawDocument() })
+    this.$eventHub.$off('document-refresh', this.getDocumentRefresh)
+    this.$eventHub.$off('document-redraw', this.getDocumentRedraw)
     this.layer = null
     removeListener(this.$refs.anaesDrug, this.resize)
   },
   methods: {
-    handleRefreshDocument () {
+    getDocumentRefresh () {
       // 获取数据
       this.getDrawLineList()
     },
-    handleReDrawDocument () {
+    getDocumentRedraw () {
       // 重新绘制
       this.setLayout()
       this.setContent()
@@ -760,7 +762,6 @@ export default {
               interval
           )
           // const startTime = Math.round((moment(item.startTime) - moment('2020-7-21 17:00')) * interval)
-          console.log(startTime, 'anaesDrug')
           let endTime = null
           if (item.endTime !== '') {
             endTime = Math.round(
@@ -832,30 +833,34 @@ export default {
               })
               group.append(rightLine)
             }
-            const center = group.attr('width') / 2
-            const leftCenterLine = new Polyline({
-              pos: [0, 0],
-              points: [
-                0,
-                group.attr('height') / 2 - 0.5,
-                center - text / 2 - 4,
-                group.attr('height') / 2 - 0.5
-              ],
-              lineWidth: 1,
-              strokeColor: 'blue'
-            })
-            const rightCenterLine = new Polyline({
-              pos: [0, 0],
-              points: [
-                center + text / 2 + 4,
-                group.attr('height') / 2 - 0.5,
-                group.attr('width'),
-                group.attr('height') / 2 - 0.5
-              ],
-              lineWidth: 1,
-              strokeColor: 'blue'
-            })
-            group.append(leftLine, leftCenterLine, rightCenterLine, dose)
+            if (moment(item.eventEndTime).diff(moment(item.eventStartTime), 'minute') < 5) {
+              group.append(leftLine, dose)
+            } else {
+              const center = group.attr('width') / 2
+              const leftCenterLine = new Polyline({
+                pos: [0, 0],
+                points: [
+                  0,
+                  group.attr('height') / 2 - 0.5,
+                  center - text / 2 - 4,
+                  group.attr('height') / 2 - 0.5
+                ],
+                lineWidth: 1,
+                strokeColor: 'blue'
+              })
+              const rightCenterLine = new Polyline({
+                pos: [0, 0],
+                points: [
+                  center + text / 2 + 4,
+                  group.attr('height') / 2 - 0.5,
+                  group.attr('width'),
+                  group.attr('height') / 2 - 0.5
+                ],
+                lineWidth: 1,
+                strokeColor: 'blue'
+              })
+              group.append(leftLine, leftCenterLine, rightCenterLine, dose)
+            }
           } else {
             group = new Group({
               className: 'col',
@@ -883,9 +888,9 @@ export default {
     setDrugTotal () {
       if (!this.editMode) {
         // 清空子元素
-        // this.layer.getElementsByClassName('total').forEach(ref => {
-        //   ref.removeAllChildren()
-        // })
+        this.layer.getElementsByClassName('total').forEach(ref => {
+          ref.removeAllChildren()
+        })
         const legend = this.layer.getElementsByClassName('legend')[0]
         const labels = legend.querySelectorAll('.total')
         labels.forEach((el) => legend.removeChild(el))

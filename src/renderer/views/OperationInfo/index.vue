@@ -494,6 +494,10 @@ export default {
           if (item.className === i) {
             const dict = ['anes_method',
               'surgeon',
+              'first_ope_nurse',
+              'first_supply_nurse',
+              'sec_supply_nurse',
+              'sec_ope_nurse',
               'first_assist', 'second_assist', 'third_assist', 'forth_assist', 'infuse_doc', 'anes_doc', 'first_anes_doc', 'sec_anes_doc', 'third_anes_doc']
             if (item.value === '' && !dict.includes(item.className)) {
               item.label = this.form[i]
@@ -584,7 +588,10 @@ export default {
         data: obj
       }).then(res => {
         if (res.data.code === 200) {
+          this.$message({ type: 'success', message: '保存成功' })
           this.getData()
+        } else {
+          this.$message({ type: 'error', message: res.data.msg })
         }
       })
     }

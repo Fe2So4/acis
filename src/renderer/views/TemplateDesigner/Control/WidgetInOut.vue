@@ -20,11 +20,7 @@
       @handleClose="handleCloseDrugDetail"
       @handleSubmit="handleSubmit"
     />
-    <canvas
-      id="canvas"
-      width="0"
-      height="0"
-    />
+    <canvas id="canvas" />
   </div>
 </template>
 
@@ -121,31 +117,27 @@ export default {
       await this.getDrawLineList()
       await this.getInfusionBloodList()
       // 注册刷新事件
-      this.$eventHub.$on('document-refresh', () => {
-        this.handleRefreshDocument()
-      })
-      // 注册刷新事件
-      this.$eventHub.$on('document-redraw', () => {
-        this.handleReDrawDocument()
-      })
+      this.$eventHub.$on('document-refresh', () => { this.getDocumentRefresh() })
+      // 注册重绘事件
+      this.$eventHub.$on('document-redraw', () => { this.getDocumentRedraw() })
     } else {
       addListener(this.$refs.inOut, this.resize)
     }
     // this.setDrug()
   },
   beforeDestroy () {
+    this.$eventHub.$off('document-refresh', this.getDocumentRefresh)
+    this.$eventHub.$off('document-redraw', this.getDocumentRedraw)
     this.layer = null
     removeListener(this.$refs.inOut, this.resize)
-    this.$eventHub.$off('document-refresh', () => { this.handleRefreshDocument() })
-    this.$eventHub.$off('document-redraw', () => { this.handleReDrawDocument() })
   },
   methods: {
-    handleRefreshDocument () {
+    getDocumentRefresh () {
       // 获取数据
       this.getDrawLineList()
       this.getInfusionBloodList()
     },
-    handleReDrawDocument () {
+    getDocumentRedraw () {
       // 重新绘制
       this.setLayout()
       this.setContent()
@@ -397,7 +389,6 @@ export default {
         pos: [0, (step * this.configuration.infusion.num) / 2],
         anchor: [0, 0.5],
         fontSize: 12,
-        // bgcolor: 'green',
         fontFamily: '宋体',
         textAlign: 'center',
         fillColor: 'black',
@@ -593,6 +584,7 @@ export default {
       this.setXAxisList()
       this.setXAxis()
       this.setGrid()
+      this.setTotalLine()
       this.setTotalTitle()
     },
     setLeftTitle () {
@@ -654,7 +646,6 @@ export default {
       totalTitle.append(text)
     },
     setTotalLine () {
-      console.log(this.layer, this.layer.getElementsByClassName('legend')[0])
       const legend = this.layer.getElementsByClassName('legend')[0]
       const height = legend.attr('height')
       const width = legend.attr('width')
@@ -810,6 +801,7 @@ export default {
             if (evt.originalEvent.button === 2) {
               if (evt.target.attr('className').indexOf('row') !== -1) {
                 this.groupNo = evt.target.attr('index')
+
                 this.drugStartTime =
                   moment(this.startTime) +
                   ((evt.x - leftPart.attr('width')) *
@@ -1047,34 +1039,39 @@ export default {
                     0,
                     (group.attr('height') * 3) / 4
                   ],
-                  lineWidth: 1
+                  lineWidth: 1,
+                  strokeColor: 'blue'
                 })
                 group.append(rightLine)
               }
-              const center = group.attr('width') / 2
-              const leftCenterLine = new Polyline({
-                pos: [0, 0],
-                points: [
-                  0,
-                  group.attr('height') / 2 - 0.5,
-                  center - text / 2 - 4,
-                  group.attr('height') / 2 - 0.5
-                ],
-                lineWidth: 1,
-                strokeColor: 'blue'
-              })
-              const rightCenterLine = new Polyline({
-                pos: [0, 0],
-                points: [
-                  center + text / 2 + 4,
-                  group.attr('height') / 2 - 0.5,
-                  group.attr('width'),
-                  group.attr('height') / 2 - 0.5
-                ],
-                lineWidth: 1,
-                strokeColor: 'blue'
-              })
-              group.append(leftLine, leftCenterLine, rightCenterLine, dose)
+              if (moment(item.eventEndTime).diff(moment(item.eventStartTime), 'minute') < 5) {
+                group.append(leftLine, dose)
+              } else {
+                const center = group.attr('width') / 2
+                const leftCenterLine = new Polyline({
+                  pos: [0, 0],
+                  points: [
+                    0,
+                    group.attr('height') / 2 - 0.5,
+                    center - text / 2 - 4,
+                    group.attr('height') / 2 - 0.5
+                  ],
+                  lineWidth: 1,
+                  strokeColor: 'blue'
+                })
+                const rightCenterLine = new Polyline({
+                  pos: [0, 0],
+                  points: [
+                    center + text / 2 + 4,
+                    group.attr('height') / 2 - 0.5,
+                    group.attr('width'),
+                    group.attr('height') / 2 - 0.5
+                  ],
+                  lineWidth: 1,
+                  strokeColor: 'blue'
+                })
+                group.append(leftLine, leftCenterLine, rightCenterLine, dose)
+              }
             } else {
               group = new Group({
                 className: 'infusion_col',
@@ -1403,15 +1400,9 @@ export default {
     setDrugTotal () {
       if (!this.editMode) {
         // 清空子元素
-        this.layer.getElementsByClassName('total').forEach((ref) => {
-          ref.removeAllChildren()
-        })
         const legend = this.layer.getElementsByClassName('legend')[0]
-        // const infusion = drugList.getElementsByClassName('infusion')[0]
-        // const bloodTransfusion = drugList.getElementsByClassName(
-        //   'bloodTransfusion'
-        // )[0]
-        // const outPut = drugList.getElementsByClassName('outPut')[0]
+        const labels = legend.querySelectorAll('.total')
+        labels.forEach((el) => legend.removeChild(el))
         const width = Math.round(legend.attr('width'))
         const lineNumber =
           this.configuration.infusion.num +
@@ -1430,7 +1421,9 @@ export default {
               fillColor: 'blue',
               width: width,
               height: lineHeight,
-              lineHeight: lineHeight
+              strokeWidth: 1,
+              lineHeight: lineHeight,
+              className: 'total'
             })
             legend.append(text)
           }
@@ -1459,8 +1452,9 @@ export default {
       }
     },
     setDrug () {
-      const leftPartOut = this.layer.getElementsByClassName('leftPart')[0]
-      const drugList = leftPartOut.getElementsByClassName('drugList')[0]
+      const leftPart = this.layer.getElementsByClassName('leftPart')[0]
+      const drugList = leftPart.getElementsByClassName('drugList')[0]
+
       const infusion = drugList.getElementsByClassName('infusion')[0]
       const bloodTransfusion = drugList.getElementsByClassName('bloodTransfusion')[0]
       // const outPut = drugList.getElementsByClassName('outPut')[0]
@@ -1496,13 +1490,13 @@ export default {
           if (this.bloodTransfusionDataList[i]) {
             const text = new Label(this.bloodTransfusionDataList[i].eventName)
             text.attr({
-              pos: [this.configuration.bloodTransfusion.width, lineHeight * i],
+              pos: [30, lineHeight * i],
               anchor: [0, 0],
               fontSize: 12,
               fontFamily: '宋体',
               textAlign: 'center',
               fillColor: 'blue',
-              width: width - this.configuration.bloodTransfusion.width,
+              width: width - 30,
               height: lineHeight,
               lineHeight: lineHeight
             })
