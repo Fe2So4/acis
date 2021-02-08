@@ -229,7 +229,7 @@
                 :label="item.opeName"
                 :value="item.opeCode")
     .option
-      el-button(size="mini" @click="resetForm('form')") 刷新(R)
+      el-button(size="mini" @click="resetForm('form')") 重置(R)
       el-button(size="mini" @click="submitForm('form')") 保存(S)
 </template>
 
@@ -264,7 +264,7 @@ export default {
         patient_id: '',
         visit_id: '',
         patient_name: '',
-        gender: '',
+        gender: '1',
         birthday: '',
         bed_id: '',
         dept_code: '',
@@ -572,7 +572,7 @@ export default {
         patient_id: '',
         visit_id: '',
         patient_name: '',
-        gender: '',
+        gender: '1',
         birthday: '',
         bed_id: '',
         dept_code: '',

@@ -419,7 +419,8 @@ export default {
       'setOperationId',
       'setPatientCardInfo',
       'setProcedureState',
-      'setRoomNo'
+      'setRoomNo',
+      'clearBaseInfo'
     ]),
     getDefaultRoom () {
       request({
@@ -659,27 +660,31 @@ export default {
         url: opeList,
         params: obj
       }).then((res) => {
-        const data = res.data.data.list || []
-        this.totalPages = res.data.data.pages
-        data.forEach((value) => {
-          if (value.opeScheduleTime) {
-            // value.opeTime = moment(value.opeScheduleTime).format('yyyy-MM-DD HH:mm')
-            value.opeTime = value.opeScheduleTime
+        if (res.data.code === 200) {
+          this.activeIndex = null
+          this.clearBaseInfo()
+          const data = res.data.data.list || []
+          this.totalPages = res.data.data.pages
+          data.forEach((value) => {
+            if (value.opeScheduleTime) {
+              // value.opeTime = moment(value.opeScheduleTime).format('yyyy-MM-DD HH:mm')
+              value.opeTime = value.opeScheduleTime
+            } else {
+              value.opeTime = ''
+            }
+            if (value.isEmergency === 0) {
+              value.emergency = true
+            } else {
+              value.emergency = false
+            }
+          })
+          if (param === 'scroll') {
+            this.cardList = this.cardList.concat(data)
+            this.dataList = this.dataList.concat(data)
           } else {
-            value.opeTime = ''
+            this.cardList = data
+            this.dataList = data
           }
-          if (value.isEmergency === 0) {
-            value.emergency = true
-          } else {
-            value.emergency = false
-          }
-        })
-        if (param === 'scroll') {
-          this.cardList = this.cardList.concat(data)
-          this.dataList = this.dataList.concat(data)
-        } else {
-          this.cardList = data
-          this.dataList = data
         }
       })
     },
