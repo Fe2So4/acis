@@ -283,7 +283,7 @@
           el-input(v-model="form.blood_losses")
       el-col(:span="4")
         el-form-item(label="尿量(ml)")
-          el-input(v-model="form.urine_volumn")
+          el-input(v-model="form.urine_volume")
       el-col(:span="5")
         el-form-item(label="其他出量(ml)")
           el-input(v-model="form.amount_other")
@@ -302,10 +302,11 @@ import {
   opeNameData
 } from '@/api/dictionary'
 import request from '@/utils/requestForMock'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import _ from 'lodash'
 import SelectDoctorNurse from '@/components/Dictionary/SelectDoctorNurse'
 import SelectDepartment from '@/components/Dictionary/SelectDepartment'
+import $bus from '@/utils/bus'
 export default {
   name: 'PostoperativeRegistration',
   components: {
@@ -359,7 +360,7 @@ export default {
         blood_transfusion_volume: '',
         fluid_volume: '',
         blood_losses: '',
-        urine_volumn: '',
+        urine_volume: '',
         amount_other: ''
       },
       loadingSelect: false,
@@ -407,6 +408,7 @@ export default {
     ...mapGetters('Base', ['operationId'])
   },
   methods: {
+    ...mapActions('Base', ['setPatientCardInfo']),
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -418,7 +420,13 @@ export default {
       })
     },
     handleRefresh () {
-      this.getData()
+      $bus.$emit('getPatientInfoData')
+      this.setPatientCardInfo({
+        roomNo: this.form.ope_room + '-' + this.form.sequence,
+        ptName: this.form.patient_name,
+        gender: this.form.gender === '1' ? '男' : '女',
+        ptId: this.form.patient_id
+      })
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
@@ -592,7 +600,7 @@ export default {
         'blood_transfusion_volume',
         'fluid_volume',
         'blood_losses',
-        'urine_volumn',
+        'urine_volume',
         'amount_other'
       ]
       obj.acis_pat_master_index = []

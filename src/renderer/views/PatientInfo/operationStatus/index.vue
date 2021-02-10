@@ -233,7 +233,7 @@ export default {
           this.setProcedureState(res.data.data)
           this.getStatusList()
           this.scrollEffect(this.$refs.scrollbar.wrap, 168)
-          this.$eventHub.$emit('refresh-ptlist')
+          // this.$eventHub.$emit('refresh-ptlist')
           // 入复苏室状态情况下需要选择床位和增加设备信息
           // if (+param.conCode === 12) {
           //   this.showResuscitationBed()

@@ -176,13 +176,17 @@ export default {
       this.getDetail()
     },
     getDetail () {
-      request({
-        method: 'GET',
-        url: commonUseDetail + '/' + this.currentMenu.eventCode
-      }).then(res => {
-        const data = res.data.data
-        this.tableData = data
-      })
+      if (this.currentMenu.eventCode) {
+        request({
+          method: 'GET',
+          url: commonUseDetail + '/' + this.currentMenu.eventCode
+        }).then(res => {
+          const data = res.data.data
+          this.tableData = data
+        })
+      } else {
+        this.$message({ type: 'warning', message: '请选择事件' })
+      }
     },
     deleteDetail () {
       if (this.currentRow.detailCode && this.currentRow.detailCode !== '') {

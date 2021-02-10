@@ -354,9 +354,9 @@ export default {
       })
     },
     // 修改状态
-    addStatusTimePoint () {
+    addStatusTimePoint (id) {
       const formData = new FormData()
-      formData.append('operationId', this.form.patient_id)
+      formData.append('operationId', id)
       formData.append('conCode', '2')
       formData.append('timePoint', moment(new Date()).format('YYYY-MM-DD HH:mm'))
       request({
@@ -560,7 +560,7 @@ export default {
       }).then(res => {
         if (res.data.code === 200) {
           this.$message({ type: 'success', message: '增加急诊成功' })
-          this.addStatusTimePoint()
+          this.addStatusTimePoint(res.data.data)
         } else {
           this.$message({ type: 'error', message: res.data.msg })
         }

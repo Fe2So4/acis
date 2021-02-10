@@ -552,7 +552,9 @@ export default {
         const data = res.data.data
         data.forEach((value) => {
           value.checked = false
+          value.remote = true
         })
+        this.deleteVisible = true
         this.tableData = res.data.data
       })
     },
@@ -627,7 +629,8 @@ export default {
         id: item.id,
         eventId: item.eventCode,
         detailId: item.detailCode,
-        checked: false
+        checked: false,
+        remote: false
       }
       // this.insertData = record
       const { row: newRow } = await this.$refs.xTable.insertAt(record, 0)
@@ -653,31 +656,48 @@ export default {
     },
     handleDelete () {
       const selectRecords = this.$refs.xTable.getCheckboxRecords()
+      let remoteArr = []
+      let notRemoteArr = []
+      remoteArr = selectRecords.filter(item => {
+        return item.remote === true
+      })
+      notRemoteArr = selectRecords.filter(item => {
+        return item.remote === false
+      })
+      if (notRemoteArr.length) {
+        notRemoteArr.forEach(item => {
+          this.$refs.xTable.remove(item)
+        })
+        this.deleteVisible = true
+      }
+      if (remoteArr.length) {
+        const obj = {}
+        obj.mode = 2
+        obj.list = remoteArr
+        request({
+          url: optionEvent,
+          method: 'POST',
+          data: obj
+        }).then((res) => {
+          if (res.data.code === 200) {
+            this.$message({ type: 'success', message: '删除成功' })
+            remoteArr.forEach(item => {
+              this.$refs.xTable.remove(item)
+            })
+            this.deleteVisible = true
+            // this.getEventDetail()
+          } else {
+            this.$message({ type: 'error', message: res.data.msg })
+          }
+        })
+      }
       const { insertRecords, updateRecords } = this.$refs.xTable.getRecordset()
       if (insertRecords.length > 0 || updateRecords.length > 0) {
+        this.saveVisible = false
+        // this.resertData()
+      } else {
         this.saveVisible = true
-        this.resertData()
       }
-      selectRecords.forEach((item) => {
-        for (var k in item) {
-          if (k === '_XID' || k === 'checked') {
-            delete item[k]
-          }
-        }
-      })
-      const obj = {}
-      obj.mode = 2
-      obj.list = selectRecords
-      request({
-        url: optionEvent,
-        method: 'POST',
-        data: obj
-      }).then((res) => {
-        if (res.data.code === 200) {
-          this.$message({ type: 'success', message: '删除成功' })
-          this.getEventDetail()
-        }
-      })
       // }
     },
     // 新增事件
@@ -711,7 +731,6 @@ export default {
     },
     handleRefresh () {
       const { insertRecords, updateRecords } = this.$refs.xTable.getRecordset()
-      console.log(insertRecords, updateRecords)
       if (insertRecords.length > 0 || updateRecords.length > 0) {
         this.$confirm(
           '检测到未保存的内容，是否在刷新前保存修改？',
@@ -733,6 +752,8 @@ export default {
               message: action === 'cancel' ? '放弃保存' : '停留在当前'
             })
           })
+      } else {
+        this.getEventDetail()
       }
     },
     onCellDblClick (row, column, cell, event) {

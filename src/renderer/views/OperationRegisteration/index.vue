@@ -261,10 +261,11 @@ import {
   opeNameData
 } from '@/api/dictionary'
 import request from '@/utils/requestForMock'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import _ from 'lodash'
 import SelectDoctorNurse from '@/components/Dictionary/SelectDoctorNurse'
 import SelectDepartment from '@/components/Dictionary/SelectDepartment'
+import $bus from '@/utils/bus'
 export default {
   name: 'EmergencyTreatment',
   components: {
@@ -370,6 +371,7 @@ export default {
     ...mapGetters('Base', ['operationId'])
   },
   methods: {
+    ...mapActions('Base', ['setPatientCardInfo']),
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -384,7 +386,13 @@ export default {
       this.$refs[formName].resetFields()
     },
     handleRefresh () {
-      this.getData()
+      $bus.$emit('getPatientInfoData')
+      this.setPatientCardInfo({
+        roomNo: this.form.ope_room + '-' + this.form.sequence,
+        ptName: this.form.patient_name,
+        gender: this.form.gender === '1' ? '男' : '女',
+        ptId: this.form.patient_id
+      })
     },
     getData () {
       request({

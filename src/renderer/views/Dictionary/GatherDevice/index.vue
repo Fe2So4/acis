@@ -167,6 +167,7 @@ export default {
       }
     },
     deleteDetail () {
+      console.log(this.currentRow)
       if (this.currentRow.instrumentCode && this.currentRow.instrumentCode !== '') {
         request({
           method: 'DELETE',
@@ -191,7 +192,7 @@ export default {
       const record = {
         detailCode: detailCode,
         label: '',
-        firmLabel: '',
+        firmName: '',
         model: '',
         memo: '',
         state: '',

@@ -18,6 +18,7 @@ import OperationInfo from './OperationInfo/index'
 import OperationPersonnel from './OperationPersonnel/index'
 import { patientDetail } from '@/api/patientList'
 import request from '@/utils/requestForMock'
+import $bus from '@/utils/bus'
 import { mapGetters } from 'vuex'
 export default {
   name: 'PatientDetail',
@@ -45,6 +46,10 @@ export default {
   },
   mounted () {
     this.getPatientInfo()
+    $bus.$on('getPatientInfoData', this.getPatientInfo)
+  },
+  beforeDestroy () {
+    $bus.$off('getPatientInfoData')
   },
   methods: {
     getPatientInfo () {

@@ -10,6 +10,8 @@
     @change="(val)=> $emit('change', val)"
     ref="select"
     @focus="onFocus"
+    @visible-change="handleVisibleChange"
+    @clear="getData"
   >
     <el-option
       v-for="item in list"
@@ -126,6 +128,10 @@ export default {
         }
       )
     },
+    handleVisibleChange (visible) {
+      console.log(123, visible)
+      // if (!visible) this.getData()
+    },
     // 只对第一次聚焦进行空值搜索-目的是降低初始化查询的次数
     createFocusHandler () {
       let isInitial = true
@@ -166,6 +172,7 @@ export default {
       }).then(
         res => {
           if (res.data.success) {
+            this.query = ''
             return res.data.data
           } else {
             return Promise.reject(new Error('获取医护字典失败'))

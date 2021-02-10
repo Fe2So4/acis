@@ -206,7 +206,7 @@
         >
           <li
             v-for="(item,index) in cardList"
-            :key="item.patientId"
+            :key="item.operationId"
             :class="{'active':index===activeIndex}"
             @dblclick="handleJump(item)"
             @click="hanldeSelectPatient(item,index)"
@@ -411,6 +411,11 @@ export default {
     this.getPatientList()
     this.$eventHub.$on('refresh-ptlist', () => {
       this.getPatientList()
+    })
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      vm.getPatientList()
     })
   },
   methods: {
