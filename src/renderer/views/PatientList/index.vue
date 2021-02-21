@@ -666,6 +666,7 @@ export default {
         params: obj
       }).then((res) => {
         if (res.data.code === 200) {
+          this.operationStatus = []
           this.activeIndex = null
           this.clearBaseInfo()
           const data = res.data.data.list || []

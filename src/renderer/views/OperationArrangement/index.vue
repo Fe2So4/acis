@@ -7,7 +7,11 @@
           el-radio(:label="1") 全部
           el-radio(:label="2") 本人的
           el-radio(:label="3") 其他人
-        el-select(v-model="form.select" :disabled="form.radio !== 3" style="margin-left:12px;" @change="getData")
+        el-select(v-model="form.select" :disabled="form.radio !== 3" style="margin-left:12px;"
+        filterable
+        remote
+        :remote-method="remoteMethod"
+        @change="getData")
           el-option(v-for="item in docList"
             :key="item.userId"
             :label="item.userName"
@@ -53,7 +57,7 @@
 <script>
 import moment from 'moment'
 import { opeSchedule } from '@/api/patientList'
-import { getDetailDocList } from '@/api/schedule'
+import { getDoctorNurseListPaging } from '@/api/dict'
 import request from '@/utils/requestForMock'
 import { getCurrentAccount } from '@/utils/storage'
 export default {
@@ -61,6 +65,7 @@ export default {
   data () {
     return {
       tableData: [],
+      loading: false,
       form: {
         radio: 1,
         select: '',
@@ -76,15 +81,17 @@ export default {
     }
   },
   mounted () {
-    this.getDocList()
+    // this.getDocList()
     this.getData()
   },
   methods: {
     getData () {
       let surgeon = ''
       if (this.form.radio === 1) {
+        this.form.select = ''
         surgeon = ''
       } else if (this.form.radio === 2) {
+        this.form.select = ''
         surgeon = getCurrentAccount()
       } else {
         surgeon = this.form.select
@@ -100,13 +107,27 @@ export default {
         this.tableData = data
       })
     },
-    getDocList () {
+    getDocList (content = '') {
       request({
-        url: getDetailDocList
+        url: getDoctorNurseListPaging,
+        params: {
+          userJob: 1,
+          start: 1,
+          size: 20,
+          content
+        }
       }).then(res => {
-        const data = res.data.data
+        const data = res.data.data.list
         this.docList = data
       })
+    },
+    remoteMethod (query) {
+      if (query !== '') {
+        this.getDocList(query)
+      } else {
+        this.getDocList()
+        // this.options = []
+      }
     }
   }
 }

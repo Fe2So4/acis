@@ -129,8 +129,7 @@ export default {
       )
     },
     handleVisibleChange (visible) {
-      console.log(123, visible)
-      // if (!visible) this.getData()
+
     },
     // 只对第一次聚焦进行空值搜索-目的是降低初始化查询的次数
     createFocusHandler () {

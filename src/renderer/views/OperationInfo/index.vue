@@ -493,6 +493,7 @@ export default {
         }
       }).then((res) => {
         const data = res.data.data
+        this.loadingSelect = false
         this.opeName = data.list
       })
     },

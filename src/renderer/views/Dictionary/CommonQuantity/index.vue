@@ -55,7 +55,7 @@
             template(v-slot:edit="{ row }")
               el-input(v-model="row.usualDose4" size="mini" @blur="handleBlur")
     .option
-      el-button(size="mini" :disabled="addDisabled" @click="insertEvent(-1)") 新增(N)
+      el-button(size="mini" :disabled="addDisabled" @click="insertEvent(0)") 新增(N)
       el-button(size="mini" :disabled="deleteDisabled" @click="deleteDetail") 删除(D)
       el-button(size="mini" :disabled="saveDisabled" @click="saveEvent") 保存(S)
       el-button(size="mini" :disabled="cancelDisabled" @click="revertEvent") 取消(C)
@@ -203,6 +203,7 @@ export default {
     async insertEvent (row) {
       if (this.currentMenu.eventCode) {
         this.addDisabled = true
+        this.saveDisabled = false
         this.cancelDisabled = false
         let sort = null
         if (this.tableData.length > 0) {

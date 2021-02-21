@@ -171,6 +171,7 @@ export default {
     async insertEvent (row) {
       this.addDisabled = true
       this.cancelDisabled = false
+      this.saveDisabled = false
       let detailCode = null
       if (this.tableData.length > 0) {
         const length = this.tableData.length

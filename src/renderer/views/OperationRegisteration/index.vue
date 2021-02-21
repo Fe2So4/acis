@@ -492,6 +492,7 @@ export default {
         }
       }).then((res) => {
         const data = res.data.data
+        this.loadingSelect = false
         this.opeName = data.list
       })
     },
@@ -590,14 +591,13 @@ export default {
           }
         })
       })
-      // console.log(obj)
       request({
         url: register + `?operationId=${this.operationId}`,
         method: 'POST',
         data: obj
       }).then(res => {
         if (res.data.code === 200) {
-          this.$message({ type: 'success', message: '修改成功' })
+          this.$message({ type: 'success', message: '保存成功' })
         } else {
           this.$message({ type: 'error', message: res.data.msg })
         }

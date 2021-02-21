@@ -528,6 +528,7 @@ export default {
         }
       }).then((res) => {
         const data = res.data.data
+        this.loadingSelect = false
         this.opeName = data.list
       })
     },
@@ -641,6 +642,9 @@ export default {
       }).then(res => {
         if (res.data.code === 200) {
           this.getData()
+          this.$message({ type: 'success', message: res.data.msg })
+        } else {
+          this.$message({ type: 'error', message: res.data.msg })
         }
       })
     }

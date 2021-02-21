@@ -85,7 +85,7 @@
                 el-option(v-for="item in adviceClassifyList" :label="item.detailName" :value="item.detailCode" :key="item.detailCode")
             template(v-slot="{ row }") {{ getSelectLabel(row.adviceClassify, adviceClassifyList) }}
     .option
-      el-button(size="mini" :disabled="addDisabled" @click="insertEvent(-1)") 新增(N)
+      el-button(size="mini" :disabled="addDisabled" @click="insertEvent(0)") 新增(N)
       el-button(size="mini" :disabled="deleteDisabled" @click="deleteDetail") 删除(D)
       el-button(size="mini" :disabled="saveDisabled" @click="saveEvent") 保存(S)
       el-button(size="mini" :disabled="cancelDisabled" @click="revertEvent") 取消(C)
@@ -307,6 +307,7 @@ export default {
       if (this.currentMenu.eventCode) {
         this.addDisabled = true
         this.cancelDisabled = false
+        this.saveDisabled = false
         this.data.forEach(value => {
           value.disabled = true
         })

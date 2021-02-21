@@ -35,7 +35,7 @@
           template(v-slot:edit="{ row }")
             el-input(v-model="row.anesName" size="mini" @blur="handleBlur")
     .option
-      el-button(size="mini" :disabled="addDisabled" @click="insertEvent(-1)") 新增(N)
+      el-button(size="mini" :disabled="addDisabled" @click="insertEvent(0)") 新增(N)
       el-button(size="mini" :disabled="deleteDisabled" @click="deleteDetail") 删除(D)
       el-button(size="mini" :disabled="saveDisabled" @click="saveEvent") 保存(S)
       el-button(size="mini" :disabled="cancelDisabled" @click="revertEvent") 取消(C)
@@ -52,7 +52,7 @@ export default {
       deleteDisabled: true,
       saveDisabled: true,
       cancelDisabled: true,
-      refreshDisabled: false,
+      refreshDisabled: false, // 应该使用一个状态进行按钮控制 ---不想改了，先记着，后来人跟上
       currentRow: {}
     }
   },
@@ -138,6 +138,7 @@ export default {
     },
     async insertEvent (row) {
       this.addDisabled = true
+      this.saveDisabled = false
       this.cancelDisabled = false
       let sort = null
       if (this.tableData.length > 0) {

@@ -46,7 +46,7 @@
             template(v-slot:edit="{ row }")
               el-input(v-model="row.detailCode" size="mini" @blur="handleBlur")
     .option
-      el-button(size="mini" :disabled="addDisabled" @click="insertEvent(-1)") 新增(N)
+      el-button(size="mini" :disabled="addDisabled" @click="insertEvent(0)") 新增(N)
       el-button(size="mini" :disabled="deleteDisabled" @click="deleteCommonTerms") 删除(D)
       el-button(size="mini" :disabled="saveDisabled" @click="saveEvent") 保存(S)
       el-button(size="mini" :disabled="cancelDisabled" @click="revertEvent") 取消(C)
@@ -183,6 +183,7 @@ export default {
     async insertEvent (row) {
       if (this.currentMenu.itemCode) {
         this.addDisabled = true
+        this.saveDisabled = false
         this.cancelDisabled = false
         this.data.forEach(value => {
           value.disabled = true

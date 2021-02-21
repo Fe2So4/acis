@@ -36,6 +36,7 @@
             border="inner"
             ref="table"
             resizable
+            align="center"
             highlight-hover-row
             height="499px"
             :data="tableData"
@@ -50,17 +51,17 @@
             <vxe-table-column
               field="eventType"
               title="类型"
-              width="60"
             />
+            <!-- width="60" -->
             <vxe-table-column
               field="eventName"
               title="事件名称"
-              width="200"
             />
+            <!-- width="200" -->
+            <!-- width="80" -->
             <vxe-table-column
               field="approach"
               title="途径"
-              width="80"
               :edit-render="{
                 name: '$select',
                 options: approachList,
@@ -73,9 +74,9 @@
             <vxe-table-column
               field="concentration"
               title="浓度"
-              width="80"
               :edit-render="{name: '$input', props: {type: 'float', digits: 2}}"
             />
+            <!-- width="80" -->
             <vxe-table-column
               field="concentrationUnit"
               title="单位"
@@ -84,9 +85,9 @@
             <vxe-table-column
               field="speed"
               title="速度"
-              width="80"
               :edit-render="{name: '$input', props: {type: 'float', digits: 2}}"
             />
+            <!-- width="80" -->
             <vxe-table-column
               field="speedUnit"
               title="单位"
@@ -95,9 +96,9 @@
             <vxe-table-column
               field="dosage"
               title="剂量"
-              width="80"
               :edit-render="{name: '$input', props: {type: 'float', digits: 2}}"
             />
+            <!-- width="80" -->
             <vxe-table-column
               field="dosageUnit"
               title="单位"
@@ -106,9 +107,9 @@
             <vxe-table-column
               field="holdingTime"
               title="持续时间"
-              width="100"
               :edit-render="{name: '$input', props: {type: 'number'}}"
             />
+            <!-- width="100" -->
           </vxe-table>
         </div>
       </div>

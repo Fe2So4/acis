@@ -148,6 +148,7 @@ export default {
     },
     async insertEvent (row) {
       this.addDisabled = true
+      this.saveDisabled = false
       this.cancelDisabled = false
       let detailCode = null
       if (this.tableData.length > 0) {

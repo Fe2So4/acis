@@ -21,7 +21,7 @@
                 :value="item.value")
       el-row
         el-col(:span="6")
-          el-form-item(label="出生日期")
+          el-form-item(label="出生日期" prop="birthday")
             el-date-picker(v-model="form.birthday" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" popper-class="dateTimePicker")
         el-col(:span="6")
           el-form-item(label="床号")
@@ -46,7 +46,7 @@
             el-input(v-model="form.memo")
       el-row
         el-col(:span="6")
-          el-form-item(label="手术时间")
+          el-form-item(label="手术时间" prop="ope_schedule_time")
             el-date-picker(
               v-model="form.ope_schedule_time"
               popper-class="dateTimePicker"
@@ -312,7 +312,9 @@ export default {
           { required: true, message: '请输入患者ID', trigger: 'change' }
         ],
         hospitalNo: [{ required: true, message: '请输入住院号', trigger: 'change' }],
-        ope_room: [{ required: true, message: '请选择手术间', trigger: 'change' }]
+        ope_room: [{ required: true, message: '请选择手术间', trigger: 'change' }],
+        ope_schedule_time: [{ required: true, message: '请输入手术时间', trigger: 'change' }],
+        birthday: [{ required: true, message: '请输入出生日期', trigger: 'change' }]
       },
       level: [{ value: '0', label: '特' }, { value: '1', label: '大' }, { value: '2', label: '中' }, { value: '3', label: '小' }],
       isolation: [{ value: '0', label: '正常' }, { value: '1', label: '隔离' }, { value: '2', label: '放射' }],
@@ -465,6 +467,7 @@ export default {
         }
       }).then((res) => {
         const data = res.data.data
+        this.loadingSelect = false
         this.opeName = data.list
       })
     },

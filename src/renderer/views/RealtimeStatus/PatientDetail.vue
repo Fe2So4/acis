@@ -28,7 +28,7 @@
       <div class="left">
         <div
           class="circle"
-          :style="{background: +info.isEmergency ? '#FF4045':'#24E760'}"
+          :style="{background: +info.isEmergency ? '#24E760' : '#FF4045'}"
         />
       </div>
       <div class="right">
@@ -139,7 +139,7 @@ export default {
         手术结束时间：${this.sliceTimeStr(this.info.operEndTime)}<br>
         麻醉结束时间：${this.sliceTimeStr(this.info.anesEndTime)}<br>
         出室时间：${this.sliceTimeStr(this.info.outOperTime)}<br>
-        ${+this.info.isEmergency ? '急诊' : '择期'}<br>
+        ${+this.info.isEmergency ? '择期' : '急诊'}<br>
         姓名：${this.info.patientName}<br>
         性别：${this.info.patientGender}<br>
         年龄：${this.info.age}<br>
@@ -147,8 +147,8 @@ export default {
         床号：${this.info.bedId}<br>
         手术医生：${this.info.surgeon}<br>
         麻醉医生：${this.info.anesDoc}<br>
-        ${this.info.anesMethod}<br>
-        ${this.info.opeName}<br>
+        ${this.info.anesMethod === '' ? '麻醉方式：' : this.info.anesMethod}<br>
+        ${this.info.opeName === '' ? '手术名称' : this.info.opeName}<br>
       `
     }
   },
@@ -182,9 +182,9 @@ export default {
   position: absolute;
   border-style: solid;
   border-color: #cddaff;
-  border-left-width: 1px;
-  border-top-width: 1px;
-  border-bottom-width: 1px;
+  // border-left-width: 1px;
+  // border-top-width: 1px;
+  border-width: 1px;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   height: 56px;
