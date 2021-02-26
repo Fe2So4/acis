@@ -252,6 +252,7 @@
 </template>
 
 <script>
+// 手术登记
 import { register, getRegisterData } from '@/api/register'
 import {
   commonTermsDetail,
@@ -373,7 +374,7 @@ export default {
   methods: {
     ...mapActions('Base', ['setPatientCardInfo']),
     submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           this.updataData()
         } else {
@@ -401,10 +402,10 @@ export default {
         params: {
           operationId: this.operationId
         }
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         for (var i in this.form) {
-          data.forEach((item) => {
+          data.forEach(item => {
             if (item.className === 'patient_gender') {
               if (item.label === '男') {
                 this.form.gender = '1'
@@ -428,7 +429,7 @@ export default {
       request({
         url: commonTermsDetail + '/' + 'D010',
         method: 'GET'
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         this.opeLevel = data
       })
@@ -437,7 +438,7 @@ export default {
       request({
         url: anaesMethodDetail,
         method: 'GET'
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         this.anaesMethod = data
       })
@@ -446,7 +447,7 @@ export default {
       request({
         url: commonTermsDetail + '/' + 'D019',
         method: 'GET'
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         this.emergencyList = data
       })
@@ -455,7 +456,7 @@ export default {
       request({
         url: commonTermsDetail + '/' + 'D018',
         method: 'GET'
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         this.quarantineList = data
       })
@@ -464,7 +465,7 @@ export default {
       request({
         url: roomNoList,
         method: 'GET'
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         this.roomList = data
       })
@@ -472,7 +473,7 @@ export default {
     getDiagnoseList () {
       request({
         url: diagnoseData
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         this.diagnoseList = data
       })
@@ -480,8 +481,7 @@ export default {
     remoteMethod: _.debounce(function (query) {
       this.loadingSelect = true
       this.getOpeName(query)
-    },
-    200),
+    }, 200),
     getOpeName (query = '') {
       request({
         url: opeNameData,
@@ -490,7 +490,7 @@ export default {
           start: 1,
           content: query
         }
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         this.loadingSelect = false
         this.opeName = data.list
@@ -498,13 +498,19 @@ export default {
     },
     updataData () {
       for (var i in this.form) {
-        this.list.forEach((item) => {
+        this.list.forEach(item => {
           if (item.className === 'patient_gender') {
             item.value = this.form.gender
             item.label = ''
           }
           if (item.className === i) {
-            const dict = ['anes_doc', 'first_anes_doc', 'sec_anes_doc', 'third_anes_doc', 'forth_anes_doc']
+            const dict = [
+              'anes_doc',
+              'first_anes_doc',
+              'sec_anes_doc',
+              'third_anes_doc',
+              'forth_anes_doc'
+            ]
             if (item.value === '' && !dict.includes(item.className)) {
               item.label = this.form[i]
             } else {
@@ -565,27 +571,31 @@ export default {
       obj.acis_ope_apply_info = []
       obj.acis_ope_schedule_info = []
       obj.acis_amount_record = []
-      this.list.forEach((item) => {
+      this.list.forEach(item => {
         if (item.className === 'patient_gender') {
-          obj.acis_pat_master_index.push({ className: 'gender', value: item.value, label: item.label })
+          obj.acis_pat_master_index.push({
+            className: 'gender',
+            value: item.value,
+            label: item.label
+          })
         } else {
-          sheel1.forEach((_item1) => {
+          sheel1.forEach(_item1 => {
             if (_item1 === item.className) {
               obj.acis_pat_master_index.push(item)
             }
           })
         }
-        sheel2.forEach((_item2) => {
+        sheel2.forEach(_item2 => {
           if (_item2 === item.className) {
             obj.acis_ope_apply_info.push(item)
           }
         })
-        sheel3.forEach((_item3) => {
+        sheel3.forEach(_item3 => {
           if (_item3 === item.className) {
             obj.acis_ope_schedule_info.push(item)
           }
         })
-        sheel4.forEach((_item4) => {
+        sheel4.forEach(_item4 => {
           if (_item4 === item.className) {
             obj.acis_amount_record.push(item)
           }

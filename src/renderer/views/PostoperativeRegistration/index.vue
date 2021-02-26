@@ -12,8 +12,8 @@
         el-form-item(label="患者ID", prop="patient_id")
           el-input(v-model="form.patient_id")
       el-col(:span="6")
-        el-form-item(label="住院号", prop="visit_id")
-          el-input(v-model="form.visit_id")
+        el-form-item(label="住院号", prop="hospital_no")
+          el-input(v-model="form.hospital_no")
       el-col(:span="6")
         el-form-item(label="姓名")
           el-input(v-model="form.patient_name")
@@ -32,7 +32,7 @@
           el-date-picker(
             v-model="form.birthday",
             type="date",
-            value-format="yyyy-MM-dd",
+            value-format="yyyy-MM-dd HH:mm:ss",
             format="yyyy-MM-dd"
           )
       el-col(:span="6")
@@ -51,7 +51,7 @@
               v-for="item in diagnoseList",
               :key="item.diagCode",
               :label="item.diagName",
-              :value="item.diagCode"
+              :value="item.diagName"
             )
     el-row
       el-col(:span="24")
@@ -83,7 +83,7 @@
     el-row
       el-col(:span="6")
         el-form-item(label="隔离")
-          el-select(v-model="form.is_quarantine", placeholder="请选择是否隔离")
+          el-select(v-model="form.quarantine_state", placeholder="请选择是否隔离")
             el-option(
               v-for="item in quarantineList",
               :key="item.detailCode",
@@ -163,7 +163,7 @@
               )
     el-row
       el-col(:span="6")
-        el-form-item(label="灌注医生")
+        el-form-item(label="输血医生")
           SelectDoctorNurse(
             v-model="form.infuse_doc"
             :type="1"
@@ -247,53 +247,59 @@
             )
     el-row
       el-col(:span="5")
-        el-form-item(label="护士换班")
-          <el-radio-group v-model="form.nurse_shift_record">
-            el-radio(label="1") 未换班
-            el-radio(label="2") 换班
+        el-form-item(label="是否交班")
+          <el-radio-group v-model="form.is_turn">
+            el-radio(label="0") 未换班
+            el-radio(label="1") 换班
           </el-radio-group>
       el-col(:span="9")
         el-form-item(label="麻醉满意度")
-          <el-radio-group v-model="form.anesthesia_satisfaction">
-            el-radio(label="1") 满意
-            el-radio(label="2") 不全满意
-            el-radio(label="3") 改麻醉
+          <el-radio-group v-model="form.anes_satisfaction">
+            el-radio(label="0") 满意
+            el-radio(label="1") 不全满意
+            el-radio(label="2") 不满意
           </el-radio-group>
       el-col(:span="5")
         el-form-item(label="手术过程顺利")
-          <el-radio-group v-model="form.operative_process">
-            el-radio(label="1") 顺利
-            el-radio(label="2") 不顺利
+          <el-radio-group v-model="form.oper_procedure">
+            el-radio(label="0") 顺利
+            el-radio(label="1") 不顺利
           </el-radio-group>
       el-col(:span="5")
         el-form-item(label="器械清点")
-          <el-radio-group v-model="form.equipment_inventory">
-            el-radio(label="1") 对数
-            el-radio(label="2") 不对数
+          <el-radio-group v-model="form.equip_count">
+            el-radio(label="0") 对数
+            el-radio(label="1") 不对数
           </el-radio-group>
     el-row
       el-col(:span="5")
-        el-form-item(label="输血量(ml)")
-          el-input(v-model="form.blood_transfusion_volume")
+        el-form-item(label="总入量(ml)")
+          el-input(v-model="ye_form.blood_transfusion_volume")
       el-col(:span="5")
-        el-form-item(label="输液量(ml)")
-          el-input(v-model="form.fluid_volume")
+        el-form-item(label="总出量(ml)")
+          el-input(v-model="ye_form.fluid_volume")
       el-col(:span="5")
         el-form-item(label="失血量(ml)")
-          el-input(v-model="form.blood_losses")
+          el-input(v-model="ye_form.blood_losses")
       el-col(:span="4")
         el-form-item(label="尿量(ml)")
-          el-input(v-model="form.urine_volume")
+          el-input(v-model="ye_form.urine_volume")
       el-col(:span="5")
         el-form-item(label="其他出量(ml)")
-          el-input(v-model="form.amount_other")
+          el-input(v-model="ye_form.amount_other")
   .option
     el-button(size="mini", @click="handleRefresh") 刷新(R)
     el-button(size="mini", @click="submitForm('form')") 保存(S)
 </template>
 
 <script>
-import { register, getRegisterData } from '@/api/register'
+// 术后登记
+import {
+  register,
+  getRegisterData,
+  getPostoperativeFluidRegistration,
+  updatePostoperativeFluidRegistration
+} from '@/api/register'
 import {
   commonTermsDetail,
   anaesMethodDetail,
@@ -315,9 +321,17 @@ export default {
   },
   data () {
     return {
+      yetiValue: [],
+      ye_form: {
+        blood_transfusion_volume: '',
+        fluid_volume: '',
+        blood_losses: '',
+        urine_volume: '',
+        amount_other: ''
+      },
       form: {
         patient_id: '',
-        visit_id: '',
+        hospital_no: '',
         patient_name: '',
         gender: '',
         birthday: '',
@@ -328,7 +342,7 @@ export default {
         ope_schedule_time: '',
         sequence: '',
         ope_room: '',
-        is_quarantine: '',
+        quarantine_state: '',
         ope_grade: '',
         anes_method: '',
         notch_level: '',
@@ -353,15 +367,10 @@ export default {
         third_assist: '',
         forth_assist: '',
         ope_name_after: '',
-        nurse_shift_record: '',
-        anesthesia_satisfaction: '',
-        operative_process: '',
-        equipment_inventory: '',
-        blood_transfusion_volume: '',
-        fluid_volume: '',
-        blood_losses: '',
-        urine_volume: '',
-        amount_other: ''
+        is_turn: '',
+        anes_satisfaction: '',
+        oper_procedure: '',
+        equip_count: ''
       },
       loadingSelect: false,
       rules: {
@@ -410,7 +419,7 @@ export default {
   methods: {
     ...mapActions('Base', ['setPatientCardInfo']),
     submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           this.updataData()
         } else {
@@ -433,38 +442,71 @@ export default {
     },
     getData () {
       request({
-        method: 'POST',
-        url: getRegisterData,
-        params: {
-          operationId: this.operationId
-        }
-      }).then((res) => {
-        const data = res.data.data
-        for (var i in this.form) {
-          data.forEach((item) => {
-            if (item.className === 'patient_gender') {
-              if (item.label === '男') {
-                this.form.gender = '1'
-              } else {
-                this.form.gender = '2'
-              }
-            } else if (item.className === i) {
-              if (item.value === '') {
-                this.form[i] = item.label
-              } else {
-                this.form[i] = item.value
-              }
+        url: getPostoperativeFluidRegistration + `/${this.operationId}`,
+        method: 'GET'
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.yetiValue = res.data.data
+          this.yetiValue.forEach(item => {
+            console.log(item)
+            if (item.tag_Name === '总入量') {
+              this.ye_form.blood_transfusion_volume =
+                item.template_select_elements_value || ''
+            } else if (item.tag_Name === '总出量') {
+              this.ye_form.fluid_volume =
+                item.template_select_elements_value || ''
+            } else if (item.tag_Name === '失血量') {
+              this.ye_form.blood_losses =
+                item.template_select_elements_value || ''
+            } else if (item.tag_Name === '尿量') {
+              this.ye_form.urine_volume =
+                item.template_select_elements_value || ''
+            } else if (item.tag_Name === '其他') {
+              this.ye_form.amount_other =
+                item.template_select_elements_value || ''
             }
           })
+          // this.$message({ type: 'success', message: res.data.msg })
+        } else {
+          this.$message({ type: 'error', message: res.data.msg })
         }
-        this.list = data
+      })
+      request({
+        method: 'GET',
+        url: getRegisterData + `/${this.operationId}`
+      }).then(res => {
+        const data = res.data.data
+        console.log(data)
+        this.form = data
+        if (data.is_quarantine === '1') {
+          this.form.quarantine_state = '2'
+        } else if (data.is_radiate === '1') {
+          this.form.quarantine_state = '3'
+        } else {
+          this.form.quarantine_state = '1'
+        }
+        this.form.surgeon = data.surgeon_code
+        this.form.first_assist = data.first_assist_code
+        this.form.second_assist = data.second_assist_code
+        this.form.third_assist = data.third_assist_code
+        this.form.forth_assist = data.forth_assist_code
+        this.form.infuse_doc = data.infuse_doc_code
+        this.form.anes_doc = data.anes_doc_code
+        this.form.first_anes_doc = data.first_anes_doc_code
+        this.form.sec_anes_doc = data.sec_anes_doc_code
+        this.form.third_anes_doc = data.third_anes_doc_code
+        this.form.first_ope_nurse = data.first_ope_nurse_code
+        this.form.sec_ope_nurse = data.sec_ope_nurse_code
+        this.form.first_supply_nurse = data.first_supply_nurse_code
+        this.form.sec_supply_nurse = data.sec_supply_nurse_code
+        this.form.ope_code_before = data.ope_code_before
       })
     },
     getLevelData (param) {
       request({
         url: commonTermsDetail + '/' + 'D010',
         method: 'GET'
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         this.opeLevel = data
       })
@@ -473,7 +515,7 @@ export default {
       request({
         url: anaesMethodDetail,
         method: 'GET'
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         this.anaesMethod = data
       })
@@ -482,7 +524,7 @@ export default {
       request({
         url: commonTermsDetail + '/' + 'D019',
         method: 'GET'
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         this.emergencyList = data
       })
@@ -491,7 +533,7 @@ export default {
       request({
         url: commonTermsDetail + '/' + 'D018',
         method: 'GET'
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         this.quarantineList = data
       })
@@ -500,7 +542,7 @@ export default {
       request({
         url: roomNoList,
         method: 'GET'
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         this.roomList = data
       })
@@ -508,7 +550,7 @@ export default {
     getDiagnoseList () {
       request({
         url: diagnoseData
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         this.diagnoseList = data
       })
@@ -516,8 +558,7 @@ export default {
     remoteMethod: _.debounce(function (query) {
       this.loadingSelect = true
       this.getOpeName(query)
-    },
-    200),
+    }, 200),
     getOpeName (query = '') {
       request({
         url: opeNameData,
@@ -526,127 +567,166 @@ export default {
           start: 1,
           content: query
         }
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         this.loadingSelect = false
         this.opeName = data.list
       })
     },
     updataData () {
-      for (var i in this.form) {
-        this.list.forEach((item) => {
-          if (item.className === i) {
-            const dict = ['anes_method',
-              'surgeon',
-              'first_supply_nurse',
-              'sec_supply_nurse',
-              'first_ope_nurse',
-              'sec_ope_nurse',
-              'ope_name_after',
-              'nurse_shift_record',
-              'anesthesia_satisfaction',
-              'operative_process',
-              'equipment_inventory',
-              'first_assist', 'second_assist', 'third_assist', 'forth_assist', 'infuse_doc', 'anes_doc', 'first_anes_doc', 'sec_anes_doc', 'third_anes_doc']
-            if (item.value === '' && !dict.includes(item.className)) {
-              item.label = this.form[i]
-            } else {
-              item.value = this.form[i]
-              item.label = ''
-            }
-          }
-        })
-      }
-      // console.log(this.list)
-      const obj = {}
-      const sheel1 = ['patient_id', 'patient_name', 'gender', 'birthday']
-      const sheel2 = [
-        'visit_id',
-        'bed_id',
-        'dept_code',
-        'memo',
-        'ope_schedule_time',
-        'ope_grade',
-        'anes_method',
-        'surgeon',
-        'first_assist',
-        'second_assist',
-        'third_assist',
-        'forth_assist'
-      ]
-      const sheel3 = [
-        'diagnose_after',
-        'sequence',
-        'ope_room',
-        'is_quarantine',
-        'notch_level',
-        'notch_num',
-        'is_emergency',
-        'infuse_doc',
-        'anes_doc',
-        'first_anes_doc',
-        'sec_anes_doc',
-        'third_anes_doc',
-        'first_ope_nurse',
-        'sec_ope_nurse',
-        'first_supply_nurse',
-        'sec_supply_nurse',
-        'ope_name_after'
-      ]
-      const sheel4 = [
-        'nurse_shift_record',
-        'anesthesia_satisfaction',
-        'operative_process',
-        'equipment_inventory',
-        'blood_transfusion_volume',
-        'fluid_volume',
-        'blood_losses',
-        'urine_volume',
-        'amount_other'
-      ]
-      obj.acis_pat_master_index = []
-      obj.acis_ope_apply_info = []
-      obj.acis_ope_schedule_info = []
-      obj.acis_amount_record = []
-      this.list.forEach((item) => {
-        if (item.className === 'patient_gender') {
-          obj.acis_pat_master_index.push({ value: this.form.gender, className: 'gender', label: '' })
-        } else {
-          sheel1.forEach((_item1) => {
-            if (_item1 === item.className) {
-              obj.acis_pat_master_index.push(item)
-            }
-          })
+      this.yetiValue.forEach(item => {
+        item.operation_id = this.operationId
+        item.patient_id = this.form.patient_id
+        if (item.tag_Name === '总入量') {
+          item.template_select_elements_value = this.ye_form.blood_transfusion_volume
+        } else if (item.tag_Name === '总出量') {
+          item.template_select_elements_value = this.ye_form.fluid_volume
+        } else if (item.tag_Name === '失血量') {
+          item.template_select_elements_value = this.ye_form.blood_losses
+        } else if (item.tag_Name === '尿量') {
+          item.template_select_elements_value = this.ye_form.urine_volume
+        } else if (item.tag_Name === '其他') {
+          item.template_select_elements_value = this.ye_form.amount_other
         }
-        sheel2.forEach((_item2) => {
-          if (_item2 === item.className) {
-            obj.acis_ope_apply_info.push(item)
-          }
-        })
-        sheel3.forEach((_item3) => {
-          if (_item3 === item.className) {
-            obj.acis_ope_schedule_info.push(item)
-          }
-        })
-        sheel4.forEach((_item4) => {
-          if (_item4 === item.className) {
-            obj.acis_amount_record.push(item)
-          }
-        })
       })
-      // console.log(obj)
       request({
-        url: register + `?operationId=${this.operationId}`,
+        url: updatePostoperativeFluidRegistration,
         method: 'POST',
-        data: obj
+        data: this.yetiValue
       }).then(res => {
         if (res.data.code === 200) {
-          this.getData()
-          this.$message({ type: 'success', message: res.data.msg })
+          request({
+            url: register + `?operationId=${this.operationId}`,
+            method: 'POST',
+            data: this.form
+          }).then(res => {
+            if (res.data.code === 200) {
+              this.getData()
+              this.$message({ type: 'success', message: res.data.msg })
+            } else {
+              this.$message({ type: 'error', message: res.data.msg })
+            }
+          })
         } else {
           this.$message({ type: 'error', message: res.data.msg })
         }
       })
+      // for (var i in this.form) {
+      //   this.list.forEach(item => {
+      //     if (item.className === i) {
+      //       const dict = [
+      //         'anes_method',
+      //         'surgeon',
+      //         'first_supply_nurse',
+      //         'sec_supply_nurse',
+      //         'first_ope_nurse',
+      //         'sec_ope_nurse',
+      //         'ope_name_after',
+      //         'nurse_shift_record',
+      //         'anesthesia_satisfaction',
+      //         'operative_process',
+      //         'equipment_inventory',
+      //         'first_assist',
+      //         'second_assist',
+      //         'third_assist',
+      //         'forth_assist',
+      //         'infuse_doc',
+      //         'anes_doc',
+      //         'first_anes_doc',
+      //         'sec_anes_doc',
+      //         'third_anes_doc'
+      //       ]
+      //       if (item.value === '' && !dict.includes(item.className)) {
+      //         item.label = this.form[i]
+      //       } else {
+      //         item.value = this.form[i]
+      //         item.label = ''
+      //       }
+      //     }
+      //   })
+      // }
+      // // console.log(this.list)
+      // const obj = {}
+      // const sheel1 = ['patient_id', 'patient_name', 'gender', 'birthday']
+      // const sheel2 = [
+      //   'visit_id',
+      //   'bed_id',
+      //   'dept_code',
+      //   'memo',
+      //   'ope_schedule_time',
+      //   'ope_grade',
+      //   'anes_method',
+      //   'surgeon',
+      //   'first_assist',
+      //   'second_assist',
+      //   'third_assist',
+      //   'forth_assist'
+      // ]
+      // const sheel3 = [
+      //   'diagnose_after',
+      //   'sequence',
+      //   'ope_room',
+      //   'is_quarantine',
+      //   'notch_level',
+      //   'notch_num',
+      //   'is_emergency',
+      //   'infuse_doc',
+      //   'anes_doc',
+      //   'first_anes_doc',
+      //   'sec_anes_doc',
+      //   'third_anes_doc',
+      //   'first_ope_nurse',
+      //   'sec_ope_nurse',
+      //   'first_supply_nurse',
+      //   'sec_supply_nurse',
+      //   'ope_name_after'
+      // ]
+      // const sheel4 = [
+      //   'nurse_shift_record',
+      //   'anesthesia_satisfaction',
+      //   'operative_process',
+      //   'equipment_inventory',
+      //   'blood_transfusion_volume',
+      //   'fluid_volume',
+      //   'blood_losses',
+      //   'urine_volume',
+      //   'amount_other'
+      // ]
+      // obj.acis_pat_master_index = []
+      // obj.acis_ope_apply_info = []
+      // obj.acis_ope_schedule_info = []
+      // obj.acis_amount_record = []
+      // this.list.forEach(item => {
+      //   if (item.className === 'patient_gender') {
+      //     obj.acis_pat_master_index.push({
+      //       value: this.form.gender,
+      //       className: 'gender',
+      //       label: ''
+      //     })
+      //   } else {
+      //     sheel1.forEach(_item1 => {
+      //       if (_item1 === item.className) {
+      //         obj.acis_pat_master_index.push(item)
+      //       }
+      //     })
+      //   }
+      //   sheel2.forEach(_item2 => {
+      //     if (_item2 === item.className) {
+      //       obj.acis_ope_apply_info.push(item)
+      //     }
+      //   })
+      //   sheel3.forEach(_item3 => {
+      //     if (_item3 === item.className) {
+      //       obj.acis_ope_schedule_info.push(item)
+      //     }
+      //   })
+      //   sheel4.forEach(_item4 => {
+      //     if (_item4 === item.className) {
+      //       obj.acis_amount_record.push(item)
+      //     }
+      //   })
+      // })
+      // console.log(obj)
     }
   },
   created () {

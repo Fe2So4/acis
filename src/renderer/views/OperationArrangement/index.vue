@@ -18,7 +18,7 @@
             :value="item.userId"
             :disabled="item.disabled")
       el-form-item(label="时间")
-        el-date-picker(type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="form.date" @change="getData")
+        el-date-picker(type="date" :clearable="false" format="yyyy-MM-dd" value-format="yyyy-MM-dd" v-model="form.date" @change="getData")
     .content
       vxe-table(
         border
@@ -44,7 +44,7 @@
         vxe-table-column(field="gender" title="性别")
         vxe-table-column(field="age" title="年龄")
         vxe-table-column(field="patientId" title="患者ID")
-        vxe-table-column(field="visitId" title="住院号")
+        vxe-table-column(field="hospitalNo" title="住院号")
         vxe-table-column(field="diagnose" title="诊断")
         vxe-table-column(field="operationName" title="手术名称")
         vxe-table-column(field="memo" title="备注")
@@ -133,16 +133,16 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-  .operation-arrangement
-    width 80vw
-    height 70vh
-    .title
-      color #9BA3D5
-      text-align center
-      font-size 18px
-      line-height 28px
-      font-weight bold
-      margin-bottom 16px
-    .content
-      height calc(100% - 90px)
+.operation-arrangement
+  width 80vw
+  height 70vh
+  .title
+    color #9BA3D5
+    text-align center
+    font-size 18px
+    line-height 28px
+    font-weight bold
+    margin-bottom 16px
+  .content
+    height calc(100% - 90px)
 </style>

@@ -101,25 +101,22 @@ export default {
           day: this.form.date,
           room: this.form.room
         }
-      }).then(
-        res => {
-          if (res.data && res.data.success) {
-            this.patientList = res.data.data
-          }
+      }).then(res => {
+        if (res.data && res.data.success) {
+          console.log(res.data.data)
+          this.patientList = res.data.data
         }
-      )
+      })
     },
     getRoomList () {
       return request({
         url: getRoomList,
         method: 'get'
-      }).then(
-        res => {
-          if (res.data && res.data.success) {
-            this.roomList = res.data.data
-          }
+      }).then(res => {
+        if (res.data && res.data.success) {
+          this.roomList = res.data.data
         }
-      )
+      })
     },
     setTimeLine () {
       this.renderScene()
@@ -218,133 +215,133 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  @import "@/styles/theme";
+@import '@/styles/theme';
 
-  .realtime-status {
-    height: 70vh;
-    width: 80vw;
-    @include theme-property(color, $color-text-regular);
-    font-size: 14px;
+.realtime-status {
+  height: 70vh;
+  width: 80vw;
+  @include theme-property(color, $color-text-regular);
+  font-size: 14px;
 
-    .status {
-      display: flex;
-      line-height: 28px;
+  .status {
+    display: flex;
+    line-height: 28px;
 
-      .circle {
-        vertical-align: middle;
-        display: inline-block;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        margin-right: 6px;
-        margin-top: -2px;
-      }
-
-      .rectangle {
-        margin-top: -2px;
-        display: inline-block;
-        vertical-align: middle;
-        width: 20px;
-        height: 14px;
-        margin-right: 6px;
-      }
+    .circle {
+      vertical-align: middle;
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 6px;
+      margin-top: -2px;
     }
 
-    .el-form {
-      height: 30px;
-
-      .el-form-item {
-        margin-bottom: 0;
-      }
+    .rectangle {
+      margin-top: -2px;
+      display: inline-block;
+      vertical-align: middle;
+      width: 20px;
+      height: 14px;
+      margin-right: 6px;
     }
+  }
 
-    .status-content {
-      width: 100%;
+  .el-form {
+    height: 30px;
 
-      .right {
-        width: calc(100% - 200px);
-        float: right;
-        overflow-x: auto;
+    .el-form-item {
+      margin-bottom: 0;
+    }
+  }
 
-        .content {
-          width: 3841px;
-          height: 600px;
+  .status-content {
+    width: 100%;
 
-          ul {
-            height: calc(100% - 50px);
+    .right {
+      width: calc(100% - 200px);
+      float: right;
+      overflow-x: auto;
 
-            li {
-              margin-bottom: 20px;
-              position: relative;
-              height: 56px;
-              overflow: hidden;
-            }
-          }
-
-          .line {
-            height: 50px;
-          }
-        }
-      }
-
-      .left {
-        width: 200px;
-        float: left;
-        padding-right: 20px;
-        box-sizing: border-box;
-        text-align: center;
-
-        span {
-          display: inline-block;
-          line-height: 50px;
-        }
-
-        .white {
-          @include theme-property(color, $color-text-secondary);
-          width: 50px;
-        }
-
-        .green {
-          width: 28px;
-          color: #00B337;
-        }
-
-        .blue {
-          width: 28px;
-          color: #007EFF;
-        }
-
-        .title {
-          line-height: 30px;
-          display: flex;
-          justify-content: space-between;
-        }
+      .content {
+        width: 3841px;
+        height: 600px;
 
         ul {
+          height: calc(100% - 50px);
+
           li {
-            display: flex;
-            justify-content: space-between;
             margin-bottom: 20px;
+            position: relative;
+            height: 56px;
+            overflow: hidden;
+          }
+        }
 
-            span {
-              display: inline-block;
-              text-align: center;
-              padding: 3px 0;
+        .line {
+          height: 50px;
+        }
+      }
+    }
 
-              &:first-child {
-                width: 50px;
-                height: 50px;
-                font-size: 24px;
-                line-height: 44px;
-                font-weight: bold;
-                text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
-                border-radius: 50%;
-                background: #3C79E9;
-              }
+    .left {
+      width: 200px;
+      float: left;
+      padding-right: 20px;
+      box-sizing: border-box;
+      text-align: center;
+
+      span {
+        display: inline-block;
+        line-height: 50px;
+      }
+
+      .white {
+        @include theme-property(color, $color-text-secondary);
+        width: 50px;
+      }
+
+      .green {
+        width: 28px;
+        color: #00b337;
+      }
+
+      .blue {
+        width: 28px;
+        color: #007eff;
+      }
+
+      .title {
+        line-height: 30px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      ul {
+        li {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 20px;
+
+          span {
+            display: inline-block;
+            text-align: center;
+            padding: 3px 0;
+
+            &:first-child {
+              width: 50px;
+              height: 50px;
+              font-size: 24px;
+              line-height: 44px;
+              font-weight: bold;
+              text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+              border-radius: 50%;
+              background: #3c79e9;
             }
           }
         }
       }
     }
   }
+}
 </style>

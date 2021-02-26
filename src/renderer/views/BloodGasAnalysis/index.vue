@@ -79,6 +79,7 @@
 </template>
 
 <script>
+// 血气分析弹框
 import BloodGas from '@/components/BloodGas/BloodGas'
 import request from '../../utils/requestForMock'
 import {
@@ -243,6 +244,7 @@ export default {
       }).then(
         res => {
           if (res.data.success) {
+            this.$message.success('更新血气分析记录成功')
             return res.data.data
           } else {
             return Promise.reject(new Error('更新血气分析记录失败'))

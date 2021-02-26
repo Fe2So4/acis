@@ -7,7 +7,7 @@
     filterable
     remote
     :remote-method="queryList"
-    @change="(val)=> $emit('change', val)"
+    @change="val => $emit('change', val)"
     ref="select"
     @focus="onFocus"
     @visible-change="handleVisibleChange"
@@ -105,36 +105,34 @@ export default {
       this.getData()
     },
     getData () {
-      return this.getDoctorNurseListPaging(this.page, this.query).then(
-        ({ list, isFirstPage, pages }) => {
-          if (pages === 0) {
-            this.list = []
-            this.totalPage = 1
-          } else {
-            this.totalPage = pages
-            if (isFirstPage) {
-              this.list = list
+      return this.getDoctorNurseListPaging(this.page, this.query)
+        .then(
+          ({ list, isFirstPage, pages }) => {
+            if (pages === 0) {
+              this.list = []
+              this.totalPage = 1
             } else {
-              this.list = [...this.list, ...list]
+              this.totalPage = pages
+              if (isFirstPage) {
+                this.list = list
+              } else {
+                this.list = [...this.list, ...list]
+              }
             }
+          },
+          e => {
+            this.$message.error(e.message)
           }
-        },
-        e => {
-          this.$message.error(e.message)
-        }
-      ).finally(
-        () => {
+        )
+        .finally(() => {
           this.loading = false
-        }
-      )
+        })
     },
-    handleVisibleChange (visible) {
-
-    },
+    handleVisibleChange (visible) {},
     // 只对第一次聚焦进行空值搜索-目的是降低初始化查询的次数
     createFocusHandler () {
       let isInitial = true
-      return (e) => {
+      return e => {
         if (isInitial) {
           isInitial = false
           this.queryList()
@@ -144,7 +142,7 @@ export default {
     // 只对第一次赋值进行查询-目的是回显选中数据
     createInitialList () {
       let isInitial = true
-      return (code) => {
+      return code => {
         if (isInitial) {
           return this.getDoctorNurseList(code).then(
             res => {
@@ -168,16 +166,14 @@ export default {
           size: 20,
           content
         }
-      }).then(
-        res => {
-          if (res.data.success) {
-            this.query = ''
-            return res.data.data
-          } else {
-            return Promise.reject(new Error('获取医护字典失败'))
-          }
+      }).then(res => {
+        if (res.data.success) {
+          this.query = ''
+          return res.data.data
+        } else {
+          return Promise.reject(new Error('获取医护字典失败'))
         }
-      )
+      })
     },
     getDoctorNurseList (code) {
       return request({
@@ -186,20 +182,16 @@ export default {
           userJob: this.type,
           code
         }
-      }).then(
-        res => {
-          if (res.data.success) {
-            return res.data.data
-          } else {
-            return Promise.reject(new Error('医护字典查询失败'))
-          }
+      }).then(res => {
+        if (res.data.success) {
+          return res.data.data
+        } else {
+          return Promise.reject(new Error('医护字典查询失败'))
         }
-      )
+      })
     }
   }
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

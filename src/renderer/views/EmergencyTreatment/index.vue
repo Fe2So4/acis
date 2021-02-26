@@ -6,8 +6,8 @@
           el-form-item(label="患者ID" prop="patient_id")
             el-input(v-model="form.patient_id" @blur="getData")
         el-col(:span="6")
-          el-form-item(label="住院号" prop="visit_id")
-            el-input(v-model="form.visit_id")
+          el-form-item(label="住院号" prop="hospital_no")
+            el-input(v-model="form.hospital_no")
         el-col(:span="6")
           el-form-item(label="姓名")
             el-input(v-model="form.patient_name")
@@ -22,7 +22,7 @@
       el-row
         el-col(:span="6")
           el-form-item(label="出生日期" prop="birthday")
-            el-date-picker(v-model="form.birthday" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" popper-class="dateTimePicker")
+            el-date-picker(v-model="form.birthday" type="date" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd" popper-class="dateTimePicker")
         el-col(:span="6")
           el-form-item(label="床号")
             el-input(v-model="form.bed_id")
@@ -34,12 +34,12 @@
       el-row
         el-col(:span="24")
           el-form-item(label="主要诊断")
-            el-select(v-model="form.diagnose_after" placeholder="请选择诊断")
+            el-select(v-model="form.diagnose_before" placeholder="请选择诊断")
               el-option(
                 v-for="item in diagnoseList"
                 :key="item.diagCode"
                 :label="item.diagName"
-                :value="item.diagCode")
+                :value="item.diagName")
       el-row
         el-col(:span="24")
           el-form-item(label="病情")
@@ -69,7 +69,7 @@
       el-row
         el-col(:span="6")
           el-form-item(label="隔离")
-            el-select(v-model="form.is_quarantine" placeholder="请选择是否隔离")
+            el-select(v-model="form.quarantine_state" placeholder="请选择是否隔离")
               el-option(
                 v-for="item in quarantineList"
                 :key="item.detailCode"
@@ -145,7 +145,7 @@
                 )
       el-row
         el-col(:span="6")
-          el-form-item(label="灌注医生")
+          el-form-item(label="输血医生")
             SelectDoctorNurse(
               v-model="form.infuse_doc"
               :type="1"
@@ -234,10 +234,8 @@
 </template>
 
 <script>
-import {
-  getEmergencyInfo,
-  saveEmergencyInfo
-} from '@/api/register'
+// 急诊登记
+import { getEmergencyInfo, saveEmergencyInfo } from '@/api/register'
 import _ from 'lodash'
 import {
   commonTermsDetail,
@@ -262,18 +260,18 @@ export default {
     return {
       form: {
         patient_id: '',
-        visit_id: '',
+        hospital_no: '',
         patient_name: '',
         gender: '1',
         birthday: '',
         bed_id: '',
         dept_code: '',
-        diagnose_after: '',
+        diagnose_before: '',
         memo: '',
         ope_schedule_time: '',
         sequence: '',
         ope_room: '',
-        is_quarantine: '',
+        quarantine_state: '',
         ope_grade: '',
         anes_method: '',
         notch_level: '',
@@ -308,17 +306,35 @@ export default {
         amount_other: ''
       },
       rules: {
-        ptId: [
-          { required: true, message: '请输入患者ID', trigger: 'change' }
+        ptId: [{ required: true, message: '请输入患者ID', trigger: 'change' }],
+        hospitalNo: [
+          { required: true, message: '请输入住院号', trigger: 'change' }
         ],
-        hospitalNo: [{ required: true, message: '请输入住院号', trigger: 'change' }],
-        ope_room: [{ required: true, message: '请选择手术间', trigger: 'change' }],
-        ope_schedule_time: [{ required: true, message: '请输入手术时间', trigger: 'change' }],
-        birthday: [{ required: true, message: '请输入出生日期', trigger: 'change' }]
+        ope_room: [
+          { required: true, message: '请选择手术间', trigger: 'change' }
+        ],
+        ope_schedule_time: [
+          { required: true, message: '请输入手术时间', trigger: 'change' }
+        ],
+        birthday: [
+          { required: true, message: '请输入出生日期', trigger: 'change' }
+        ]
       },
-      level: [{ value: '0', label: '特' }, { value: '1', label: '大' }, { value: '2', label: '中' }, { value: '3', label: '小' }],
-      isolation: [{ value: '0', label: '正常' }, { value: '1', label: '隔离' }, { value: '2', label: '放射' }],
-      changeTime: [{ value: '0', label: '急诊' }, { value: '1', label: '择期' }],
+      level: [
+        { value: '0', label: '特' },
+        { value: '1', label: '大' },
+        { value: '2', label: '中' },
+        { value: '3', label: '小' }
+      ],
+      isolation: [
+        { value: '0', label: '正常' },
+        { value: '1', label: '隔离' },
+        { value: '2', label: '放射' }
+      ],
+      changeTime: [
+        { value: '0', label: '急诊' },
+        { value: '1', label: '择期' }
+      ],
       opeLevel: [],
       anaesMethod: [],
       emergencyList: [],
@@ -328,7 +344,10 @@ export default {
       opeName: [],
       loadingSelect: false,
       list: [],
-      genderList: [{ value: '1', label: '男' }, { value: '2', label: '女' }]
+      genderList: [
+        { value: '1', label: '男' },
+        { value: '2', label: '女' }
+      ]
     }
   },
   watch: {
@@ -346,7 +365,7 @@ export default {
   },
   methods: {
     submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           // alert('submit!')
           this.updataData()
@@ -360,13 +379,15 @@ export default {
       const formData = new FormData()
       formData.append('operationId', id)
       formData.append('conCode', '2')
-      formData.append('timePoint', moment(new Date()).format('YYYY-MM-DD HH:mm'))
+      formData.append(
+        'timePoint',
+        moment(new Date()).format('YYYY-MM-DD HH:mm')
+      )
       request({
         method: 'POST',
         url: addStatus,
         data: formData
-      }).then((res) => {
-      })
+      }).then(res => {})
     },
     getData () {
       request({
@@ -455,8 +476,7 @@ export default {
     remoteMethod: _.debounce(function (query) {
       this.loadingSelect = true
       this.getOpeName(query)
-    },
-    200),
+    }, 200),
     getOpeName (query = '') {
       request({
         url: opeNameData,
@@ -465,101 +485,149 @@ export default {
           start: 1,
           content: query
         }
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         this.loadingSelect = false
         this.opeName = data.list
       })
     },
     updataData () {
-      const obj = {}
-      const sheel1 = [{ className: 'patient_id', dict: false }, { className: 'patient_name', dict: false }, { className: 'gender', dict: true }, { className: 'birthday', dict: false }]
-      const sheel2 = [{ className: 'visit_id', dict: false }, { className: 'bed_id', dict: false }, { className: 'dept_code', dict: true },
-        { className: 'memo', dict: false }, { className: 'ope_schedule_time', dict: false }, { className: 'ope_grade', dict: true },
-        { className: 'anes_method', dict: true }, { className: 'surgeon', dict: true },
-        { className: 'first_assist', dict: true }, { className: 'second_assist', dict: true },
-        { className: 'third_assist', dict: true }, { className: 'forth_assist', dict: true },
-        { className: 'ope_name_before', dict: false },
-        { className: 'ope_code_before', dict: false }
-      ]
-      const sheel3 = [{ className: 'diagnose_after', dict: false }, { className: 'sequence', dict: false },
-        { className: 'ope_room', dict: true },
-        { className: 'is_quarantine', dict: true },
-        { className: 'notch_level', dict: false },
-        { className: 'notch_num', dict: false },
-        { className: 'is_emergency', dict: true },
-        { className: 'infuse_doc', dict: true },
-        { className: 'anes_doc', dict: true },
-        { className: 'first_anes_doc', dict: true },
-        { className: 'sec_anes_doc', dict: true },
-        { className: 'third_anes_doc', dict: true },
-        { className: 'first_ope_nurse', dict: true },
-        { className: 'sec_ope_nurse', dict: true },
-        { className: 'first_supply_nurse', dict: true },
-        { className: 'sec_supply_nurse', dict: true },
-        { className: 'ope_name_after', dict: false }
-      ]
-      const sheel4 = [
-        { className: 'nurse_shift_record', dict: true },
-        { className: 'anesthesia_satisfaction', dict: true },
-        { className: 'operative_process', dict: true },
-        { className: 'equipment_inventory', dict: true },
-        { className: 'blood_transfusion_volume', dict: false },
-        { className: 'fluid_volume', dict: false },
-        { className: 'blood_losses', dict: false },
-        { className: 'urine_volumn', dict: false },
-        { className: 'amount_other', dict: false }]
-      // const dict = ['gender', 'dept_code', 'diagnose_after',
-      //   'ope_room', 'is_quarantine', 'ope_grade', 'anes_method', 'is_emergency',
-      //   'surgeon', 'first_assist', 'second_assist', 'third_assist', 'forth_assist',
-      //   'infuse_doc', 'first_anes_doc', 'sec_anes_doc', 'third_anes_doc', 'first_ope_nurse', 'sec_ope_nurse',
-      //   'first_supply_nurse', 'sec_supply_nurse', 'ope_name_after']
-      obj.acis_pat_master_index = []
-      obj.acis_ope_apply_info = []
-      obj.acis_ope_schedule_info = []
-      obj.acis_amount_record = []
-      for (var item in this.form) {
-        sheel1.forEach(_item1 => {
-          if (_item1.className === item) {
-            if (_item1.dict === true) {
-              obj.acis_pat_master_index.push({ className: item, value: this.form[item], label: '' })
-            } else {
-              obj.acis_pat_master_index.push({ className: item, value: '', label: this.form[item] })
-            }
-          }
-        })
-        sheel2.forEach(_item2 => {
-          if (_item2.className === item) {
-            if (_item2.dict === true) {
-              obj.acis_ope_apply_info.push({ className: item, value: this.form[item], label: '' })
-            } else {
-              obj.acis_ope_apply_info.push({ className: item, value: '', label: this.form[item] })
-            }
-          }
-        })
-        sheel3.forEach(_item3 => {
-          if (_item3.className === item) {
-            if (_item3.dict === true) {
-              obj.acis_ope_schedule_info.push({ className: item, value: this.form[item], label: '' })
-            } else {
-              obj.acis_ope_schedule_info.push({ className: item, value: '', label: this.form[item] })
-            }
-          }
-        })
-        sheel4.forEach(_item4 => {
-          if (_item4.className === item) {
-            if (_item4.dict === true) {
-              obj.acis_amount_record.push({ className: item, value: this.form[item], label: '' })
-            } else {
-              obj.acis_amount_record.push({ className: item, value: '', label: this.form[item] })
-            }
-          }
-        })
-      }
+      // const obj = {}
+      // const sheel1 = [
+      //   { className: 'patient_id', dict: false },
+      //   { className: 'patient_name', dict: false },
+      //   { className: 'gender', dict: true },
+      //   { className: 'birthday', dict: false }
+      // ]
+      // const sheel2 = [
+      //   { className: 'hospital_no', dict: false },
+      //   { className: 'bed_id', dict: false },
+      //   { className: 'dept_code', dict: true },
+      //   { className: 'memo', dict: false },
+      //   { className: 'ope_schedule_time', dict: false },
+      //   { className: 'ope_grade', dict: true },
+      //   { className: 'anes_method', dict: true },
+      //   { className: 'surgeon', dict: true },
+      //   { className: 'first_assist', dict: true },
+      //   { className: 'second_assist', dict: true },
+      //   { className: 'third_assist', dict: true },
+      //   { className: 'forth_assist', dict: true },
+      //   { className: 'ope_name_before', dict: false },
+      //   { className: 'ope_code_before', dict: false }
+      // ]
+      // const sheel3 = [
+      //   { className: 'diagnose_after', dict: false },
+      //   { className: 'sequence', dict: false },
+      //   { className: 'ope_room', dict: true },
+      //   { className: 'is_quarantine', dict: true },
+      //   { className: 'notch_level', dict: false },
+      //   { className: 'notch_num', dict: false },
+      //   { className: 'is_emergency', dict: true },
+      //   { className: 'infuse_doc', dict: true },
+      //   { className: 'anes_doc', dict: true },
+      //   { className: 'first_anes_doc', dict: true },
+      //   { className: 'sec_anes_doc', dict: true },
+      //   { className: 'third_anes_doc', dict: true },
+      //   { className: 'first_ope_nurse', dict: true },
+      //   { className: 'sec_ope_nurse', dict: true },
+      //   { className: 'first_supply_nurse', dict: true },
+      //   { className: 'sec_supply_nurse', dict: true },
+      //   { className: 'ope_name_after', dict: false }
+      // ]
+      // const sheel4 = [
+      //   { className: 'nurse_shift_record', dict: true },
+      //   { className: 'anesthesia_satisfaction', dict: true },
+      //   { className: 'operative_process', dict: true },
+      //   { className: 'equipment_inventory', dict: true },
+      //   { className: 'blood_transfusion_volume', dict: false },
+      //   { className: 'fluid_volume', dict: false },
+      //   { className: 'blood_losses', dict: false },
+      //   { className: 'urine_volumn', dict: false },
+      //   { className: 'amount_other', dict: false }
+      // ]
+      // // const dict = ['gender', 'dept_code', 'diagnose_after',
+      // //   'ope_room', 'is_quarantine', 'ope_grade', 'anes_method', 'is_emergency',
+      // //   'surgeon', 'first_assist', 'second_assist', 'third_assist', 'forth_assist',
+      // //   'infuse_doc', 'first_anes_doc', 'sec_anes_doc', 'third_anes_doc', 'first_ope_nurse', 'sec_ope_nurse',
+      // //   'first_supply_nurse', 'sec_supply_nurse', 'ope_name_after']
+      // obj.acis_pat_master_index = []
+      // obj.acis_ope_apply_info = []
+      // obj.acis_ope_schedule_info = []
+      // obj.acis_amount_record = []
+      // for (var item in this.form) {
+      //   sheel1.forEach(_item1 => {
+      //     if (_item1.className === item) {
+      //       if (_item1.dict === true) {
+      //         obj.acis_pat_master_index.push({
+      //           className: item,
+      //           value: this.form[item],
+      //           label: ''
+      //         })
+      //       } else {
+      //         obj.acis_pat_master_index.push({
+      //           className: item,
+      //           value: '',
+      //           label: this.form[item]
+      //         })
+      //       }
+      //     }
+      //   })
+      //   sheel2.forEach(_item2 => {
+      //     if (_item2.className === item) {
+      //       if (_item2.dict === true) {
+      //         obj.acis_ope_apply_info.push({
+      //           className: item,
+      //           value: this.form[item],
+      //           label: ''
+      //         })
+      //       } else {
+      //         obj.acis_ope_apply_info.push({
+      //           className: item,
+      //           value: '',
+      //           label: this.form[item]
+      //         })
+      //       }
+      //     }
+      //   })
+      //   sheel3.forEach(_item3 => {
+      //     if (_item3.className === item) {
+      //       if (_item3.dict === true) {
+      //         obj.acis_ope_schedule_info.push({
+      //           className: item,
+      //           value: this.form[item],
+      //           label: ''
+      //         })
+      //       } else {
+      //         obj.acis_ope_schedule_info.push({
+      //           className: item,
+      //           value: '',
+      //           label: this.form[item]
+      //         })
+      //       }
+      //     }
+      //   })
+      //   sheel4.forEach(_item4 => {
+      //     if (_item4.className === item) {
+      //       if (_item4.dict === true) {
+      //         obj.acis_amount_record.push({
+      //           className: item,
+      //           value: this.form[item],
+      //           label: ''
+      //         })
+      //       } else {
+      //         obj.acis_amount_record.push({
+      //           className: item,
+      //           value: '',
+      //           label: this.form[item]
+      //         })
+      //       }
+      //     }
+      //   })
+      // }
       request({
         url: saveEmergencyInfo,
         method: 'POST',
-        data: obj
+        data: this.form
       }).then(res => {
         if (res.data.code === 200) {
           this.$message({ type: 'success', message: '增加急诊成功' })
@@ -573,18 +641,18 @@ export default {
       this.$refs[formName].resetFields()
       this.form = {
         patient_id: '',
-        visit_id: '',
+        hospital_no: '',
         patient_name: '',
         gender: '1',
         birthday: '',
         bed_id: '',
         dept_code: '',
-        diagnose_after: '',
+        diagnose_before: '',
         memo: '',
         ope_schedule_time: '',
         sequence: '',
         ope_room: '',
-        is_quarantine: '',
+        quarantine_state: '',
         ope_grade: '',
         anes_method: '',
         notch_level: '',
@@ -641,12 +709,12 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-  .emergency-treatment
-    // background #fff
-    .el-select
-      width 100%
-    .el-date-editor.el-input, .el-date-editor.el-input__inner
-      width 100%
-    .option
-      text-align right
+.emergency-treatment
+  // background #fff
+  .el-select
+    width 100%
+  .el-date-editor.el-input, .el-date-editor.el-input__inner
+    width 100%
+  .option
+    text-align right
 </style>

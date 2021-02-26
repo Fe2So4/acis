@@ -67,7 +67,7 @@
               >
                 <i
                   class="el-icon-d-arrow-right"
-                  :style="{'transform':showMore?'rotate(90deg)':''}"
+                  :style="{ transform: showMore ? 'rotate(90deg)' : '' }"
                 />
               </el-button>
             </el-form-item>
@@ -205,11 +205,11 @@
           infinite-scroll-distance="5"
         >
           <li
-            v-for="(item,index) in cardList"
+            v-for="(item, index) in cardList"
             :key="item.operationId"
-            :class="{'active':index===activeIndex}"
+            :class="{ active: index === activeIndex }"
             @dblclick="handleJump(item)"
-            @click="hanldeSelectPatient(item,index)"
+            @click="hanldeSelectPatient(item, index)"
           >
             <div class="title">
               <span>手术室 {{ item.roomNo }}</span>
@@ -232,7 +232,7 @@
                 </p>
                 <p>
                   <span class="label">住院号</span>
-                  <span>{{ item.visitId }}</span>
+                  <span>{{ item.hospitalNo }}</span>
                 </p>
                 <p>
                   <span class="label">手术</span>
@@ -253,7 +253,9 @@
                 </p>
                 <p>
                   <span class="label">术者</span>
-                  <span style="max-width:40px;white-space: nowrap">{{ item.surgeonName }}</span>
+                  <span style="max-width:40px;white-space: nowrap">{{
+                    item.surgeonName
+                  }}</span>
                   <span
                     class="label"
                     style="margin-left:10px;"
@@ -270,7 +272,13 @@
                       alt
                     >
                   </div>
-                  <div :style="{color:'#FF2C2C',fontSize:'14px',textAlign:'center'}">
+                  <div
+                    :style="{
+                      color: '#FF2C2C',
+                      fontSize: '14px',
+                      textAlign: 'center'
+                    }"
+                  >
                     急诊
                   </div>
                 </div>
@@ -282,7 +290,13 @@
                       alt
                     >
                   </div>
-                  <div :style="{color:'#2E95FE',fontSize:'14px',textAlign:'center'}">
+                  <div
+                    :style="{
+                      color: '#2E95FE',
+                      fontSize: '14px',
+                      textAlign: 'center'
+                    }"
+                  >
                     隔离
                   </div>
                 </div>
@@ -294,7 +308,13 @@
                       alt
                     >
                   </div>
-                  <div :style="{color:'#FFCC03',fontSize:'14px',textAlign:'center'}">
+                  <div
+                    :style="{
+                      color: '#FFCC03',
+                      fontSize: '14px',
+                      textAlign: 'center'
+                    }"
+                  >
                     放射
                   </div>
                 </div>
@@ -325,10 +345,7 @@ import { opeList, roomList, getDefaultRoom } from '@/api/patientList'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { Socket, SocketRoom } from '@/model/Socket'
 import _ from 'lodash'
-import {
-  anaesMethodDetail,
-  opeNameData
-} from '@/api/dictionary'
+import { anaesMethodDetail, opeNameData } from '@/api/dictionary'
 import SelectDoctorNurse from '@/components/Dictionary/SelectDoctorNurse'
 import SelectDepartment from '@/components/Dictionary/SelectDepartment'
 export default {
@@ -439,7 +456,7 @@ export default {
       if (this.opeRoom !== '') {
         SocketRoom.create(this.opeRoom)
         this.socket = SocketRoom.getInstance()
-        this.socket.on('push_operation_cancel_event', (res) => {
+        this.socket.on('push_operation_cancel_event', res => {
           console.log(res)
           if (res.length) {
             switch (res[0].itemCode) {
@@ -465,11 +482,12 @@ export default {
                     type: 'warning',
                     showCancelButton: false,
                     customClass: 'messageBox'
-                  }).then(() => {
-                    this.$router.push('/home')
-                    this.getPatientList('')
-                  }).catch(() => {
                   })
+                    .then(() => {
+                      this.$router.push('/home')
+                      this.getPatientList('')
+                    })
+                    .catch(() => {})
                 } else {
                   this.getPatientList('')
                 }
@@ -492,7 +510,7 @@ export default {
       request({
         url: anaesMethodDetail,
         method: 'GET'
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         this.anaesMethod = data
       })
@@ -502,7 +520,7 @@ export default {
       this.getOpeName(query)
     },
     getOpeName (query) {
-      const fn = _.throttle((query) => {
+      const fn = _.throttle(query => {
         return request({
           url: opeNameData,
           params: {
@@ -510,7 +528,7 @@ export default {
             start: 1,
             content: query
           }
-        }).then((res) => {
+        }).then(res => {
           if (res.data.code === 200) {
             this.loadingSelect = false
             const data = res.data.data.list
@@ -527,16 +545,14 @@ export default {
       month = month < 10 ? `0${month}` : `${month}`
       date = date < 10 ? `0${date}` : `${date}`
       if (param === 1) {
-        this.searchForm.date =
-          d.getFullYear() + '-' + month + '-' + date
+        this.searchForm.date = d.getFullYear() + '-' + month + '-' + date
       } else {
         d.setTime(d.getTime() + 24 * 60 * 60 * 1000)
         month = d.getMonth() + 1
         date = d.getDate()
         month = month < 10 ? `0${month}` : `${month}`
         date = date < 10 ? `0${date}` : `${date}`
-        this.searchForm.date =
-          d.getFullYear() + '-' + month + '-' + date
+        this.searchForm.date = d.getFullYear() + '-' + month + '-' + date
       }
       this.getPatientList('')
     },
@@ -550,7 +566,7 @@ export default {
       const list = this.dataList
       let rest = null
       if (arr.length > 0) {
-        rest = list.filter((item) => {
+        rest = list.filter(item => {
           if (arr.indexOf('emergency') !== -1) {
             return item.emergency === true
           }
@@ -571,7 +587,7 @@ export default {
       const list = this.dataList
       let rest = null
       if (val.length > 0) {
-        rest = list.filter((item) => {
+        rest = list.filter(item => {
           if (val.indexOf('emergency') !== -1) {
             return item.emergency === true
           } else if (val.indexOf('quatantine' !== -1)) {
@@ -635,7 +651,7 @@ export default {
       request({
         method: 'GET',
         url: roomList
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         this.roomList = data.roomList
         // this.opeRoom = data.defaultRoom
@@ -664,14 +680,14 @@ export default {
         method: 'GET',
         url: opeList,
         params: obj
-      }).then((res) => {
+      }).then(res => {
         if (res.data.code === 200) {
           this.operationStatus = []
           this.activeIndex = null
           this.clearBaseInfo()
           const data = res.data.data.list || []
           this.totalPages = res.data.data.pages
-          data.forEach((value) => {
+          data.forEach(value => {
             if (value.opeScheduleTime) {
               // value.opeTime = moment(value.opeScheduleTime).format('yyyy-MM-DD HH:mm')
               value.opeTime = value.opeScheduleTime
@@ -706,7 +722,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import "@/styles/theme";
+@import '@/styles/theme';
 .patient-info {
   height: 100%;
   width: 100%;
@@ -716,8 +732,8 @@ export default {
   .search {
     // flex: 1;
     height: 118px;
-    @include theme-property("background", $color-background-navigation);
-    @include theme-property("box-shadow", $box-shadow-card);
+    @include theme-property('background', $color-background-navigation);
+    @include theme-property('box-shadow', $box-shadow-card);
     border-radius: 5px;
     width: 100%;
     padding: 20px;
@@ -726,8 +742,8 @@ export default {
       position: absolute;
       padding: 20px 20px 0 20px;
       width: 100%;
-      @include theme-property("background", $color-background-navigation);
-      @include theme-property("box-shadow", $box-shadow-card);
+      @include theme-property('background', $color-background-navigation);
+      @include theme-property('box-shadow', $box-shadow-card);
       border-radius: 5px;
       top: 120px;
       left: 0;
@@ -756,11 +772,11 @@ export default {
       grid-column-gap: 20px;
       grid-row-gap: 20px;
       li {
-        @include theme-property("box-shadow", $box-shadow-card);
+        @include theme-property('box-shadow', $box-shadow-card);
         cursor: pointer;
         border-radius: 5px;
         padding: 0 0 14px 0;
-        @include theme-property("background", $color-background-card);
+        @include theme-property('background', $color-background-card);
         // border: 1px solid transparent;
         width: 392px;
         height: 196px;
@@ -772,12 +788,12 @@ export default {
           display: flex;
           justify-content: space-between;
           span {
-            @include theme-property("color", $color-text-card-title);
+            @include theme-property('color', $color-text-card-title);
             padding: 0 10px;
             line-height: 28px;
             &:last-child {
               font-weight: bold;
-              @include theme-property("color", $color-text-primary);
+              @include theme-property('color', $color-text-primary);
             }
           }
         }
@@ -801,7 +817,7 @@ export default {
               line-height: 46px;
               @include card-room;
               border-radius: 0px 23px 23px 0px;
-              font-size: 26px;
+              font-size: 18px;
               font-weight: bold;
               color: #fff;
               text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
@@ -825,7 +841,7 @@ export default {
               color: #9ba3d5;
               // display: flex;
               span {
-                @include theme-property("color", $color-text-secondary);
+                @include theme-property('color', $color-text-secondary);
                 float: left;
                 margin-right: 10px;
                 line-height: 28px;
@@ -852,7 +868,7 @@ export default {
                 white-space: nowrap;
               }
               .label {
-                @include theme-property("color", $color-text-regular);
+                @include theme-property('color', $color-text-regular);
                 margin-right: 10px;
               }
             }
@@ -868,11 +884,11 @@ export default {
         }
         &:hover {
           // @include border-active;
-          @include theme-property("background", $color-background-card-hover);
+          @include theme-property('background', $color-background-card-hover);
         }
         &.active {
           // @include border-active;
-          @include theme-property("background", $color-background-card-hover);
+          @include theme-property('background', $color-background-card-hover);
         }
       }
     }

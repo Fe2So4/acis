@@ -6,29 +6,29 @@
       width: elementWidth + 'px',
       left: elementLeft + 'px'
     }"
-    :class="{hasEnd:info.outOperTime}"
+    :class="{ hasEnd: info.outOperTime }"
     @mousemove="onMouseover"
     @mouseleave="onMouseLeave"
   >
     <div class="background">
       <div
         class="ready"
-        :style="{width: readyWidth + 'px'}"
+        :style="{ width: readyWidth + 'px' }"
       />
       <div
         class="operating"
-        :style="{width: operatingWidth + 'px'}"
+        :style="{ width: operatingWidth + 'px' }"
       />
       <div
         class="waking"
-        :style="{width: wakingWidth + 'px'}"
+        :style="{ width: wakingWidth + 'px' }"
       />
     </div>
     <div class="content">
       <div class="left">
         <div
           class="circle"
-          :style="{background: +info.isEmergency ? '#24E760' : '#FF4045'}"
+          :style="{ background: +info.isEmergency ? '#24E760' : '#FF4045' }"
         />
       </div>
       <div class="right">

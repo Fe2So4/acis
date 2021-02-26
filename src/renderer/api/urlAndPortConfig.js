@@ -10,7 +10,7 @@ const IP = {
   SERVER: prodIp,
   LOCAL: 'localhost',
   XIE: '192.168.1.134',
-  LI: '192.168.1.7',
+  LI: '192.168.80.98',
   ZHONG: '192.168.1.191'
 }
 const PORT = {

@@ -11,7 +11,7 @@
         </el-col>
         <el-col :span="5">
           <span>住院号</span>
-          {{ basicInfo.visitId }}
+          {{ basicInfo.hospitalNo }}
         </el-col>
         <el-col :span="5">
           <span>姓名</span>
@@ -81,12 +81,12 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import "@/styles/theme";
+@import '@/styles/theme';
 .basic-info {
   height: 100%;
   flex: 1;
   font-size: 14px;
-  @include theme-property("border", $border-info);
+  @include theme-property('border', $border-info);
   border-radius: 10px;
   .title {
     font-size: 14px;
@@ -101,7 +101,7 @@ export default {
       display: inline-block;
       vertical-align: middle;
       margin-right: 8px;
-      @include theme-property("background",$background-menu-active)
+      @include theme-property('background', $background-menu-active);
     }
   }
   span {
@@ -111,11 +111,11 @@ export default {
     width: 56px;
     margin-right: 10px;
     text-align: right;
-    @include theme-property("color", $color-text-regular);
+    @include theme-property('color', $color-text-regular);
   }
   .content {
     padding: 0 15px 15px;
-    @include theme-property("color", $color-text-secondary);
+    @include theme-property('color', $color-text-secondary);
   }
 }
 </style>
