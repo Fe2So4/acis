@@ -7,7 +7,6 @@ import store from './store'
 import ElementUI from 'element-ui'
 import 'normalize.css/normalize.css'
 import './styles/element-variables.scss'
-
 import './styles/index.scss'
 import './styles/transition.scss'
 import './iconfont/iconfont.css'

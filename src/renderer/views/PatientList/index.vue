@@ -339,13 +339,18 @@
   </div>
 </template>
 <script>
+// 首页
 import moment from 'moment'
 import request from '../../utils/requestForMock'
 import { opeList, roomList, getDefaultRoom } from '@/api/patientList'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { Socket, SocketRoom } from '@/model/Socket'
 import _ from 'lodash'
-import { anaesMethodDetail, opeNameData } from '@/api/dictionary'
+import {
+  anaesMethodDetail,
+  opeNameData,
+  getApplicationKey
+} from '@/api/dictionary'
 import SelectDoctorNurse from '@/components/Dictionary/SelectDoctorNurse'
 import SelectDepartment from '@/components/Dictionary/SelectDepartment'
 export default {
@@ -603,7 +608,19 @@ export default {
         this.cardList = this.dataList
       }
     },
+    saveSign (id) {
+      request({
+        url: getApplicationKey + `/${id}`,
+        method: 'POST'
+      }).then(res => {
+        if (res.data.code === 200) {
+        } else {
+          this.$message.error('获取电子签名失败')
+        }
+      })
+    },
     handleJump (item) {
+      this.saveSign(item.operationId)
       this.setPatientId(item.patientId)
       this.setOperationId(item.operationId)
       this.setProcedureState(item.state)

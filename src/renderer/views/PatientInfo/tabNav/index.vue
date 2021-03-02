@@ -82,9 +82,9 @@ export default {
         method: 'get',
         url: `${getDocumentsList}/${this.procedureState}`
       })
-        .then((res) => {
+        .then(res => {
           if (res.data && res.data.success) {
-            this.documentsList = res.data.data.isUse.map((item) => {
+            this.documentsList = res.data.data.isUse.map(item => {
               return {
                 label: item.templateName,
                 templateId: item.templateCode,
@@ -97,20 +97,20 @@ export default {
             })
           }
         })
-        .catch((e) => {})
+        .catch(e => {})
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-@import "@/styles/theme";
+@import '@/styles/theme';
 .tab-nav {
   width: 100%;
   margin-top: 18px;
-  @include theme-property("box-shadow", $box-shadow-card);
+  @include theme-property('box-shadow', $box-shadow-card);
   border-radius: 5px;
-  @include theme-property("background", $color-background-navigation);
-  @include theme-property("color", $color-text-regular);
+  @include theme-property('background', $color-background-navigation);
+  @include theme-property('color', $color-text-regular);
   width: 100%;
 
   ul {
@@ -123,16 +123,16 @@ export default {
       padding: 5px 15px;
       font-size: 14px;
 
-      &>div {
+      & > div {
         line-height: 30px;
         height: 30px;
         white-space: nowrap;
         padding: 0 5px;
 
         &.isActive {
-          @include theme-property("color",$color-text-primary);
+          @include theme-property('color', $color-text-primary);
           border-bottom: 2px solid;
-          @include theme-property("border-color",$color-text-primary);
+          @include theme-property('border-color', $color-text-primary);
           font-weight: bold;
         }
       }

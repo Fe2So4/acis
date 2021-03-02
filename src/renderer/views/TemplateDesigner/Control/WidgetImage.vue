@@ -1,6 +1,6 @@
 <template lang="pug">
     div.image(:style="widgetStyle")
-     img(:src="configuration.value")
+     img(:src="'data:image/jpeg;base64,'+ configuration.value")
 </template>
 <script>
 export default {
@@ -52,10 +52,10 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-    .image
-        width:100%
-        height:100%
-        img
-          width:100%
-          height:100%
+.image
+    width:100%
+    height:100%
+    img
+      width:100%
+      height:100%
 </style>

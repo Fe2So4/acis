@@ -200,6 +200,11 @@ if (process.env.BUILD_TARGET === 'schedule') {
         name: 'PrintDocument',
         component: () => import('@/views/PrintDocument/index')
       },
+      {
+        path: '/printDocumentPDF/:templateId/:operationId/:patientId/:pageIndex/:isRescueMode/:opePhase/:pageInfo/:flag',
+        name: 'PrintDocumentPDF',
+        component: () => import('@/views/PrintDocumentPDF/index')
+      },
       ...customDialogs,
       {
         path: '*',

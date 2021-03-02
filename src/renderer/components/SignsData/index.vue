@@ -5,27 +5,30 @@
       :wrap-style="wrapStyle"
     >
       <div class="list">
-        <template v-for="(item,index) in signsList">
+        <template v-for="(item, index) in signsList">
           <div
-            :style="{color:item.itemColor}"
-            :key="index+item.itemName"
+            :style="{ color: item.itemColor }"
+            :key="index + item.itemName"
             class="name"
           >
             {{ item.itemName }}
           </div>
           <div
-            :style="{color:item.itemColor}"
-            :key="index+item.itemUnit"
+            :style="{ color: item.itemColor }"
+            :key="index + item.itemUnit"
             class="unit"
           >
             {{ item.itemUnit }}
           </div>
           <div
             class="value"
-            :style="{color:item.itemColor,fontSize:/\//g.test(item.itemValue) ? '30px' : '40px'}"
-            :key="index+item.itemValue"
+            :style="{
+              color: item.itemColor,
+              fontSize: /\//g.test(item.itemValue) ? '30px' : '40px'
+            }"
+            :key="index + item.itemValue"
           >
-            {{ item.itemValue==='' ? '--' : item.itemValue }}
+            {{ item.itemValue === '' ? '--' : item.itemValue }}
           </div>
         </template>
       </div>
@@ -62,9 +65,9 @@ export default {
     getList () {
       request({
         url: getSignItemList
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
-        data.forEach((item) => {
+        data.forEach(item => {
           item.itemValue = ''
         })
         this.signsList = data
@@ -76,16 +79,16 @@ export default {
       if (!this.socket) return
       // 体征数据
       const that = this
-      this.socket.on('push_monitor_event_realtime', (res) => {
+      this.socket.on('push_monitor_event_realtime', res => {
         if (Array.isArray(res)) {
           // 回应socket.io
           that.socket.emit('push_monitor_event_realtime', {
             loginUserNum,
             content: res
           })
-          res.forEach((item) => {
-            this.signsList.forEach((_item) => {
-              if (_item.itemCode === item.itemCode) {
+          res.forEach(item => {
+            this.signsList.forEach(_item => {
+              if (_item.itemName === item.itemCode) {
                 _item.itemValue = item.itemValue
               }
             })
@@ -105,16 +108,16 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import "@/styles/theme";
+@import '@/styles/theme';
 $box-shadow-signs: (
-  "dark-gray": -5px 1px 5px 0px rgba(0, 0, 0, 0.4),
-  "dark-blue": -5px 1px 5px 0px rgba(0, 0, 0, 0.4),
-  "light-white": -4px 2px 5px 0px rgba(0, 0, 0, 0.1),
+  'dark-gray': -5px 1px 5px 0px rgba(0, 0, 0, 0.4),
+  'dark-blue': -5px 1px 5px 0px rgba(0, 0, 0, 0.4),
+  'light-white': -4px 2px 5px 0px rgba(0, 0, 0, 0.1)
 );
 $color-background-signs: (
-  "dark-gray": #363638,
-  "dark-blue": #121421,
-  "light-white": #454546,
+  'dark-gray': #363638,
+  'dark-blue': #121421,
+  'light-white': #454546
 );
 @media all and (orientation: portrait) {
   .signs-data {
@@ -137,8 +140,8 @@ $color-background-signs: (
   width: 100%;
   height: 100%;
   background: #121421;
-  @include theme-property("box-shadow", $box-shadow-signs);
-  @include theme-property("background", $color-background-signs);
+  @include theme-property('box-shadow', $box-shadow-signs);
+  @include theme-property('background', $color-background-signs);
   .list {
     display: grid;
     height: calc(100% - 26px);

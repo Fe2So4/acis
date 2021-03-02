@@ -13,6 +13,9 @@
 import { mapState } from 'vuex'
 import { renderSync, render } from 'sass'
 import $bus from '@/utils/bus'
+import { getUserToken } from './utils/storage'
+import { ipcRenderer } from 'electron'
+import { ftpUploadAnesPDF } from '@/api/blood'
 export default {
   name: 'Acis',
   computed: {
@@ -40,6 +43,37 @@ export default {
     this.$electron.ipcRenderer.on('printRoute', (e, printRoute) => {
       if (printRoute) {
         this.$router.push(printRoute)
+      }
+    })
+    this.$electron.ipcRenderer.on('reply', (e, data) => {
+      var xhr = new XMLHttpRequest()
+
+      xhr.open(
+        'POST',
+        ftpUploadAnesPDF +
+          `/${this.$router.currentRoute.params.operationId}/${this.$router.currentRoute.params.flag}`
+      )
+      xhr.setRequestHeader('Authorization', getUserToken())
+
+      xhr.overrideMimeType('application/octet-stream')
+      // 直接发送二进制数据
+      xhr.onreadystatechange = function (data) {
+        // 判断是否服务器响应
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          const res = JSON.parse(data.currentTarget.response)
+          if (res.code === 200) {
+            console.log('上传成功')
+            ipcRenderer.send('upLoadSuccess', '1')
+          } else {
+            console.log('上传失败')
+            ipcRenderer.send('upLoadSuccess', '2')
+          }
+        }
+      }
+      if (xhr.sendAsBinary) {
+        xhr.sendAsBinary(data)
+      } else {
+        xhr.send(data)
       }
     })
     // 加载所有css并默认调整一次
@@ -76,9 +110,11 @@ export default {
       //     document.head.appendChild(styleTag)
       //   }
       // })
-      return Promise.all(this.themes.map(theme => {
-        return this.getCSSString(theme.value)
-      })).then(strings => {
+      return Promise.all(
+        this.themes.map(theme => {
+          return this.getCSSString(theme.value)
+        })
+      ).then(strings => {
         this.themes.forEach((theme, index) => {
           const styleTag = document.createElement('style')
           styleTag.setAttribute('id', theme.value)
@@ -114,6 +150,4 @@ export default {
 }
 </script>
 
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>

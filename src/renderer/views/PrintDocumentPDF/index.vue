@@ -26,7 +26,7 @@ import {
 } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
 import MainContent from './MainContent'
-
+import { ipcRenderer } from 'electron'
 export default {
   name: 'MedicalDocument',
   components: {
@@ -34,6 +34,7 @@ export default {
   },
   data () {
     return {
+      flag: '',
       widgetList: [],
       startTime: '',
       endTime: '',
@@ -57,9 +58,14 @@ export default {
     this.pageIndex = this.$route.params.pageIndex
     this.opePhase = this.$route.params.opePhase
     this.pageInfo = this.$route.params.pageInfo
+    this.flag = this.$route.params.flag || ''
     this.isRescueMode = this.$route.params.isRescueMode === 'true'
-    console.log(this.$route.params)
     this.getData(this.pageIndex)
+  },
+  mounted () {
+    ipcRenderer.on('wordTest', data => {
+      console.log(data)
+    })
   },
   methods: {
     // 通用接口 - 获取模板和源数据表中查出的信息
@@ -190,7 +196,8 @@ export default {
       }
       if (this.canvasWidgetList.length === 0) {
         this.timer = setTimeout(() => {
-          this.$electron.ipcRenderer.send('ready-to-print')
+          console.log('开始上传文件')
+          this.$electron.ipcRenderer.send('ready-to-printPDF', this.operationId)
         }, 1000)
       }
     }

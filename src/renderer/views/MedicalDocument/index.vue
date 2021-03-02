@@ -30,9 +30,11 @@
       :total-page="totalPage"
       :page-index="pageIndex"
       :displayed-buttons="displayedButtons"
+      :operation-id="operationId"
       @change-page="onChangePage"
       @change-rescue-mode="onChangeRescueMode"
       @print="onPrint"
+      @upload="onLoad"
       @print-all="onPrintAll"
       @refresh="onRefresh"
       @save="onSave"
@@ -69,9 +71,7 @@ import {
   getTestInfo,
   changeDisplayMode
 } from '@/api/medicalDocument'
-import {
-  addBloodGasAnalysisRecord
-} from '@/api/blood'
+import { addBloodGasAnalysisRecord } from '@/api/blood'
 import request from '@/utils/requestForMock'
 import MainContent from './MainContent'
 import BottomButtons from './BottomButtons'
@@ -154,62 +154,64 @@ export default {
   methods: {
     // 通用接口 - 获取模板和源数据表中查出的信息
     getTemplateAndValueData () {
-      return Promise.all([
-        this.getTemplateData(),
-        this.getValueData()
-      ]).then((res) => {
-        const [{ list: widgetList } = { list: [], isIntraoperative: false }, valueMap = {}] = res
-        widgetList.forEach((widget) => {
-          // 源数据赋值
-          if (widget.dataSource) {
-            const { tableName, className } = widget.dataSource
-            let value = ''
-            if (valueMap[tableName]) {
-              const valueArr = valueMap[tableName].filter(
-                (item) => item.className === className
-              )
-              valueArr.forEach((valueItem) => {
-                const { widgetId, value: widgetValue } = valueItem
-                if (widgetId && widgetId === widget.id) {
-                  value = widgetValue
-                } else if (widgetId === '') {
-                  value = widgetValue
-                }
-              })
+      return Promise.all([this.getTemplateData(), this.getValueData()]).then(
+        res => {
+          const [
+            { list: widgetList } = { list: [], isIntraoperative: false },
+            valueMap = {}
+          ] = res
+          widgetList.forEach(widget => {
+            // 源数据赋值
+            if (widget.dataSource) {
+              const { tableName, className } = widget.dataSource
+              let value = ''
+              if (valueMap[tableName]) {
+                const valueArr = valueMap[tableName].filter(
+                  item => item.className === className
+                )
+                valueArr.forEach(valueItem => {
+                  const { widgetId, value: widgetValue } = valueItem
+                  if (widgetId && widgetId === widget.id) {
+                    value = widgetValue
+                  } else if (widgetId === '') {
+                    value = widgetValue
+                  }
+                })
+              }
+              widget.dirty = false
+              widget.value = value
             }
-            widget.dirty = false
-            widget.value = value
+            // 表格中赋值 - 暂未使用 20210202 zwf
+            // if (widget.name === 'widget-table') {
+            //   widget.cells.forEach((row) => {
+            //     row.forEach((cell) => {
+            //       cell.value = valueMap[cell.tableName] && valueMap[cell.tableName].find(
+            //         ({ className }) => className === cell.className
+            //       )
+            //         ? valueMap[cell.tableName].find(
+            //           ({ className }) => className === cell.className
+            //         ).value
+            //         : cell.value
+            //     })
+            //   })
+            // }
+          })
+          let paperSettingIndex
+          const paperSetting = widgetList.find((item, index) => {
+            if (item.id === 'paper') {
+              paperSettingIndex = index
+              return true
+            }
+            return false
+          })
+          if (typeof paperSettingIndex !== 'number') {
+            return Promise.reject(new Error('未找到纸张配置'))
           }
-          // 表格中赋值 - 暂未使用 20210202 zwf
-          // if (widget.name === 'widget-table') {
-          //   widget.cells.forEach((row) => {
-          //     row.forEach((cell) => {
-          //       cell.value = valueMap[cell.tableName] && valueMap[cell.tableName].find(
-          //         ({ className }) => className === cell.className
-          //       )
-          //         ? valueMap[cell.tableName].find(
-          //           ({ className }) => className === cell.className
-          //         ).value
-          //         : cell.value
-          //     })
-          //   })
-          // }
-        })
-        let paperSettingIndex
-        const paperSetting = widgetList.find((item, index) => {
-          if (item.id === 'paper') {
-            paperSettingIndex = index
-            return true
-          }
-          return false
-        })
-        if (typeof paperSettingIndex !== 'number') {
-          return Promise.reject(new Error('未找到纸张配置'))
+          this.paperSetting = paperSetting
+          widgetList.splice(paperSettingIndex, 1)
+          this.tempList = widgetList
         }
-        this.paperSetting = paperSetting
-        widgetList.splice(paperSettingIndex, 1)
-        this.tempList = widgetList
-      })
+      )
     },
     // 只有术中文书才有，获取术中文书相关信息
     getIntraoperativeData (pageIndex) {
@@ -231,14 +233,14 @@ export default {
           pageTimeInterval,
           operState: this.opePhase
         }
-      }).then((res) => {
+      }).then(res => {
         if (res.data && res.data.success) {
           const { startTime, endTime, totalPage, pageIndex } = res.data.data
           this.startTime = startTime
           this.endTime = endTime
           this.totalPage = totalPage
           this.pageIndex = pageIndex
-          this.tempList.forEach((widget) => {
+          this.tempList.forEach(widget => {
             // x轴起止时间更改
             if (widget.xAxis) {
               widget.xAxis.startTime = startTime
@@ -266,7 +268,7 @@ export default {
         default:
       }
       const data = this.tempList
-      data.forEach((item) => {
+      data.forEach(item => {
         if (item.name === 'widget-anaes-table') {
           item.name = 'widget-monitor-table'
         }
@@ -308,8 +310,30 @@ export default {
         path: `/printDocument/${this.templateId}/${this.operationId}/${this.patientId}/${this.pageIndex}/${this.isRescueMode}/${this.opePhase}/${this.pageInfo}`
       })
     },
-    onPrintAll () {
+    // pdf 上传
+    // onLoad () {
+    //   utilsDebounce(() => {
+    //     this.downFile()
+    //   }, 1000)
+    // },
+    onLoad () {
+      let flag
+      // this.$refs.mainContent.daochuPDF()
+      if (this.buttonConfig.includes('ANES')) {
+        flag = 0
+      } else if (this.buttonConfig.includes('ANAB')) {
+        flag = 1
+      }
+      if (flag === undefined) {
+        return false
+      } else {
+        this.$message.warning('文件生成中,请稍后')
+        this.$electron.ipcRenderer.send('print-documentPDF', {
+          path: `/printDocumentPDF/${this.templateId}/${this.operationId}/${this.patientId}/${this.pageIndex}/${this.isRescueMode}/${this.opePhase}/${this.pageInfo}/${flag}`
+        })
+      }
     },
+    onPrintAll () {},
     onSetTotalPage (page) {
       this.totalPage = page
     },
@@ -341,14 +365,14 @@ export default {
       this.saveChangedSignData()
     },
     validateModified () {
-      const list = this.widgetList.filter((widget) => widget.dirty)
+      const list = this.widgetList.filter(widget => widget.dirty)
       return list.length !== 0
     },
     validateFilledRequiredItem () {
       let flag = true
       this.widgetList
-        .filter((widget) => widget.required)
-        .forEach((widget) => {
+        .filter(widget => widget.required)
+        .forEach(widget => {
           if (!widget.value) {
             flag = false
           }
@@ -358,13 +382,13 @@ export default {
     saveNormalData () {
       const customDataList = this.widgetList
         .filter(
-          (widget) =>
+          widget =>
             widget.dirty &&
             widget.dataSource &&
             (widget.dataSource.tableName === 'acis_patient_writ_data' ||
               widget.dataSource.tableName === 'acis_amount_record')
         )
-        .map((widget) => {
+        .map(widget => {
           return {
             widgetId: widget.id,
             tagName: widget.tagName || '',
@@ -383,13 +407,13 @@ export default {
             patientId: this.patientId,
             tableName: 'acis_patient_writ_data'
           }
-        }).then((res) => {
+        }).then(res => {
           if (res.data.success) {
             this.$message({
               message: '保存成功',
               type: 'success'
             })
-            this.widgetList.forEach((widget) => {
+            this.widgetList.forEach(widget => {
               if (widget.dirty) {
                 widget.dirty = false
               }
@@ -415,8 +439,7 @@ export default {
       this.getData(this.pageIndex)
       this.$eventHub.$emit('document-refresh')
     },
-    showLeaveMessage (nextFn, rejectFn = () => {
-    }) {
+    showLeaveMessage (nextFn, rejectFn = () => {}) {
       const modified = this.validateModified()
       if (!modified) {
         nextFn()
@@ -440,10 +463,10 @@ export default {
         return
       }
       const group = this.changedSignDataList.find(
-        (group) => group.itemCode === itemCode && group.itemName === itemName
+        group => group.itemCode === itemCode && group.itemName === itemName
       )
       if (group) {
-        const item = group.list.find((item) => item.timePoint === timePoint)
+        const item = group.list.find(item => item.timePoint === timePoint)
         if (item) {
           item.itemValue = itemValue
         } else {
@@ -481,7 +504,7 @@ export default {
           dataMode: this.isRescueMode ? 1 : 5,
           operationId: this.operationId
         }
-      }).then((res) => {
+      }).then(res => {
         if (res.data.success) {
           this.changedSignDataList = []
           this.$message({
@@ -512,16 +535,12 @@ export default {
       return request({
         method: 'GET',
         url: `${getSignInfo}/${this.patientId}/${this.operationId}`
-      }).then((res) => {
+      }).then(res => {
         const infoList = res.data.data
         if (Array.isArray(infoList)) {
-          const hasTagWidgetList = this.widgetList.filter(
-            (item) => item.tagName
-          )
-          hasTagWidgetList.forEach((widget) => {
-            const info = infoList.find(
-              (item) => item.tagName === widget.tagName
-            )
+          const hasTagWidgetList = this.widgetList.filter(item => item.tagName)
+          hasTagWidgetList.forEach(widget => {
+            const info = infoList.find(item => item.tagName === widget.tagName)
             if (info) {
               widget.dirty = true
               widget.value = info.signValue
@@ -535,16 +554,12 @@ export default {
       return request({
         method: 'GET',
         url: `${getTestInfo}/${this.patientId}`
-      }).then((res) => {
+      }).then(res => {
         const infoList = res.data.data
         if (Array.isArray(infoList)) {
-          const hasTagWidgetList = this.widgetList.filter(
-            (item) => item.tagName
-          )
-          hasTagWidgetList.forEach((widget) => {
-            const info = infoList.find(
-              (item) => item.tagName === widget.tagName
-            )
+          const hasTagWidgetList = this.widgetList.filter(item => item.tagName)
+          hasTagWidgetList.forEach(widget => {
+            const info = infoList.find(item => item.tagName === widget.tagName)
             if (info) {
               widget.dirty = true
               widget.value = info.itemValue
@@ -566,19 +581,17 @@ export default {
         params: {
           templateCode: this.templateId
         }
-      }).then(
-        res => {
+      })
+        .then(res => {
           if (res.data.success) {
             return res.data.data || undefined
           }
           return Promise.reject(new Error('获取模板数据失败'))
-        }
-      ).catch(
-        e => {
+        })
+        .catch(e => {
           this.$message.error(e.message)
           return undefined
-        }
-      )
+        })
     },
     getValueData () {
       return request({
@@ -589,42 +602,37 @@ export default {
           operationId: this.operationId,
           patientId: this.patientId
         }
-      }).then(
-        res => {
+      })
+        .then(res => {
           if (res.data.success) {
             return res.data.data || undefined
           }
           return Promise.reject(new Error('获取模板值失败'))
-        }
-      ).catch(
-        e => {
+        })
+        .catch(e => {
           this.$message.error(e.message)
           return undefined
-        }
-      )
+        })
     },
     addBloodGasAnalysisRecord (data) {
       return request({
         url: addBloodGasAnalysisRecord,
         method: 'post',
         data
-      }).then(
-        res => {
-          if (res.data.success) {
-            return res
-          } else {
-            return Promise.reject(new Error('保存血气分析失败'))
-          }
+      }).then(res => {
+        if (res.data.success) {
+          return res
+        } else {
+          return Promise.reject(new Error('保存血气分析失败'))
         }
-      )
+      })
     },
     onAddBloodGas (data) {
-      this.addBloodGasAnalysisRecord(data).then(
-        res => {
-          this.$message.success('添加成功')
-          this.visibleBloodGas = false
-          this.$eventHub.$emit('document-refresh')
-        })
+      this.addBloodGasAnalysisRecord(data).then(res => {
+        this.$message.success('添加成功')
+        this.visibleBloodGas = false
+        this.$eventHub.$emit('document-refresh')
+      })
     }
   }
 }
@@ -635,6 +643,6 @@ export default {
   width: 100%;
   height: calc(100% - 172px);
   position: relative;
-  font-family: "宋体";
+  font-family: '宋体';
 }
 </style>

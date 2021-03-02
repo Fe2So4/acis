@@ -70,8 +70,14 @@
         el-button(@click="onCancel", size="mini") 取消
 </template>
 <script>
+// 设备采集
 import request from '@/utils/requestForMock'
-import { getMonitorInfo, addMonitorInfo } from '@/api/device'
+import {
+  getMonitorInfo,
+  addMonitorInfo,
+  getOperationBindEquipmentIp,
+  saveServerIp
+} from '@/api/device'
 import { createNamespacedHelpers } from 'vuex'
 import moment from 'moment'
 const { mapState } = createNamespacedHelpers('Base')
@@ -89,7 +95,7 @@ export default {
   computed: {
     ...mapState(['roomNo', 'operationId']),
     defaultSelectedMonitor () {
-      const item = this.monitorList.find((item) => +item.state === 2)
+      const item = this.monitorList.find(item => +item.state === 2)
       if (item) {
         return [item.instrumentCode]
       } else {
@@ -97,7 +103,7 @@ export default {
       }
     },
     defaultSelectedAnesMachine () {
-      const item = this.anesMachineList.find((item) => +item.state === 2)
+      const item = this.anesMachineList.find(item => +item.state === 2)
       if (item) {
         return [item.instrumentCode]
       } else {
@@ -122,8 +128,8 @@ export default {
     onMonitorCheckboxChange ({ rowIndex, checked, row }) {
       if (checked) {
         this.$refs.monitor.clearCheckboxRow()
-        this.$refs.monitor.setCheckboxRow([this.monitorList[rowIndex]], true);
-        ({
+        this.$refs.monitor.setCheckboxRow([this.monitorList[rowIndex]], true)
+        ;({
           defaultRecvFrequency: this.defaultRecvFrequency,
           currentRecvFrequency: this.currentRecvFrequency,
           collectNumber: this.collectNumber
@@ -146,8 +152,8 @@ export default {
       const selecteAnesMachine = this.$refs.anesMachine.getCheckboxRecords()
       const requestArr = []
       if (selectedMonitor.length) {
-        const monitorItem = {};
-        ({
+        const monitorItem = {}
+        ;({
           instrumentCode: monitorItem.instrumentCode,
           itemType: monitorItem.itemType,
           label: monitorItem.label,
@@ -156,14 +162,17 @@ export default {
           defaultRecvFrequency: monitorItem.defaultRecvFrequency
         } = selectedMonitor[0])
         monitorItem.startTime = this.time
-        monitorItem.collectNumber = this.collectNumber || monitorItem.collectNumber
-        monitorItem.currentRecvFrequency = this.currentRecvFrequency || monitorItem.currentRecvFrequency
-        monitorItem.defaultRecvFrequency = this.defaultRecvFrequency || monitorItem.defaultRecvFrequency
+        monitorItem.collectNumber =
+          this.collectNumber || monitorItem.collectNumber
+        monitorItem.currentRecvFrequency =
+          this.currentRecvFrequency || monitorItem.currentRecvFrequency
+        monitorItem.defaultRecvFrequency =
+          this.defaultRecvFrequency || monitorItem.defaultRecvFrequency
         requestArr.push(monitorItem)
       }
       if (selecteAnesMachine.length) {
-        const anesMachineItem = {};
-        ({
+        const anesMachineItem = {}
+        ;({
           instrumentCode: anesMachineItem.instrumentCode,
           startTime: anesMachineItem.startTime,
           collectNumber: anesMachineItem.collectNumber,
@@ -194,7 +203,7 @@ export default {
       return request({
         url: `${getMonitorInfo}/${this.roomNo}`,
         method: 'get'
-      }).then((res) => {
+      }).then(res => {
         if (res.data && res.data.success) {
           const { monitor, anesMachine } = res.data.data
           if (Array.isArray(monitor)) {
@@ -206,28 +215,64 @@ export default {
         }
       })
     },
+    // 获取IP
+    getOperationIp () {
+      return request({
+        method: 'get',
+        url: getOperationBindEquipmentIp + `/${this.operationId}`
+      })
+        .then(res => {
+          if (res.data.code === 200) {
+            this.saveServerHome(res.data.data)
+            // this.$eventHub.$emit('close-dialog')
+          } else {
+            return Promise.reject(new Error())
+          }
+        })
+        .catch(e => {
+          this.$message({
+            showClose: true,
+            message: '获取设备房间IP失败',
+            type: 'errpr'
+          })
+        })
+    },
+    // 保存IP地址
+    saveServerHome (ip) {
+      return request({
+        method: 'get',
+        url: `http://127.0.0.1:10300/start?SERVER_HOSTNAME=${ip}&SERVER_PORT=4001`
+      })
+        .then(res => {
+          if (res.data && res.data.success) {
+          } else {
+            return Promise.reject(new Error())
+          }
+        })
+        .catch(e => {})
+    },
     addMonitorInfo (arr) {
       return request({
         method: 'post',
         url: addMonitorInfo,
         data: arr
-      }).then(
-        res => {
+      })
+        .then(res => {
           if (res.data && res.data.success) {
+            // this.saveServerHome()
+            this.getOperationIp()
             this.$eventHub.$emit('close-dialog')
           } else {
             return Promise.reject(new Error())
           }
-        }
-      ).catch(
-        e => {
+        })
+        .catch(e => {
           this.$message({
             showClose: true,
             message: '保存失败',
             type: 'errpr'
           })
-        }
-      )
+        })
     },
     pickNow () {
       this.time = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')

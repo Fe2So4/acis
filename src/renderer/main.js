@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import axios from 'axios'
-
 import App from './App'
 import router from './router'
 import store from './store'
@@ -25,11 +24,11 @@ import 'vxe-table-plugin-element/dist/style.css'
 // 解决vxe - table与element - ui兼容性问题
 // ...
 VXETable.use(VXETablePluginElement)
-
 Vue.use(VXETable)
 Vue.use(ElementUI)
 if (!process.env.IS_WEB) { Vue.use(require('vue-electron')) }
 Vue.http = Vue.prototype.$http = axios
+
 Vue.config.productionTip = false
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
 // 增加tooltip

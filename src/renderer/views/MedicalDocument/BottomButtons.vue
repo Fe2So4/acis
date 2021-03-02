@@ -73,6 +73,14 @@
       </div>
       <div
         class="button"
+        :class="upLoadButtonName === '上传中' ? 'red' : ''"
+        @click="uploadBefore"
+        v-show="displayedButtons.includes('UPLOAD')"
+      >
+        {{ this.upLoadButtonName }}
+      </div>
+      <div
+        class="button"
         @click="$emit('refresh')"
       >
         刷新
@@ -96,9 +104,18 @@
 </template>
 
 <script>
+import $bus from '@/utils/bus'
+import utilsDebounce from '@/utils/utilsDebounce'
+import request from '@/utils/requestForMock'
+import { acisUploadWritWright } from '@/api/blood'
+
 export default {
   name: 'BottomButtons',
   props: {
+    operationId: {
+      type: String,
+      default: ''
+    },
     rescueMode: {
       type: [String, Number],
       default: ''
@@ -125,7 +142,9 @@ export default {
     }
   },
   data () {
-    return {}
+    return {
+      upLoadButtonName: '上传'
+    }
   },
   computed: {
     // 是否可以开启抢救模式
@@ -136,7 +155,56 @@ export default {
       return !!+this.pageInfo
     }
   },
+  mounted () {
+    this.$electron.ipcRenderer.on('upLoadEnd', (event, res) => {
+      console.log(res)
+      utilsDebounce(() => {
+        this.upLoadEndPDF(res)
+      }, 1000)
+    })
+  },
+
   methods: {
+    uploadBefore () {
+      // 发送
+      let flag
+      if (this.displayedButtons.includes('ANES')) {
+        flag = '0'
+      } else if (this.displayedButtons.includes('ANAB')) {
+        flag = '1'
+      }
+      return request({
+        url: acisUploadWritWright + `/${this.operationId}/${flag}`,
+        method: 'get'
+      }).then(res => {
+        console.log(res)
+        if (res.data.code === 200 && res.data.data === 1) {
+          console.log('判断是否可以上传')
+          this.clickUpload()
+        } else {
+          this.$message.error(res.data.msg)
+        }
+      })
+    },
+    clickUpload () {
+      if (this.upLoadButtonName === '上传中') {
+        this.$message.warning('文件上传中,请等待')
+        return false
+      } else {
+        this.upLoadButtonName = '上传中'
+      }
+      utilsDebounce(() => {
+        this.$emit('upload')
+      }, 1000)
+    },
+    upLoadEndPDF (res) {
+      if (res === '1') {
+        this.$message.success('文件上传成功')
+      } else {
+        this.$message.error('文件上传失败')
+      }
+      this.upLoadButtonName = '上传'
+    },
     pageUp () {
       const pageIndex = +this.pageIndex
       if (pageIndex > 0) {
@@ -149,16 +217,23 @@ export default {
         this.$emit('change-page', pageIndex + 1)
       }
     }
+  },
+  beforeDestroy () {
+    $bus.$off('upLoadEnd')
   }
 }
 </script>
-<style lang='scss' scoped>
-@import url("./iconfont/iconfont.css");
-@import "@/styles/theme";
-$background:(
-  dark-blue:#181C28,
-  dark-gray:#363638,
-  light-white: #F8F8F8
+<style lang="scss" scoped>
+@import url('./iconfont/iconfont.css');
+@import '@/styles/theme';
+.red {
+  color: red;
+  font-weight: 600;
+}
+$background: (
+  dark-blue: #181c28,
+  dark-gray: #363638,
+  light-white: #f8f8f8
 );
 .bottomButtons {
   position: absolute;
@@ -168,9 +243,9 @@ $background:(
   height: 36px;
 
   padding: 4px 0;
-  @include theme-property("background", $background);
-  @include theme-property("box-shadow", $box-shadow-card);
-  @include theme-property("color", $color-text-regular);
+  @include theme-property('background', $background);
+  @include theme-property('box-shadow', $box-shadow-card);
+  @include theme-property('color', $color-text-regular);
   font-size: 14px;
   font-weight: 400;
   overflow: hidden;
@@ -184,7 +259,7 @@ $background:(
       &.button {
         cursor: pointer;
         &:hover {
-         @include theme-property('color', $color-regular-light);
+          @include theme-property('color', $color-regular-light);
         }
       }
       &.red {
@@ -199,15 +274,15 @@ $background:(
   .leftButtons {
     float: left;
     & > div {
-      border-right: 1px solid ;
-      @include theme-property("border-color", $border-color-basic);
+      border-right: 1px solid;
+      @include theme-property('border-color', $border-color-basic);
     }
   }
   .rightButtons {
     float: right;
     & > div {
       border-left: 1px solid;
-      @include theme-property("border-color", $border-color-basic);
+      @include theme-property('border-color', $border-color-basic);
     }
   }
   .iconfont {

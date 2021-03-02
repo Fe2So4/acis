@@ -9,11 +9,9 @@
         :style="sizeStyle"
         @click.right="showCtxMenu($event)"
       >
-        <div
-          class="widgetContent"
-        >
+        <div class="widgetContent">
           <widget-wrapper
-            v-for="(item,index) of widgetList"
+            v-for="(item, index) of widgetList"
             :key="index"
             :widget="item"
           >
@@ -43,6 +41,7 @@
 </template>
 
 <script>
+// import { ipcRenderer } from 'electron'
 import WidgetWrapper from './WidgetWrapper'
 import { controls } from '../TemplateDesigner/getAllConfigurationPage'
 export default {
@@ -107,6 +106,7 @@ export default {
   },
   data () {
     return {
+      pdfTitle: 'test',
       wrapStyle: [
         {
           'overflow-x': 'hidden'
@@ -165,7 +165,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/theme";
+@import '@/styles/theme';
 .mainContent {
   width: 100%;
   height: calc(100% - 36px);
@@ -173,11 +173,11 @@ export default {
   .documentContent {
     width: calc(210mm + 100px);
     height: 0;
-    transition:0.3s;
+    transition: 0.3s;
     padding: 50px;
     margin: 20px auto;
-    @include theme-property("background", $color-background-document);
-    @include theme-property("box-shadow", $box-shadow-document);
+    @include theme-property('background', $color-background-document);
+    @include theme-property('box-shadow', $box-shadow-document);
     border-radius: 5px;
 
     .widgetContent {

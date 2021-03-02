@@ -95,3 +95,6 @@ export const addOpeNameData = `${config.default.api.baseURL}/acis/dict/addOperat
 export const roomNoList = `${config.default.api.baseURL}/acis/operation/getRoomList`
 // 科室字典
 export const deptList = `${config.default.api.baseURL}/acis/dict/getDeptList`
+
+// 获取电子签名
+export const getApplicationKey = `${config.default.api.baseURL}/acis/intraoperative/info/getApplicationKey`

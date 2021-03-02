@@ -12,3 +12,10 @@ export const getMonitorInfo = mock
 export const addMonitorInfo = mock
   ? ''
   : baseLi + 'acis/signDataCollect/addMonitorInfo'
+
+export const getOperationBindEquipmentIp = mock
+  ? ''
+  : baseLi + 'acis/intraoperative/info/getOperationBindEquipmentIp'
+export const saveServerIp = mock
+  ? ''
+  : baseLi + 'start'

@@ -19,3 +19,12 @@ export const updateBloodGasAnalysisRecord = baseLi + 'acis/blood/updateBloodGasA
 
 // 删除血气分析 - 李 - 2021-01-25
 export const deleteBloodGasAnalysisRecord = baseLi + 'acis/blood/deleteBloodGasAnalysisRecord'
+
+// 文件上传
+export const ftpUploadAnesPDF = baseLi + 'acis/intraoperative/info/ftpUploadAnesPDF'
+
+// 判断是否可以进行文件上传
+export const acisUploadWritWright = baseLi + 'acis/intraoperative/info/acisUploadWritWright'
+
+// 调用电子签名
+export const getSignPicture = 'api.jhsec.com.cn/pkiserver/v1/getSignPicture'

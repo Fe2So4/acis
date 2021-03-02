@@ -1,0 +1,21 @@
+.mainContent {
+  width: 100%;
+  height: calc(100% - 36px);
+  overflow: auto;
+  .documentContent {
+    width: calc(210mm + 100px);
+    height: 0;
+    transition: 0.3s;
+    padding: 50px;
+    margin: 20px auto;
+    @include theme-property('background', $color-background-document);
+    @include theme-property('box-shadow', $box-shadow-document);
+    border-radius: 5px;
+
+    .widgetContent {
+      height: 100%;
+      // overflow: hidden;
+      position: relative;
+    }
+  }
+}

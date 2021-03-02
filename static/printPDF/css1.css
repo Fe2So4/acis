@@ -1,0 +1,23 @@
+.mainContent {
+  width: 100%;
+  height: calc(100% - 36px);
+  overflow: auto;
+}
+
+.mainContent .documentContent {
+  width: calc(210mm + 100px);
+  height: 0;
+  transition: 0.3s;
+  padding: 50px;
+  margin: 20px auto;
+  border-radius: 5px;
+}
+
+.mainContent .documentContent .widgetContent {
+  height: 100%;
+  position: relative;
+}
+.widgetWrapper {
+  position: absolute;
+  background: transparent;
+}

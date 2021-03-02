@@ -233,7 +233,7 @@
     el-row
       el-col(:span="24")
         el-form-item(label="手术名称")
-          el-select(v-model="form.ope_name_after", placeholder="请选择"
+          el-select(v-model="form.ope_code_after", placeholder="请选择"
             filterable
             remote
             clearable
@@ -366,7 +366,7 @@ export default {
         second_assist: '',
         third_assist: '',
         forth_assist: '',
-        ope_name_after: '',
+        ope_code_after: '',
         is_turn: '',
         anes_satisfaction: '',
         oper_procedure: '',
@@ -415,6 +415,16 @@ export default {
   },
   computed: {
     ...mapGetters('Base', ['operationId'])
+  },
+  watch: {
+    'form.ope_code_after': {
+      handler (newVal) {
+        var arr = this.opeName.filter(function (item) {
+          return item.opeCode === newVal
+        })
+        this.form.ope_name_after = arr[0].opeName
+      }
+    }
   },
   methods: {
     ...mapActions('Base', ['setPatientCardInfo']),
@@ -574,6 +584,7 @@ export default {
       })
     },
     updataData () {
+      // console.log(this.form)
       this.yetiValue.forEach(item => {
         item.operation_id = this.operationId
         item.patient_id = this.form.patient_id

@@ -8,17 +8,13 @@
 </template>
 
 <script>
+// 打点渲染
 import * as spritejs from 'spritejs'
 import { addListener, removeListener } from 'resize-detector'
 import debounce from 'lodash/debounce'
 import moment from 'moment'
-import {
-  getSignData,
-  getEventDictData
-} from '@/api/medicalDocument'
-import {
-  getBloodGasAnalysisRecordTime
-} from '@/api/blood'
+import { getSignData, getEventDictData } from '@/api/medicalDocument'
+import { getBloodGasAnalysisRecordTime } from '@/api/blood'
 import { getAcisIntraoEventInfo } from '@/api/intraoperative'
 import request from '@/utils/requestForMock'
 import {
@@ -845,46 +841,42 @@ export default {
     // 事件标识
     drawEventTags () {
       if (Array.isArray(this.eventList)) {
-        this.eventList.forEach(({
-          detailCode,
-          drawIcon,
-          eventName,
-          eventStartTime
-        }) => {
-          this.eventTags.addTag({
-            order: detailCode,
-            label: drawIcon,
-            time: eventStartTime
-          })
-        })
+        this.eventList.forEach(
+          ({ detailCode, drawIcon, eventName, eventStartTime }) => {
+            this.eventTags.addTag({
+              order: detailCode,
+              label: drawIcon,
+              time: eventStartTime
+            })
+          }
+        )
       }
     },
     // 事件图例
     drawEventLegends () {
       if (Array.isArray(this.eventList)) {
-        this.eventList.forEach(({
-          detailCode,
-          drawIcon,
-          eventName,
-          eventStartTime
-        }) => {
-          if (drawIcon) {
-            this.legends.addLegend({
-              label: drawIcon,
-              name: eventName
-            })
+        this.eventList.forEach(
+          ({ detailCode, drawIcon, eventName, eventStartTime }) => {
+            if (drawIcon) {
+              this.legends.addLegend({
+                label: drawIcon,
+                name: eventName
+              })
+            }
           }
-        })
+        )
       }
     },
     getDataBySocketIO () {
       // 如果没有传入的时间
       if (!this.startTime || !this.endTime) {
+        console.log('没有传入时间')
         return
       }
       // 与当前时间对比，如果结束时间为当前时间之前，则不需要建立连接
       const now = new Date()
       if (+moment(this.endTime) < now) {
+        console.log('结束时间为当前时间之前')
         return
       }
       const loginUserNum = this.operationId
@@ -893,12 +885,14 @@ export default {
       // 体征曲线
       const that = this
       this.socket.on('push_sign_event', res => {
+        console.log(res, '刷新绘制数据')
         if (Array.isArray(res)) {
           // 回应socket.io
           that.socket.emit('push_sign_event', {
             loginUserNum,
             content: res
           })
+          console.log(that.lines)
           res.forEach(item => {
             const { itemCode: signId, ...value } = item
             if (that.lines[signId]) {
@@ -908,6 +902,7 @@ export default {
               })
             }
           })
+          // this.getData()
         }
       })
     },
@@ -915,7 +910,10 @@ export default {
       const grid = this.layer.querySelector('.grid')
       if (grid) {
         const mousemoveHandler = e => {
-          if (e.target instanceof Label && e.target.className !== 'blood-gas-label') {
+          if (
+            e.target instanceof Label &&
+            e.target.className !== 'blood-gas-label'
+          ) {
             this.$tooltip({
               dangerouslyUseHTMLString: true,
               message: `
@@ -973,7 +971,7 @@ export default {
       const startMoment = +moment(this.configuration.xAxis.startTime)
       const endMoment = +moment(this.configuration.xAxis.endTime)
       const width = grid.attr('width')
-      const time = (endMoment - startMoment) / width * offsetX + startMoment
+      const time = ((endMoment - startMoment) / width) * offsetX + startMoment
       this.$emit('dblclick-time', time)
     },
     getEventDictData () {
@@ -987,19 +985,17 @@ export default {
     getBloodGasAnalysisRecordTime () {
       return request({
         url: `${getBloodGasAnalysisRecordTime}/${this.operationId}`
-      }).then(
-        res => {
+      })
+        .then(res => {
           if (res.data.success) {
             return res.data.data
           } else {
             return Promise.reject(new Error('查询血气分析记录失败'))
           }
-        }
-      ).then(
-        res => {
+        })
+        .then(res => {
           this.bloodGas.addRecords(res)
-        }
-      )
+        })
     },
     setBloodGas () {
       this.bloodGas = new PhysicalSignBloodGas({
@@ -1020,19 +1016,17 @@ export default {
           endTime: this.endTime
         },
         method: 'post'
-      }).then(
-        res => {
-          if (res.data.success) {
-            return res.data.data.iconList
-          }
-          return Promise.reject(new Error('获取术中事件信息失败'))
+      }).then(res => {
+        if (res.data.success) {
+          return res.data.data.iconList
         }
-      )
+        return Promise.reject(new Error('获取术中事件信息失败'))
+      })
     }
   }
 }
 </script>
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .widgetPhysicalSign {
   height: 100%;
   width: 100%;

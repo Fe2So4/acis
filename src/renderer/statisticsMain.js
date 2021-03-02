@@ -13,7 +13,6 @@ import './iconfont/iconfont.css'
 import 'element-ui/lib/theme-chalk/index.css'
 import './utils/dialog'
 import VueContextMenu from 'vue-contextmenu'
-
 import 'xe-utils'
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'

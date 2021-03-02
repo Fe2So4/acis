@@ -28,7 +28,7 @@ const isWin7 = os.release().startsWith('6.1')
 // win7 下关闭硬件加速
 if (isWin7) app.disableHardwareAcceleration()
 
-function createInitialWindow () {
+function createInitialWindow() {
   initialWindow = new BrowserWindow({
     width: 880,
     height: 560,
@@ -46,7 +46,7 @@ function createInitialWindow () {
   })
   initialWindow.loadURL(Path.resolve(__static, './loading/index.html'))
 }
-function createWindow () {
+function createWindow() {
   /**
    * Initial window options
    */
@@ -128,7 +128,7 @@ function createWindow () {
     autoUpdater.checkForUpdates()
   }
   // 主进程主动发送消息给渲染进程函数
-  function sendUpdateMessage (message, data) {
+  function sendUpdateMessage(message, data) {
     mainWindow.webContents.send('message', { message, data })
   }
   mainWindow.on('closed', () => {
@@ -308,6 +308,7 @@ ipcMain.on('ready-to-print', () => {
       right: 10
     }
   }, (success, errorType) => {
+    console.log(success)
     if (!success) {
       console.log(errorType)
       dialog.showMessageBox(printWin, {
@@ -323,6 +324,107 @@ ipcMain.on('ready-to-print', () => {
 })
 
 // ---------------------------------打印功能 end--------------
+
+// ---------------------------------到出PDF功能 start---------------
+// const printPagePDFURL = process.env.NODE_ENV === 'development'
+//   ? 'http://localhost:9080/static/printPDF/printPDF.html'
+//   : Path.join(__dirname, '/static/printPDF/printPDF.html')
+const printPDFWindows = new Set()
+const createPrintPDFWindow = (printRoute) => {
+  let newPrintPDFWindow = new BrowserWindow({
+    show: false,
+    webPreferences: {
+      webSecurity: false,
+      nodeIntegration: true
+    }
+  })
+
+  newPrintPDFWindow.loadURL(winURL)
+  console.log(newPrintPDFWindow, '``````````````````````````````````````')
+  newPrintPDFWindow.webContents.on('did-finish-load', () => {
+    newPrintPDFWindow.webContents.send('printRoute', printRoute)
+  })
+
+  newPrintPDFWindow.on('closed', () => {
+    printPDFWindows.delete(newPrintPDFWindow)
+    newPrintPDFWindow = null
+  })
+  printPDFWindows.add(newPrintPDFWindow)
+  return newPrintPDFWindow
+}
+
+let printPDFWin
+
+ipcMain.on('print-documentPDF', (e, printRoute) => {
+  printPDFWin = createPrintPDFWindow(printRoute)
+})
+
+ipcMain.on('ready-to-printPDF', (event, res) => {
+  printPDFWin.webContents.printToPDF({}, (error, data) => {
+    if (error === null) {
+      printPDFWin.webContents.send('reply', data)
+    } else {
+      dialog.showMessageBox(printPDFWin, {
+        type: 'info',
+        title: '提示',
+        message: '文件上传失败'
+      })
+    }
+    // ipcRenderer.send('upLoadEnd')
+  })
+
+  // if (printPDFWin) {
+  //   printPDFWin.close()
+  // }
+  // printPDFWin.webContents.printToPDF({
+
+  // }, (error, data) => {
+  //   console.log(data, '==================')
+  //   if (error) {
+  //     dialog.showMessageBox(printWin, {
+  //       type: 'info',
+  //       title: '提示',
+  //       message: '未完成打印'
+  //     })
+  //   }
+  //   console.log('======================')
+  //   printPDFWin.webContents.send('reply', data)
+  // })
+
+  // if (printPDFWin) {
+  //   printPDFWin.close()
+  // }
+  // (error, file) => {
+  //   if (error) throw error // 写文件
+  //   printPDFWin.webContents.send('reply', file)
+  //   if (printPDFWin) {
+  //     printPDFWin.close()
+  //   }
+  // })
+})
+ipcMain.on('upLoadSuccess', (event, res) => {
+  console.log(res)
+  if (res === '1') {
+    dialog.showMessageBox(printPDFWin, {
+      type: 'info',
+      title: '提示',
+      message: '文件上传成功'
+    })
+    mainWindow.webContents.send('upLoadEnd', '1')
+  } else {
+    dialog.showMessageBox(printPDFWin, {
+      type: 'info',
+      title: '提示',
+      message: '文件上传失败'
+    })
+    mainWindow.webContents.send('upLoadEnd', '2')
+  }
+
+  if (printPDFWin) {
+    printPDFWin.close()
+  }
+})
+// ---------------------------------到出PDF功能 end-----------------
 
 // ---------------------------------显示病历功能 start--------------
 // 新建打印窗口
@@ -383,8 +485,8 @@ ipcMain.on('WEB-EMR', (e, operationId) => {
 // 打印手术通知单
 const printPageURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080/static/print/print.html'
-// : Path.join(__dirname, '../../static/print/print.html')
-// `file://${__dirname}/index.html`
+  // : Path.join(__dirname, '../../static/print/print.html')
+  // `file://${__dirname}/index.html`
   : Path.join(__dirname, '/static/print/print.html')
 const printWindowsPage = new Set()
 const createPrintWindowPage = () => {
