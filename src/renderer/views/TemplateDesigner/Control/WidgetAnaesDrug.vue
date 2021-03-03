@@ -144,7 +144,7 @@ export default {
       request({
         method: 'GET',
         url: getAnaesDrugList
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         data.forEach((value, index) => {
           value.menuName = value.detailName
@@ -163,11 +163,11 @@ export default {
             endTime: this.endTime,
             operationId: this.operationId
           }
-        }).then((res) => {
+        }).then(res => {
           const data = res.data.data
           data.forEach((item, index) => {
             item.total = item.gross
-            item.data.forEach((_item) => {
+            item.data.forEach(_item => {
               _item.startTime = _item.eventStartTime
               _item.endTime = _item.eventEndTime
               _item.dose = _item.dosage
@@ -206,7 +206,8 @@ export default {
       this.scene = new Scene({
         container: this.$refs.anaesDrug,
         width: this.$refs.width,
-        height: this.$refs.height
+        height: this.$refs.height,
+        contextType: '2d'
         // mode: 'static'
       })
       this.layer = this.scene.layer()
@@ -462,7 +463,7 @@ export default {
       const drugList = leftPart.getElementsByClassName('drugList')[0]
       const labels = drugList.querySelectorAll('.drug')
       if (labels.length > 0) {
-        labels.forEach((el) => drugList.removeChild(el))
+        labels.forEach(el => drugList.removeChild(el))
       }
       const width = Math.round(drugList.attr('width'))
       const lineHeight = Math.round(
@@ -667,7 +668,7 @@ export default {
           // const interval = Math.floor(
           //   (this.configuration.xAxis.timeInterval * 60 * 1000) / xScale
           // );
-          grid.addEventListener('mousedown', (evt) => {
+          grid.addEventListener('mousedown', evt => {
             if (evt.originalEvent.button === 2) {
               // const menu = document.querySelector('.menu-list')
               // console.log(menu)
@@ -736,7 +737,7 @@ export default {
     setDrugLine () {
       // 清空子元素
       if (this.layer.getElementsByClassName('col').length > 0) {
-        this.layer.getElementsByClassName('col').forEach((ref) => {
+        this.layer.getElementsByClassName('col').forEach(ref => {
           ref.removeAllChildren()
         })
       }
@@ -833,7 +834,12 @@ export default {
               })
               group.append(rightLine)
             }
-            if (moment(item.eventEndTime).diff(moment(item.eventStartTime), 'minute') < 5) {
+            if (
+              moment(item.eventEndTime).diff(
+                moment(item.eventStartTime),
+                'minute'
+              ) < 5
+            ) {
               group.append(leftLine, dose)
             } else {
               const center = group.attr('width') / 2
@@ -893,7 +899,7 @@ export default {
         })
         const legend = this.layer.getElementsByClassName('legend')[0]
         const labels = legend.querySelectorAll('.total')
-        labels.forEach((el) => legend.removeChild(el))
+        labels.forEach(el => legend.removeChild(el))
         const height = legend.attr('height')
         const width = legend.attr('width')
         const yScale = height / this.configuration.drugNumber
@@ -965,7 +971,7 @@ export default {
   }
 }
 </script>
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .anaesDrug {
   height: 100%;
   width: 100%;

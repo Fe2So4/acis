@@ -16,6 +16,7 @@
   </div>
 </template>
 <script>
+import $bus from '@/utils/bus'
 import request from '@/utils/requestForMock'
 import { getDocumentsList } from '@/api/medicalDocument'
 import { createNamespacedHelpers } from 'vuex'
@@ -75,6 +76,7 @@ export default {
   methods: {
     handleClick (item) {
       this.$router.push(item.path)
+      $bus.$emit('changeShuaxin')
     },
     getDocumentsList () {
       if (this.procedureState === '') return

@@ -128,7 +128,8 @@ export default {
       this.scene = new Scene({
         container: this.$refs.line,
         width: this.$refs.width,
-        height: this.$refs.height
+        height: this.$refs.height,
+        contextType: '2d'
         // mode: 'static'
       })
       this.layer = this.scene.layer()

@@ -92,13 +92,11 @@ export default {
         params: {
           dateTime: this.form.date
         }
-      }).then(
-        res => {
-          if (res.data && res.data.success) {
-            this.patientList = res.data.data
-          }
+      }).then(res => {
+        if (res.data && res.data.success) {
+          this.patientList = res.data.data
         }
-      )
+      })
     },
     // getRoomList () {
     //   return request({
@@ -122,7 +120,8 @@ export default {
       this.scene = new Scene({
         container: this.$refs.line,
         width: this.$refs.width,
-        height: this.$refs.height
+        height: this.$refs.height,
+        contextType: '2d'
         // mode: 'static'
       })
       this.layer = this.scene.layer()
@@ -212,7 +211,7 @@ export default {
 .pacu-status {
   height: 70vh;
   width: 80vw;
-  color: #9BA3D5;
+  color: #9ba3d5;
   font-size: 14px;
 
   .status {
@@ -281,18 +280,18 @@ export default {
       }
 
       .white {
-        color: #FFFFFF;
+        color: #ffffff;
         width: 50px;
       }
 
       .green {
         width: 28px;
-        color: #00B337;
+        color: #00b337;
       }
 
       .blue {
         width: 28px;
-        color: #007EFF;
+        color: #007eff;
       }
 
       .title {
@@ -320,7 +319,7 @@ export default {
               font-weight: bold;
               text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
               border-radius: 50%;
-              background: #3C79E9;
+              background: #3c79e9;
             }
           }
         }

@@ -337,7 +337,10 @@ export default {
     onSetTotalPage (page) {
       this.totalPage = page
     },
-    onRefresh () {
+    onRefresh (res) {
+      if (res === '1') {
+        this.pageIndex = 0
+      }
       this.widgetList = []
       // 重置修改过的体征
       this.changedSignDataList = []

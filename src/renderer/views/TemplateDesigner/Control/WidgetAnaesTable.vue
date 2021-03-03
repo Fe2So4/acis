@@ -87,7 +87,8 @@ export default {
         container: this.$refs.anaesTable,
         width: this.$refs.width,
         height: this.$refs.height,
-        mode: 'static'
+        mode: 'static',
+        contextType: '2d'
       })
       this.layer = this.scene.layer()
     },
@@ -111,10 +112,7 @@ export default {
       // leftPart
       const leftPart = this.layer.getElementsByClassName('leftPart')[0]
       leftPart.attr({
-        size: [
-          this.configuration.leftTitle.width,
-          this.layer.height
-        ]
+        size: [this.configuration.leftTitle.width, this.layer.height]
       })
       const leftPartRightLine = new Polyline({
         pos: [leftPart.attr('width') - 0.5, 0],
@@ -126,10 +124,7 @@ export default {
 
       const middlePart = this.layer.getElementsByClassName('middlePart')[0]
       middlePart.attr({
-        size: [
-          this.configuration.rowTitle.width,
-          this.layer.height
-        ],
+        size: [this.configuration.rowTitle.width, this.layer.height],
         pos: [this.configuration.leftTitle.width, 0]
       })
       const middlePartRightLine = new Polyline({
@@ -200,7 +195,9 @@ export default {
     },
     setRowTitle () {
       const middlePart = this.layer.getElementsByClassName('middlePart')[0]
-      const lineHeight = Math.round(middlePart.attr('height') / this.configuration.rowList.length)
+      const lineHeight = Math.round(
+        middlePart.attr('height') / this.configuration.rowList.length
+      )
       for (let i = 0; i < this.configuration.rowList.length - 1; i++) {
         const line = new Polyline({
           pos: [0, lineHeight * (1 + i) - 0.5],
@@ -228,7 +225,9 @@ export default {
     },
     setRightPartRow () {
       const rightPart = this.layer.getElementsByClassName('rightPart')[0]
-      const lineHeight = Math.round(rightPart.attr('height') / this.configuration.rowList.length)
+      const lineHeight = Math.round(
+        rightPart.attr('height') / this.configuration.rowList.length
+      )
       for (let i = 0; i < this.configuration.rowList.length - 1; i++) {
         const line = new Polyline({
           pos: [0, lineHeight * (1 + i) - 0.5],
@@ -241,9 +240,13 @@ export default {
     },
     setRightPartCol () {
       const rightPart = this.layer.getElementsByClassName('rightPart')[0]
-      const lineHeight = Math.round(rightPart.attr('height') / this.configuration.rowList.length)
+      const lineHeight = Math.round(
+        rightPart.attr('height') / this.configuration.rowList.length
+      )
       for (let i = 0; i < this.configuration.rowList.length; i++) {
-        const colInterval = Math.round(rightPart.attr('width') / this.configuration.anaesColumn.num)
+        const colInterval = Math.round(
+          rightPart.attr('width') / this.configuration.anaesColumn.num
+        )
         // const colInterval = Math.round(rightPart.attr('width') / this.anaesColumn.num) * this.rowList[i].colNum
         for (let j = 0; j < this.configuration.anaesColumn.num - 1; j++) {
           const line = new Polyline({
@@ -252,7 +255,10 @@ export default {
             strokeColor: 'black',
             lineWidth: 1
           })
-          if (j % this.configuration.rowList[i].colNum === 0 && this.configuration.rowList[i].colNum !== 1) {
+          if (
+            j % this.configuration.rowList[i].colNum === 0 &&
+            this.configuration.rowList[i].colNum !== 1
+          ) {
             // console.log(j, this.configuration.rowList[i].colNum)
             continue
           }
@@ -263,13 +269,13 @@ export default {
   }
 }
 </script>
-<style lang='scss' scoped>
-  .anaesTable {
-    height: 100%;
-    width: 100%;
-    // border: 1px solid black;
-    box-sizing: border-box;
-    margin: 0 auto;
-    // background:#fff;
-  }
+<style lang="scss" scoped>
+.anaesTable {
+  height: 100%;
+  width: 100%;
+  // border: 1px solid black;
+  box-sizing: border-box;
+  margin: 0 auto;
+  // background:#fff;
+}
 </style>

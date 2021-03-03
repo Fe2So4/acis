@@ -156,6 +156,9 @@ export default {
     }
   },
   mounted () {
+    $bus.$on('changeShuaxin', () => {
+      this.$emit('refresh', '1')
+    })
     this.$electron.ipcRenderer.on('upLoadEnd', (event, res) => {
       console.log(res)
       utilsDebounce(() => {
@@ -182,7 +185,7 @@ export default {
           console.log('判断是否可以上传')
           this.clickUpload()
         } else {
-          this.$message.error(res.data.msg)
+          this.$message.error('当前患者状态不可上传此文件')
         }
       })
     },
@@ -220,6 +223,7 @@ export default {
   },
   beforeDestroy () {
     $bus.$off('upLoadEnd')
+    $bus.$off('changeShuaxin')
   }
 }
 </script>

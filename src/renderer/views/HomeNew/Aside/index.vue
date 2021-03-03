@@ -37,11 +37,13 @@
             </template>
             <div class="menu">
               <span
-                v-for="(_item,index) in item.subNav"
+                v-for="(_item, index) in item.subNav"
                 :key="_item.id"
-                :class="{'rightActive':activeIndex === index && oddEven(index),
-                         'leftActive':activeIndex === index && !oddEven(index)}"
-                @click="handleChangeButton(_item,index)"
+                :class="{
+                  rightActive: activeIndex === index && oddEven(index),
+                  leftActive: activeIndex === index && !oddEven(index)
+                }"
+                @click="handleChangeButton(_item, index)"
               >{{ _item.perName }}</span>
             </div>
           </el-collapse-item>
@@ -82,10 +84,10 @@
             />
           </template>
           <el-menu-item
-            v-for="(_item,index) in item.subNav"
+            v-for="(_item, index) in item.subNav"
             :key="_item.id"
             :index="_item.perCode"
-            @click="handleChangeButton(_item,index)"
+            @click="handleChangeButton(_item, index)"
           >
             {{ _item.perName }}
           </el-menu-item>
@@ -371,7 +373,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('Anaes', ['setEventType']),
+    ...mapActions('anaes', ['setEventType']),
     jumpLogin () {
       //  ----login页测试
       this.$router.push('/login')
@@ -389,14 +391,16 @@ export default {
       done()
     },
     handleChangeButton (item, index) {
+      console.log(item, '点击麻药用药')
       if (this.operationId === '' && item.necessary) {
         this.$confirm('当前操作需先选择患者', '提示', {
           confirmButtonText: '确定',
           type: 'warning',
           showCancelButton: false,
           customClass: 'messageBox'
-        }).then(() => {}).catch(() => {
         })
+          .then(() => {})
+          .catch(() => {})
         return
       }
       this.activeIndex = index
@@ -442,7 +446,7 @@ export default {
     getNavList () {
       request({
         url: getNavs + '/' + 3
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         const empty = []
         for (var item in data) {
@@ -454,13 +458,13 @@ export default {
             })
           }
         }
-        empty.forEach((_item) => {
-          this.navList.forEach((item) => {
+        empty.forEach(_item => {
+          this.navList.forEach(item => {
             if (item.index === _item.mainNav) {
               _item.name = item.name
               _item.icon = item.icon
-              _item.subNav.forEach((value2) => {
-                this.subNavList.forEach((value1) => {
+              _item.subNav.forEach(value2 => {
+                this.subNavList.forEach(value1 => {
                   if (value2.perName === value1.name) {
                     value2.componentName = value1.componentName
                     value2.necessary = value1.necessary
@@ -475,7 +479,7 @@ export default {
     }
   },
   mounted () {
-    this.$eventHub.$on('show-dialog', (item) => {
+    this.$eventHub.$on('show-dialog', item => {
       // 激活弹窗
       this.handleChangeButton(item)
     })
@@ -488,15 +492,15 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import "@/styles/theme";
+@import '@/styles/theme';
 .aside {
   height: 100%;
   width: 100%;
   font-size: 14px;
   overflow: hidden;
-  @include theme-property("background", $color-background-aside);
+  @include theme-property('background', $color-background-aside);
   .img {
-    height:48px;
+    height: 48px;
     margin: 14px 0;
     display: flex;
     align-items: center;
@@ -518,12 +522,12 @@ export default {
       text-align: center;
       margin-bottom: 26px;
       line-height: 30px;
-      @include theme-property("color", $color-text-regular);
+      @include theme-property('color', $color-text-regular);
       font-size: 14px;
       cursor: pointer;
 
       &:hover {
-        @include theme-property("color", $color-text-primary);
+        @include theme-property('color', $color-text-primary);
       }
     }
 
@@ -561,7 +565,7 @@ export default {
 
   .el-collapse {
     border: unset;
-    @include theme-property("background", $color-background-aside);
+    @include theme-property('background', $color-background-aside);
   }
 
   .active {
@@ -570,15 +574,15 @@ export default {
     position: absolute;
     right: 0;
     bottom: 0;
-    @include theme-property("background", $background-menu-active);
+    @include theme-property('background', $background-menu-active);
   }
 }
 
 .aside /deep/ .el-collapse-item__header {
   height: 40px;
   border: unset;
-  @include theme-property("background", $color-background-aside);
-  @include theme-property("color", $color-text-regular);
+  @include theme-property('background', $color-background-aside);
+  @include theme-property('color', $color-text-regular);
   font-size: 14px;
   padding-left: 20px;
   position: relative;
@@ -590,18 +594,18 @@ export default {
 }
 
 .aside /deep/ .el-collapse-item__wrap {
-  @include theme-property("background", $color-background-aside);
+  @include theme-property('background', $color-background-aside);
   border: unset;
 }
 
 .aside /deep/ .el-collapse-item__content {
-  @include theme-property("background", $color-background-aside);
+  @include theme-property('background', $color-background-aside);
   border: unset;
   padding: 30px 0 4px 0;
 }
 
 .aside /deep/ .el-collapse-item__header.is-active {
-  @include theme-property("background", $color-background-aside-active);
+  @include theme-property('background', $color-background-aside-active);
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.05);
   color: #edf1f9;
   font-size: 16px;
@@ -646,7 +650,7 @@ export default {
       position: absolute;
       left: 0;
       bottom: 0;
-      @include theme-property("background", $background-menu-active-portrait);
+      @include theme-property('background', $background-menu-active-portrait);
     }
   }
 }

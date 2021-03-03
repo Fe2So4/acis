@@ -117,9 +117,13 @@ export default {
       await this.getDrawLineList()
       await this.getInfusionBloodList()
       // 注册刷新事件
-      this.$eventHub.$on('document-refresh', () => { this.getDocumentRefresh() })
+      this.$eventHub.$on('document-refresh', () => {
+        this.getDocumentRefresh()
+      })
       // 注册重绘事件
-      this.$eventHub.$on('document-redraw', () => { this.getDocumentRedraw() })
+      this.$eventHub.$on('document-redraw', () => {
+        this.getDocumentRedraw()
+      })
     } else {
       addListener(this.$refs.inOut, this.resize)
     }
@@ -150,7 +154,7 @@ export default {
       request({
         method: 'GET',
         url: getInfusionBloodList
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         const infusionList = []
         const bloodTransfusionList = []
@@ -177,13 +181,13 @@ export default {
             endTime: this.endTime,
             operationId: this.operationId
           }
-        }).then((res) => {
+        }).then(res => {
           const data = res.data.data
           const infusionDataList = []
           const bloodTransfusionDataList = []
           data.forEach((item, index) => {
             item.total = item.gross
-            item.data.forEach((_item) => {
+            item.data.forEach(_item => {
               _item.startTime = _item.eventStartTime
               _item.endTime = _item.eventEndTime
               _item.dose = _item.dosage
@@ -230,7 +234,8 @@ export default {
       this.scene = new Scene({
         container: this.$refs.inOut,
         width: this.$refs.width,
-        height: this.$refs.height
+        height: this.$refs.height,
+        contextType: '2d'
         // mode: 'static'
       })
       this.layer = this.scene.layer()
@@ -282,7 +287,7 @@ export default {
     },
     setLayout () {
       // 清空子元素
-      this.layer.getElementsByClassName('content').forEach((ref) => {
+      this.layer.getElementsByClassName('content').forEach(ref => {
         ref.removeAllChildren()
       })
       // leftPart
@@ -296,10 +301,7 @@ export default {
       // leftPart/leftTitle
       const leftTitle = leftPart.getElementsByClassName('leftTitle')[0]
       leftTitle.attr({
-        size: [
-          this.configuration.leftTitle.width || 0,
-          leftPart.attr('height')
-        ]
+        size: [this.configuration.leftTitle.width || 0, leftPart.attr('height')]
         // padding: [0, 10, 0, 10]
       })
       const leftTitleBorderRightLine = new Polyline({
@@ -377,10 +379,12 @@ export default {
       })
       const outPut = new Group({ className: 'outPut content' })
       drugList.append(infusion, bloodTransfusion, outPut)
-      const step = Math.round(drugList.attr('height') /
+      const step = Math.round(
+        drugList.attr('height') /
           (this.configuration.infusion.num +
             this.configuration.bloodTransfusion.num +
-            this.configuration.outPut.num))
+            this.configuration.outPut.num)
+      )
       infusion.attr({
         size: [leftMain.attr('width'), step * this.configuration.infusion.num]
       })
@@ -399,7 +403,12 @@ export default {
       for (let i = 0; i < this.configuration.infusion.num; i++) {
         const infusionLine = new Polyline({
           pos: [this.configuration.infusion.width, i * step - 0.5],
-          points: [0, 0, leftMain.attr('width') - this.configuration.infusion.width, 0],
+          points: [
+            0,
+            0,
+            leftMain.attr('width') - this.configuration.infusion.width,
+            0
+          ],
           strokeColor: 'black',
           lineWidth: 1
         })
@@ -797,7 +806,7 @@ export default {
           const grid = this.layer.getElementsByClassName('grid')[0]
           const leftPart = this.layer.getElementsByClassName('leftPart')[0]
           const width = grid.attr('width')
-          grid.addEventListener('mousedown', (evt) => {
+          grid.addEventListener('mousedown', evt => {
             if (evt.originalEvent.button === 2) {
               if (evt.target.attr('className').indexOf('row') !== -1) {
                 this.groupNo = evt.target.attr('index')
@@ -946,7 +955,7 @@ export default {
     setInfusionLine () {
       // 清空子元素
       if (!this.editMode) {
-        this.layer.getElementsByClassName('infusion_col').forEach((ref) => {
+        this.layer.getElementsByClassName('infusion_col').forEach(ref => {
           ref.removeAllChildren()
         })
         const grid = this.layer.getElementsByClassName('grid')[0]
@@ -1044,7 +1053,12 @@ export default {
                 })
                 group.append(rightLine)
               }
-              if (moment(item.eventEndTime).diff(moment(item.eventStartTime), 'minute') < 5) {
+              if (
+                moment(item.eventEndTime).diff(
+                  moment(item.eventStartTime),
+                  'minute'
+                ) < 5
+              ) {
                 group.append(leftLine, dose)
               } else {
                 const center = group.attr('width') / 2
@@ -1102,7 +1116,7 @@ export default {
     setTransfusionLine () {
       // 清空子元素
       if (!this.editMode) {
-        this.layer.getElementsByClassName('blood_col').forEach((ref) => {
+        this.layer.getElementsByClassName('blood_col').forEach(ref => {
           ref.removeAllChildren()
         })
         const grid = this.layer.getElementsByClassName('grid')[0]
@@ -1255,7 +1269,7 @@ export default {
     setOutputLine () {
       // 清空子元素
       if (!this.editMode) {
-        this.layer.getElementsByClassName('output_col').forEach((ref) => {
+        this.layer.getElementsByClassName('output_col').forEach(ref => {
           ref.removeAllChildren()
         })
         const grid = this.layer.getElementsByClassName('grid')[0]
@@ -1402,7 +1416,7 @@ export default {
         // 清空子元素
         const legend = this.layer.getElementsByClassName('legend')[0]
         const labels = legend.querySelectorAll('.total')
-        labels.forEach((el) => legend.removeChild(el))
+        labels.forEach(el => legend.removeChild(el))
         const width = Math.round(legend.attr('width'))
         const lineNumber =
           this.configuration.infusion.num +
@@ -1456,7 +1470,9 @@ export default {
       const drugList = leftPart.getElementsByClassName('drugList')[0]
 
       const infusion = drugList.getElementsByClassName('infusion')[0]
-      const bloodTransfusion = drugList.getElementsByClassName('bloodTransfusion')[0]
+      const bloodTransfusion = drugList.getElementsByClassName(
+        'bloodTransfusion'
+      )[0]
       // const outPut = drugList.getElementsByClassName('outPut')[0]
       if (!this.editMode) {
         const leftPart = this.layer.getElementsByClassName('leftPart')[0]
@@ -1510,7 +1526,7 @@ export default {
   }
 }
 </script>
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .inOut {
   height: 100%;
   width: 100%;

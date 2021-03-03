@@ -29,24 +29,26 @@
                 <span
                   class="button"
                   @click="handleAddAnesthetic(item)"
-                >{{ item.detailName }}</span>
+                >{{
+                  item.detailName
+                }}</span>
               </div>
               <div class="dose-button">
                 <span
-                  v-if="item.usualDose1!==0"
-                  @click="handleAddAnesthetic(item,1)"
+                  v-if="item.usualDose1 !== 0"
+                  @click="handleAddAnesthetic(item, 1)"
                 >{{ item.usualDose1 }}</span>
                 <span
-                  v-if="item.usualDose2!==0"
-                  @click="handleAddAnesthetic(item,2)"
+                  v-if="item.usualDose2 !== 0"
+                  @click="handleAddAnesthetic(item, 2)"
                 >{{ item.usualDose2 }}</span>
                 <span
-                  v-if="item.usualDose3!==0"
-                  @click="handleAddAnesthetic(item,3)"
+                  v-if="item.usualDose3 !== 0"
+                  @click="handleAddAnesthetic(item, 3)"
                 >{{ item.usualDose3 }}</span>
                 <span
-                  v-if="item.usualDose4!==0"
-                  @click="handleAddAnesthetic(item,4)"
+                  v-if="item.usualDose4 !== 0"
+                  @click="handleAddAnesthetic(item, 4)"
                 >{{ item.usualDose4 }}</span>
               </div>
             </li>
@@ -86,8 +88,13 @@
           highlight-hover-row
           highlight-current-row
           @checkbox-change="handleCheck"
-          :checkbox-config="{checkStrictly: true,highlight:true,checkField: 'checked',trigger: 'row'}"
-          :edit-config="{trigger: 'click', mode: 'cell', showStatus: true}"
+          :checkbox-config="{
+            checkStrictly: true,
+            highlight: true,
+            checkField: 'checked',
+            trigger: 'row'
+          }"
+          :edit-config="{ trigger: 'click', mode: 'cell', showStatus: true }"
         >
           <!-- @current-change="currentChangeEvent" -->
           <vxe-table-column
@@ -143,7 +150,7 @@
             width="80"
             v-if="showColumn"
           >
-            <template v-slot:edit="{row}">
+            <template v-slot:edit="{ row }">
               <el-input
                 v-model="row.concentration"
                 size="mini"
@@ -162,7 +169,12 @@
               <el-select
                 v-model="scope.row.concentrationUnit"
                 size="mini"
-                @change="()=>{$refs.xTable.updateStatus(scope);handleBlur()}"
+                @change="
+                  () => {
+                    $refs.xTable.updateStatus(scope)
+                    handleBlur()
+                  }
+                "
               >
                 <el-option
                   v-for="item in conUnitList"
@@ -202,7 +214,12 @@
               <el-select
                 v-model="scope.row.speedUnit"
                 size="mini"
-                @change="()=>{$refs.xTable.updateStatus(scope);handleBlur()}"
+                @change="
+                  () => {
+                    $refs.xTable.updateStatus(scope)
+                    handleBlur()
+                  }
+                "
               >
                 <el-option
                   v-for="item in speedUnitList"
@@ -235,7 +252,7 @@
             title="频率"
             :edit-render="{}"
             width="80"
-            v-if="eventType.eventCode==='E013'"
+            v-if="eventType.eventCode === 'E013'"
           >
             <template v-slot:edit="{ row }">
               <el-input
@@ -255,7 +272,12 @@
               <el-select
                 v-model="scope.row.dosageUnit"
                 size="mini"
-                @change="()=>{$refs.xTable.updateStatus(scope);handleBlur()}"
+                @change="
+                  () => {
+                    $refs.xTable.updateStatus(scope)
+                    handleBlur()
+                  }
+                "
               >
                 <el-option
                   v-for="item in doseUnitList"
@@ -477,7 +499,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('Anaes', ['eventType']),
+    ...mapGetters('anaes', ['eventType']),
     ...mapGetters('Base', ['operationId'])
   },
   methods: {
@@ -548,9 +570,9 @@ export default {
           operationId: this.operationId,
           eventId: this.eventType.eventCode
         }
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
-        data.forEach((value) => {
+        data.forEach(value => {
           value.checked = false
           value.remote = true
         })
@@ -578,7 +600,7 @@ export default {
       valueProp = 'detail_code',
       labelField = 'detail_name'
     ) {
-      const item = XEUtils.find(list, (item) => item[valueProp] === value)
+      const item = XEUtils.find(list, item => item[valueProp] === value)
       return item ? item[labelField] : null
     },
     currentChangeEvent ({ row }) {
@@ -646,7 +668,7 @@ export default {
         url: optionEvent,
         method: 'POST',
         data: obj
-      }).then((res) => {
+      }).then(res => {
         if (res.data.code === 200) {
           this.getEventDetail()
           this.saveVisible = true
@@ -678,7 +700,7 @@ export default {
           url: optionEvent,
           method: 'POST',
           data: obj
-        }).then((res) => {
+        }).then(res => {
           if (res.data.code === 200) {
             this.$message({ type: 'success', message: '删除成功' })
             remoteArr.forEach(item => {
@@ -710,7 +732,7 @@ export default {
         url: optionEvent,
         method: 'POST',
         data: obj
-      }).then((res) => {
+      }).then(res => {
         if (res.data.code === 200) {
           this.getEventDetail()
           this.saveVisible = true
@@ -744,7 +766,7 @@ export default {
           .then(() => {
             this.handleSave()
           })
-          .catch((action) => {
+          .catch(action => {
             this.getEventDetail()
             this.saveVisible = true
             this.$message({
@@ -773,7 +795,7 @@ export default {
           pageSize: this.pageSize,
           inputCode: this.searchName
         }
-      }).then((res) => {
+      }).then(res => {
         // console.log(res.data.data)
         this.fromList = res.data.data.list
         this.total = res.data.data.total
@@ -786,35 +808,35 @@ export default {
     handleOptionEvent () {
       request({
         url: optionEvent
-      }).then((res) => {
+      }).then(res => {
         console.log(res)
       })
     },
     getDoseUnit () {
       request({
         url: getDoseUnit
-      }).then((res) => {
+      }).then(res => {
         this.doseUnitList = res.data.data
       })
     },
     getConUnit () {
       request({
         url: getConUnit
-      }).then((res) => {
+      }).then(res => {
         this.conUnitList = res.data.data
       })
     },
     getSpeedUnit () {
       request({
         url: getSpeedUnit
-      }).then((res) => {
+      }).then(res => {
         this.speedUnitList = res.data.data
       })
     },
     getDrugChannel () {
       request({
         url: getDrugChannel
-      }).then((res) => {
+      }).then(res => {
         this.channelList = res.data.data
       })
     },
@@ -840,7 +862,7 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-@import "@/styles/theme";
+@import '@/styles/theme';
 .event {
   width: 80vw;
   height: 60vh;
@@ -849,7 +871,7 @@ export default {
   .title {
     line-height: 30px;
     padding-left: 5px;
-    @include theme-property("color", $color-text-regular);
+    @include theme-property('color', $color-text-regular);
   }
   .left {
     height: 100%;
@@ -858,7 +880,7 @@ export default {
     width: 374px;
     float: left;
     display: flex;
-    @include theme-property("background", $background-dialog-content);
+    @include theme-property('background', $background-dialog-content);
     border-radius: 10px;
     flex-direction: column;
     .pagination {
@@ -895,13 +917,13 @@ export default {
               overflow: hidden;
               line-height: 30px;
               text-indent: 10px;
-              @include theme-property("background", $background-event-list);
-              @include theme-property("border", $border-event-list);
-              @include theme-property("color", $color-event-list);
+              @include theme-property('background', $background-event-list);
+              @include theme-property('border', $border-event-list);
+              @include theme-property('color', $color-event-list);
               cursor: pointer;
               &:hover {
                 @include theme-property(
-                  "background",
+                  'background',
                   $background-hover-event-list
                 );
                 color: #fff;
@@ -916,17 +938,17 @@ export default {
               text-overflow: ellipsis;
               overflow: hidden;
               white-space: nowrap;
-              @include theme-property("background", $background-event-list);
-              @include theme-property("border", $border-event-list);
+              @include theme-property('background', $background-event-list);
+              @include theme-property('border', $border-event-list);
               border-radius: 4px;
               display: inline-block;
               line-height: 30px;
-              @include theme-property("color", $color-event-list);
+              @include theme-property('color', $color-event-list);
               cursor: pointer;
               text-align: center;
               &:hover {
                 @include theme-property(
-                  "background",
+                  'background',
                   $background-hover-event-list
                 );
                 color: #fff;
@@ -959,7 +981,7 @@ export default {
     float: right;
     padding: 0 5px;
     display: flex;
-    @include theme-property("background", $background-dialog-content);
+    @include theme-property('background', $background-dialog-content);
     border-radius: 10px;
     flex-direction: column;
     .content {
@@ -988,8 +1010,8 @@ export default {
 }
 </style>
 <style lang="scss">
-@import "@/styles/theme";
-.event{
+@import '@/styles/theme';
+.event {
   .el-pagination.is-background .btn-prev,
   .el-pagination.is-background .btn-next,
   .el-pagination.is-background .el-pager li {

@@ -194,7 +194,8 @@ export default {
         container: this.$refs.physicalSign,
         width: this.$refs.width,
         height: this.$refs.height,
-        mode: 'static'
+        mode: 'static',
+        contextType: '2d'
       })
 
       this.layer = this.scene.layer()
