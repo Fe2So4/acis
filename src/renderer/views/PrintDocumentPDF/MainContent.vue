@@ -6,7 +6,7 @@
     >
       <div class="widgetContent">
         <widget-wrapper
-          v-for="(item,index) of widgetList"
+          v-for="(item, index) of widgetList"
           :key="index"
           :widget="item"
         >

@@ -187,7 +187,7 @@
             <template v-slot="{ row }">
               {{ getSelectLabel(row.concentrationUnit, conUnitList) }}
             </template>
-          </vxe-table-column>-->
+          </vxe-table-column>
           <vxe-table-column
             field="speed"
             title="速度"
@@ -499,7 +499,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('anaes', ['eventType']),
+    ...mapGetters('Anaes', ['eventType']),
     ...mapGetters('Base', ['operationId'])
   },
   methods: {

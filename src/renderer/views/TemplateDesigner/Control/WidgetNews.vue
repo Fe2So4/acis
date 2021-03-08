@@ -5,7 +5,7 @@
   >
     <div class="lineContent">
       <div
-        v-for="(col,index) in configuration.column"
+        v-for="(col, index) in configuration.column"
         class="col"
         :style="colStyle(index)"
         :key="index"
@@ -16,7 +16,7 @@
         class="news"
         v-for="(news, idx) in newsList"
         :key="idx"
-        :style="{width: colWidth}"
+        :style="{ width: colWidth }"
       >
         <div class="order">
           {{ news.detailCode }}
@@ -148,20 +148,18 @@ export default {
         data: {
           operationId: this.operationId,
           line: 40,
-          length: 20,
+          length: 25,
           page: this.pageIndex + 1,
           startTime: this.startTime,
           endTime: this.endTime
         },
         method: 'post'
-      }).then(
-        res => {
-          if (res.data.success) {
-            return res.data.data.eventList
-          }
-          return Promise.reject(new Error('获取术中事件信息失败'))
+      }).then(res => {
+        if (res.data.success) {
+          return res.data.data.eventList
         }
-      )
+        return Promise.reject(new Error('获取术中事件信息失败'))
+      })
     }
   }
 }
@@ -192,7 +190,7 @@ export default {
     height: 100%;
     display: flex;
     flex-direction: column;
-    flex-wrap:wrap;
+    flex-wrap: wrap;
     align-content: flex-start;
     .news {
       display: flex;

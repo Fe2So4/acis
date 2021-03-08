@@ -71,14 +71,14 @@
       >
         打印
       </div>
-      <div
+      <!-- <div
         class="button"
         :class="upLoadButtonName === '上传中' ? 'red' : ''"
         @click="uploadBefore"
         v-show="displayedButtons.includes('UPLOAD')"
       >
         {{ this.upLoadButtonName }}
-      </div>
+      </div> -->
       <div
         class="button"
         @click="$emit('refresh')"
@@ -143,7 +143,7 @@ export default {
   },
   data () {
     return {
-      upLoadButtonName: '上传'
+      // upLoadButtonName: '上传'
     }
   },
   computed: {
@@ -159,12 +159,12 @@ export default {
     $bus.$on('changeShuaxin', () => {
       this.$emit('refresh', '1')
     })
-    this.$electron.ipcRenderer.on('upLoadEnd', (event, res) => {
-      console.log(res)
-      utilsDebounce(() => {
-        this.upLoadEndPDF(res)
-      }, 1000)
-    })
+    // this.$electron.ipcRenderer.on('upLoadEnd', (event, res) => {
+    //   console.log(res)
+    //   utilsDebounce(() => {
+    //     this.upLoadEndPDF(res)
+    //   }, 1000)
+    // })
   },
 
   methods: {
@@ -185,29 +185,29 @@ export default {
           console.log('判断是否可以上传')
           this.clickUpload()
         } else {
-          this.$message.error('当前患者状态不可上传此文件')
+          this.$message.error('当前患者状态不可上传文件')
         }
       })
     },
     clickUpload () {
-      if (this.upLoadButtonName === '上传中') {
-        this.$message.warning('文件上传中,请等待')
-        return false
-      } else {
-        this.upLoadButtonName = '上传中'
-      }
+      // if (this.upLoadButtonName === '上传中') {
+      //   this.$message.warning('文件上传中,请等待')
+      //   return false
+      // } else {
+      //   this.upLoadButtonName = '上传中'
+      // }
       utilsDebounce(() => {
         this.$emit('upload')
       }, 1000)
     },
-    upLoadEndPDF (res) {
-      if (res === '1') {
-        this.$message.success('文件上传成功')
-      } else {
-        this.$message.error('文件上传失败')
-      }
-      this.upLoadButtonName = '上传'
-    },
+    // upLoadEndPDF (res) {
+    //   if (res === '1') {
+    //     this.$message.success('文件上传成功')
+    //   } else {
+    //     this.$message.error('文件上传失败')
+    //   }
+    //   this.upLoadButtonName = '上传'
+    // },
     pageUp () {
       const pageIndex = +this.pageIndex
       if (pageIndex > 0) {

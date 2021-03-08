@@ -3,7 +3,7 @@
     <div class="buttons">
       <el-button-group>
         <el-button
-          :type="state === 'sign' ? 'primary': ''"
+          :type="state === 'sign' ? 'primary' : ''"
           size="mini"
           @click="onSelectSign"
         >
@@ -20,14 +20,14 @@
       <el-button-group size="mini">
         <el-button
           size="mini"
-          :disabled="pageIndex<=0"
+          :disabled="pageIndex <= 0"
           @click="onPageUp"
         >
           上一页
         </el-button>
         <el-button
           size="mini"
-          :disabled="pageIndex + 1>=totalPage"
+          :disabled="pageIndex + 1 >= totalPage"
           @click="onPageDown"
         >
           下一页
@@ -40,17 +40,17 @@
         ref="table"
         resizable
         highlight-hover-row
-        height="300px"
+        height="100%"
         :data="tableData"
-        :edit-config="{trigger: 'click', mode: 'cell'}"
+        :edit-config="{ trigger: 'click', mode: 'cell' }"
         size="mini"
-        :checkbox-config="{labelField: 'itemName'}"
+        :checkbox-config="{ labelField: 'itemName' }"
       >
         <!-- class="scroll" -->
         <vxe-table-column
           type="checkbox"
           title="名称"
-          width="100"
+          width="110"
           fixed="left"
         />
         <vxe-table-column
@@ -59,65 +59,134 @@
           :field="timePoint"
           :title="timePoint.slice(11, 16)"
           width="80"
-          :edit-render="{name: '$input', props: {type: 'float', digits: 2}, events:{change: onInputChange}}"
+          :edit-render="{
+            name: '$input',
+            props: { type: 'float', digits: 2 },
+            events: { change: onInputChange }
+          }"
         />
       </vxe-table>
-      <div class="bottomButtons">
-        <el-button
-          @click="onSave"
-          size="mini"
-          type="primary"
-        >
-          保存
-        </el-button>
-        <el-button
-          @click="onRefresh"
-          size="mini"
-        >
-          刷新
-        </el-button>
-        <el-popover
-          placement="top"
-          width="160"
-          trigger="click"
-        >
-          <div>
-            <el-scrollbar
-              style="height: 100px"
-              :wrap-style="wrapStyles"
-            >
-              <el-button
-                v-for="button in signList"
-                :key="button.itemCode"
-                size="mini"
-                type="text"
-                @click="onAddItem(button)"
-                style="display:block;margin: 4px 0"
-              >
-                {{ button.itemName }}
-              </el-button>
-            </el-scrollbar>
-          </div>
-          <el-button
-            slot="reference"
-            size="mini"
+    </div>
+    <div class="bottomButtons">
+      <el-button
+        @click="onSave"
+        size="mini"
+        type="primary"
+      >
+        保存
+      </el-button>
+      <el-button
+        @click="onRefresh"
+        size="mini"
+      >
+        刷新
+      </el-button>
+      <el-button
+        @click="moreAddTable"
+        size="mini"
+      >
+        批量添加体征
+      </el-button>
+      <el-popover
+        placement="top"
+        width="160"
+        trigger="click"
+      >
+        <div>
+          <el-scrollbar
+            style="height: 100px"
+            :wrap-style="wrapStyles"
           >
-            增加项目
-          </el-button>
-        </el-popover>
+            <el-button
+              v-for="button in signList"
+              :key="button.itemCode"
+              size="mini"
+              type="text"
+              @click="onAddItem(button)"
+              style="display:block;margin: 4px 0"
+            >
+              {{ button.itemName }}
+            </el-button>
+          </el-scrollbar>
+        </div>
         <el-button
-          @click="onDeleteItem"
+          slot="reference"
           size="mini"
         >
-          删除项目
+          增加项目
+        </el-button>
+      </el-popover>
+      <el-button
+        @click="onDeleteItem"
+        size="mini"
+      >
+        删除项目
+      </el-button>
+    </div>
+
+    <el-dialog
+      append-to-body
+      :before-close="handleClose"
+      title="批量添加体征"
+      :visible.sync="dialogFormVisible"
+    >
+      <el-form
+        size="mini"
+        label-width="160px"
+      >
+        <el-form-item label="开始时间">
+          <el-date-picker
+            v-model="addForm.startTime"
+            type="datetime"
+            format="yyyy-MM-dd HH:mm"
+            value-format="yyyy-MM-dd HH:mm"
+            placeholder="选择日期时间"
+          />
+        </el-form-item>
+        <el-form-item label="结束时间">
+          <el-date-picker
+            v-model="addForm.endTime"
+            type="datetime"
+            format="yyyy-MM-dd HH:mm"
+            value-format="yyyy-MM-dd HH:mm"
+            placeholder="选择日期时间"
+          />
+        </el-form-item>
+        <el-form-item
+          :label="item.itemName"
+          v-for="item in moreSignList"
+          :key="item.itemCode"
+        >
+          <el-input
+            v-model="item.itemValue"
+            @input="inputValue"
+          />
+        </el-form-item>
+      </el-form>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="handleClose">
+          取 消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="saveMoreAdd"
+        >
+          确 定
         </el-button>
       </div>
-    </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 import moment from 'moment'
-import { getTemplateInfo, getSignData } from '@/api/medicalDocument'
+import {
+  getTemplateInfo,
+  getSignData,
+  batchAddIntraoMonitorData
+} from '@/api/medicalDocument'
 import {
   getMonitorData,
   addSignOrMonitorItem,
@@ -139,6 +208,12 @@ export default {
   },
   data () {
     return {
+      addForm: {
+        startTime: '',
+        endTime: ''
+      },
+      value1: '',
+      dialogFormVisible: false,
       startTime: '',
       endTime: '',
       totalPage: 1,
@@ -152,7 +227,8 @@ export default {
           'overflow-x': 'hidden'
         }
       ],
-      signList: []
+      signList: [],
+      moreSignList: []
     }
   },
   computed: {
@@ -165,6 +241,44 @@ export default {
     this.getSignList()
   },
   methods: {
+    inputValue (e) {
+      this.$forceUpdate()
+    },
+    handleClose () {
+      this.moreSignList.forEach(item => {
+        item.itemValue = ''
+      })
+      this.dialogFormVisible = false
+    },
+    // 批量添加体征
+    moreAddTable () {
+      this.dialogFormVisible = true
+    },
+    // 保存批量
+    saveMoreAdd () {
+      const list = []
+      this.moreSignList.forEach(item => {
+        if (item.itemValue && item.itemValue > 0) {
+          list.push(item)
+        }
+      })
+      return request({
+        method: 'POST',
+        url: batchAddIntraoMonitorData,
+        data: {
+          operationId: this.operationId,
+          startTime: this.addForm.startTime,
+          endTime: this.addForm.endTime,
+          signList: list
+        }
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.$message.success('添加体征成功')
+          this.handleClose()
+          this.onRefresh()
+        }
+      })
+    },
     onSelectSign () {
       this.state = 'sign'
       this.getData()
@@ -181,12 +295,19 @@ export default {
       await this.getIntraoperativeData(this.pageIndex + 1)
       this.getData()
     },
-    onInputChange (data) {
-    },
+    onInputChange (data) {},
     onSave () {
       if (!this.validate72Hours()) return
       const list = this.tableData.reduce((acc, item) => {
-        const { itemName, itemCode, itemUnit, disColor, drawIcon, _XID, ...points } = item
+        const {
+          itemName,
+          itemCode,
+          itemUnit,
+          disColor,
+          drawIcon,
+          _XID,
+          ...points
+        } = item
         const timePoints = Object.keys(points)
         const items = timePoints.map(timePoint => {
           return {
@@ -210,7 +331,7 @@ export default {
     onDeleteItem () {
       const selectedArr = this.$refs.table.getCheckboxRecords()
       if (selectedArr.length) {
-        selectedArr.forEach((row) => {
+        selectedArr.forEach(row => {
           this.deleteSignOrMonitorItem(row)
         })
       }
@@ -227,7 +348,7 @@ export default {
           pageTimeInterval: 4,
           operState: this.operationState
         }
-      }).then((res) => {
+      }).then(res => {
         const { startTime, endTime, totalPage, pageIndex } = res.data.data
         this.startTime = startTime
         this.endTime = endTime
@@ -256,13 +377,12 @@ export default {
           modeCode: 'N033'
         }
       })
-        .then((res) => {
+        .then(res => {
           if (res.data && res.data.success) {
             this.tableData = this.convertTableData(res.data.data)
           }
         })
-        .catch((e) => {
-        })
+        .catch(e => {})
     },
     getMonitorData () {
       return request({
@@ -274,12 +394,12 @@ export default {
           operationId: this.operationId
         }
       })
-        .then((res) => {
+        .then(res => {
           if (res.data && res.data.success) {
             this.tableData = this.convertTableData(res.data.data)
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     },
@@ -287,13 +407,12 @@ export default {
       return request({
         method: 'get',
         url: getSignList
-      }).then(
-        res => {
-          if (res.data && res.data.success) {
-            this.signList = res.data.data
-          }
+      }).then(res => {
+        if (res.data && res.data.success) {
+          this.signList = res.data.data
+          this.moreSignList = JSON.parse(JSON.stringify(this.signList))
         }
-      )
+      })
     },
     addSignOrMonitorItem ({ itemCode, itemName }) {
       const mode = this.state === 'sign' ? 1 : 2
@@ -305,13 +424,11 @@ export default {
           itemName,
           mode
         }
-      }).then(
-        res => {
-          if (res.data && res.data.success) {
-            this.onRefresh()
-          }
+      }).then(res => {
+        if (res.data && res.data.success) {
+          this.onRefresh()
         }
-      )
+      })
     },
     deleteSignOrMonitorItem ({ itemCode, itemName }) {
       const mode = this.state === 'sign' ? 1 : 2
@@ -323,13 +440,11 @@ export default {
           itemName,
           mode
         }
-      }).then(
-        res => {
-          if (res.data && res.data.success) {
-            this.onRefresh()
-          }
+      }).then(res => {
+        if (res.data && res.data.success) {
+          this.onRefresh()
         }
-      )
+      })
     },
     initDefaultTimePointSet () {
       this.defaultTimePointSet = new Set()
@@ -342,8 +457,8 @@ export default {
     },
     convertTableData (responseData) {
       const timePointSet = new Set(this.defaultTimePointSet)
-      responseData.forEach((item) => {
-        item.list.forEach((data) => {
+      responseData.forEach(item => {
+        item.list.forEach(data => {
           timePointSet.add(data.timePoint)
         })
       })
@@ -352,17 +467,17 @@ export default {
         return +moment(a) - +moment(b)
       })
       this.timePointArr = [...timePointArr]
-      const arr = responseData.map((item) => {
-        const obj = {};
-        ({
+      const arr = responseData.map(item => {
+        const obj = {}
+        ;({
           itemCode: obj.itemCode,
           itemName: obj.itemName,
           itemUnit: obj.itemUnit,
           disColor: obj.disColor,
           drawIcon: obj.drawIcon
         } = item)
-        timePointArr.forEach((timePoint) => {
-          let itemValue = item.list.find((i) => i.timePoint === timePoint)
+        timePointArr.forEach(timePoint => {
+          let itemValue = item.list.find(i => i.timePoint === timePoint)
           itemValue = itemValue ? itemValue.itemValue : ''
           obj[timePoint] = itemValue
         })
@@ -380,8 +495,8 @@ export default {
           mode,
           operationId: this.operationId
         }
-      }).then(
-        res => {
+      })
+        .then(res => {
           if (res.data && res.data.success) {
             this.$message({
               type: 'success',
@@ -390,15 +505,13 @@ export default {
           } else {
             return Promise.reject(new Error())
           }
-        }
-      ).catch(
-        e => {
+        })
+        .catch(e => {
           this.$message({
             type: 'error',
             message: '保存失败'
           })
-        }
-      )
+        })
     },
     validate72Hours () {
       const result = this.validateHours(72)
@@ -413,28 +526,30 @@ export default {
   }
 }
 </script>
-<style lang='scss' scoped>
-  @import "@/styles/theme";
+<style lang="scss" scoped>
+@import '@/styles/theme';
 
-  .signAndMonitorTable {
-    height: 100%;
+.signAndMonitorTable {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
-    .buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .table {
-      border: 1px solid;
-      @include theme-property('border-color', $dateTimePicker-color-border);
-      border-radius: 5px;
-      height: calc(100% - 40px);
-
-      .bottomButtons {
-        margin-top: 10px;
-        margin-left: 10px;
-      }
-    }
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
   }
+
+  .table {
+    flex: 1;
+    border: 1px solid;
+    @include theme-property('border-color', $dateTimePicker-color-border);
+    border-radius: 5px;
+    // height: calc(100% - 40px);
+  }
+  .bottomButtons {
+    margin-top: 10px;
+    margin-left: 10px;
+  }
+}
 </style>

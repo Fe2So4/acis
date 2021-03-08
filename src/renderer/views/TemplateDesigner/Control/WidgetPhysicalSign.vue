@@ -64,6 +64,7 @@ export default {
   },
   data () {
     return {
+      timer: null,
       widgetStyle: {},
       title: '',
       layer: null,
@@ -868,7 +869,7 @@ export default {
         )
       }
     },
-    getDataBySocketIO () {
+    async getDataBySocketIO () {
       // 如果没有传入的时间
       if (!this.startTime || !this.endTime) {
         console.log('没有传入时间')
@@ -886,13 +887,12 @@ export default {
       // 体征曲线
       const that = this
       this.socket.on('push_sign_event', res => {
-        console.log(res, '刷新绘制数据')
+        that.socket.emit('push_sign_event', {
+          loginUserNum,
+          content: res
+        })
         if (Array.isArray(res)) {
           // 回应socket.io
-          that.socket.emit('push_sign_event', {
-            loginUserNum,
-            content: res
-          })
           console.log(that.lines)
           res.forEach(item => {
             const { itemCode: signId, ...value } = item
@@ -903,7 +903,6 @@ export default {
               })
             }
           })
-          // this.getData()
         }
       })
     },
@@ -1011,7 +1010,7 @@ export default {
         data: {
           operationId: this.operationId,
           line: 40,
-          length: 20,
+          length: 25,
           page: this.pageIndex + 1,
           startTime: this.startTime,
           endTime: this.endTime

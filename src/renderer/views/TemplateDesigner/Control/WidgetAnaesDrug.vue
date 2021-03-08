@@ -6,10 +6,12 @@
     @click="handleClearRightClick"
   >
     <drug-list
+      @emitgetDrug="emitgetDrugList"
       v-if="drugListVisible"
       :drug-list-visible.sync="drugListVisible"
       :position="position"
       :menu-list="list"
+      :type="'0'"
       @handleClick="handleAddDrug"
     />
     <drug-detail
@@ -20,6 +22,18 @@
       @handleClose="handleCloseDrugDetail"
       @handleSubmit="handleSubmit"
     />
+    <div
+      id="closeEventId"
+      style="z-index:9999999;width:90px;height:50px"
+      v-show="closeEventFlag"
+    >
+      <el-button
+        size="mini"
+        @click="stopValue"
+      >
+        {{ btnName }}
+      </el-button>
+    </div>
     <canvas id="canvas" />
   </div>
 </template>
@@ -34,7 +48,8 @@ import DrugDetail from '@/components/DrugDetail/index'
 import {
   getAnaesDrugList,
   getDrugListRecords,
-  addDrug
+  addDrug,
+  stopPharmacyUse
 } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
 const { Scene, Group, Label, Polyline } = spritejs
@@ -42,6 +57,8 @@ export default {
   name: 'WidgetAnaesDrug',
   data () {
     return {
+      btnName: '',
+      closeEventFlag: false,
       layer: null,
       drugListVisible: false,
       position: { positionX: 0, positionY: 0 },
@@ -100,6 +117,7 @@ export default {
     this.resize = debounce(this.domResizeListener, 20)
   },
   async mounted () {
+    this.saveDataIo()
     this.renderScene()
     this.createGroups()
     this.setLayout()
@@ -122,12 +140,25 @@ export default {
     }
   },
   beforeDestroy () {
+    clearInterval(this.timer)
     this.$eventHub.$off('document-refresh', this.getDocumentRefresh)
     this.$eventHub.$off('document-redraw', this.getDocumentRedraw)
     this.layer = null
     removeListener(this.$refs.anaesDrug, this.resize)
   },
   methods: {
+    emitgetDrugList (res) {
+      // console.log(res)
+      this.getDrugList(res)
+    },
+    saveDataIo () {
+      if (this.timer) {
+        clearInterval(this.timer)
+      }
+      this.timer = setInterval(() => {
+        this.getDocumentRedraw()
+      }, 60000)
+    },
     getDocumentRefresh () {
       // 获取数据
       this.getDrawLineList()
@@ -140,10 +171,13 @@ export default {
       this.getDrawLineList()
     },
     // 获取用药列表数据
-    getDrugList () {
+    getDrugList (res) {
       request({
         method: 'GET',
-        url: getAnaesDrugList
+        url: getAnaesDrugList,
+        params: {
+          eventName: res
+        }
       }).then(res => {
         const data = res.data.data
         data.forEach((value, index) => {
@@ -655,6 +689,24 @@ export default {
       }
       this.handleGridRightClick()
     },
+    // 停止事件
+    stopValue () {
+      const obj = {
+        id: this.id
+      }
+      request({
+        url: stopPharmacyUse,
+        method: 'post',
+        params: obj
+      }).then(res => {
+        console.log(res)
+        if (res.data.code === 200) {
+          this.$message.success(this.btnName)
+          this.getDocumentRedraw()
+        }
+        this.closeEventFlag = false
+      })
+    },
     // 网格区右击
     handleGridRightClick () {
       if (!this.editMode) {
@@ -668,13 +720,32 @@ export default {
           // const interval = Math.floor(
           //   (this.configuration.xAxis.timeInterval * 60 * 1000) / xScale
           // );
+          grid.removeEventListener('mousedown')
+
           grid.addEventListener('mousedown', evt => {
+            let flag = 0
             if (evt.originalEvent.button === 2) {
-              // const menu = document.querySelector('.menu-list')
-              // console.log(menu)
-              // if (menu) {
-              //   menu.remove()
-              // }
+              if (evt.currentTarget.attr('className' === 'line')) {
+                this.groupNo = evt.target.attr('index')
+                if (this.groupNo !== undefined && this.drugList[this.groupNo]) {
+                  this.drugList[this.groupNo].data.forEach(item => {
+                    if (item.isHolding === '1' && item.isFinish === '0') {
+                      const res = document.getElementById('closeEventId')
+                      this.btnName =
+                        '停止' + this.drugList[this.groupNo].eventName
+                      res.style.position = 'absolute'
+                      res.style.top = evt.y + 5 + 'px'
+                      res.style.left = evt.x + 5 + 'px'
+                      this.id = item.id
+                      this.closeEventFlag = true
+                      flag = 0
+                      return false
+                    } else {
+                      flag = 1
+                    }
+                  })
+                }
+              }
               if (evt.target.attr('className') === 'row') {
                 this.groupNo = evt.target.attr('index')
                 // console.log(evt.x - leftPart.attr("width"));
@@ -683,6 +754,8 @@ export default {
                   ((evt.x - leftPart.attr('width')) *
                     (moment(this.endTime) - moment(this.startTime))) /
                     width
+
+                // return false
                 if (this.drugList[this.groupNo]) {
                   this.drugListVisible = false
                   this.currentDrug = this.drugList[this.groupNo]
@@ -690,14 +763,19 @@ export default {
                     this.groupNo
                   ].eventId
                   this.drugName = this.drugList[this.groupNo].eventName
-                  this.drugDetailVisible = true
+                  if (flag === 1) {
+                    this.drugDetailVisible = true
+                  }
                 } else {
+                  this.closeEventFlag = false
                   this.drugListVisible = true
                 }
                 // this.drugListVisible = true
                 this.position.positionX = evt.x
                 this.position.positionY = evt.y
               }
+            } else {
+              this.closeEventFlag = false
             }
           })
         }
@@ -721,8 +799,11 @@ export default {
       }
       // this.setDrug()
     },
-    handleClearRightClick () {
-      if (!this.editMode) {
+    handleClearRightClick (e) {
+      if (e.target.className.includes('input')) {
+        console.log(111)
+      } else if (!this.editMode) {
+        this.getDrugList()
         this.drugListVisible = false
         this.groupNo = null
       }
@@ -798,7 +879,9 @@ export default {
                 (group.attr('height') * 3) / 4
               ],
               lineWidth: 1,
-              strokeColor: 'blue'
+              strokeColor: 'blue',
+              className: 'line',
+              index: index
             })
             if (item.isCross === '1') {
               const topArow = new Polyline({
@@ -817,7 +900,9 @@ export default {
                 ],
                 points: [0, 0, -10, group.attr('height') / 4],
                 lineWidth: 1,
-                strokeColor: 'blue'
+                strokeColor: 'blue',
+                className: 'line',
+                index: index
               })
               group.append(topArow, bottomArow)
             } else {
@@ -830,7 +915,9 @@ export default {
                   (group.attr('height') * 3) / 4
                 ],
                 lineWidth: 1,
-                strokeColor: 'blue'
+                strokeColor: 'blue',
+                className: 'line',
+                index: index
               })
               group.append(rightLine)
             }
@@ -852,7 +939,9 @@ export default {
                   group.attr('height') / 2 - 0.5
                 ],
                 lineWidth: 1,
-                strokeColor: 'blue'
+                strokeColor: 'blue',
+                className: 'line',
+                index: index
               })
               const rightCenterLine = new Polyline({
                 pos: [0, 0],
@@ -863,7 +952,9 @@ export default {
                   group.attr('height') / 2 - 0.5
                 ],
                 lineWidth: 1,
-                strokeColor: 'blue'
+                strokeColor: 'blue',
+                className: 'line',
+                index: index
               })
               group.append(leftLine, leftCenterLine, rightCenterLine, dose)
             }
@@ -886,13 +977,18 @@ export default {
             })
             group.append(dose)
           }
-          row[index].append(group)
+          if (row[index]) {
+            row[index].append(group)
+          }
         })
       })
     },
     // 绘制用药总量
     setDrugTotal () {
       if (!this.editMode) {
+        if (!this.layer) {
+          return false
+        }
         // 清空子元素
         this.layer.getElementsByClassName('total').forEach(ref => {
           ref.removeAllChildren()
@@ -957,6 +1053,7 @@ export default {
           obj.eventEndTime = ''
           obj.isHolding = 0
         }
+        console.log(obj)
         list.push(obj)
         request({
           url: addDrug,

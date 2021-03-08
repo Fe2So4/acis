@@ -93,7 +93,7 @@ export default {
   data () {
     var validateTime = (rule, value, callback) => {
       if (value === '' && this.form.continue) {
-        callback(new Error('请选择结束时间'))
+        callback()
       } else {
         callback()
       }
@@ -157,7 +157,8 @@ export default {
       this.$emit('handleClose')
     },
     handleSubmit (formName) {
-      this.$refs[formName].validate((valid) => {
+      console.log(this.form)
+      this.$refs[formName].validate(valid => {
         if (valid) {
           this.$emit('handleSubmit', this.form)
         } else {
@@ -169,28 +170,28 @@ export default {
     getDoseUnit () {
       request({
         url: getDoseUnit
-      }).then((res) => {
+      }).then(res => {
         this.doseUnitList = res.data.data
       })
     },
     getConUnit () {
       request({
         url: getConUnit
-      }).then((res) => {
+      }).then(res => {
         this.conUnitList = res.data.data
       })
     },
     getSpeedUnit () {
       request({
         url: getSpeedUnit
-      }).then((res) => {
+      }).then(res => {
         this.speedUnitList = res.data.data
       })
     },
     getDrugChannel () {
       request({
         url: getDrugChannel
-      }).then((res) => {
+      }).then(res => {
         this.channelList = res.data.data
       })
     }

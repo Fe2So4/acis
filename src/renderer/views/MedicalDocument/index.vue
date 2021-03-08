@@ -61,6 +61,7 @@
 </template>
 
 <script>
+import utilsDebounce from '@/utils/utilsDebounce'
 import {
   getTemplateInfo,
   getTemplateData,
@@ -71,7 +72,11 @@ import {
   getTestInfo,
   changeDisplayMode
 } from '@/api/medicalDocument'
-import { addBloodGasAnalysisRecord } from '@/api/blood'
+import {
+  addBloodGasAnalysisRecord,
+  acisUploadWritWright,
+  getsThePageThatCurrently
+} from '@/api/blood'
 import request from '@/utils/requestForMock'
 import MainContent from './MainContent'
 import BottomButtons from './BottomButtons'
@@ -92,6 +97,8 @@ export default {
   },
   data () {
     return {
+      bmiWeight: '',
+      bmiHeight: '',
       widgetList: [],
       startTime: '',
       endTime: '',
@@ -119,9 +126,45 @@ export default {
     // 展示的按钮
     displayedButtons () {
       return this.buttonConfig.split(',')
+    },
+    bmiWeightNum () {
+      let weight = ''
+      this.widgetList.forEach(item => {
+        if (item.tagName === 'weight') {
+          weight = item.value
+          this.widget = weight
+          return false
+        }
+      })
+      return weight
+    },
+    bmiHeightNum () {
+      let height = ''
+      this.widgetList.forEach(item => {
+        if (item.tagName === 'height') {
+          height = item.value
+          this.height = item.value
+        }
+        if (item.tagName === 'BMI') {
+          console.log(item)
+        }
+      })
+      return height
     }
   },
   watch: {
+    bmiWeightNum (val) {
+      this.bmiWieight = val
+      utilsDebounce(() => {
+        this.getBmiNum()
+      }, 1000)
+    },
+    bmiHeightNum (val) {
+      this.bmiHeight = val
+      utilsDebounce(() => {
+        this.getBmiNum()
+      }, 1000)
+    },
     $route: {
       handler (to, from) {
         this.templateId = to.params.templateId
@@ -152,6 +195,20 @@ export default {
     this.showLeaveMessage(next, () => next(false))
   },
   methods: {
+    // 计算BMI
+    getBmiNum () {
+      if (this.bmiWieight && this.bmiHeight) {
+        const bmi = Math.round(
+          Number(this.bmiWieight) /
+            ((Number(this.bmiHeight) * Number(this.bmiHeight)) / 10000)
+        )
+        this.widgetList.forEach(item => {
+          if (item.tagName === 'BMI') {
+            item.value = bmi
+          }
+        })
+      }
+    },
     // 通用接口 - 获取模板和源数据表中查出的信息
     getTemplateAndValueData () {
       return Promise.all([this.getTemplateData(), this.getValueData()]).then(
@@ -306,8 +363,26 @@ export default {
       this.$eventHub.$emit('document-refresh')
     },
     onPrint () {
-      this.$electron.ipcRenderer.send('print-document', {
-        path: `/printDocument/${this.templateId}/${this.operationId}/${this.patientId}/${this.pageIndex}/${this.isRescueMode}/${this.opePhase}/${this.pageInfo}`
+      let flag
+      // this.$refs.mainContent.daochuPDF()
+      if (this.buttonConfig.includes('ANES')) {
+        flag = 0
+      } else if (this.buttonConfig.includes('ANAB')) {
+        flag = 1
+      }
+      return request({
+        url: getsThePageThatCurrently + `/${this.operationId}/${flag}`,
+        method: 'get'
+      }).then(res => {
+        if (res.data.code === 200) {
+          console.log(res)
+          const totalPageNum = res.data.data
+          utilsDebounce(() => {
+            this.$electron.ipcRenderer.send('print-document', {
+              path: `/printDocument/${this.templateId}/${this.operationId}/${this.patientId}/${this.pageIndex}/${this.isRescueMode}/${this.opePhase}/${this.pageInfo}/${totalPageNum}`
+            })
+          }, 1000)
+        }
       })
     },
     // pdf 上传
@@ -327,45 +402,75 @@ export default {
       if (flag === undefined) {
         return false
       } else {
-        this.$message.warning('文件生成中,请稍后')
-        this.$electron.ipcRenderer.send('print-documentPDF', {
-          path: `/printDocumentPDF/${this.templateId}/${this.operationId}/${this.patientId}/${this.pageIndex}/${this.isRescueMode}/${this.opePhase}/${this.pageInfo}/${flag}`
+        return request({
+          url: acisUploadWritWright + `/${this.operationId}/${flag}`,
+          method: 'get'
+        }).then(res => {
+          console.log(res)
+          if (res.data.code === 200 && res.data.data === 1) {
+            console.log('判断是否可以上传')
+            this.$message.warning('文件生成中,请稍后')
+            this.getsThePageThatCurrently()
+          } else {
+            // this.$message.error('')
+          }
         })
       }
+    },
+    getsThePageThatCurrently () {
+      let flag
+      // this.$refs.mainContent.daochuPDF()
+      if (this.buttonConfig.includes('ANES')) {
+        flag = 0
+      } else if (this.buttonConfig.includes('ANAB')) {
+        flag = 1
+      }
+      return request({
+        url: getsThePageThatCurrently + `/${this.operationId}/${flag}`,
+        method: 'get'
+      }).then(res => {
+        if (res.data.code === 200) {
+          console.log(res)
+          const totalPageNum = res.data.data
+          this.$electron.ipcRenderer.send('print-documentPDF', {
+            path: `/printDocumentPDF/${this.templateId}/${this.operationId}/${this.patientId}/${this.pageIndex}/${this.isRescueMode}/${this.opePhase}/${this.pageInfo}/${flag}/${totalPageNum}`
+          })
+        }
+      })
     },
     onPrintAll () {},
     onSetTotalPage (page) {
       this.totalPage = page
     },
-    onRefresh (res) {
-      if (res === '1') {
-        this.pageIndex = 0
-      }
+    onRefresh () {
       this.widgetList = []
       // 重置修改过的体征
       this.changedSignDataList = []
       this.getData(this.pageIndex)
       // this.$eventHub.$emit('document-refresh')
     },
-    onSave () {
-      const modified = this.validateModified()
-      const filledRequiredItem = this.validateFilledRequiredItem()
-      if (!modified) {
-        this.$message({
-          message: '没有已修改的数据',
-          type: 'info'
-        })
-        return
-      }
-      if (!filledRequiredItem) {
-        this.$message({
-          message: '当前有必填项未填写信息，请检查',
-          type: 'warning'
-        })
-        return
-      }
-      this.saveNormalData()
-      this.saveChangedSignData()
+    async onSave () {
+      // const modified = this.validateModified()
+      // const filledRequiredItem = this.validateFilledRequiredItem()
+      // if (!modified) {
+      //   this.$message({
+      //     message: '没有已修改的数据',
+      //     type: 'info'
+      //   })
+      //   return
+      // }
+      // if (!filledRequiredItem) {
+      //   this.$message({
+      //     message: '当前有必填项未填写信息，请检查',
+      //     type: 'warning'
+      //   })
+      //   return
+      // }
+      await this.saveNormalData()
+      await this.saveChangedSignData()
+      utilsDebounce(() => {
+        this.onLoad()
+      }, 1000)
     },
     validateModified () {
       const list = this.widgetList.filter(widget => widget.dirty)
@@ -514,6 +619,7 @@ export default {
             type: 'success',
             message: '已保存修改后的体征数据'
           })
+          this.onRefresh()
         } else {
           this.$message({
             type: 'error',

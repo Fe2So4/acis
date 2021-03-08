@@ -6,6 +6,8 @@
     @click="handleClearRightClick"
   >
     <drug-list
+      @emitgetinfusion="emitgetinfusionbloodList"
+      :type="'1'"
       v-if="drugListVisible"
       :drug-list-visible.sync="drugListVisible"
       :position="position"
@@ -20,6 +22,18 @@
       @handleClose="handleCloseDrugDetail"
       @handleSubmit="handleSubmit"
     />
+    <div
+      id="closeEventId2"
+      style="z-index:9999999;width:90px;height:50px"
+      v-show="closeEventFlag"
+    >
+      <el-button
+        size="mini"
+        @click="stopValue"
+      >
+        {{ btnName }}
+      </el-button>
+    </div>
     <canvas id="canvas" />
   </div>
 </template>
@@ -34,7 +48,8 @@ import DrugDetail from '@/components/DrugDetail/index'
 import {
   getInfusionBloodList,
   getBloodInfusionData,
-  addDrug
+  addDrug,
+  stopPharmacyUse
 } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
 const { Scene, Group, Label, Polyline } = spritejs
@@ -42,6 +57,8 @@ export default {
   name: 'WidgetInOut',
   data () {
     return {
+      btnName: '',
+      closeEventFlag: false,
       layer: null,
       drugDetailVisible: false,
       drugListVisible: false,
@@ -106,6 +123,7 @@ export default {
     this.resize = debounce(this.domResizeListener, 20)
   },
   async mounted () {
+    this.saveDataIo()
     this.renderScene()
     this.createGroups()
     this.setLayout()
@@ -130,12 +148,26 @@ export default {
     // this.setDrug()
   },
   beforeDestroy () {
+    console.log('定时器清除')
+    clearInterval(this.timer)
     this.$eventHub.$off('document-refresh', this.getDocumentRefresh)
     this.$eventHub.$off('document-redraw', this.getDocumentRedraw)
     this.layer = null
     removeListener(this.$refs.inOut, this.resize)
   },
   methods: {
+    emitgetinfusionbloodList (res) {
+      this.getInfusionBloodList(res)
+    },
+    saveDataIo () {
+      console.log('定时器启动')
+      if (this.timer) {
+        clearInterval(this.timer)
+      }
+      this.timer = setInterval(() => {
+        this.getDocumentRedraw()
+      }, 60000)
+    },
     getDocumentRefresh () {
       // 获取数据
       this.getDrawLineList()
@@ -150,10 +182,13 @@ export default {
       this.getInfusionBloodList()
     },
     // 获取输血输液列表数据
-    getInfusionBloodList () {
+    getInfusionBloodList (res) {
       request({
         method: 'GET',
-        url: getInfusionBloodList
+        url: getInfusionBloodList,
+        params: {
+          eventName: res
+        }
       }).then(res => {
         const data = res.data.data
         const infusionList = []
@@ -161,12 +196,13 @@ export default {
         data.forEach((value, index) => {
           value.menuName = value.detailName
           value.value = value.detailCode
-          if (value.eventCode === 'E004') {
-            bloodTransfusionList.push(value)
-          } else {
-            infusionList.push(value)
-          }
+          // if (value.eventCode === 'E004') {
+          //   bloodTransfusionList.push(value)
+          // } else {
+          infusionList.push(value)
+          // }
         })
+        this.list = res.data.data
         this.bloodTransfusionList = bloodTransfusionList
         this.infusionList = infusionList
       })
@@ -197,11 +233,12 @@ export default {
                 _item.continue = false
               }
             })
-            if (item.eventId === 'E004') {
-              bloodTransfusionDataList.push(item)
-            } else {
-              infusionDataList.push(item)
-            }
+            // 输血输液修改
+            // if (item.eventId === 'E004') {
+            //   bloodTransfusionDataList.push(item)
+            // } else {
+            infusionDataList.push(item)
+            // }
           })
           this.infusionDataList = infusionDataList
           this.bloodTransfusionDataList = bloodTransfusionDataList
@@ -287,6 +324,9 @@ export default {
     },
     setLayout () {
       // 清空子元素
+      if (!this.layer) {
+        return false
+      }
       this.layer.getElementsByClassName('content').forEach(ref => {
         ref.removeAllChildren()
       })
@@ -799,6 +839,23 @@ export default {
       }
       this.handleGridRightClick()
     },
+    // 停止事件
+    stopValue () {
+      const obj = {
+        id: this.id
+      }
+      request({
+        url: stopPharmacyUse,
+        method: 'post',
+        params: obj
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.$message.success(this.btnName)
+          this.getDocumentRedraw()
+        }
+        this.closeEventFlag = false
+      })
+    },
     // 网格区右击
     handleGridRightClick () {
       if (!this.editMode) {
@@ -806,8 +863,39 @@ export default {
           const grid = this.layer.getElementsByClassName('grid')[0]
           const leftPart = this.layer.getElementsByClassName('leftPart')[0]
           const width = grid.attr('width')
+          grid.removeEventListener('mousedown')
           grid.addEventListener('mousedown', evt => {
             if (evt.originalEvent.button === 2) {
+              let flag = 0
+              console.log(evt.target.attr('className'))
+              // return false
+              if (
+                evt.currentTarget.attr('className' === 'line') ||
+                evt.target.attr('className').indexOf('row') !== -1
+              ) {
+                this.groupNo = evt.target.attr('index')
+                if (
+                  this.groupNo !== undefined &&
+                  this.infusionDataList[this.groupNo]
+                ) {
+                  this.infusionDataList[this.groupNo].data.forEach(item => {
+                    if (item.isHolding === '1' && item.isFinish === '0') {
+                      const res = document.getElementById('closeEventId2')
+                      this.btnName =
+                        '停止' + this.infusionDataList[this.groupNo].eventName
+                      res.style.position = 'absolute'
+                      res.style.top = evt.y + 5 + 'px'
+                      res.style.left = evt.x + 5 + 'px'
+                      this.id = item.id
+                      this.closeEventFlag = true
+                      flag = 0
+                      return false
+                    } else {
+                      flag = 1
+                    }
+                  })
+                }
+              }
               if (evt.target.attr('className').indexOf('row') !== -1) {
                 this.groupNo = evt.target.attr('index')
 
@@ -828,8 +916,12 @@ export default {
                     this.drugName = this.infusionDataList[
                       this.groupNo
                     ].eventName
-                    this.drugDetailVisible = true
+                    if (flag === 1) {
+                      this.closeEventFlag = false
+                      this.drugDetailVisible = true
+                    }
                   } else {
+                    this.closeEventFlag = false
                     this.drugListVisible = true
                   }
                 } else if (
@@ -849,8 +941,12 @@ export default {
                     this.drugName = this.bloodTransfusionDataList[
                       this.groupNo
                     ].eventName
-                    this.drugDetailVisible = true
+                    if (flag === 1) {
+                      this.closeEventFlag = false
+                      this.drugDetailVisible = true
+                    }
                   } else {
+                    this.closeEventFlag = false
                     this.drugListVisible = true
                   }
                 } else {
@@ -860,12 +956,16 @@ export default {
                 this.position.positionX = evt.x
                 this.position.positionY = evt.y
               }
+            } else {
+              this.closeEventFlag = false
             }
           })
         }
       }
     },
     handleAddDrug (param) {
+      console.log(param)
+
       if (!this.editMode) {
         let list = []
         switch (this.currentState) {
@@ -893,8 +993,10 @@ export default {
       }
       // this.setDrug()
     },
-    handleClearRightClick () {
-      if (!this.editMode) {
+    handleClearRightClick (e) {
+      if (e.target.className.includes('input')) {
+      } else if (!this.editMode) {
+        this.getInfusionBloodList()
         this.drugListVisible = false
         this.groupNo = null
       }
@@ -955,6 +1057,9 @@ export default {
     setInfusionLine () {
       // 清空子元素
       if (!this.editMode) {
+        if (!this.layer) {
+          return false
+        }
         this.layer.getElementsByClassName('infusion_col').forEach(ref => {
           ref.removeAllChildren()
         })
@@ -1082,7 +1187,9 @@ export default {
                     group.attr('height') / 2 - 0.5
                   ],
                   lineWidth: 1,
-                  strokeColor: 'blue'
+                  strokeColor: 'blue',
+                  className: 'line',
+                  index: index
                 })
                 group.append(leftLine, leftCenterLine, rightCenterLine, dose)
               }
@@ -1106,7 +1213,9 @@ export default {
               group.append(dose)
             }
             // if(row[index]&&index<this.configuration.){
-            row[index].append(group)
+            if (row[index]) {
+              row[index].append(group)
+            }
             // }
           })
         })
@@ -1116,6 +1225,9 @@ export default {
     setTransfusionLine () {
       // 清空子元素
       if (!this.editMode) {
+        if (!this.layer) {
+          return false
+        }
         this.layer.getElementsByClassName('blood_col').forEach(ref => {
           ref.removeAllChildren()
         })
@@ -1178,7 +1290,9 @@ export default {
                   (group.attr('height') * 3) / 4
                 ],
                 lineWidth: 1,
-                strokeColor: 'blue'
+                strokeColor: 'blue',
+                className: 'line',
+                index: index
               })
               if (item.isCross === '1') {
                 const topArow = new Polyline({
@@ -1197,7 +1311,9 @@ export default {
                   ],
                   points: [0, 0, -10, group.attr('height') / 4],
                   lineWidth: 1,
-                  strokeColor: 'blue'
+                  strokeColor: 'blue',
+                  className: 'line',
+                  index: index
                 })
                 group.append(topArow, bottomArow)
               } else {
@@ -1210,7 +1326,9 @@ export default {
                     (group.attr('height') * 3) / 4
                   ],
                   lineWidth: 1,
-                  strokeColor: 'blue'
+                  strokeColor: 'blue',
+                  className: 'line',
+                  index: index
                 })
                 group.append(rightLine)
               }
@@ -1224,7 +1342,9 @@ export default {
                   group.attr('height') / 2 - 0.5
                 ],
                 lineWidth: 1,
-                strokeColor: 'blue'
+                strokeColor: 'blue',
+                className: 'line',
+                index: index
               })
               const rightCenterLine = new Polyline({
                 pos: [0, 0],
@@ -1235,7 +1355,9 @@ export default {
                   group.attr('height') / 2 - 0.5
                 ],
                 lineWidth: 1,
-                strokeColor: 'blue'
+                strokeColor: 'blue',
+                className: 'line',
+                index: index
               })
               group.append(leftLine, leftCenterLine, rightCenterLine, dose)
             } else {
@@ -1269,6 +1391,9 @@ export default {
     setOutputLine () {
       // 清空子元素
       if (!this.editMode) {
+        if (!this.layer) {
+          return false
+        }
         this.layer.getElementsByClassName('output_col').forEach(ref => {
           ref.removeAllChildren()
         })
@@ -1383,7 +1508,9 @@ export default {
                   group.attr('height') / 2 - 0.5
                 ],
                 lineWidth: 1,
-                strokeColor: 'blue'
+                strokeColor: 'blue',
+                className: 'line',
+                index: index
               })
               group.append(leftLine, leftCenterLine, rightCenterLine, dose)
             } else {
