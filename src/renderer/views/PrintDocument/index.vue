@@ -1,17 +1,19 @@
 <template>
   <div class="printDocument">
     <main-content
+      v-for="item in Arr"
+      :key="item.pageIndex"
       id="mainContent"
-      ref="mainContent"
-      :widget-list="widgetList"
-      :start-time="startTime"
-      :end-time="endTime"
-      :paper-setting="paperSetting"
+      :ref="'mainContent' + item.pageIndex"
+      :widget-list="item.widgetList"
+      :start-time="item.startTime"
+      :end-time="item.endTime"
+      :patient-id="patientId"
+      :paper-setting="item.paperSetting"
       :is-rescue-mode="isRescueMode"
       :operation-id="operationId"
-      :patient-id="patientId"
-      :total-page="totalPage"
-      :page-index="pageIndex"
+      :total-page="Number(totalPageNum) + 1"
+      :page-index="item.pageIndex"
       :operation-phase="opePhase"
       @widget-finish="onWidgetFinish"
     />
@@ -26,7 +28,7 @@ import {
 } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
 import MainContent from './MainContent'
-
+import { ipcRenderer } from 'electron'
 export default {
   name: 'MedicalDocument',
   components: {
@@ -34,6 +36,10 @@ export default {
   },
   data () {
     return {
+      Arr: [],
+      arrPathSetting: {},
+      totalPageNum: 0,
+      flag: '',
       widgetList: [],
       startTime: '',
       endTime: '',
@@ -54,12 +60,19 @@ export default {
     this.templateId = this.$route.params.templateId
     this.operationId = this.$route.params.operationId
     this.patientId = this.$route.params.patientId
-    this.pageIndex = this.$route.params.pageIndex
+    // this.pageIndex = this.$route.params.pageIndex
     this.opePhase = this.$route.params.opePhase
     this.pageInfo = this.$route.params.pageInfo
+    this.totalPageNum = this.$route.params.totalPageNum
+    console.log(this.totalPageNum)
+    // this.flag = this.$route.params.flag || ''
     this.isRescueMode = this.$route.params.isRescueMode === 'true'
-    console.log(this.$route.params)
-    this.getData(this.pageIndex)
+    this.getData(0)
+  },
+  mounted () {
+    ipcRenderer.on('wordTest', data => {
+      console.log(data)
+    })
   },
   methods: {
     // 通用接口 - 获取模板和源数据表中查出的信息
@@ -115,9 +128,12 @@ export default {
         if (typeof paperSettingIndex !== 'number') {
           return Promise.reject(new Error('未找到纸张配置'))
         }
-        this.paperSetting = paperSetting
+        this.arrPathSetting.paperSetting = paperSetting
+
+        // this.paperSetting = paperSetting
         widgetList.splice(paperSettingIndex, 1)
-        this.tempList = widgetList
+        // this.tempList = widgetList
+        this.arrPathSetting.tempList = widgetList
       })
     },
     // 只有术中文书才有，获取术中文书相关信息
@@ -142,35 +158,56 @@ export default {
         }
       }).then(res => {
         const { startTime, endTime, totalPage, pageIndex } = res.data.data
-        this.startTime = startTime
-        this.endTime = endTime
-        this.totalPage = totalPage
-        this.pageIndex = pageIndex
-        this.tempList.forEach(widget => {
+        // this.startTime = startTime
+        // this.endTime = endTime
+        // this.totalPage = totalPage
+        // this.pageIndex = pageIndex
+        this.arrPathSetting.startTime = startTime
+        this.arrPathSetting.endTime = endTime
+        this.arrPathSetting.totalPage = totalPage
+        this.arrPathSetting.pageIndex = pageIndex
+        this.arrPathSetting.tempList.forEach(widget => {
           // x轴起止时间更改
           if (widget.xAxis) {
             widget.xAxis.startTime = startTime
             widget.xAxis.endTime = endTime
           }
         })
-        this.canvasWidgetList = this.getCanvasWidget()
+        // this.tempList.forEach(widget => {
+        //   // x轴起止时间更改
+        //   if (widget.xAxis) {
+        //     widget.xAxis.startTime = startTime
+        //     widget.xAxis.endTime = endTime
+        //   }
+        // })
+        this.arrPathSetting.canvasWidgetList = this.getCanvasWidget(
+          this.arrPathSetting.tempList
+        )
+        this.canvasWidgetList = this.getCanvasWidget(
+          this.arrPathSetting.tempList
+        )
       })
     },
     async getData (pageIndex) {
+      this.arrPathSetting = {}
+      this.arrPathSetting.pageIndex = pageIndex
+      // console.log(pageIndex, '11111')
       await this.getTemplateAndValueData()
       if (+this.pageInfo) {
         await this.getIntraoperativeData(pageIndex)
       }
-      this.widgetList = this.tempList
+      this.arrPathSetting.widgetList = this.arrPathSetting.tempList
+      this.Arr.push(this.arrPathSetting)
+      console.log(this.Arr)
       this.onWidgetFinish()
     },
-    getCanvasWidget () {
+    getCanvasWidget (tempList) {
       const canvasWidgets = [
         'widget-physical-sign',
         'widget-in-out',
         'widght-anaes-table'
       ]
-      return this.tempList.reduce((arr, widget) => {
+      return tempList.reduce((arr, widget) => {
         if (canvasWidgets.includes(widget.name)) {
           return arr.concat([widget.name])
         } else {
@@ -179,6 +216,7 @@ export default {
       }, [])
     },
     onWidgetFinish (widgetName) {
+      console.log('进入=====', widgetName)
       if (this.timer) {
         clearTimeout(this.timer)
       }
@@ -189,9 +227,29 @@ export default {
         }
       }
       if (this.canvasWidgetList.length === 0) {
-        this.timer = setTimeout(() => {
-          this.$electron.ipcRenderer.send('ready-to-print')
-        }, 1000)
+        console.log(
+          '当前第',
+          this.pageIndex,
+          '页， 一共,',
+          this.totalPageNum,
+          '页'
+        )
+        if (Number(this.pageIndex) === Number(this.totalPageNum)) {
+          console.log(
+            '开始生成第',
+            this.pageIndex,
+            '页， 一共,',
+            this.totalPageNum,
+            '页'
+          )
+          this.timer = setTimeout(() => {
+            console.log('开始打印文件')
+            this.$electron.ipcRenderer.send('ready-to-print', this.operationId)
+          }, 1000)
+        } else {
+          this.pageIndex = Number(this.pageIndex) + 1
+          this.getData(this.pageIndex)
+        }
       }
     }
   }
@@ -201,5 +259,10 @@ export default {
 <style lang="scss" scoped>
 .printDocument {
   font-family: '宋体';
+}
+@media print {
+  #mainContent {
+    page-break-after: always;
+  }
 }
 </style>

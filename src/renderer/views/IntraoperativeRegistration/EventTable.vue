@@ -8,7 +8,7 @@
         highlight-hover-row
         height="330px"
         :data="tableData"
-        :edit-config="{trigger: 'click', mode: 'cell'}"
+        :edit-config="{ trigger: 'click', mode: 'cell' }"
         class="table"
         size="mini"
       >
@@ -46,34 +46,95 @@
           field="concentration"
           title="浓度"
           width="80"
-          :edit-render="{name: '$input', props: {type: 'float', digits: 2}, events:{change: onInputChange}}"
+          :edit-render="{
+            name: '$input',
+            props: { type: 'float', digits: 2 },
+            events: { change: onInputChange }
+          }"
         />
         <vxe-table-column
           field="concentrationUnit"
           title="单位"
-          width="80"
+          :edit-render="{
+            name: '$select',
+            options: conUnitList,
+            optionProps: {
+              value: 'detail_code',
+              label: 'detail_name'
+            },
+            events: {
+              change: onApproachChange
+            }
+          }"
+          width="120"
         />
         <vxe-table-column
           field="speed"
           title="速度"
           width="80"
-          :edit-render="{name: '$input', props: {type: 'float', digits: 2}, events:{change: onInputChange}}"
+          :edit-render="{
+            name: '$input',
+            props: { type: 'float', digits: 2 },
+            events: { change: onInputChange }
+          }"
         />
         <vxe-table-column
           field="speedUnit"
           title="单位"
-          width="80"
+          :edit-render="{
+            name: '$select',
+            options: speedUnitList,
+            optionProps: {
+              value: 'detail_code',
+              label: 'detail_name'
+            },
+            events: {
+              change: onApproachChange
+            }
+          }"
+          width="120"
         />
         <vxe-table-column
           field="dosage"
           title="剂量"
           width="80"
-          :edit-render="{name: '$input', props: {type: 'float', digits: 2}, events:{change: onInputChange}}"
+          :edit-render="{
+            name: '$input',
+            props: { type: 'float', digits: 2 },
+            events: { change: onInputChange }
+          }"
         />
         <vxe-table-column
           field="dosageUnit"
           title="单位"
-          width="80"
+          :edit-render="{
+            name: '$select',
+            options: doseUnitList,
+            optionProps: {
+              value: 'detail_code',
+              label: 'detail_name'
+            },
+            events: {
+              change: onApproachChange
+            }
+          }"
+          width="120"
+        />
+        <vxe-table-column
+          field="isHolding"
+          title="持续用药"
+          :edit-render="{
+            name: '$select',
+            options: isHoldingList,
+            optionProps: {
+              value: 'value',
+              label: 'name'
+            },
+            events: {
+              change: onApproachChange
+            }
+          }"
+          width="90"
         />
         <vxe-table-column
           field="eventStartTime"
@@ -90,7 +151,11 @@
               popper-class="dateTimePicker"
               size="mini"
               :clearable="false"
-              @change="(val) => {onStartTimeChange({row})}"
+              @change="
+                val => {
+                  onStartTimeChange({ row })
+                }
+              "
             />
           </template>
           <template v-slot="{ row }">
@@ -101,7 +166,11 @@
           field="holdingTime"
           title="持续时间"
           width="100"
-          :edit-render="{name: '$input', props: {type: 'number'}, events: {input: onHoldingTimeChange}}"
+          :edit-render="{
+            name: '$input',
+            props: { type: 'number' },
+            events: { input: onHoldingTimeChange }
+          }"
         />
         <vxe-table-column
           field="eventEndTime"
@@ -117,7 +186,11 @@
               value-format="yyyy-MM-dd HH:mm"
               popper-class="dateTimePicker"
               size="mini"
-              @change="(val) => {onEndTimeChange({row})}"
+              @change="
+                val => {
+                  onEndTimeChange({ row })
+                }
+              "
             />
           </template>
           <template v-slot="{ row }">
@@ -183,7 +256,9 @@
 
 <script>
 import moment from 'moment'
-
+import XEUtils from 'xe-utils'
+import request from '@/utils/requestForMock'
+import { getConUnit, getSpeedUnit, getDoseUnit } from '@/api/anaesDrug'
 export default {
   name: 'EventTable',
   props: {
@@ -202,10 +277,52 @@ export default {
   },
   data () {
     return {
-      eventType: ''
+      isHoldingList: [
+        { name: '是', value: '1' },
+        { name: '否', value: '0' }
+      ],
+      eventType: '',
+      conUnitList: [],
+      speedUnitList: [],
+      doseUnitList: []
     }
   },
+  mounted () {
+    this.getDoseUnit()
+    this.getConUnit()
+    this.getSpeedUnit()
+  },
   methods: {
+    getDoseUnit () {
+      request({
+        url: getDoseUnit
+      }).then(res => {
+        this.doseUnitList = res.data.data
+      })
+    },
+    getConUnit () {
+      request({
+        url: getConUnit
+      }).then(res => {
+        this.conUnitList = res.data.data
+      })
+    },
+    getSpeedUnit () {
+      request({
+        url: getSpeedUnit
+      }).then(res => {
+        this.speedUnitList = res.data.data
+      })
+    },
+    getSelectLabel (
+      value,
+      list,
+      valueProp = 'detail_code',
+      labelField = 'detail_name'
+    ) {
+      const item = XEUtils.find(list, item => item[valueProp] === value)
+      return item ? item[labelField] : null
+    },
     onApproachChange ({ row }) {
       this.$emit('change-event', row)
     },
@@ -239,7 +356,7 @@ export default {
     onDelete () {
       const selectedArr = this.$refs.table.getCheckboxRecords()
       if (selectedArr.length) {
-        selectedArr.forEach((row) => {
+        selectedArr.forEach(row => {
           this.$emit('delete-event', row)
         })
       }
@@ -305,30 +422,30 @@ export default {
   }
 }
 </script>
-<style lang='scss' scoped>
-  .eventTable {
-    @import "@/styles/theme";
-    border: 1px solid;
-    @include theme-property('border-color', $dateTimePicker-color-border);
-    border-radius: 5px;
-    height: 400px;
+<style lang="scss" scoped>
+.eventTable {
+  @import '@/styles/theme';
+  border: 1px solid;
+  @include theme-property('border-color', $dateTimePicker-color-border);
+  border-radius: 5px;
+  height: 400px;
 
-    .buttons {
-      height: 70px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+  .buttons {
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-      .left,
-      .right {
-        height: 30px;
-        padding: 0 20px;
-        @include theme-property('color', $color-text-regular);
-      }
-    }
-
-    & ::v-deep .vxe-table .vxe-body--column .vxe-cell {
-      white-space: unset;
+    .left,
+    .right {
+      height: 30px;
+      padding: 0 20px;
+      @include theme-property('color', $color-text-regular);
     }
   }
+
+  & ::v-deep .vxe-table .vxe-body--column .vxe-cell {
+    white-space: unset;
+  }
+}
 </style>

@@ -373,7 +373,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('anaes', ['setEventType']),
+    ...mapActions('Anaes', ['setEventType']),
     jumpLogin () {
       //  ----login页测试
       this.$router.push('/login')
@@ -419,9 +419,7 @@ export default {
         this.lockVisible = true
         return
       }
-      if (item.componentName === 'Event') {
-        this.setEventType(item)
-      }
+      this.setEventType(item)
       this.dialogTitle = item.perName
       this.componentName = item.componentName
       this.showDialog = true

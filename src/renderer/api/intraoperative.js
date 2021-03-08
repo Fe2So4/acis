@@ -79,3 +79,6 @@ export const renameEventTemplate = mock
 
 // 获取术中事件信息 - 李 - 2021-02-01
 export const getAcisIntraoEventInfo = baseLi + 'acis/intraoperative/info/getAcisIntraoEventInfo'
+
+// 添加模板 - 李 - 2021-02-01
+export const useTemplateDuringOperation = baseLi + 'acis/intraoperative/info/useTemplateDuringOperation'

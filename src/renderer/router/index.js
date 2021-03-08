@@ -196,12 +196,12 @@ if (process.env.BUILD_TARGET === 'schedule') {
         }]
       },
       {
-        path: '/printDocument/:templateId/:operationId/:patientId/:pageIndex/:isRescueMode/:opePhase/:pageInfo',
+        path: '/printDocument/:templateId/:operationId/:patientId/:pageIndex/:isRescueMode/:opePhase/:pageInfo/:totalPageNum',
         name: 'PrintDocument',
         component: () => import('@/views/PrintDocument/index')
       },
       {
-        path: '/printDocumentPDF/:templateId/:operationId/:patientId/:pageIndex/:isRescueMode/:opePhase/:pageInfo/:flag',
+        path: '/printDocumentPDF/:templateId/:operationId/:patientId/:pageIndex/:isRescueMode/:opePhase/:pageInfo/:flag/:totalPageNum',
         name: 'PrintDocumentPDF',
         component: () => import('@/views/PrintDocumentPDF/index')
       },

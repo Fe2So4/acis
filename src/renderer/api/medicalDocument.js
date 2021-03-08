@@ -142,3 +142,9 @@ export const changeDisplayMode = mock
   ? '/api/changeDisplayMode'
   : baseLi + 'acis/signDataCollect/changeOpeMode'
 // 文书展示相关 --------------------------------end---------------------------------
+
+// 停止用药
+export const stopPharmacyUse = baseLi + 'acis/intraoperative/info/stopPharmacyUse'
+
+// 批量添加体征数据
+export const batchAddIntraoMonitorData = baseLi + 'acis/intraoperative/info/batchAddIntraoMonitorData'

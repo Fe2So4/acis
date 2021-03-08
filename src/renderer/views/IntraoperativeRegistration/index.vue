@@ -39,12 +39,14 @@
 </template>
 
 <script>
+// 术中登记
 import {
   getExistEvent,
   getApproachList,
   getEventList,
   saveEvent,
-  addNewTemplate
+  addNewTemplate,
+  useTemplateDuringOperation
 } from '@/api/intraoperative'
 import request from '@/utils/requestForMock'
 import EventTable from './EventTable'
@@ -84,9 +86,7 @@ export default {
     ...mapGetters(['validateHours']),
     filteredTableData () {
       if (this.filterType) {
-        return this.tableData.filter(
-          (item) => item.eventId === this.filterType
-        )
+        return this.tableData.filter(item => item.eventId === this.filterType)
       }
       return [...this.tableData]
     }
@@ -140,13 +140,13 @@ export default {
         delete this.changedMap[row.existIndex]
         this.deletedMap[row.existIndex] = row
         const rowIndex = this.tableData.findIndex(
-          (item) => item.existIndex === row.existIndex
+          item => item.existIndex === row.existIndex
         )
         this.tableData.splice(rowIndex, 1)
       } else if (row._tag === 'add') {
         delete this.addedMap[row.addIndex]
         const rowIndex = this.tableData.findIndex(
-          (item) => item.addIndex === row.addIndex
+          item => item.addIndex === row.addIndex
         )
         this.tableData.splice(rowIndex, 1)
       }
@@ -154,35 +154,36 @@ export default {
     onSaveEvent () {
       if (!this.validate72Hours()) return
       const requestArr = []
-      const changedList = Object.values(this.changedMap).map((item) => {
-        const obj = {};
-        ({
+      console.log(this.changedMap)
+      const changedList = Object.values(this.changedMap).map(item => {
+        const obj = {}
+        ;({
           approach: obj.approach,
           concentration: obj.concentration,
           concentrationUnit: obj.concentrationUnit,
           detailId: obj.detailId,
           dosage: obj.dosage,
           dosageUnit: obj.dosageUnit,
-          eventEndTime: obj.eventEndTime,
           eventId: obj.eventId,
           eventName: obj.eventName,
           eventStartTime: obj.eventStartTime,
           eventType: obj.eventType,
-          holdingTime: obj.holdingTime,
           id: obj.id,
           isHolding: obj.isHolding,
           speed: obj.speed,
           speedUnit: obj.speedUnit
         } = item)
+        obj.holdingTime = item.holdingTime ? item.holdingTime : null
+        obj.eventEndTime = item.eventEndTime ? item.eventEndTime : null
         obj.operationId = this.operationId
         return obj
       })
       if (changedList.length) {
         requestArr.push(this.saveEvent(changedList, 1))
       }
-      const addedList = Object.values(this.addedMap).map((item) => {
-        const obj = {};
-        ({
+      const addedList = Object.values(this.addedMap).map(item => {
+        const obj = {}
+        ;({
           approach: obj.approach,
           concentration: obj.concentration,
           concentrationUnit: obj.concentrationUnit,
@@ -195,8 +196,8 @@ export default {
           eventStartTime: obj.eventStartTime,
           eventType: obj.eventType,
           holdingTime: obj.holdingTime,
-          isHolding: obj.isHolding,
           speed: obj.speed,
+          isHolding: obj.isHolding,
           speedUnit: obj.speedUnit
         } = item)
         obj.operationId = this.operationId
@@ -205,18 +206,21 @@ export default {
       if (addedList.length) {
         requestArr.push(this.saveEvent(addedList, 0))
       }
-      const deletedList = Object.values(this.deletedMap).map((item) => {
-        const obj = {};
-        ({ id: obj.id, eventId: obj.eventId } = item)
+      const deletedList = Object.values(this.deletedMap).map(item => {
+        const obj = {}
+        ;({ id: obj.id, eventId: obj.eventId } = item)
         return obj
       })
       if (deletedList.length) {
         requestArr.push(this.saveEvent(deletedList, 2))
       }
       if (requestArr.length) {
-        return Promise.all(requestArr).then((res) => {
-          const success = res.every((res) => res.data && res.data.data)
+        return Promise.all(requestArr).then(res => {
+          const success = res.every(res => res.data && res.data.data)
           if (success) {
+            this.init()
+          } else {
+            this.$message.warning('存在持续用药未结束')
             this.init()
           }
         })
@@ -231,11 +235,13 @@ export default {
     onUseTemplate ({ list, date, useDosage }) {
       const arr = list.map(
         ({
+          id,
           approach,
           concentration,
           concentrationUnit,
           detailId,
           dosage,
+          durationFromInroom,
           dosageUnit,
           eventId,
           eventName,
@@ -253,6 +259,7 @@ export default {
               .format('YYYY-MM-DD HH:mm')
           }
           return {
+            id,
             eventId,
             detailId,
             eventType,
@@ -262,6 +269,7 @@ export default {
             concentrationUnit,
             speed,
             speedUnit,
+            durationFromInroom,
             dosage: useDosage ? dosage : '',
             dosageUnit,
             isHolding,
@@ -273,33 +281,34 @@ export default {
           }
         }
       )
-      arr.forEach((event) => {
-        this.addedMap[event.addIndex] = event
-        this.tableData.push(event)
+      this.useTemplateDuringOperationAdd(arr)
+      // arr.forEach(event => {
+      //   this.addedMap[event.addIndex] = event
+      //   this.tableData.push(event)
+      // })
+    },
+    useTemplateDuringOperationAdd (arr) {
+      return request({
+        method: 'post',
+        url: useTemplateDuringOperation + `/${this.operationId}`,
+        data: arr
       })
-      this.dialogTemplateVisible = false
+        .then(res => {
+          if (res.data.code === 200) {
+            this.dialogTemplateVisible = false
+            this.$message.success('添加成功')
+            this.onRefreshEvent()
+          }
+        })
+        .catch(e => {})
     },
     onShowConfirmDialog () {
       this.dialogConfirmVisible = true
     },
     onSaveTemplate ({ havingWay, templateName, templateParentName }) {
       this.dialogConfirmVisible = false
-      const list = this.tableData.map(({
-        approach,
-        concentration,
-        concentrationUnit,
-        detailId,
-        dosage,
-        dosageUnit,
-        eventId,
-        eventName,
-        eventType,
-        holdingTime,
-        isHolding,
-        speed,
-        speedUnit
-      }) => {
-        return {
+      const list = this.tableData.map(
+        ({
           approach,
           concentration,
           concentrationUnit,
@@ -310,14 +319,35 @@ export default {
           eventName,
           eventType,
           holdingTime,
+          eventStartTime,
           isHolding,
           speed,
           speedUnit
+        }) => {
+          return {
+            approach,
+            concentration,
+            concentrationUnit,
+            detailId,
+            dosage,
+            dosageUnit,
+            eventId,
+            eventName,
+            eventType,
+            holdingTime,
+            eventStartTime,
+            isHolding,
+            speed,
+            speedUnit
+          }
         }
-      })
+      )
       if (list.length) {
         this.addNewTemplate({
-          havingWay, templateName, templateParentName, list
+          havingWay,
+          templateName,
+          templateParentName,
+          list
         })
       }
     },
@@ -329,40 +359,40 @@ export default {
           operationId: this.operationId
         }
       })
-        .then((res) => {
+        .then(res => {
           if (res.data && res.data.success) {
-            this.tableData = res.data.data.map((item) => {
+            this.tableData = res.data.data.map(item => {
               item.existIndex = this.existIndex++
               item._tag = 'exist'
               return item
             })
           }
         })
-        .catch((e) => {})
+        .catch(e => {})
     },
     getApproachList () {
       return request({
         method: 'get',
         url: getApproachList
       })
-        .then((res) => {
+        .then(res => {
           if (res.data && res.data.success) {
             this.approachList = res.data.data
           }
         })
-        .catch((e) => {})
+        .catch(e => {})
     },
     getEventList () {
       return request({
         url: getEventList,
         method: 'get'
       })
-        .then((res) => {
+        .then(res => {
           if (res.data && res.data.success) {
             this.eventList = res.data.data
           }
         })
-        .catch((e) => {})
+        .catch(e => {})
     },
     saveEvent (list, mode) {
       return request({
@@ -379,13 +409,14 @@ export default {
         url: addNewTemplate,
         method: 'post',
         data: {
+          operationId: this.operationId,
           havingWay,
           templeteName: templateName,
           templeteParentName: templateParentName,
           list
         }
-      }).then(
-        res => {
+      })
+        .then(res => {
           if (res.data && res.data.success) {
             this.$message({
               message: '保存成功',
@@ -394,13 +425,13 @@ export default {
           } else {
             return Promise.reject(new Error())
           }
-        }
-      ).catch(e => {
-        this.$message({
-          message: '保存失败',
-          type: 'error'
         })
-      })
+        .catch(e => {
+          this.$message({
+            message: '保存失败',
+            type: 'error'
+          })
+        })
     },
     init () {
       this.tableData = []
@@ -428,8 +459,8 @@ export default {
 <style lang="scss" scoped>
 .intraoperativeRegistration {
   font-size: 14px;
-  width: 90vw;
-  height: 80vh;
+  width: 95vw;
+  height: 90vh;
   .event {
     display: grid;
     grid-template-columns: 70% calc(30% - 20px);
