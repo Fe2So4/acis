@@ -10,3 +10,6 @@ export const getDeptList1 = baseLi + 'acis/dict/getDeptList1'
 
 // 科室列表查询-无分页 2021-02-07
 export const getDeptList = baseLi + 'acis/dict/getDeptList'
+
+// 麻醉医生字典 2021-03-08
+export const getAnesDocList = baseLi + 'acis/dict/getAnesDocList'

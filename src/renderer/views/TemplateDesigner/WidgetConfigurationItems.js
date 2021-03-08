@@ -1,5 +1,5 @@
 import { Cell } from '../../model/WidgetTable'
-export default function getConfigurationItems(widgetName) {
+export default function getConfigurationItems (widgetName) {
   // 边框
   const border = {
     position: ['top', 'right', 'bottom', 'left'],
@@ -298,6 +298,15 @@ export default function getConfigurationItems(widgetName) {
           api: '',
           method: 'get'
         }
+      }
+    case 'widget-anaesthesia-doctor':
+      return {
+        font,
+        border: Object.assign({}, border, {
+          position: ['bottom']
+        }),
+        placeholder: '',
+        dataSource
       }
     default:
       return {}
