@@ -20,7 +20,7 @@ const PORT = {
   SOCKET: '9093',
   SOCKETROOM: '9099'
 }
-const developmentIpType = 'LI' // 'SERVER' / ''
+const developmentIpType = 'SERVER' // 'SERVER' / ''
 const productIpType = 'SERVER' // 'SERVER' / 'LOCAL'
 
 const IP_BASE = IP[productIpType]

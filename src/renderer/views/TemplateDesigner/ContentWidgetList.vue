@@ -97,6 +97,10 @@ export default {
       {
         label: '表格',
         name: 'widget-table-fj'
+      },
+      {
+        label: '麻醉医生',
+        name: 'widget-anaesthesia-doctor'
       }
     ])
     const wrapStyle = Object.freeze([
