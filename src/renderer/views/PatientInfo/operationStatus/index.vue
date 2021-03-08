@@ -122,9 +122,13 @@ export default {
     $bus.$on('hidenMenu', () => {
       this.showVisible = false
     })
+    $bus.$on('shuaxinStatusList', () => {
+      this.getStatusList()
+    })
   },
   beforeDestroy () {
     $bus.$off('hidenMenu')
+    $bus.$off('shuaxinStatusList')
   },
   methods: {
     ...mapActions('Base', [

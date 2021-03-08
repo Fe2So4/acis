@@ -385,37 +385,9 @@ export default {
         }
       })
     },
-    // pdf 上传
-    // onLoad () {
-    //   utilsDebounce(() => {
-    //     this.downFile()
-    //   }, 1000)
-    // },
+
     onLoad () {
-      let flag
-      // this.$refs.mainContent.daochuPDF()
-      if (this.buttonConfig.includes('ANES')) {
-        flag = 0
-      } else if (this.buttonConfig.includes('ANAB')) {
-        flag = 1
-      }
-      if (flag === undefined) {
-        return false
-      } else {
-        return request({
-          url: acisUploadWritWright + `/${this.operationId}/${flag}`,
-          method: 'get'
-        }).then(res => {
-          console.log(res)
-          if (res.data.code === 200 && res.data.data === 1) {
-            console.log('判断是否可以上传')
-            this.$message.warning('文件生成中,请稍后')
-            this.getsThePageThatCurrently()
-          } else {
-            // this.$message.error('')
-          }
-        })
-      }
+      this.getsThePageThatCurrently()
     },
     getsThePageThatCurrently () {
       let flag
@@ -450,27 +422,8 @@ export default {
       // this.$eventHub.$emit('document-refresh')
     },
     async onSave () {
-      // const modified = this.validateModified()
-      // const filledRequiredItem = this.validateFilledRequiredItem()
-      // if (!modified) {
-      //   this.$message({
-      //     message: '没有已修改的数据',
-      //     type: 'info'
-      //   })
-      //   return
-      // }
-      // if (!filledRequiredItem) {
-      //   this.$message({
-      //     message: '当前有必填项未填写信息，请检查',
-      //     type: 'warning'
-      //   })
-      //   return
-      // }
       await this.saveNormalData()
       await this.saveChangedSignData()
-      utilsDebounce(() => {
-        this.onLoad()
-      }, 1000)
     },
     validateModified () {
       const list = this.widgetList.filter(widget => widget.dirty)

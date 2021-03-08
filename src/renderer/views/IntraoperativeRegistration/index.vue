@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import $bus from '@/utils/bus'
 // 术中登记
 import {
   getExistEvent,
@@ -154,7 +155,6 @@ export default {
     onSaveEvent () {
       if (!this.validate72Hours()) return
       const requestArr = []
-      console.log(this.changedMap)
       const changedList = Object.values(this.changedMap).map(item => {
         const obj = {}
         ;({
@@ -434,6 +434,7 @@ export default {
         })
     },
     init () {
+      $bus.$emit('shuaxinStatusList')
       this.tableData = []
       this.existIndex = 0
       this.addIndex = 0

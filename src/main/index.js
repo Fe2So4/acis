@@ -360,50 +360,25 @@ ipcMain.on('print-documentPDF', (e, printRoute) => {
 })
 
 ipcMain.on('ready-to-printPDF', (event, res) => {
-  printPDFWin.webContents.printToPDF({}, (error, data) => {
-    if (error === null) {
-      printPDFWin.webContents.send('reply', data)
-    } else {
-      dialog.showMessageBox(printPDFWin, {
-        type: 'info',
-        title: '提示',
-        message: '文件上传失败'
-      })
-    }
-    // ipcRenderer.send('upLoadEnd')
-  })
-
-  // if (printPDFWin) {
-  //   printPDFWin.close()
-  // }
-  // printPDFWin.webContents.printToPDF({
-
-  // }, (error, data) => {
-  //   console.log(data, '==================')
-  //   if (error) {
-  //     dialog.showMessageBox(printWin, {
-  //       type: 'info',
-  //       title: '提示',
-  //       message: '未完成打印'
-  //     })
-  //   }
-  //   console.log('======================')
-  //   printPDFWin.webContents.send('reply', data)
-  // })
-
-  // if (printPDFWin) {
-  //   printPDFWin.close()
-  // }
-  // (error, file) => {
-  //   if (error) throw error // 写文件
-  //   printPDFWin.webContents.send('reply', file)
-  //   if (printPDFWin) {
-  //     printPDFWin.close()
-  //   }
-  // })
+  try {
+    printPDFWin.webContents.printToPDF({}, (error, data) => {
+      if (error === null) {
+        printPDFWin.webContents.send('reply', data)
+      } else {
+        mainWindow.webContents.send('upLoadEnd', '2')
+        dialog.showMessageBox(printPDFWin, {
+          type: 'info',
+          title: '提示',
+          message: '文件上传失败'
+        })
+      }
+    })
+  } catch (error) {
+    mainWindow.webContents.send('upLoadEnd', '2')
+    console.log('这里报错')
+  }
 })
 ipcMain.on('upLoadSuccess', (event, res) => {
-  console.log(res)
   if (res === '1') {
     dialog.showMessageBox(printPDFWin, {
       type: 'info',

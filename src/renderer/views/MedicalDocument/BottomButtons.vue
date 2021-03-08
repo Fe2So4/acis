@@ -87,10 +87,10 @@
       </div>
       <div
         class="button"
-        @click="$emit('save')"
+        @click="saveBtnClick"
         v-show="displayedButtons.includes('SAVE')"
       >
-        保存
+        {{ upLoadButtonName }}
       </div>
       <div
         class="button"
@@ -143,7 +143,7 @@ export default {
   },
   data () {
     return {
-      // upLoadButtonName: '上传'
+      upLoadButtonName: '保存'
     }
   },
   computed: {
@@ -159,15 +159,20 @@ export default {
     $bus.$on('changeShuaxin', () => {
       this.$emit('refresh', '1')
     })
-    // this.$electron.ipcRenderer.on('upLoadEnd', (event, res) => {
-    //   console.log(res)
-    //   utilsDebounce(() => {
-    //     this.upLoadEndPDF(res)
-    //   }, 1000)
-    // })
   },
-
+  created () {
+    this.$electron.ipcRenderer.on('upLoadEnd', (event, res) => {
+      console.log(res)
+      utilsDebounce(() => {
+        this.upLoadEndPDF(res)
+      }, 1000)
+    })
+  },
   methods: {
+    saveBtnClick () {
+      this.uploadBefore()
+      this.$emit('save')
+    },
     uploadBefore () {
       // 发送
       let flag
@@ -183,6 +188,7 @@ export default {
         console.log(res)
         if (res.data.code === 200 && res.data.data === 1) {
           console.log('判断是否可以上传')
+          this.$message.warning('文件生成中,请稍后')
           this.clickUpload()
         } else {
           this.$message.error('当前患者状态不可上传文件')
@@ -190,24 +196,24 @@ export default {
       })
     },
     clickUpload () {
-      // if (this.upLoadButtonName === '上传中') {
-      //   this.$message.warning('文件上传中,请等待')
-      //   return false
-      // } else {
-      //   this.upLoadButtonName = '上传中'
-      // }
+      if (this.upLoadButtonName === '上传中') {
+        this.$message.warning('文件上传中,请等待')
+        return false
+      } else {
+        this.upLoadButtonName = '上传中'
+      }
       utilsDebounce(() => {
         this.$emit('upload')
       }, 1000)
     },
-    // upLoadEndPDF (res) {
-    //   if (res === '1') {
-    //     this.$message.success('文件上传成功')
-    //   } else {
-    //     this.$message.error('文件上传失败')
-    //   }
-    //   this.upLoadButtonName = '上传'
-    // },
+    upLoadEndPDF (res) {
+      if (res === '1') {
+        this.$message.success('文件上传成功')
+      } else {
+        this.$message.error('文件上传失败')
+      }
+      this.upLoadButtonName = '保存'
+    },
     pageUp () {
       const pageIndex = +this.pageIndex
       if (pageIndex > 0) {
@@ -222,7 +228,6 @@ export default {
     }
   },
   beforeDestroy () {
-    $bus.$off('upLoadEnd')
     $bus.$off('changeShuaxin')
   }
 }

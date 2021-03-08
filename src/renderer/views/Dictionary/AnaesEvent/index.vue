@@ -34,6 +34,10 @@
           vxe-table-column(field="detailName" title="事件名称" :edit-render="{}" width="200")
             template(v-slot:edit="{ row }")
               el-input(v-model="row.detailName" size="mini" @blur="handleBlur")
+          vxe-table-column(field="way" title="途径" :edit-render="{}" width="200")
+            template(v-slot:edit="{ row }")
+              el-select(size="mini" v-model="row.way" @change="handleBlur")
+                el-option(v-for="item in channelList" :label="item.detail_name" :value="item.detail_code" :key="item.detail_code")
           vxe-table-column(field="drugSpec" title="药品规格" :edit-render="{}" width="200")
             template(v-slot:edit="{ row }")
               el-input(v-model="row.drugSpec" size="mini" @blur="handleBlur")
@@ -63,10 +67,6 @@
             template(v-slot:edit="{ row }")
               el-select(size="mini" v-model="row.speedUnit" @change="handleBlur")
                 el-option(v-for="item in speedUnitList" :label="item.detail_name" :value="item.detail_code" :key="item.detail_code")
-          vxe-table-column(field="way" title="途径" :edit-render="{}" width="200")
-            template(v-slot:edit="{ row }")
-              el-select(size="mini" v-model="row.way" @change="handleBlur")
-                el-option(v-for="item in channelList" :label="item.detail_name" :value="item.detail_code" :key="item.detail_code")
           vxe-table-column(field="isContinue" title="持续" :edit-render="{}" width="200")
             template(v-slot:edit="{ row }")
               el-select(size="mini" v-model="row.isContinue" @change="handleBlur")
@@ -92,9 +92,19 @@
       el-button(size="mini" :disabled="refreshDisabled" @click="getDetail") 刷新(R)
 </template>
 <script>
-import { commonTermsDetail, anaesEventList, anaesEventDetail, addAnaesEvent, deleteAnaesEvent, updateAnaesEvent } from '@/api/dictionary'
 import {
-  getDoseUnit, getConUnit, getSpeedUnit, getDrugChannel
+  commonTermsDetail,
+  anaesEventList,
+  anaesEventDetail,
+  addAnaesEvent,
+  deleteAnaesEvent,
+  updateAnaesEvent
+} from '@/api/dictionary'
+import {
+  getDoseUnit,
+  getConUnit,
+  getSpeedUnit,
+  getDrugChannel
 } from '@/api/anaesDrug'
 import XEUtils from 'xe-utils'
 import request from '@/utils/requestForMock'
@@ -125,7 +135,10 @@ export default {
       channelList: [],
       chargeTypeList: [],
       adviceClassifyList: [],
-      continueList: [{ value: '1', label: '是' }, { value: '2', label: '否' }]
+      continueList: [
+        { value: '1', label: '是' },
+        { value: '2', label: '否' }
+      ]
     }
   },
   created () {
@@ -212,19 +225,19 @@ export default {
       if (insertRecords.length > 0) {
         if (
           insertRecords[0].liquidProperty !== '' ||
-            insertRecords[0].addviceClassify !== '' ||
-            insertRecords[0].speed !== '' ||
-            insertRecords[0].speedUnit !== '' ||
-            insertRecords[0].dose !== '' ||
-            insertRecords[0].doseUnit !== '' ||
-            insertRecords[0].concentration !== '' ||
-            insertRecords[0].conUnit !== '' ||
-            insertRecords[0].way !== '' ||
-            insertRecords[0].chargeType !== '' ||
-            insertRecords[0].drugProperty !== '' ||
-            insertRecords[0].drugSpec !== '' ||
-            insertRecords[0].isContinue !== '' ||
-            insertRecords[0].detailName !== ''
+          insertRecords[0].addviceClassify !== '' ||
+          insertRecords[0].speed !== '' ||
+          insertRecords[0].speedUnit !== '' ||
+          insertRecords[0].dose !== '' ||
+          insertRecords[0].doseUnit !== '' ||
+          insertRecords[0].concentration !== '' ||
+          insertRecords[0].conUnit !== '' ||
+          insertRecords[0].way !== '' ||
+          insertRecords[0].chargeType !== '' ||
+          insertRecords[0].drugProperty !== '' ||
+          insertRecords[0].drugSpec !== '' ||
+          insertRecords[0].isContinue !== '' ||
+          insertRecords[0].detailName !== ''
         ) {
           this.saveDisabled = false
           this.cancelDisabled = false
@@ -295,7 +308,9 @@ export default {
       if (this.currentRow.detailCode && this.currentRow.detailCode !== '') {
         request({
           method: 'DELETE',
-          url: deleteAnaesEvent + `/${this.currentRow.detailCode}/${this.currentMenu.eventCode}`
+          url:
+            deleteAnaesEvent +
+            `/${this.currentRow.detailCode}/${this.currentMenu.eventCode}`
         }).then(res => {
           this.currentRow = {}
           this.deleteDisabled = true
@@ -428,33 +443,32 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
- @import "@/styles/theme";
-.anaes-event{
-  height:100%;
-  .content{
-    height:calc(100% - 40px);
-    .left{
-      width:20%;
-      height:100%;
-      float:left;
+@import '@/styles/theme';
+.anaes-event {
+  height: 100%;
+  .content {
+    height: calc(100% - 40px);
+    .left {
+      width: 20%;
+      height: 100%;
+      float: left;
       // border 1px solid rgba(57, 66, 92, 1)
-      @include theme-property("border", $border-event-left);
+      @include theme-property('border', $border-event-left);
       border-right: unset !important;
       border-radius: 5px 0px 0px 5px;
-
     }
-    .right{
-      height:100%;
-      float:right;
-      width:80%;
-    }
-  }
-  .option{
-    margin-top:10px;
-    text-align:right;
-    .el-button{
-      margin-right:10px;
+    .right {
+      height: 100%;
+      float: right;
+      width: 80%;
     }
   }
+  .option {
+    margin-top: 10px;
+    text-align: right;
+    .el-button {
+      margin-right: 10px;
     }
+  }
+}
 </style>
