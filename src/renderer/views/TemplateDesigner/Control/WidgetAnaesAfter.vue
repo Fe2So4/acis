@@ -1,6 +1,7 @@
 <template>
   <div
-    class="widgetAnaesthesiaDoctor"
+    class="WidgetAnaesAfter
+"
     :style="[
       noTableNameStyle,
       dataSourceAlertStyle,
@@ -42,12 +43,12 @@
   </div>
 </template>
 <script>
-import { getAnesDocList } from '@/api/dict'
+import { getOperationList } from '@/api/dict'
 import request from '@/utils/requestForMock'
 import { validateDataSourceMixin, validateDictionarySourceMixin } from './mixin'
 
 export default {
-  name: 'WidgetAnaesthesiaDoctor',
+  name: 'WidgetAnaesAfter',
   mixins: [validateDataSourceMixin, validateDictionarySourceMixin],
   props: {
     configuration: {
@@ -147,15 +148,14 @@ export default {
         }
       }
     },
-    getDictionaryData (startPage) {
-      return this.getAnesDocList(this.content, startPage).then(
+    getDictionaryData (start) {
+      return this.getOperationList(this.content, start).then(
         ({ list, pageNum, isFirstPage, isLastPage }) => {
-          list = list.map(({ userId, userName }) => `${userId}_${userName}`)
+          list = list.map(({ opeCode, opeName }) => `${opeCode}_${opeName}`)
           this.isLastPage = isLastPage
           this.pageIndex = pageNum
           if (isFirstPage) {
             this.options = list
-            console.log(this.options)
           } else {
             this.options.push(...list)
           }
@@ -165,14 +165,14 @@ export default {
         }
       )
     },
-    getAnesDocList (content, startPage) {
+    getOperationList (content, start) {
       return request({
         method: 'get',
-        url: getAnesDocList,
+        url: getOperationList,
         params: {
           content,
-          startPage,
-          pageSize: 10
+          start,
+          size: 10
         }
       }).then(res => {
         if (res.data.success) {
@@ -270,7 +270,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.widgetAnaesthesiaDoctor {
+.WidgetAnaesAfter {
   width: 100%;
   height: 100%;
   position: relative;

@@ -101,6 +101,14 @@ export default {
       {
         label: '麻醉医生',
         name: 'widget-anaesthesia-doctor'
+      },
+      {
+        label: '麻醉方法',
+        name: 'widget-anaes-method'
+      },
+      {
+        label: '实施手术',
+        name: 'widget-anaes-after'
       }
     ])
     const wrapStyle = Object.freeze([
@@ -117,7 +125,7 @@ export default {
   computed: {
     ...mapGetters(['templateData']),
     ...mapState({
-      templateId: (state) => state.templateId
+      templateId: state => state.templateId
     })
   },
   methods: {
@@ -130,8 +138,8 @@ export default {
       this.$emit('show-template-data', JSON.stringify(this.templateData))
 
       return Promise.all([this.updateDocument(), this.saveTemplateTableInfo()])
-        .then((res) => {
-          const success = res.every((res) => res.data && res.data.success)
+        .then(res => {
+          const success = res.every(res => res.data && res.data.success)
           if (success) {
             this.$message({
               message: '保存成功',
@@ -141,7 +149,7 @@ export default {
             return Promise.reject(new Error())
           }
         })
-        .catch((e) => {
+        .catch(e => {
           this.$message({
             message: '保存失败',
             type: 'error'
@@ -161,7 +169,7 @@ export default {
     saveTemplateTableInfo () {
       // 过滤出一般控件的表名字段名
       let data = this.templateData.filter(
-        (widget) =>
+        widget =>
           widget.dataSource &&
           widget.dataSource.tableName &&
           widget.dataSource.className
@@ -176,7 +184,8 @@ export default {
         return acc
       }, {})
       // 过滤出表格，将表格中的表名字段名添加到请求集合中
-      this.templateData.filter(widget => widget.name === 'widget-table')
+      this.templateData
+        .filter(widget => widget.name === 'widget-table')
         .map(widgetTable => widgetTable.cells)
         .reduce((arr, cells) => {
           return [...arr, ...cells.reduce((acc, cell) => [...acc, ...cell], [])]
@@ -190,7 +199,7 @@ export default {
             data[cell.tableName].add(cell.className)
           }
         })
-      Object.keys(data).forEach((key) => {
+      Object.keys(data).forEach(key => {
         data[key] = Array.from(data[key]).join(',')
       })
       return request({
@@ -206,12 +215,12 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import "@/styles/theme";
+@import '@/styles/theme';
 
 $background: (
   dark-blue: #364058,
   dark-gray: #353537,
-  light-white: #ebecef,
+  light-white: #ebecef
 );
 .widgetList {
   height: 100%;

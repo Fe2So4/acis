@@ -1005,12 +1005,27 @@ export default {
       })
     },
     getAcisIntraoEventInfo () {
+      let type = null
+      if (
+        this.$route.params.flag === 0 ||
+        (this.$route.params.buttonConfig &&
+          this.$route.params.buttonConfig.includes('ANES'))
+      ) {
+        type = 1
+      } else if (
+        this.$route.params.flag === 1 ||
+        (this.$route.params.buttonConfig &&
+          this.$route.params.buttonConfig.includes('ANAB'))
+      ) {
+        type = 2
+      }
       return request({
         url: getAcisIntraoEventInfo,
         data: {
+          type: type,
           operationId: this.operationId,
           line: 40,
-          length: 25,
+          length: 22,
           page: this.pageIndex + 1,
           startTime: this.startTime,
           endTime: this.endTime

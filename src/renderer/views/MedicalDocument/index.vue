@@ -74,7 +74,6 @@ import {
 } from '@/api/medicalDocument'
 import {
   addBloodGasAnalysisRecord,
-  acisUploadWritWright,
   getsThePageThatCurrently
 } from '@/api/blood'
 import request from '@/utils/requestForMock'
@@ -99,6 +98,9 @@ export default {
     return {
       bmiWeight: '',
       bmiHeight: '',
+      wardAlertness: '',
+      wardBreathPatency: '',
+      wardMobility: '',
       widgetList: [],
       startTime: '',
       endTime: '',
@@ -145,14 +147,64 @@ export default {
           height = item.value
           this.height = item.value
         }
-        if (item.tagName === 'BMI') {
-          console.log(item)
-        }
       })
       return height
+    },
+    wardAlertnessCNM () {
+      let alertness = ''
+      this.widgetList.forEach(item => {
+        if (item.tagName === '复苏_出室_清醒程度') {
+          console.log(item)
+          alertness = item.value
+
+          return false
+        }
+      })
+      return alertness
+    },
+    wardBreathPatencyCNM () {
+      let breathPatency = ''
+      this.widgetList.forEach(item => {
+        if (item.tagName === '复苏_出室_呼吸通畅度') {
+          console.log(item)
+          breathPatency = item.value
+
+          return false
+        }
+      })
+      return breathPatency
+    },
+    wardMobilityCNM () {
+      let mobility = ''
+      this.widgetList.forEach(item => {
+        if (item.tagName === '复苏_出室_肢体活动度') {
+          mobility = item.value
+
+          return false
+        }
+      })
+      return mobility
     }
   },
   watch: {
+    wardAlertnessCNM (val) {
+      this.wardAlertness = val
+      utilsDebounce(() => {
+        this.getSteWard()
+      }, 1000)
+    },
+    wardBreathPatencyCNM (val) {
+      this.wardBreathPatency = val
+      utilsDebounce(() => {
+        this.getSteWard()
+      }, 1000)
+    },
+    wardMobilityCNM (val) {
+      this.wardMobility = val
+      utilsDebounce(() => {
+        this.getSteWard()
+      }, 1000)
+    },
     bmiWeightNum (val) {
       this.bmiWieight = val
       utilsDebounce(() => {
@@ -195,6 +247,38 @@ export default {
     this.showLeaveMessage(next, () => next(false))
   },
   methods: {
+    // 计算steward
+    getSteWard () {
+      let qxNum = 0
+      let hxNum = 0
+      let ztNum = 0
+      if (this.wardAlertness === '完全苏醒') {
+        qxNum = 2
+      } else if (this.wardAlertness === '对刺激有反应') {
+        qxNum = 1
+      } else {
+        qxNum = 0
+      }
+      if (this.wardBreathPatency === '可按医师吩咐咳嗽') {
+        hxNum = 2
+      } else if (this.wardBreathPatency === '不用支持可以维持呼吸道畅通') {
+        hxNum = 1
+      } else {
+        hxNum = 0
+      }
+      if (this.wardMobility === '肢体能作有意识的活动') {
+        ztNum = 2
+      } else if (this.wardMobility === '肢体无意识活动') {
+        ztNum = 1
+      } else {
+        ztNum = 0
+      }
+      this.widgetList.forEach(item => {
+        if (item.tagName === '复苏_stward评分') {
+          item.value = Number(qxNum) + Number(hxNum) + Number(ztNum)
+        }
+      })
+    },
     // 计算BMI
     getBmiNum () {
       if (this.bmiWieight && this.bmiHeight) {
@@ -375,7 +459,6 @@ export default {
         method: 'get'
       }).then(res => {
         if (res.data.code === 200) {
-          console.log(res)
           const totalPageNum = res.data.data
           utilsDebounce(() => {
             this.$electron.ipcRenderer.send('print-document', {
@@ -402,7 +485,6 @@ export default {
         method: 'get'
       }).then(res => {
         if (res.data.code === 200) {
-          console.log(res)
           const totalPageNum = res.data.data
           this.$electron.ipcRenderer.send('print-documentPDF', {
             path: `/printDocumentPDF/${this.templateId}/${this.operationId}/${this.patientId}/${this.pageIndex}/${this.isRescueMode}/${this.opePhase}/${this.pageInfo}/${flag}/${totalPageNum}`

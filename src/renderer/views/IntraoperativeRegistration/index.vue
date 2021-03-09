@@ -434,6 +434,7 @@ export default {
         })
     },
     init () {
+      $bus.$emit('changeShuaxin')
       $bus.$emit('shuaxinStatusList')
       this.tableData = []
       this.existIndex = 0

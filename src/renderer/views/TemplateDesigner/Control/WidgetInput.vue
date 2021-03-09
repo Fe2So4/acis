@@ -42,16 +42,10 @@
 <script>
 import { getDictionaryData } from '@/api/medicalDocument'
 import request from '@/utils/requestForMock'
-import {
-  validateDataSourceMixin,
-  validateDictionarySourceMixin
-} from './mixin'
+import { validateDataSourceMixin, validateDictionarySourceMixin } from './mixin'
 export default {
   name: 'WidgetInput',
-  mixins: [
-    validateDataSourceMixin,
-    validateDictionarySourceMixin
-  ],
+  mixins: [validateDataSourceMixin, validateDictionarySourceMixin],
   props: {
     configuration: {
       type: Object,
@@ -73,7 +67,7 @@ export default {
   data () {
     return {
       widgetStyle: {},
-      showSelectEvent: 'click',
+      showSelectEvent: 'dblclick',
       selectVisible: false,
       options: []
     }

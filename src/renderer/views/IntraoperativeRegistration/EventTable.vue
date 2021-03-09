@@ -25,6 +25,11 @@
           field="eventName"
           title="事件名称"
           width="200"
+          :edit-render="{
+            name: '$input',
+            props: { type: 'string' },
+            events: { change: onInputChange }
+          }"
         />
         <vxe-table-column
           field="approach"

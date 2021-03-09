@@ -157,10 +157,10 @@ export default {
   },
   mounted () {
     $bus.$on('changeShuaxin', () => {
-      this.$emit('refresh', '1')
+      utilsDebounce(() => {
+        this.$emit('refresh', '1')
+      }, 1000)
     })
-  },
-  created () {
     this.$electron.ipcRenderer.on('upLoadEnd', (event, res) => {
       console.log(res)
       utilsDebounce(() => {
@@ -229,6 +229,7 @@ export default {
   },
   beforeDestroy () {
     $bus.$off('changeShuaxin')
+    this.$electron.ipcRenderer.removeAllListeners(['upLoadEnd'])
   }
 }
 </script>

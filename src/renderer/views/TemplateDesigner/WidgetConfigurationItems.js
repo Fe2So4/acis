@@ -1,5 +1,5 @@
 import { Cell } from '../../model/WidgetTable'
-export default function getConfigurationItems (widgetName) {
+export default function getConfigurationItems(widgetName) {
   // 边框
   const border = {
     position: ['top', 'right', 'bottom', 'left'],
@@ -301,6 +301,27 @@ export default function getConfigurationItems (widgetName) {
       }
     case 'widget-anaesthesia-doctor':
       return {
+        tagName,
+        font,
+        border: Object.assign({}, border, {
+          position: ['bottom']
+        }),
+        placeholder: '',
+        dataSource
+      }
+    case 'widget-anaes-after':
+      return {
+        tagName,
+        font,
+        border: Object.assign({}, border, {
+          position: ['bottom']
+        }),
+        placeholder: '',
+        dataSource
+      }
+    case 'widget-anaes-method':
+      return {
+        tagName,
         font,
         border: Object.assign({}, border, {
           position: ['bottom']

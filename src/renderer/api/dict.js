@@ -13,3 +13,9 @@ export const getDeptList = baseLi + 'acis/dict/getDeptList'
 
 // 麻醉医生字典 2021-03-08
 export const getAnesDocList = baseLi + 'acis/dict/getAnesDocList'
+
+// 实施手术字典 2021-03-09
+export const getOperationList = baseLi + 'acis/dict/getOperationList'
+
+// 麻醉方法字段 2021-03-09
+export const getAnesMethodDict = baseLi + 'acis/dict/getAnesMethodDict'
