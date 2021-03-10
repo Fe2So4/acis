@@ -106,6 +106,29 @@
       :lock-visible="lockVisible"
       @handleLock="handleLock"
     />
+    <el-dialog
+      title="跳转电子病历,请输入患者ID"
+      append-to-body
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <el-form>
+        <el-form-item label="请输入患者ID">
+          <el-input v-model="binglipatientId" />
+        </el-form-item>
+      </el-form>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="handleClickBingli"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -115,14 +138,16 @@ import { getNavs } from '@/api/nav'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import request from '@/utils/requestForMock'
 import { exec } from 'child_process'
-import { ipcRenderer } from 'electron'
-// const { shell } = require('electron')
+// import { ipcRenderer } from 'electron'
+const { shell } = require('electron')
 
 // import Overview from '../../../components/OperationOverview/index'
 export default {
   name: 'Aside',
   data () {
     return {
+      binglipatientId: '',
+      dialogVisible: false,
       dialogTitle: '标题',
       activesNames: 'M001',
       isCollapse: false,
@@ -322,8 +347,13 @@ export default {
     // ChangePass
     // Hemodynamics
   },
+  watch: {
+    patientId (val) {
+      this.binglipatientId = val
+    }
+  },
   computed: {
-    ...mapState('Base', ['theme']),
+    ...mapState('Base', ['theme', 'patientId']),
     ...mapGetters('Base', ['operationId']),
     oddEven (index) {
       return function (index) {
@@ -390,6 +420,10 @@ export default {
     handleClose (done) {
       done()
     },
+    handleClickBingli () {
+      const url = `http://168.2.5.28:7070/viewhip-etyy/view/commView/layout.jsp?patientId=${this.patientId}&patientSystemCode=HIS`
+      shell.openExternal(url)
+    },
     handleChangeButton (item, index) {
       console.log(item, '点击麻药用药')
       if (this.operationId === '' && item.necessary) {
@@ -411,14 +445,15 @@ export default {
         return
       } else if (item.componentName === 'MedicalRecordCourse') {
         // this.showWebview = true
-        ipcRenderer.send('WEB-EMR', this.operationId)
-        // const url = `http://192.168.10.18:8089/Default.aspx?inpatientID=${this.operationId}&out=0`
-        // shell.openExternal('https://github.com')
+        // ipcRenderer.send('WEB-EMR', this.operationId)
+        // console.log(this.patientId)
+        this.dialogVisible = true
         return
       } else if (item.componentName === 'LockScreen') {
         this.lockVisible = true
         return
       }
+      // shell.openExternal
       this.setEventType(item)
       this.dialogTitle = item.perName
       this.componentName = item.componentName

@@ -462,7 +462,7 @@ export default {
           const totalPageNum = res.data.data
           utilsDebounce(() => {
             this.$electron.ipcRenderer.send('print-document', {
-              path: `/printDocument/${this.templateId}/${this.operationId}/${this.patientId}/${this.pageIndex}/${this.isRescueMode}/${this.opePhase}/${this.pageInfo}/${totalPageNum}`
+              path: `/printDocument/${this.templateId}/${this.operationId}/${this.patientId}/${this.pageIndex}/${this.isRescueMode}/${this.opePhase}/${this.pageInfo}/${totalPageNum}/${flag}`
             })
           }, 1000)
         }

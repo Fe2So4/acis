@@ -1005,15 +1005,16 @@ export default {
       })
     },
     getAcisIntraoEventInfo () {
-      let type = null
+      console.log(this.$route.params)
+      let type = 1
       if (
-        this.$route.params.flag === 0 ||
+        this.$route.params.flag === '0' ||
         (this.$route.params.buttonConfig &&
           this.$route.params.buttonConfig.includes('ANES'))
       ) {
         type = 1
       } else if (
-        this.$route.params.flag === 1 ||
+        this.$route.params.flag === '1' ||
         (this.$route.params.buttonConfig &&
           this.$route.params.buttonConfig.includes('ANAB'))
       ) {
