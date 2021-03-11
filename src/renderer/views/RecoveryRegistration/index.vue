@@ -42,6 +42,7 @@
 </template>
 
 <script>
+// 复苏登记
 import {
   getExistEvent,
   getApproachList,
@@ -86,9 +87,7 @@ export default {
     ...mapState(['operationId']),
     filteredTableData () {
       if (this.filterType) {
-        return this.tableData.filter(
-          (item) => item.eventId === this.filterType
-        )
+        return this.tableData.filter(item => item.eventId === this.filterType)
       }
       return [...this.tableData]
     }
@@ -97,6 +96,7 @@ export default {
     this.getExistEvent()
     this.getApproachList()
     this.getEventList()
+    console.log('复苏登记')
   },
   methods: {
     onShowTemplates () {
@@ -142,22 +142,22 @@ export default {
         delete this.changedMap[row.existIndex]
         this.deletedMap[row.existIndex] = row
         const rowIndex = this.tableData.findIndex(
-          (item) => item.existIndex === row.existIndex
+          item => item.existIndex === row.existIndex
         )
         this.tableData.splice(rowIndex, 1)
       } else if (row._tag === 'add') {
         delete this.addedMap[row.addIndex]
         const rowIndex = this.tableData.findIndex(
-          (item) => item.addIndex === row.addIndex
+          item => item.addIndex === row.addIndex
         )
         this.tableData.splice(rowIndex, 1)
       }
     },
     onSaveEvent () {
       const requestArr = []
-      const changedList = Object.values(this.changedMap).map((item) => {
-        const obj = {};
-        ({
+      const changedList = Object.values(this.changedMap).map(item => {
+        const obj = {}
+        ;({
           approach: obj.approach,
           concentration: obj.concentration,
           concentrationUnit: obj.concentrationUnit,
@@ -181,9 +181,9 @@ export default {
       if (changedList.length) {
         requestArr.push(this.saveEvent(changedList, 1))
       }
-      const addedList = Object.values(this.addedMap).map((item) => {
-        const obj = {};
-        ({
+      const addedList = Object.values(this.addedMap).map(item => {
+        const obj = {}
+        ;({
           approach: obj.approach,
           concentration: obj.concentration,
           concentrationUnit: obj.concentrationUnit,
@@ -206,17 +206,17 @@ export default {
       if (addedList.length) {
         requestArr.push(this.saveEvent(addedList, 0))
       }
-      const deletedList = Object.values(this.deletedMap).map((item) => {
-        const obj = {};
-        ({ id: obj.id, eventId: obj.eventId } = item)
+      const deletedList = Object.values(this.deletedMap).map(item => {
+        const obj = {}
+        ;({ id: obj.id, eventId: obj.eventId } = item)
         return obj
       })
       if (deletedList.length) {
         requestArr.push(this.saveEvent(deletedList, 2))
       }
       if (requestArr.length) {
-        return Promise.all(requestArr).then((res) => {
-          const success = res.every((res) => res.data && res.data.data)
+        return Promise.all(requestArr).then(res => {
+          const success = res.every(res => res.data && res.data.data)
           if (success) {
             this.init()
           }
@@ -274,7 +274,7 @@ export default {
           }
         }
       )
-      arr.forEach((event) => {
+      arr.forEach(event => {
         this.addedMap[event.addIndex] = event
         this.tableData.push(event)
       })
@@ -285,22 +285,8 @@ export default {
     },
     onSaveTemplate ({ havingWay, templateName, templateParentName }) {
       this.dialogConfirmVisible = false
-      const list = this.tableData.map(({
-        approach,
-        concentration,
-        concentrationUnit,
-        detailId,
-        dosage,
-        dosageUnit,
-        eventId,
-        eventName,
-        eventType,
-        holdingTime,
-        isHolding,
-        speed,
-        speedUnit
-      }) => {
-        return {
+      const list = this.tableData.map(
+        ({
           approach,
           concentration,
           concentrationUnit,
@@ -314,11 +300,30 @@ export default {
           isHolding,
           speed,
           speedUnit
+        }) => {
+          return {
+            approach,
+            concentration,
+            concentrationUnit,
+            detailId,
+            dosage,
+            dosageUnit,
+            eventId,
+            eventName,
+            eventType,
+            holdingTime,
+            isHolding,
+            speed,
+            speedUnit
+          }
         }
-      })
+      )
       if (list.length) {
         this.addNewTemplate({
-          havingWay, templateName, templateParentName, list
+          havingWay,
+          templateName,
+          templateParentName,
+          list
         })
       }
     },
@@ -327,43 +332,44 @@ export default {
         method: 'post',
         url: getExistEvent,
         params: {
-          operationId: this.operationId
+          operationId: this.operationId,
+          type: 2,
         }
       })
-        .then((res) => {
+        .then(res => {
           if (res.data && res.data.success) {
-            this.tableData = res.data.data.map((item) => {
+            this.tableData = res.data.data.map(item => {
               item.existIndex = this.existIndex++
               item._tag = 'exist'
               return item
             })
           }
         })
-        .catch((e) => {})
+        .catch(e => {})
     },
     getApproachList () {
       return request({
         method: 'get',
         url: getApproachList
       })
-        .then((res) => {
+        .then(res => {
           if (res.data && res.data.success) {
             this.approachList = res.data.data
           }
         })
-        .catch((e) => {})
+        .catch(e => {})
     },
     getEventList () {
       return request({
         url: getEventList,
         method: 'get'
       })
-        .then((res) => {
+        .then(res => {
           if (res.data && res.data.success) {
             this.eventList = res.data.data
           }
         })
-        .catch((e) => {})
+        .catch(e => {})
     },
     saveEvent (list, mode) {
       return request({
@@ -385,8 +391,8 @@ export default {
           templeteParentName: templateParentName,
           list
         }
-      }).then(
-        res => {
+      })
+        .then(res => {
           if (res.data && res.data.success) {
             this.$message({
               message: '保存成功',
@@ -395,13 +401,13 @@ export default {
           } else {
             return Promise.reject(new Error())
           }
-        }
-      ).catch(e => {
-        this.$message({
-          message: '保存失败',
-          type: 'error'
         })
-      })
+        .catch(e => {
+          this.$message({
+            message: '保存失败',
+            type: 'error'
+          })
+        })
     },
     init () {
       this.tableData = []

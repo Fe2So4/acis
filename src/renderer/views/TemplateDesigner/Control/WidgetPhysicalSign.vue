@@ -1005,7 +1005,7 @@ export default {
       })
     },
     getAcisIntraoEventInfo () {
-      console.log(this.$route.params)
+      // console.log(this.$route.params)
       let type = 1
       if (
         this.$route.params.flag === '0' ||

@@ -96,6 +96,7 @@ export default {
     this.getExistEvent()
     this.getApproachList()
     this.getEventList()
+    console.log('术中登记')
   },
   methods: {
     onShowTemplates () {
@@ -356,7 +357,8 @@ export default {
         method: 'post',
         url: getExistEvent,
         params: {
-          operationId: this.operationId
+          operationId: this.operationId,
+          type: 1
         }
       })
         .then(res => {
