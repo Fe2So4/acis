@@ -96,6 +96,68 @@ export class PhysicalSignLine {
     this._drawLine()
   }
 
+  setValuePoint ({ time, value, pointY }) {
+    const { x } = this._coordinateAdaptor({ time })
+    const thisMoment = +moment(time, 'YYYY-MM-DD HH:mm:ss')
+    const hasLabel = thisMoment % (5 * 60 * 1000) === 0
+    const text = hasLabel ? this._label : ''
+    const label = new Label(text)
+    const position = [x + 4, pointY]
+    const width = hasLabel ? 25 : 15
+    const height = hasLabel ? 10 : 5
+    label.attr({
+      anchor: [0, 0],
+      width,
+      height,
+      fontSize: 10,
+      fontFamily: '宋体',
+      textAlign: 'center',
+      verticalAlign: 'middle',
+      fillColor: this._color,
+      pos: [position[0] + 4 - width / 2, position[1] - height / 2],
+      zIndex: 1111,
+      className: 'signLabel',
+      signId: this._signId,
+      signName: this._name,
+      timePoint: time,
+      pointValue: value
+    })
+    this._labels.set(label, position)
+
+    let offsetPosition = [0, 0]
+    const mousedownHandler = (e) => {
+      const { x, y } = e
+      offsetPosition = label.getOffsetPosition(x + 4 - width / 2, y - height / 2)
+      this._layer.addEventListener('mousemove', mousemoveHandler)
+      this._layer.addEventListener('mouseup', mouseupHandler)
+    }
+    const mousemoveHandler = (e) => {
+      const { x, y } = e
+      const groupOffsetPosition = this._group.getOffsetPosition(x, y)
+      let newPosY = Math.min(
+        groupOffsetPosition[1] - offsetPosition[1],
+        this._group.attr('height')
+      )
+      newPosY = Math.max(0, newPosY)
+      const newPos = [position[0], newPosY]
+      label.setAttribute('pos', [
+        Math.round(newPos[0] + 4 - width / 2),
+        Math.round(newPos[1] - height / 2)
+      ])
+      label.setAttribute('fillColor', 'red')
+      this._labels.set(label, newPos)
+      this._drawLine()
+      label.attr('pointValue', this.getPoint(label))
+    }
+    const mouseupHandler = (e) => {
+      this._layer.removeEventListener('mousemove', mousemoveHandler)
+      this._layer.removeEventListener('mouseup', mouseupHandler)
+    }
+    label.addEventListener('mousedown', mousedownHandler)
+    this._group.append(label)
+    this._drawLine()
+  }
+
   // 获取某个点的value
   getPoint (label) {
     const position = this._labels.get(label)

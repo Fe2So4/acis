@@ -1,5 +1,5 @@
 import { Cell } from '../../model/WidgetTable'
-export default function getConfigurationItems(widgetName) {
+export default function getConfigurationItems (widgetName) {
   // 边框
   const border = {
     position: ['top', 'right', 'bottom', 'left'],
@@ -52,6 +52,7 @@ export default function getConfigurationItems(widgetName) {
           position: []
         }),
         font,
+        tagName,
         singleSelect: '1',
         labelMargin: 10,
         collections: [

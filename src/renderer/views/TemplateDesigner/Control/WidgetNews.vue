@@ -174,7 +174,7 @@ export default {
         if (res.data.success) {
           return res.data.data.eventList
         }
-        return Promise.reject(new Error('获取术中事件信息失败'))
+        // return Promise.reject(new Error('获取术中事件信息失败'))
       })
     }
   }

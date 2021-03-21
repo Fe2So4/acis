@@ -75,9 +75,10 @@ import request from '@/utils/requestForMock'
 import {
   getMonitorInfo,
   addMonitorInfo,
-  getOperationBindEquipmentIp,
-  saveServerIp
+  getOperationBindEquipmentIp
+
 } from '@/api/device'
+  // saveServerIp
 import { createNamespacedHelpers } from 'vuex'
 import moment from 'moment'
 const { mapState } = createNamespacedHelpers('Base')

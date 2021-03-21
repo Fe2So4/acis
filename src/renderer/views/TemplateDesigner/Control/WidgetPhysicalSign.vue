@@ -4,7 +4,12 @@
     class="widgetPhysicalSign"
     :style="widgetStyle"
     :title="title"
-  />
+  >
+    <MySignsForm
+      :dialog-visible="dialogVisible"
+      @closeDio="closeDio"
+    />
+  </div>
 </template>
 
 <script>
@@ -17,6 +22,7 @@ import { getSignData, getEventDictData } from '@/api/medicalDocument'
 import { getBloodGasAnalysisRecordTime } from '@/api/blood'
 import { getAcisIntraoEventInfo } from '@/api/intraoperative'
 import request from '@/utils/requestForMock'
+import MySignsForm from '@/components/MySignsForm/mySignsForm'
 import {
   PhysicalSignLine,
   PhysicalSignLegends,
@@ -64,6 +70,7 @@ export default {
   },
   data () {
     return {
+      dialogVisible: false,
       timer: null,
       widgetStyle: {},
       title: '',
@@ -75,6 +82,9 @@ export default {
       bloodGas: null,
       socket: null
     }
+  },
+  components: {
+    MySignsForm
   },
   computed: {
     modeCode () {
@@ -157,6 +167,9 @@ export default {
     this.scene = null
   },
   methods: {
+    closeDio () {
+      this.dialogVisible = false
+    },
     documentRefreshHandler () {
       console.log('document-refresh')
       // 获取数据
@@ -723,6 +736,7 @@ export default {
     drawLines () {
       const gridGroup = this.layer.getElementsByClassName('grid')[0]
       if (Array.isArray(this.lineList)) {
+        console.log(this.lineList)
         this.lineList.forEach(item => {
           const { min, max } = this.getYAxisValueRange(item.yindex)
           if (min === max) {
@@ -734,24 +748,53 @@ export default {
             drawIcon: label,
             disColor: color
           } = item
-          this.lines[signId] = new PhysicalSignLine({
-            signId,
-            name,
-            label,
-            color: '#' + color,
-            group: gridGroup,
-            layer: this.layer,
-            startTime: this.configuration.xAxis.startTime,
-            endTime: this.configuration.xAxis.endTime,
-            min,
-            max
-          })
-          item.list.forEach(value => {
-            this.lines[signId].addPoint({
-              time: value.timePoint,
-              value: value.itemValue
+          if (name === 'SPO2' || name === 'SBP' || name === 'MBP') {
+            item.list.forEach((value, index) => {
+              this.lines[signId + index] = new PhysicalSignLine({
+                signId: signId + index,
+                name,
+                label: value.itemValue,
+                color: '#' + color,
+                group: gridGroup,
+                layer: this.layer,
+                startTime: this.configuration.xAxis.startTime,
+                endTime: this.configuration.xAxis.endTime,
+                min,
+                max
+              })
+              this.lines[signId + index].setValuePoint({
+                time: value.timePoint,
+                value: value.itemValue,
+                pointY: name === 'SPO2' ? 2 : name === 'SBP' ? 13 : 24
+              })
             })
-          })
+
+            // item.list.forEach(value => {
+            //   this.lines[signId].addPoint({
+            //     time: value.timePoint,
+            //     value: value.itemValue
+            //   })
+            // })
+          } else {
+            this.lines[signId] = new PhysicalSignLine({
+              signId,
+              name,
+              label,
+              color: '#' + color,
+              group: gridGroup,
+              layer: this.layer,
+              startTime: this.configuration.xAxis.startTime,
+              endTime: this.configuration.xAxis.endTime,
+              min,
+              max
+            })
+            item.list.forEach(value => {
+              this.lines[signId].addPoint({
+                time: value.timePoint,
+                value: value.itemValue
+              })
+            })
+          }
         })
       }
     },
@@ -906,6 +949,7 @@ export default {
         }
       })
     },
+    // grid右击事件
     addGirdTooltip () {
       const grid = this.layer.querySelector('.grid')
       if (grid) {
@@ -931,8 +975,14 @@ export default {
         const mouseleaveHandler = e => {
           this.$tooltip.remove()
         }
+        const mouseRightClick = e => {
+          if (e.originalEvent.button === 2) {
+            this.dialogVisible = true
+          }
+        }
         grid.addEventListener('mousemove', mousemoveHandler)
         grid.addEventListener('mouseleave', mouseleaveHandler)
+        grid.addEventListener('mouseup', mouseRightClick)
       }
     },
     addEventTagCtxMenu () {
@@ -1036,7 +1086,7 @@ export default {
         if (res.data.success) {
           return res.data.data.iconList
         }
-        return Promise.reject(new Error('获取术中事件信息失败'))
+        // return Promise.reject(new Error('获取术中事件信息失败'))
       })
     }
   }

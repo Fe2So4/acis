@@ -191,7 +191,7 @@ export default {
           this.$message.warning('文件生成中,请稍后')
           this.clickUpload()
         } else {
-          this.$message.error('当前患者状态不可上传文件')
+          this.$message.warning('当前患者状态不可上传文件')
         }
       })
     },

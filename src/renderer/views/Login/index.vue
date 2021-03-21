@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import { login } from '@/api/login'
+import { login, getUserInfo } from '@/api/login'
 import request from '@/utils/requestForMock'
 import { setUserToken, setCurrentAccount } from '../../utils/storage'
 
@@ -135,6 +135,7 @@ export default {
             }
           }).then((res) => {
             if (res.data.code === '0') {
+              this.getUserInfo()
               setUserToken(res.data.data)
               setCurrentAccount(this.form.username)
               this.$router.push('/home')
@@ -145,6 +146,14 @@ export default {
         } else {
           return false
         }
+      })
+    },
+    getUserInfo () {
+      request({
+        url: getUserInfo
+      }).then(res => {
+        this.$store.dispatch('Base/setUserInfo', res.data.data)
+        // this.form.userName = res.data.data.userName
       })
     },
     enter (e) {

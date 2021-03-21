@@ -132,7 +132,7 @@ export default {
     bmiWeightNum () {
       let weight = ''
       this.widgetList.forEach(item => {
-        if (item.tagName === 'weight') {
+        if (item.tagName === 'patientWeight') {
           weight = item.value
           this.widget = weight
           return false
@@ -143,7 +143,7 @@ export default {
     bmiHeightNum () {
       let height = ''
       this.widgetList.forEach(item => {
-        if (item.tagName === 'height') {
+        if (item.tagName === 'patientHeight') {
           height = item.value
           this.height = item.value
         }
@@ -153,8 +153,8 @@ export default {
     wardAlertnessCNM () {
       let alertness = ''
       this.widgetList.forEach(item => {
-        if (item.tagName === '复苏_出室_清醒程度') {
-          console.log(item)
+        if (item.tagName === 'outpacuAvpu') {
+          console.log(item, 'outpacuAvpu')
           alertness = item.value
 
           return false
@@ -165,8 +165,8 @@ export default {
     wardBreathPatencyCNM () {
       let breathPatency = ''
       this.widgetList.forEach(item => {
-        if (item.tagName === '复苏_出室_呼吸通畅度') {
-          console.log(item)
+        if (item.tagName === 'outpacuBreathe') {
+          console.log(item, 'outpacuBreathe')
           breathPatency = item.value
 
           return false
@@ -177,7 +177,8 @@ export default {
     wardMobilityCNM () {
       let mobility = ''
       this.widgetList.forEach(item => {
-        if (item.tagName === '复苏_出室_肢体活动度') {
+        if (item.tagName === 'outpacuLimb') {
+          console.log(item, 'outpacuLimb')
           mobility = item.value
 
           return false
@@ -188,18 +189,21 @@ export default {
   },
   watch: {
     wardAlertnessCNM (val) {
+      console.log(val)
       this.wardAlertness = val
       utilsDebounce(() => {
         this.getSteWard()
       }, 1000)
     },
     wardBreathPatencyCNM (val) {
+      console.log(val)
       this.wardBreathPatency = val
       utilsDebounce(() => {
         this.getSteWard()
       }, 1000)
     },
     wardMobilityCNM (val) {
+      console.log(val)
       this.wardMobility = val
       utilsDebounce(() => {
         this.getSteWard()
@@ -274,7 +278,7 @@ export default {
         ztNum = 0
       }
       this.widgetList.forEach(item => {
-        if (item.tagName === '复苏_stward评分') {
+        if (item.tagName === 'outpacuSteward') {
           item.value = Number(qxNum) + Number(hxNum) + Number(ztNum)
         }
       })
@@ -287,7 +291,7 @@ export default {
             ((Number(this.bmiHeight) * Number(this.bmiHeight)) / 10000)
         )
         this.widgetList.forEach(item => {
-          if (item.tagName === 'BMI') {
+          if (item.tagName === 'bmi') {
             item.value = bmi
           }
         })
@@ -524,13 +528,13 @@ export default {
     },
     saveNormalData () {
       const customDataList = this.widgetList
-        .filter(
-          widget =>
-            widget.dirty &&
-            widget.dataSource &&
-            (widget.dataSource.tableName === 'acis_patient_writ_data' ||
-              widget.dataSource.tableName === 'acis_amount_record')
-        )
+        // .filter(
+        //   widget =>
+        //     widget.dirty &&
+        //     widget.dataSource &&
+        //     (widget.dataSource.tableName === 'acis_patient_writ_data' ||
+        //       widget.dataSource.tableName === 'acis_amount_record')
+        // )
         .map(widget => {
           return {
             widgetId: widget.id,
@@ -538,42 +542,35 @@ export default {
             value: widget.value
           }
         })
-      const { length } = customDataList
-      if (length) {
-        return request({
-          method: 'POST',
-          url: saveDocumentData,
-          data: customDataList,
-          params: {
-            templateCode: this.templateId,
-            operationId: this.operationId,
-            patientId: this.patientId,
-            tableName: 'acis_patient_writ_data'
-          }
-        }).then(res => {
-          if (res.data.success) {
-            this.$message({
-              message: '保存成功',
-              type: 'success'
-            })
-            this.widgetList.forEach(widget => {
-              if (widget.dirty) {
-                widget.dirty = false
-              }
-            })
-          } else {
-            this.$message({
-              message: '保存失败',
-              type: 'warning'
-            })
-          }
-        })
-      } else {
-        this.$message({
-          message: '当前无可保存到自定义表数据',
-          type: 'info'
-        })
-      }
+
+      return request({
+        method: 'POST',
+        url: saveDocumentData,
+        data: customDataList,
+        params: {
+          templateCode: this.templateId,
+          operationId: this.operationId,
+          patientId: this.patientId,
+          tableName: 'acis_patient_writ_data'
+        }
+      }).then(res => {
+        if (res.data.success) {
+          this.$message({
+            message: '保存成功',
+            type: 'success'
+          })
+          this.widgetList.forEach(widget => {
+            if (widget.dirty) {
+              widget.dirty = false
+            }
+          })
+        } else {
+          this.$message({
+            message: '保存失败',
+            type: 'warning'
+          })
+        }
+      })
     },
     onConfigure () {
       this.dialogDesignerVisible = true

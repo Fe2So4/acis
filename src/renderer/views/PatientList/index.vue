@@ -207,7 +207,7 @@
           <li
             v-for="(item, index) in cardList"
             :key="item.operationId"
-            :class="{ active: index === activeIndex }"
+            :class="{ active: index === activeIndex, recovery: item.stateName === '入复苏室' }"
             @dblclick="handleJump(item)"
             @click="hanldeSelectPatient(item, index)"
           >
@@ -906,6 +906,9 @@ export default {
         &.active {
           // @include border-active;
           @include theme-property('background', $color-background-card-hover);
+        }
+        &.recovery {
+          @include theme-property('background', $color-background-card-recovery);
         }
       }
     }

@@ -95,6 +95,16 @@
       </el-menu>
       <!-- </el-scrollbar> -->
     </div>
+    <div style="position: absolute;bottom: 9px;left: 9px; color: #707B91">
+      <div style="margin-bottom:10px">
+        <span>{{ userInfo.userName }} </span>
+        <span> ({{ userInfo.loginName }})</span>
+        <span> {{ userInfo.roleName }}</span>
+      </div>
+      <div>
+        <span>{{ nowDay }} {{ time }} </span>
+      </div>
+    </div>
     <Dialog
       @close="handleDialogClose"
       :title="dialogTitle"
@@ -146,6 +156,9 @@ export default {
   name: 'Aside',
   data () {
     return {
+      time: '',
+      nowDay: '',
+      interval: null,
       binglipatientId: '',
       dialogVisible: false,
       dialogTitle: '标题',
@@ -353,7 +366,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('Base', ['theme', 'patientId']),
+    ...mapState('Base', ['theme', 'patientId', 'userInfo']),
     ...mapGetters('Base', ['operationId']),
     oddEven (index) {
       return function (index) {
@@ -407,6 +420,31 @@ export default {
     jumpLogin () {
       //  ----login页测试
       this.$router.push('/login')
+    },
+    // 获取日期
+    getNewDay () {
+      var date_ = new Date()
+      var year = date_.getFullYear()
+      var month = date_.getMonth() + 1
+      var day = date_.getDate()
+      this.nowDay = year + '-' + month + '-' + day
+    },
+    // 每秒更新时间
+    updateTime () {
+      var cd = new Date()
+      this.time =
+        this.zeroPadding(cd.getHours(), 2) +
+        ':' +
+        this.zeroPadding(cd.getMinutes(), 2) +
+        ':' +
+        this.zeroPadding(cd.getSeconds(), 2)
+    },
+    zeroPadding (num, digit) {
+      var zero = ''
+      for (var i = 0; i < digit; i++) {
+        zero += '0'
+      }
+      return (zero + num).slice(-digit)
     },
     handleSelect () {},
     handleLock () {
@@ -512,6 +550,9 @@ export default {
     }
   },
   mounted () {
+    this.getNewDay()
+    this.updateTime()
+    this.interval = setInterval(this.updateTime, 1000)
     this.$eventHub.$on('show-dialog', item => {
       // 激活弹窗
       this.handleChangeButton(item)
@@ -521,6 +562,9 @@ export default {
       this.handleDialogClose()
     })
     this.getNavList()
+  },
+  destroyed () {
+    this.interval = null
   }
 }
 </script>

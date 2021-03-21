@@ -43,6 +43,15 @@
                     li
               .title {{ item.conName }}
               .time
+                //- input(
+                //-   :id=" 'inputTime' + index "
+                //-   :disabled="item.state == 2"
+                //-   v-model="item.time"
+                //-   @focus="getNewHHMM(item)"
+                //-   @keyup.enter="handleAddOpeStatusTime(item, 'inputTime' + index)"
+                //-   type="time"
+                //-   style="width: 120px;text-indent: 8px;height: 30px;font-size: 20px;text-align: center;"
+                //- )
                 el-date-picker(
                   v-model="item.time",
                   :disabled="item.state == 2",
@@ -136,6 +145,11 @@ export default {
       'setOperationStateList',
       'clearBaseInfo'
     ]),
+    getNewHHMM (item) {
+      if (item.time === '' || item.time === null || item.time === undefined) {
+        item.time = moment(new Date()).format('HH:mm')
+      }
+    },
     handleShowList (item) {
       if (item.conCode !== '11') return
       if (item.time === '') {
@@ -188,6 +202,7 @@ export default {
         url: `${patientStatus}/${this.operationId}`
       }).then(res => {
         if (res.data && res.data.success) {
+          console.log(res.data.data)
           this.opeStatusList = res.data.data
           this.setOperationStateList(res.data.data)
         }
@@ -266,7 +281,11 @@ export default {
         }
       })
     },
-    handleAddOpeStatusTime (param) {
+    handleAddOpeStatusTime (param, type) {
+      const input = document.getElementById(type)
+      if (input) {
+        input.blur()
+      }
       this.addStatusTimePoint(param)
     },
     // 展示复苏床位
