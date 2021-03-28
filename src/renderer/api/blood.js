@@ -29,7 +29,9 @@ export const acisUploadWritWright = baseLi + 'acis/intraoperative/info/acisUploa
 // 调用电子签名
 export const getSignPicture = 'api.jhsec.com.cn/pkiserver/v1/getSignPicture'
 
-// 调用电子签名
+// 获取页数
 export const getsThePageThatCurrently = baseLi + 'acis/intraoperative/info/getsThePageThatCurrentlyNeedsToBePrinted'
 
+// 判断是否为当前登入人
+export const getAccessIfDoWrit = baseLi + 'acis/intraoperative/info/getAccessIfDoWrit'
 

@@ -633,7 +633,7 @@ export default {
           this.$message({ type: 'success', message: '增加急诊成功' })
           this.$eventHub.$emit('refresh-ptlist')
           this.$eventHub.$emit('close-dialog')
-          this.addStatusTimePoint(res.data.data)
+          // this.addStatusTimePoint(res.data.data)
         } else {
           this.$message({ type: 'error', message: res.data.msg })
         }

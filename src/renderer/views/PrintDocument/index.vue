@@ -133,6 +133,7 @@ export default {
         // this.paperSetting = paperSetting
         widgetList.splice(paperSettingIndex, 1)
         // this.tempList = widgetList
+        console.log(widgetList)
         this.arrPathSetting.tempList = widgetList
       })
     },
@@ -157,7 +158,13 @@ export default {
           operState: this.opePhase
         }
       }).then(res => {
-        const { startTime, endTime, totalPage, pageIndex } = res.data.data
+        const {
+          startTime,
+          endTime,
+          totalPage,
+          pageIndex,
+          integralPointList
+        } = res.data.data
         // this.startTime = startTime
         // this.endTime = endTime
         // this.totalPage = totalPage
@@ -166,9 +173,11 @@ export default {
         this.arrPathSetting.endTime = endTime
         this.arrPathSetting.totalPage = totalPage
         this.arrPathSetting.pageIndex = pageIndex
+        this.integralPointList = integralPointList
         this.arrPathSetting.tempList.forEach(widget => {
           // x轴起止时间更改
           if (widget.xAxis) {
+            widget.xAxis.boldTimeList = integralPointList
             widget.xAxis.startTime = startTime
             widget.xAxis.endTime = endTime
           }
@@ -197,9 +206,19 @@ export default {
         await this.getIntraoperativeData(pageIndex)
       }
       this.arrPathSetting.widgetList = this.arrPathSetting.tempList
+      // 删除打印不需要的元素
+      for (let i = this.arrPathSetting.widgetList.length - 1; i >= 0; i--) {
+        if (
+          this.arrPathSetting.widgetList[i].tagName &&
+          this.arrPathSetting.widgetList[i].tagName.includes('ifOperText')
+        ) {
+          console.log(this.arrPathSetting.widgetList[i])
+          this.arrPathSetting.widgetList.splice(i, 1)
+        }
+      }
       this.Arr.push(this.arrPathSetting)
-      console.log(this.Arr)
-      this.onWidgetFinish()
+      return false
+      // this.onWidgetFinish()
     },
     getCanvasWidget (tempList) {
       const canvasWidgets = [
@@ -207,6 +226,7 @@ export default {
         'widget-in-out',
         'widght-anaes-table'
       ]
+      // const canvasNoWidgets = ['ifOperText']
       return tempList.reduce((arr, widget) => {
         if (canvasWidgets.includes(widget.name)) {
           return arr.concat([widget.name])
@@ -220,6 +240,7 @@ export default {
       if (this.timer) {
         clearTimeout(this.timer)
       }
+
       for (let i = 0; i < this.canvasWidgetList.length; i++) {
         if (this.canvasWidgetList[i] === widgetName) {
           this.canvasWidgetList.splice(i, 1)

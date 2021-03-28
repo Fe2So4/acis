@@ -141,4 +141,7 @@ export default {
     }
   }
 }
+/deep/ .el-scrollbar__bar.is-horizontal {
+  height: 10px !important;
+}
 </style>

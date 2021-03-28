@@ -380,14 +380,22 @@ export default {
         }
       }).then(res => {
         if (res.data && res.data.success) {
-          const { startTime, endTime, totalPage, pageIndex } = res.data.data
+          const {
+            startTime,
+            endTime,
+            totalPage,
+            pageIndex,
+            integralPointList
+          } = res.data.data
           this.startTime = startTime
           this.endTime = endTime
           this.totalPage = totalPage
           this.pageIndex = pageIndex
+          this.integralPointList = integralPointList
           this.tempList.forEach(widget => {
             // x轴起止时间更改
             if (widget.xAxis) {
+              widget.xAxis.boldTimeList = integralPointList
               widget.xAxis.startTime = startTime
               widget.xAxis.endTime = endTime
             }
@@ -599,6 +607,7 @@ export default {
       }
     },
     onChangeSignData ({ itemCode, itemName, itemValue, timePoint }) {
+      // console.log(itemCode, itemName, itemValue, timePoint, '111111111')
       if (!itemCode) {
         return
       }
@@ -634,6 +643,7 @@ export default {
       this.visibleBloodGas = true
     },
     saveChangedSignData () {
+      console.log(this.changedSignDataList, '1111')
       const { length } = this.changedSignDataList
       if (length === 0) return
       return request({

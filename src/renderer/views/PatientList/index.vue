@@ -73,7 +73,7 @@
             </el-form-item>
           </el-form>
         </el-row>
-        <el-row>
+        <el-row style="display:flex">
           <el-form
             :model="searchForm"
             :inline="true"
@@ -117,6 +117,16 @@
               </el-button>
             </el-form-item>
           </el-form>
+          <div
+            style="flex: 1; text-align: right; padding-right: 10px;font-size:16px;margin-top:7px"
+          >
+            <span style="color:#3377FF">手术中:</span>
+            <span style="font-size:20px">{{ inRoomCount }}</span>
+            <span style="margin-left:10px;color:#f5ebbd">入复苏室:</span>
+            <span style="font-size:20px">{{ inPacuCount }}</span>
+            <span style="margin-left:10px;color:#c3eee2">出复苏室:</span>
+            <span style="font-size:20px">{{ outPacuCount }}</span>
+          </div>
         </el-row>
       </el-scrollbar>
       <div
@@ -207,7 +217,11 @@
           <li
             v-for="(item, index) in cardList"
             :key="item.operationId"
-            :class="{ active: index === activeIndex, recovery: item.stateName === '入复苏室' }"
+            :class="{
+              active: index === activeIndex,
+              recovery: item.stateName === '入复苏室',
+              outrecovery: item.stateName === '出复苏室'
+            }"
             @dblclick="handleJump(item)"
             @click="hanldeSelectPatient(item, index)"
           >
@@ -342,7 +356,12 @@
 // 首页
 import moment from 'moment'
 import request from '../../utils/requestForMock'
-import { opeList, roomList, getDefaultRoom } from '@/api/patientList'
+import {
+  opeList,
+  roomList,
+  getDefaultRoom,
+  getOperationStateByDate
+} from '@/api/patientList'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { Socket, SocketRoom } from '@/model/Socket'
 import _ from 'lodash'
@@ -366,6 +385,9 @@ export default {
       }
     ])
     return {
+      inPacuCount: 0,
+      inRoomCount: 0,
+      outPacuCount: 0,
       wrapStyle,
       loading: false,
       loadingSelect: false,
@@ -699,6 +721,7 @@ export default {
         params: obj
       }).then(res => {
         if (res.data.code === 200) {
+          this.getoOpeList()
           this.operationStatus = []
           this.activeIndex = null
           this.clearBaseInfo()
@@ -724,6 +747,19 @@ export default {
             this.cardList = data
             this.dataList = data
           }
+        }
+      })
+    },
+    // 获取分别事件
+    getoOpeList () {
+      request({
+        method: 'GET',
+        url: getOperationStateByDate + '/' + this.searchForm.date
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.inRoomCount = res.data.data.inRoomCount
+          this.inPacuCount = res.data.data.inPacuCount
+          this.outPacuCount = res.data.data.outPacuCount
         }
       })
     },
@@ -908,7 +944,16 @@ export default {
           @include theme-property('background', $color-background-card-hover);
         }
         &.recovery {
-          @include theme-property('background', $color-background-card-recovery);
+          @include theme-property(
+            'background',
+            $color-background-card-recovery
+          );
+        }
+        &.outrecovery {
+          @include theme-property(
+            'background',
+            $color-background-card-outrecovery
+          );
         }
       }
     }

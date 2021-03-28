@@ -1,5 +1,5 @@
 import { Cell } from '../../model/WidgetTable'
-export default function getConfigurationItems (widgetName) {
+export default function getConfigurationItems(widgetName) {
   // 边框
   const border = {
     position: ['top', 'right', 'bottom', 'left'],
@@ -250,7 +250,20 @@ export default function getConfigurationItems (widgetName) {
         readonly: false,
         required,
         dataSource,
-        tagName
+        tagName,
+
+      }
+    case 'widget-textarea-fj':
+      return {
+        font,
+        border,
+        placeholder: '占位内容',
+        readonly: false,
+        required,
+        dataSource,
+        tagName,
+        multiSelect: false,
+        dictionarySource
       }
     case 'widget-text':
       return {
@@ -258,7 +271,8 @@ export default function getConfigurationItems (widgetName) {
         border: Object.assign({}, border, {
           position: []
         }),
-        text: '文本内容'
+        text: '文本内容',
+        tagName
       }
     case 'widget-pagination':
       return {

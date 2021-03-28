@@ -5,12 +5,13 @@
       title="个性化体征显示配置"
       :visible.sync="dialogVisible"
       width="80%"
+      :close-on-click-modal="false"
       :before-close="handleClose"
     >
       <div>
         <el-form size="mini">
           <el-row style="display:flex">
-            <div style="width:160px">
+            <div style="width:200px">
               曲线名称
             </div>
             <div
@@ -31,24 +32,24 @@
             >
               标示类型
             </div>
-            <div
+            <!-- <div
               style="width:120px"
               class="maginLeft-10"
             >
               标示实体
-            </div>
+            </div> -->
             <div
               style="width:100px"
               class="maginLeft-10"
             >
               颜色
             </div>
-            <div
+            <!-- <div
               style="width:64px"
               class="maginLeft-10"
             >
               小数位
-            </div>
+            </div> -->
             <div
               style="width:120px"
               class="maginLeft-10"
@@ -76,14 +77,14 @@
           </el-row>
           <el-row
             style="display:flex;margin-top:10px"
-            v-for="item in 5"
-            :key="item"
+            v-for="item in table"
+            :key="item.id"
           >
             <!-- 曲线名称 -->
-            <div style="width:160px">
+            <div style="width:200px">
               <el-input
                 size="mini"
-                v-model="curveName"
+                v-model="item.name"
               />
             </div>
             <!-- 显示类型 -->
@@ -94,7 +95,7 @@
               <el-select
                 placeholder=""
                 size="mini"
-                v-model="showType"
+                v-model="item.item_type"
               >
                 <el-option
                   v-for="item in showTypeList"
@@ -112,10 +113,10 @@
               <el-select
                 placeholder=""
                 size="mini"
-                v-model="isShow"
+                v-model="item.state"
               >
                 <el-option
-                  v-for="item in showTypeList"
+                  v-for="item in isShowBoolean"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -130,10 +131,10 @@
               <el-select
                 placeholder=""
                 size="mini"
-                v-model="isShow"
+                v-model="item.draw_icon"
               >
                 <el-option
-                  v-for="item in showTypeList"
+                  v-for="item in drawIconList"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -141,7 +142,7 @@
               </el-select>
             </div>
             <!-- 标示实体 -->
-            <div
+            <!-- <div
               style="width:120px"
               class="maginLeft-10"
             >
@@ -149,7 +150,7 @@
                 size="mini"
                 v-model="curveName"
               />
-            </div>
+            </div> -->
             <!-- 颜色 -->
             <div
               style="width:100px"
@@ -158,11 +159,11 @@
               <el-input
                 size="mini"
                 type="color"
-                v-model="curveName"
+                v-model="item.item_color"
               />
             </div>
             <!-- 小数位 -->
-            <div
+            <!-- <div
               style="width:64px"
               class="maginLeft-10"
             >
@@ -170,7 +171,7 @@
                 size="mini"
                 v-model="curveName"
               />
-            </div>
+            </div> -->
             <!-- 时间间隔 -->
             <div
               style="width:120px"
@@ -179,10 +180,10 @@
               <el-select
                 placeholder=""
                 size="mini"
-                v-model="isShow"
+                v-model="item.frequency"
               >
                 <el-option
-                  v-for="item in showTypeList"
+                  v-for="item in timeSplit"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -195,12 +196,13 @@
               class="maginLeft-10"
             >
               <el-select
+                @change="changeIfHide(item)"
                 placeholder=""
                 size="mini"
-                v-model="isShow"
+                v-model="item.if_hide"
               >
                 <el-option
-                  v-for="item in showTypeList"
+                  v-for="item in ifHideList"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -215,9 +217,9 @@
               <el-date-picker
                 size="mini"
                 format="MM-dd HH:mm"
-                value-format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm"
                 style="width:160px"
-                v-model="value1"
+                v-model="item.hide_start_time"
                 type="datetime"
                 placeholder="选择日期时间"
               />
@@ -230,9 +232,9 @@
               <el-date-picker
                 size="mini"
                 format="MM-dd HH:mm"
-                value-format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm"
                 style="width:160px"
-                v-model="value1"
+                v-model="item.hide_end_time"
                 type="datetime"
                 placeholder="选择日期时间"
               />
@@ -252,22 +254,82 @@
           size="mini"
           type="primary"
           @click="saveInfo"
-        >确 定</el-button>
+        >更 新</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import request from '@/utils/requestForMock'
+import {
+  getIntraoMonitorData,
+  updateIntraoMonitorIndividuation
+} from '@/api/mySignsForm'
 export default {
   name: 'MySignsForm',
   data () {
     return {
+      table: [],
       value1: '',
       curveName: '',
       showType: '',
-      showTypeList: [{ label: '折线', value: '1' }],
-      isShow: ''
+      showTypeList: [
+        { label: '曲线', value: '曲线' },
+        { label: '数值', value: '数值' }
+      ],
+      isShowBoolean: [
+        { label: '是', value: '1' },
+        { label: '否', value: '0' }
+      ],
+      drawIconList: [
+        {
+          label: '•',
+          value: '•'
+        },
+        {
+          label: '∨',
+          value: '∨'
+        },
+        {
+          label: '○',
+          value: '○'
+        },
+        {
+          label: '◇',
+          value: '◇'
+        },
+        {
+          label: '▽',
+          value: '▽'
+        },
+        {
+          label: '△',
+          value: '△'
+        },
+        {
+          label: '●',
+          value: '●'
+        },
+        {
+          label: '∧',
+          value: '∧'
+        }
+      ],
+      timeSplit: [
+        { label: '5分钟', value: 5 },
+        { label: '10分钟', value: 10 }
+      ],
+      ifHideList: [
+        {
+          label: '是',
+          value: '1'
+        },
+        {
+          label: '否',
+          value: '0'
+        }
+      ]
     }
   },
   props: {
@@ -276,12 +338,67 @@ export default {
       default: false
     }
   },
+  mounted () {
+    this.getIntraoMonitorData()
+  },
   methods: {
+    changeIfHide (item) {
+      if (item.if_hide === '0') {
+        item.hide_start_time = ''
+        item.hide_end_time = ''
+      }
+    },
+    // 获取表单数据
+    getIntraoMonitorData () {
+      request({
+        method: 'get',
+        url: getIntraoMonitorData,
+        params: {
+          templeteCode: '1'
+        }
+      }).then(res => {
+        if (res.data.code === 200) {
+          if (res.data.data.length > 0) {
+            res.data.data.forEach(item => {
+              if (item.item_color.includes('#')) {
+              } else {
+                item.item_color = '#' + item.item_color
+              }
+            })
+          }
+          this.table = res.data.data
+        }
+      })
+    },
+    // 更新表单数据
+    updateIntraoMonitorIndividuation () {
+      this.table.forEach(item => {
+        if (item.item_color.includes('#')) {
+          item.item_color = item.item_color.replace(/#/g, '')
+        }
+      })
+      request({
+        method: 'post',
+        url: updateIntraoMonitorIndividuation,
+        data: this.table
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.$message({ type: 'success', message: '更新成功' })
+          this.getIntraoMonitorData()
+          this.handleClose()
+        } else {
+          this.$message({ type: 'error', message: '更新失败' })
+          this.getIntraoMonitorData()
+          this.handleClose()
+        }
+      })
+    },
     handleClose () {
+      this.getIntraoMonitorData()
       this.$emit('closeDio')
     },
     saveInfo () {
-
+      this.updateIntraoMonitorIndividuation()
     }
   }
 }
@@ -289,6 +406,6 @@ export default {
 
 <style lang="scss" scoped>
 .maginLeft-10 {
-  margin-left: 10px;
+  margin-left: 20px;
 }
 </style>

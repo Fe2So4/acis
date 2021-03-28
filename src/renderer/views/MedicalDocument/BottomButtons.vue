@@ -107,7 +107,7 @@
 import $bus from '@/utils/bus'
 import utilsDebounce from '@/utils/utilsDebounce'
 import request from '@/utils/requestForMock'
-import { acisUploadWritWright } from '@/api/blood'
+import { acisUploadWritWright, getAccessIfDoWrit } from '@/api/blood'
 
 export default {
   name: 'BottomButtons',
@@ -170,8 +170,23 @@ export default {
   },
   methods: {
     saveBtnClick () {
-      this.uploadBefore()
-      this.$emit('save')
+      this.searchAccessIfDoWrit()
+    },
+    // 判断是否有资格进行保存
+    searchAccessIfDoWrit () {
+      return request({
+        url: getAccessIfDoWrit + `/${this.operationId}`,
+        // url: getAccessIfDoWrit + '/1615250620305',
+        method: 'get'
+      }).then(res => {
+        if (res.data.code === 200 && res.data.data === '1') {
+          // console.log(res)
+          this.uploadBefore()
+          this.$emit('save')
+        } else {
+          this.$message.warning('没有权限进行保存操作')
+        }
+      })
     },
     uploadBefore () {
       // 发送
@@ -180,6 +195,9 @@ export default {
         flag = '0'
       } else if (this.displayedButtons.includes('ANAB')) {
         flag = '1'
+      }
+      if (!flag) {
+        return false
       }
       return request({
         url: acisUploadWritWright + `/${this.operationId}/${flag}`,

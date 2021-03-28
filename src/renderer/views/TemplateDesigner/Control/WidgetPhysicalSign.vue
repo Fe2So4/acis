@@ -14,6 +14,7 @@
 
 <script>
 // 打点渲染
+import utilsDebounce from '@/utils/utilsDebounce'
 import * as spritejs from 'spritejs'
 import { addListener, removeListener } from 'resize-detector'
 import debounce from 'lodash/debounce'
@@ -70,6 +71,14 @@ export default {
   },
   data () {
     return {
+      timeNum: 0,
+      etco2Obj: {
+        disColor: '',
+        drawIcon: '',
+        frequency: '',
+        itemCode: '',
+        itemUnit: ''
+      },
       dialogVisible: false,
       timer: null,
       widgetStyle: {},
@@ -112,6 +121,7 @@ export default {
     this.resize = debounce(this.domResizeListener, 20)
   },
   async mounted () {
+    this.saveZhexian()
     this.renderScene()
     this.createGroups()
     this.setLayout()
@@ -144,6 +154,7 @@ export default {
     }
   },
   beforeDestroy () {
+    clearInterval(this.timer)
     if (this.editMode) {
       removeListener(this.$refs.physicalSign, this.resize)
     } else {
@@ -167,6 +178,20 @@ export default {
     this.scene = null
   },
   methods: {
+    // 定时器启动
+    saveZhexian () {
+      console.log('折线定时器启动')
+      if (this.timer) {
+        clearInterval(this.timer)
+      }
+      this.timer = setInterval(async () => {
+        console.log('折线定时器刷新')
+        await this.getPastSignData()
+        await this.clearLines()
+        this.drawLines()
+      }, 300000)
+    },
+
     closeDio () {
       this.dialogVisible = false
     },
@@ -468,6 +493,7 @@ export default {
       this.setTotalTitle()
     },
     setLeftTitle () {
+      if (!this.layer) return
       const leftTitle = this.layer.querySelector('.leftTitle')
       if (!leftTitle) return
       const width = leftTitle.attr('width')
@@ -593,6 +619,7 @@ export default {
         })
         i += this.configuration.xAxis.timeInterval * 60 * 1000
       }
+      // console.log(list)
       this.xAxisList = list
     },
     setXAxis () {
@@ -624,14 +651,46 @@ export default {
       const height = grid.attr('height')
       const xAxislist = this.xAxisList
       const xScale = width / xAxislist.length
+      console.log(this.configuration)
+      const startMoment = +moment(this.configuration.xAxis.startTime)
+      const arr = this.configuration.xAxis.boldTimeList
+      if (arr) {
+        arr.forEach((item, index) => {
+          let boldLine
+          const x = (+moment(item) - startMoment) / 60 / 1000 / 5
+          // eslint-disable-next-line prefer-const
+          boldLine = new Polyline({
+            zIndex: 1,
+            pos: [Math.round((x * xScale) / 3) - 0.5, 0],
+            points: [0, 0, 0, height],
+            strokeColor: 'black',
+            lineWidth: 1.1
+          })
+          grid.append(boldLine)
+        })
+      }
+
       xAxislist.forEach((item, index, arr) => {
         if (index) {
-          const mainLine = new Polyline({
+          let mainLine
+          // if (index % 4 === 0) {
+          //   mainLine = new Polyline({
+          //     zIndex: -1,
+          //     pos: [Math.round(index * xScale) - 0.5, 0],
+          //     points: [0, 0, 0, height],
+          //     strokeColor: 'black',
+          //     lineWidth: 1.1
+          //   })
+          // } else {
+          mainLine = new Polyline({
+            zIndex: -1,
             pos: [Math.round(index * xScale) - 0.5, 0],
             points: [0, 0, 0, height],
-            strokeColor: 'gray',
+            strokeColor: 'silver',
             lineWidth: 1
           })
+          // }
+
           grid.append(mainLine)
         }
         for (let i = 1; i < this.configuration.xAxis.lineInterval; i++) {
@@ -643,10 +702,11 @@ export default {
               ) - 0.5,
               0
             ],
+            zIndex: -1,
             points: [0, 0, 0, height],
-            strokeColor: 'gray',
+            strokeColor: 'silver',
             lineWidth: 1,
-            lineDash: [1, 2, 3]
+            lineDash: [2]
           })
           grid.append(line)
         }
@@ -659,9 +719,10 @@ export default {
       for (let index = 0; index < yAxislistMax; index++) {
         if (index) {
           const mainLine = new Polyline({
+            zIndex: -2,
             pos: [0, Math.round(index * yScale) - 0.5],
             points: [0, 0, width, 0],
-            strokeColor: 'gray',
+            strokeColor: 'lightgrey',
             lineWidth: 1
           })
           grid.append(mainLine)
@@ -676,9 +737,10 @@ export default {
               ) - 0.5
             ],
             points: [0, 0, width, 0],
-            strokeColor: 'gray',
+            strokeColor: 'silver',
             lineWidth: 1,
-            lineDash: [1, 2, 3]
+            zIndex: -2,
+            lineDash: [2]
           })
           grid.append(line)
         }
@@ -725,6 +787,12 @@ export default {
           .then(res => {
             const requestData = res.data.data
             this.lineList = requestData
+            const copyList = JSON.parse(JSON.stringify(res.data.data))
+            copyList.forEach(item => {
+              if (item.itemName === 'ETCO2') {
+                this.etco2Obj = item
+              }
+            })
           })
           .catch(err => {
             console.log(err)
@@ -736,7 +804,6 @@ export default {
     drawLines () {
       const gridGroup = this.layer.getElementsByClassName('grid')[0]
       if (Array.isArray(this.lineList)) {
-        console.log(this.lineList)
         this.lineList.forEach(item => {
           const { min, max } = this.getYAxisValueRange(item.yindex)
           if (min === max) {
@@ -748,7 +815,77 @@ export default {
             drawIcon: label,
             disColor: color
           } = item
-          if (name === 'SPO2' || name === 'SBP' || name === 'MBP') {
+          if (item.ifMore === '1' && signId !== '105') {
+            const ifMoreBefore = []
+            let saveArrBefore = []
+            const ifMoreBeafter = []
+            let saveArrAfter = []
+            item.list.forEach((v, index) => {
+              if (v.isDisplay === '0') {
+                ifMoreBefore.push(index)
+              }
+            })
+            console.log(ifMoreBefore)
+            if (ifMoreBefore.length > 0) {
+              saveArrBefore = item.list.splice(0, ifMoreBefore[0])
+            }
+            if (item.list.length > 0) {
+              item.list.forEach((v, index) => {
+                if (v.isDisplay === '0') {
+                  ifMoreBeafter.push(index)
+                }
+              })
+            }
+            if (ifMoreBeafter.length > 0) {
+              saveArrAfter = item.list.splice(
+                ifMoreBefore.length,
+                item.list.length
+              )
+            } else {
+              saveArrAfter = item.list
+            }
+            console.log(saveArrBefore, saveArrAfter)
+            this.lines[signId] = new PhysicalSignLine({
+              signId,
+              name,
+              label,
+              color: '#' + color,
+              group: gridGroup,
+              layer: this.layer,
+              startTime: this.configuration.xAxis.startTime,
+              endTime: this.configuration.xAxis.endTime,
+              min,
+              max
+            })
+            saveArrBefore.forEach(value => {
+              this.lines[signId].addPoint({
+                time: value.timePoint,
+                value: value.itemValue
+              })
+            })
+
+            this.lines[signId + 10086] = new PhysicalSignLine({
+              signId,
+              name,
+              label,
+              color: '#' + color,
+              group: gridGroup,
+              layer: this.layer,
+              startTime: this.configuration.xAxis.startTime,
+              endTime: this.configuration.xAxis.endTime,
+              min,
+              max
+            })
+            saveArrAfter.forEach(value => {
+              this.lines[signId + 10086].addPoint({
+                time: value.timePoint,
+                value: value.itemValue
+              })
+            })
+
+            return false
+          }
+          if (signId === '105') {
             item.list.forEach((value, index) => {
               this.lines[signId + index] = new PhysicalSignLine({
                 signId: signId + index,
@@ -762,11 +899,13 @@ export default {
                 min,
                 max
               })
-              this.lines[signId + index].setValuePoint({
-                time: value.timePoint,
-                value: value.itemValue,
-                pointY: name === 'SPO2' ? 2 : name === 'SBP' ? 13 : 24
-              })
+              if (this.configuration.xAxis.endTime >= value.timePoint) {
+                this.lines[signId + index].setValuePoint({
+                  time: value.timePoint,
+                  value: value.itemValue,
+                  pointY: signId === '105' ? 2 : 2
+                })
+              }
             })
 
             // item.list.forEach(value => {
@@ -789,6 +928,10 @@ export default {
               max
             })
             item.list.forEach(value => {
+              // this.lines[signId].addSprite({
+              //   time: value.timePoint,
+              //   value: value.itemValue
+              // })
               this.lines[signId].addPoint({
                 time: value.timePoint,
                 value: value.itemValue
@@ -811,11 +954,13 @@ export default {
     drawLineLegends () {
       if (Array.isArray(this.lineList)) {
         this.lineList.forEach(item => {
-          this.legends.addLegend({
-            label: item.drawIcon,
-            name: item.itemName,
-            color: '#' + item.disColor
-          })
+          if (item.drawIcon) {
+            this.legends.addLegend({
+              label: item.drawIcon,
+              name: item.codeName,
+              color: '#' + item.disColor
+            })
+          }
         })
       }
     },
@@ -912,6 +1057,7 @@ export default {
         )
       }
     },
+
     async getDataBySocketIO () {
       // 如果没有传入的时间
       if (!this.startTime || !this.endTime) {
@@ -919,34 +1065,68 @@ export default {
         return
       }
       // 与当前时间对比，如果结束时间为当前时间之前，则不需要建立连接
-      const now = new Date()
-      if (+moment(this.endTime) < now) {
-        console.log('结束时间为当前时间之前')
-        return
-      }
+      // const now = new Date()
+      // if (+moment(this.endTime) < now) {
+      //   console.log('结束时间为当前时间之前')
+      //   return
+      // }
       const loginUserNum = this.operationId
       this.socket = Socket.getInstance()
       if (!this.socket) return
       // 体征曲线
       const that = this
+
       this.socket.on('push_sign_event', res => {
-        that.socket.emit('push_sign_event', {
-          loginUserNum,
-          content: res
-        })
-        if (Array.isArray(res)) {
-          // 回应socket.io
-          console.log(that.lines)
-          res.forEach(item => {
-            const { itemCode: signId, ...value } = item
-            if (that.lines[signId]) {
-              that.lines[signId].addPoint({
-                time: value.timePoint,
-                value: value.itemValue
-              })
-            }
+        console.log(res)
+        utilsDebounce(async () => {
+          that.socket.emit('push_sign_event', {
+            loginUserNum,
+            content: res
           })
-        }
+
+          // if (Array.isArray(res)) {
+          //   // 回应socket.io
+          //   res.forEach(item => {
+          //     console.log(item)
+          //     console.log(this.etco2Obj)
+          //     const { itemCode: signId, ...value } = item
+          //     if (signId === '105') {
+          //       const num = Math.random() * (1000000000 - 5 + 1) + 5
+          //       const gridGroup = this.layer.getElementsByClassName('grid')[0]
+          //       const { min, max } = this.getYAxisValueRange(
+          //         this.etco2Obj.yindex
+          //       )
+          //       this.lines[signId + num] = new PhysicalSignLine({
+          //         signId: signId + num,
+          //         name: this.etco2Obj.itemName,
+          //         label: value.itemValue,
+          //         color: '#' + this.etco2Obj.disColor,
+          //         group: gridGroup,
+          //         layer: this.layer,
+          //         startTime: this.configuration.xAxis.startTime,
+          //         endTime: this.configuration.xAxis.endTime,
+          //         min,
+          //         max
+          //       })
+          //       if (this.configuration.xAxis.endTime >= value.timePoint) {
+          //         this.lines[signId + num].setValuePoint({
+          //           time: value.timePoint,
+          //           value: value.itemValue,
+          //           pointY: signId === '105' ? 2 : 2
+          //           // 13 24
+          //         })
+          //       }
+          //     } else {
+          //       if (that.lines[signId]) {
+          //         that.lines[signId].addPoint({
+          //           time: value.timePoint,
+          //           value: value.itemValue
+          //         })
+          //       }
+          //     }
+          //   })
+          // }
+        }, 1000)
       })
     },
     // grid右击事件

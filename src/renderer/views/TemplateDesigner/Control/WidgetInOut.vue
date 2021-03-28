@@ -449,7 +449,7 @@ export default {
             leftMain.attr('width') - this.configuration.infusion.width,
             0
           ],
-          strokeColor: 'black',
+          strokeColor: 'lightgrey',
           lineWidth: 1
         })
         infusion.append(infusionLine)
@@ -637,6 +637,7 @@ export default {
       this.setTotalTitle()
     },
     setLeftTitle () {
+      if (!this.layer) return
       const leftTitle = this.layer.querySelector('.leftTitle')
       if (!leftTitle) return
       const width = leftTitle.attr('width')
@@ -708,7 +709,7 @@ export default {
           const mainLine = new Polyline({
             pos: [0, Math.round(index * yScale) - 0.5],
             points: [0, 0, width, 0],
-            strokeColor: 'gray',
+            strokeColor: 'lightgrey',
             lineWidth: 1
           })
           legend.append(mainLine)
@@ -760,7 +761,7 @@ export default {
           const mainLine = new Polyline({
             pos: [Math.round(index * xScale) - 0.5, 0],
             points: [0, 0, 0, height],
-            strokeColor: 'gray',
+            strokeColor: 'lightgrey',
             lineWidth: 1
           })
           grid.append(mainLine)
@@ -775,9 +776,9 @@ export default {
               0
             ],
             points: [0, 0, 0, height],
-            strokeColor: 'gray',
+            strokeColor: 'lightgrey',
             lineWidth: 1,
-            lineDash: [1, 2, 3]
+            lineDash: [2]
           })
           grid.append(line)
         }
@@ -792,7 +793,7 @@ export default {
           const mainLine = new Polyline({
             pos: [0, Math.round(index * yScale) - 0.5],
             points: [0, 0, width, 0],
-            strokeColor: 'gray',
+            strokeColor: 'lightgrey',
             lineWidth: 1
           })
           grid.append(mainLine)
@@ -1618,8 +1619,8 @@ export default {
               anchor: [0, 0],
               fontSize: 12,
               fontFamily: '宋体',
-              textAlign: 'center',
-              fillColor: 'blue',
+              textAlign: 'left',
+              fillColor: 'black',
               width: width - this.configuration.infusion.width,
               height: lineHeight,
               lineHeight: lineHeight

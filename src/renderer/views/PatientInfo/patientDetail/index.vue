@@ -16,7 +16,7 @@
 import BasicInfo from './BasicInfo/index'
 import OperationInfo from './OperationInfo/index'
 import OperationPersonnel from './OperationPersonnel/index'
-import { patientDetail } from '@/api/patientList'
+import { patientDetail, EjectDeviceAcquisition } from '@/api/patientList'
 import request from '@/utils/requestForMock'
 import $bus from '@/utils/bus'
 import { mapGetters } from 'vuex'
@@ -46,12 +46,31 @@ export default {
   },
   mounted () {
     this.getPatientInfo()
+    this.getEjectDeviceAcquisition()
     $bus.$on('getPatientInfoData', this.getPatientInfo)
   },
   beforeDestroy () {
     $bus.$off('getPatientInfoData')
   },
   methods: {
+    // 获取患者是否绑定监护仪
+    getEjectDeviceAcquisition () {
+      if (this.operationId === '') {
+        return
+      }
+      request({
+        method: 'GET',
+        url: EjectDeviceAcquisition + '/' + this.operationId
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.$message.warning('该患者尚未绑定监护仪,请先绑定')
+          const data = res.data.data
+          data.temType = '1'
+          this.$eventHub.$emit('show-dialog', data)
+        }
+      })
+    },
+    // 获取患者详情
     getPatientInfo () {
       if (this.operationId === '') {
         return
@@ -59,7 +78,7 @@ export default {
       request({
         method: 'GET',
         url: patientDetail + '/' + this.operationId
-      }).then((res) => {
+      }).then(res => {
         const data = res.data.data
         this.basicInfo = data.basicInfo
         this.opeInfo = data.opeInfo
@@ -70,7 +89,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import "@/styles/theme";
+@import '@/styles/theme';
 .patient-detail {
   margin-top: 20px;
   width: 100%;

@@ -14,6 +14,6 @@ const getNowFormatDate = function () {
   if (mins < 10) mins = '0' + mins
   if (secs < 10) secs = '0' + secs
   if (msecs < 10) secs = '0' + msecs
-  return year + month + day + hours + mins + secs
+  return year + '-' + month + '-' + day + ' ' + hours + ':' + mins + ':' + secs
 }
 export default getNowFormatDate

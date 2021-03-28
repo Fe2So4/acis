@@ -10,7 +10,10 @@
         <router-view />
       </transition>
     </div>
-    <div class="right">
+    <div
+      class="right"
+      style="display:none"
+    >
       <signs-data />
     </div>
   </div>
@@ -28,9 +31,7 @@ export default {
     SignsData
   },
   computed: {
-    ...mapState('Base', [
-      'operationId'
-    ])
+    ...mapState('Base', ['operationId'])
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
@@ -49,39 +50,39 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
- @media all and (orientation: portrait) {
-     .patient-info{
-       .left{
-         float: unset !important;
-         width: 100% !important;
-         padding-right: 20px;
-         height: calc(100% - 100px) !important;
-       }
-       .right{
-         position: relative;
-         left: -20px;
-         right: -20px;
-         float: unset !important;
-         height: 100px !important;
-         width: calc(100% + 20px) !important;
-         margin-left: unset !important;
-       }
-     }
+@media all and (orientation: portrait) {
+  .patient-info {
+    .left {
+      float: unset !important;
+      width: 100% !important;
+      padding-right: 20px;
+      height: calc(100% - 100px) !important;
+    }
+    .right {
+      position: relative;
+      left: -20px;
+      right: -20px;
+      float: unset !important;
+      height: 100px !important;
+      width: calc(100% + 20px) !important;
+      margin-left: unset !important;
+    }
   }
+}
 .patient-info {
   height: 100%;
-  padding-left:20px;
+  padding-left: 20px;
   // display: flex;
-  .left{
-    float:left;
-    width:calc(100% - 220px);
+  .left {
+    float: left;
+    width: calc(100% - 20px);
     height: 100%;
   }
-  .right{
-    width:200px;
+  .right {
+    width: 200px;
     float: right;
-    height:100%;
-    margin-left:20px;
+    height: 100%;
+    margin-left: 20px;
   }
 }
 </style>

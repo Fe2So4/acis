@@ -7,6 +7,7 @@
     </div>
     <div class="roomTable">
       <vxe-table
+        :cell-style="cellStyle"
         show-overflow
         size="mini"
         round
@@ -58,8 +59,7 @@
 export default {
   name: 'RoomList',
   data () {
-    return {
-    }
+    return {}
   },
   props: {
     list: {
@@ -96,6 +96,14 @@ export default {
     this.removeScrollListener()
   },
   methods: {
+    cellStyle ({ row, column, rowIndex, columnIndex }) {
+      if (row.stateName === '入复苏室') {
+        // 判断条件，如果想要改变其他行样式，就写那一行的下标
+        return {
+          backgroundColor: '#f5ebbd'
+        }
+      }
+    },
     onScroll (e) {
       const el = this.$refs.scrollbar.wrap
       if (el.scrollTop + el.clientHeight + 10 > el.scrollHeight) {
@@ -114,18 +122,18 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import "@/styles/theme";
+@import '@/styles/theme';
 
 .overview {
   height: 100%;
   font-size: 14px;
-  @include theme-property("color", $color-text-primary);
-  .title{
+  @include theme-property('color', $color-text-primary);
+  .title {
     text-align: right;
-    line-height:28px;
+    line-height: 28px;
     padding-right: 10px;
   }
-  .roomTable{
+  .roomTable {
     height: calc(100% - 28px);
   }
 }

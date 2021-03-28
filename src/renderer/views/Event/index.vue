@@ -298,7 +298,12 @@
             width="150"
           >
             <template v-slot:edit="{ row }">
+              <div
+                style="position: absolute; width:100%; height:28px; z-index:1001"
+                @click="focusPicker(row, 1)"
+              />
               <el-date-picker
+                readonly
                 v-model="row.eventStartTime"
                 type="datetime"
                 popper-class="dateTimePicker"
@@ -349,7 +354,12 @@
             width="150"
           >
             <template v-slot:edit="{ row }">
+              <div
+                style="position: absolute; width:100%; height:28px; z-index:1001"
+                @click="focusPicker(row, 2)"
+              />
               <el-date-picker
+                readonly
                 v-model="row.eventEndTime"
                 size="mini"
                 popper-class="dateTimePicker"
@@ -422,6 +432,57 @@
         </el-row>
       </div>
     </div>
+    <el-dialog
+      append-to-body
+      :close-on-click-modal="false"
+      title="请选择时间"
+      :visible.sync="dialogVisible"
+      width="350px"
+      :before-close="onCancel"
+    >
+      <el-form :inline="true">
+        <el-form-item>
+          <el-date-picker
+            style="width:130px"
+            size="mini"
+            format="MM-dd"
+            value-format="yyyy-MM-dd"
+            v-model="selectYear"
+            type="date"
+            placeholder="选择日期"
+          />
+        </el-form-item>
+        <el-form-item>
+          <div
+            class="el-date-editor el-input el-input--mini el-input--prefix el-input--suffix el-date-editor--date"
+            style="width:130px"
+          >
+            <input
+              style="width:130px;height:28px;fontSize:14px"
+              class="el-input__inner"
+              size="mini"
+              maxlength="5"
+              v-model="selectTime"
+              type="time"
+            >
+          </div>
+        </el-form-item>
+      </el-form>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          size="mini"
+          @click="onCancel"
+        >取 消</el-button>
+        <el-button
+          size="mini"
+          type="primary"
+          @click="onSaveTime"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -436,7 +497,7 @@ import {
   getSpeedUnit,
   getDrugChannel
 } from '@/api/anaesDrug'
-
+import getNowFormatDate from '@/utils/utilsNewTime'
 import XEUtils from 'xe-utils'
 import moment from 'moment'
 // import OtherEvent from './components/otherEvent'
@@ -445,6 +506,11 @@ export default {
   name: 'Event',
   data () {
     return {
+      type: 1,
+      selectYear: '',
+      selectTime: '',
+      selectItem: {},
+      dialogVisible: false,
       select: '',
       searchName: '',
       tableData: [],
@@ -503,6 +569,65 @@ export default {
     ...mapGetters('Base', ['operationId'])
   },
   methods: {
+    focusPicker (item, type) {
+      console.log(item, type)
+      this.type = type
+      this.selectItem = item
+      if (type === 1) {
+        if (item.eventStartTime) {
+          this.selectYear = String(item.eventStartTime.split(' ')[0])
+          const time = String(item.eventStartTime.split(' ')[1])
+          this.selectTime = time.substring(0, 5)
+        } else {
+          this.selectYear = String(getNowFormatDate().split(' ')[0])
+          const time = String(getNowFormatDate().split(' ')[1])
+          this.selectTime = time.substring(0, 5)
+        }
+      } else {
+        if (item.eventEndTime) {
+          this.selectYear = String(item.eventEndTime.split(' ')[0])
+          const time = String(item.eventEndTime.split(' ')[1])
+          this.selectTime = time.substring(0, 5)
+        } else {
+          this.selectYear = String(getNowFormatDate().split(' ')[0])
+          const time = String(getNowFormatDate().split(' ')[1])
+          this.selectTime = time.substring(0, 5)
+        }
+      }
+
+      this.dialogVisible = true
+    },
+    onSaveTime () {
+      if (
+        this.selectYear === '' ||
+        this.selectYear === undefined ||
+        this.selectYear === null
+      ) {
+        this.$message.warning('请输入正确的日期')
+        return false
+      }
+      if (
+        this.selectTime === '' ||
+        this.selectTime === undefined ||
+        this.selectTime === null
+      ) {
+        this.$message.warning('请输入正确的时间')
+        return false
+      }
+      const time = this.selectYear + ' ' + this.selectTime
+      if (this.type === 1) {
+        this.selectItem.eventStartTime = time
+
+        this.handleDateChange(this.selectItem)
+      } else {
+        this.selectItem.eventEndTime = time
+        this.handleDateChange(this.selectItem)
+      }
+      this.onCancel()
+    },
+    onCancel () {
+      this.dialogVisible = false
+    },
     handleBlur () {
       const { insertRecords, updateRecords } = this.$refs.xTable.getRecordset()
       if (updateRecords.length > 0) {

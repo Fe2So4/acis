@@ -21,3 +21,15 @@ export const startSyncMonitorDataFJ = `${config.default.api.baseURL}/acis/signDa
 
 // 关闭体征数据推送
 export const endMonitorDataDocking = `${config.default.api.baseURL}/acis/signDataCollect/endMonitorDataDocking`
+
+// 修改状态回入手术室
+export const backOperationState = `${config.default.api.baseURL}/acis/intraoperative/info/backOperationState`
+
+// 获取患者是否绑定监护仪
+export const EjectDeviceAcquisition = `${config.default.api.baseURL}/acis/intraoperative/info/EjectDeviceAcquisition`
+
+// 判断手术开始时是否绑定监护仪
+export const getOperationBindEquipmentIpWhenInRoom = `${config.default.api.baseURL}/acis/intraoperative/info/getOperationBindEquipmentIpWhenInRoom`
+
+// 获取列表
+export const getOperationStateByDate = `${config.default.api.baseURL}/acis/intraoperative/info/getOperationStateByDate`

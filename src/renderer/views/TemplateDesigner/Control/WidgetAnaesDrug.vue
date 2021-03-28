@@ -484,7 +484,7 @@ export default {
         const line = new Polyline({
           pos: [0, Math.round(lineHeight * (i + 1)) - 0.5],
           points: [0, 0, width, 0],
-          strokeColor: 'black',
+          strokeColor: 'lightgrey',
           lineWidth: 1
         })
         drugList.append(line)
@@ -511,8 +511,8 @@ export default {
             anchor: [0, 0],
             fontSize: 12,
             fontFamily: '宋体',
-            textAlign: 'center',
-            fillColor: 'blue',
+            textAlign: 'left',
+            fillColor: 'black',
             width: width,
             height: lineHeight,
             lineHeight: lineHeight,
@@ -523,6 +523,7 @@ export default {
       }
     },
     setLeftTitle () {
+      if (!this.layer) return
       const leftTitle = this.layer.querySelector('.leftTitle')
       if (!leftTitle) return
       const width = leftTitle.attr('width')
@@ -592,7 +593,7 @@ export default {
           const mainLine = new Polyline({
             pos: [0, Math.round(index * yScale) - 0.5],
             points: [0, 0, width, 0],
-            strokeColor: 'gray',
+            strokeColor: 'lightgrey',
             lineWidth: 1
           })
           legend.append(mainLine)
@@ -608,8 +609,9 @@ export default {
           // value: i - startMoment,
           label: moment(i).format('HH:mm')
         })
-        i += this.configuration.xAxis.timeInterval * 60 * 1000
+        i += this.configuration.xAxis.timeInterval * 60 * 1000 * 2
       }
+      // console.log(list)
       this.xAxisList = list
     },
     setXAxis () {
@@ -646,7 +648,7 @@ export default {
           const mainLine = new Polyline({
             pos: [Math.round(index * xScale) - 0.5, 0],
             points: [0, 0, 0, height],
-            strokeColor: 'gray',
+            strokeColor: 'lightgrey',
             lineWidth: 1
           })
           grid.append(mainLine)
@@ -661,9 +663,9 @@ export default {
               0
             ],
             points: [0, 0, 0, height],
-            strokeColor: 'gray',
+            strokeColor: 'lightgrey',
             lineWidth: 1,
-            lineDash: [1, 2, 3]
+            lineDash: [2]
           })
           grid.append(line)
         }
@@ -674,7 +676,7 @@ export default {
           const mainLine = new Polyline({
             pos: [0, Math.round(index * yScale) - 0.5],
             points: [0, 0, width, 0],
-            strokeColor: 'gray',
+            strokeColor: 'lightgrey',
             lineWidth: 1
           })
           grid.append(mainLine)

@@ -464,7 +464,8 @@ export default {
     },
     handleChangeButton (item, index) {
       console.log(item, '点击麻药用药')
-      if (this.operationId === '' && item.necessary) {
+      if (item.temType === '1') {
+      } else if (this.operationId === '' && item.necessary) {
         this.$confirm('当前操作需先选择患者', '提示', {
           confirmButtonText: '确定',
           type: 'warning',

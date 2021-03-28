@@ -42,7 +42,7 @@
                     li
                     li
               .title {{ item.conName }}
-              .time
+              .time( @dblclick="getNewTime(item, index)" @click="focusPicker(item,index,$event)",)
                 //- input(
                 //-   :id=" 'inputTime' + index "
                 //-   :disabled="item.state == 2"
@@ -53,16 +53,19 @@
                 //-   style="width: 120px;text-indent: 8px;height: 30px;font-size: 20px;text-align: center;"
                 //- )
                 el-date-picker(
+
+                  :class="'datepicker' + index"
                   v-model="item.time",
+                  readonly,
                   :disabled="item.state == 2",
                   size="mini",
                   type="datetime",
                   style="width:130px;",
                   placeholder="",
-                  @change="handleAddOpeStatusTime(item)",
+                  @change="handleAddOpeStatusTime(item, index)",
                   format="MM-dd HH:mm",
                   value-format="yyyy-MM-dd HH:mm:ss",
-                  popper-class="dateTimePicker"
+                  :popper-class="'dateTimePicker' + index"
                 )
       .right-arow(@click="handleChangeNav(2)")
         i.el-icon-arrow-right.arow
@@ -72,19 +75,55 @@
         .menu-list-item(@click.stop="handleTransTo(1)") 转入复苏室
         .menu-list-item(@click.stop="handleTransTo(3)") 转入病房
         .menu-list-item(@click.stop="handleTransTo(2)") 转入ICU
+        .menu-list-item(@click.stop="handleTransTo(4)") 非计划转入ICU
+    .menu-list(v-if="showTypeList" ref="menuTypeList")
+      .menu-list-left
+      .menu-list-right
+        .menu-list-item(@click.stop="backOperationState") 转回手术间
     DialogResuscitationBed(:visible.sync="dialogResuscitationBedVisible" @handleUpdateStatus="handleUpdateStatus")
+    //- DialogTime(@closeDialogVisible="changeVisible" :selectYear="selectYear" :selectTime="selectTime" :dialogVisible="dialogVisible")
+    el-dialog(append-to-body,:close-on-click-modal="false",title="请选择时间",
+      :visible.sync="dialogVisible",
+      width="350px",
+      :before-close="onCancel")
+      el-form(:inline="true")
+        el-form-item
+          el-date-picker(style="width:130px",
+            size="mini",
+            format="MM-dd",
+            value-format="yyyy-MM-dd",
+            v-model="selectYear",
+            type="date",
+            placeholder="选择日期")
+        el-form-item
+          .el-date-editor.el-input.el-input--mini.el-input--prefix.el-input--suffix.el-date-editor--date(style="width:130px")
+            input(style="width:130px;height:28px;fontSize:14px",
+              type="time"
+              class="el-input__inner"
+              size="mini",
+              maxlength="5",
+              v-model="selectTime")
+      span(slot="footer", class='dialog-footer')
+        el-button(size="mini", @click="onCancel") 取消
+        el-button(size="mini", @click="onSaveTime", type="primary") 确定
+
 </template>
 <script>
+import utilsDebounce from '@/utils/utilsDebounce'
+import getNowFormatDate from '@/utils/utilsNewTime'
 import request from '@/utils/requestForMock'
 import {
   patientStatus,
   addStatus,
   opeDirection,
   startSyncMonitorDataFJ,
-  endMonitorDataDocking
+  endMonitorDataDocking,
+  backOperationState,
+  getOperationBindEquipmentIpWhenInRoom
 } from '@/api/patientList'
 import { mapGetters, mapActions, mapState } from 'vuex'
 import DialogResuscitationBed from './DialogResuscitationBed'
+// import DialogTime from './DialogTime'
 import { Socket } from '@/model/Socket'
 import $bus from '@/utils/bus'
 import moment from 'moment'
@@ -93,9 +132,21 @@ export default {
   name: 'OperationStatus',
   components: {
     DialogResuscitationBed
+    // DialogTime
   },
   data () {
     return {
+      TimeFn: null,
+      selectItem: {},
+      selectYear: '',
+      selectTime: '',
+      dialogVisible: false,
+      showTypeList: false,
+      mazuiEnd: {
+        conCode: '',
+        conName: '',
+        time: ''
+      },
       datetime: '',
       opeStatusList: [],
       // 复苏床位弹框
@@ -126,10 +177,12 @@ export default {
     }
   },
   mounted () {
+    this.showTypeList = false
     this.getStatusList()
     this.$refs.scrollbar.update()
     $bus.$on('hidenMenu', () => {
       this.showVisible = false
+      this.showTypeList = false
     })
     $bus.$on('shuaxinStatusList', () => {
       this.getStatusList()
@@ -145,25 +198,132 @@ export default {
       'setOperationStateList',
       'clearBaseInfo'
     ]),
+    onCancel () {
+      this.dialogVisible = false
+    },
+    onSaveTime () {
+      if (
+        this.selectYear === '' ||
+        this.selectYear === undefined ||
+        this.selectYear === null
+      ) {
+        this.$message.warning('请输入正确的日期')
+        return false
+      }
+      if (
+        this.selectTime === '' ||
+        this.selectTime === undefined ||
+        this.selectTime === null
+      ) {
+        this.$message.warning('请输入正确的时间')
+        return false
+      }
+      const time = this.selectYear + ' ' + this.selectTime + ':00'
+      this.selectItem.time = time
+      this.onCancel()
+      this.handleAddOpeStatusTime(this.selectItem)
+    },
+    focusPicker (item, index, e) {
+      if (item.state === 2) return
+      clearTimeout(this.TimeFn)
+      this.TimeFn = setTimeout(() => {
+        this.selectItem = item
+        if (item.time) {
+          this.selectYear = String(item.time.split(' ')[0])
+          const time = String(item.time.split(' ')[1])
+          console.log(time)
+          this.selectTime = time.substring(0, 5)
+        } else {
+          this.selectYear = String(getNowFormatDate().split(' ')[0])
+          const time = String(getNowFormatDate().split(' ')[1])
+          console.log(time)
+          this.selectTime = time.substring(0, 5)
+        }
+        this.dialogVisible = true
+      }, 300)
+
+      // console.log(item, e)
+      // this.$nextTick(() => {
+      //   const time = item.time
+      //   if (e.$el.children[0].getAttribute('addClickHandleFlag') !== '1') {
+      //     e.$el.children[0].setAttribute('addClickHandleFlag', '1')
+      //     e.$el.children[0].addEventListener('blur', () => {
+      //       if (this.opeStatusList[index].time !== time) {
+      //         console.log('1111')
+      //       }
+      //     })
+      //   }
+      // })
+      // this.$nextTick(() => {
+      //   event.popperElm.childNodes[0].childNodes[1].childNodes[0].childNodes[1].childNodes[0].children[0].addEventListener(
+      //     'input',
+      //     () => {
+      //       const a =
+      //         event.popperElm.childNodes[0].childNodes[1].childNodes[0]
+      //           .childNodes[1].childNodes[0].children[0].value
+      //       if (a.length === 2 && !a.includes(':')) {
+      //         event.popperElm.childNodes[0].childNodes[1].childNodes[0].childNodes[1].childNodes[0].children[0].value =
+      //           a + ':'
+      //       }
+      //       // event.popperElm.childNodes[0].childNodes[1].childNodes[0].childNodes[1].childNodes[0].children[0].value =
+      //       //   a.substring(0, 2) + ':' + a.substring(2)
+      //     }
+      //   )
+      // })
+    },
+    // 双击获取当前时间 隐藏弹出框
+    getNewTime (item, index) {
+      if (item.state === 2) return
+      clearTimeout(this.TimeFn)
+      item.time = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
+      this.handleAddOpeStatusTime(item)
+      // const dateType = document.getElementsByClassName(
+      //   'dateTimePicker' + index
+      // )[0]
+      // dateType.style.display = 'none'
+    },
+    // 修改手术状态
+    backOperationState () {
+      request({
+        method: 'get',
+        url: backOperationState + '/' + this.operationId
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.showTypeList = false
+          this.getStatusList()
+        }
+      })
+    },
     getNewHHMM (item) {
       if (item.time === '' || item.time === null || item.time === undefined) {
         item.time = moment(new Date()).format('HH:mm')
       }
     },
     handleShowList (item) {
-      if (item.conCode !== '11') return
-      if (item.time === '') {
-        this.$message({ type: 'success', message: '请先完成出手术室操作!' })
-        return
+      if (item.conCode === '13') {
+        this.showTypeList = true
+        this.$nextTick(() => {
+          const outOpeRoom = document.querySelector('.out-ope-room')
+          const scrollbarEl = this.$refs.scrollbar.wrap
+          this.$refs.menuTypeList.style.left =
+            outOpeRoom.offsetLeft + 630 - scrollbarEl.scrollLeft + 'px'
+          this.$refs.menuTypeList.style.top = outOpeRoom.offsetTop + 80 + 'px'
+        })
+      } else {
+        if (item.conCode !== '11') return
+        if (item.time === '') {
+          this.$message({ type: 'success', message: '请先完成出手术室操作!' })
+          return
+        }
+        this.showVisible = true
+        this.$nextTick(() => {
+          const outOpeRoom = document.querySelector('.out-ope-room')
+          const scrollbarEl = this.$refs.scrollbar.wrap
+          this.$refs.menuList.style.left =
+            outOpeRoom.offsetLeft + 493 - scrollbarEl.scrollLeft + 'px'
+          this.$refs.menuList.style.top = outOpeRoom.offsetTop + 72 + 'px'
+        })
       }
-      this.showVisible = true
-      this.$nextTick(() => {
-        const outOpeRoom = document.querySelector('.out-ope-room')
-        const scrollbarEl = this.$refs.scrollbar.wrap
-        this.$refs.menuList.style.left =
-          outOpeRoom.offsetLeft + 493 - scrollbarEl.scrollLeft + 'px'
-        this.$refs.menuList.style.top = outOpeRoom.offsetTop + 72 + 'px'
-      })
     },
     // 床位触发手术状态更新
     handleUpdateStatus () {
@@ -202,7 +362,15 @@ export default {
         url: `${patientStatus}/${this.operationId}`
       }).then(res => {
         if (res.data && res.data.success) {
-          console.log(res.data.data)
+          if (res.data.data) {
+            res.data.data.forEach((item, index) => {
+              if (item.conName === '麻醉结束') {
+                this.mazuiEnd = item
+                res.data.data.splice(index, 1)
+              }
+            })
+          }
+
           this.opeStatusList = res.data.data
           this.setOperationStateList(res.data.data)
         }
@@ -254,6 +422,9 @@ export default {
         data: formData
       }).then(res => {
         if (res.data && res.data.success) {
+          if (param.conName === '手术结束') {
+            this.addStatusTimePoint(this.mazuiEnd)
+          }
           this.setProcedureState(res.data.data)
           this.getStatusList()
           this.scrollEffect(this.$refs.scrollbar.wrap, 168)
@@ -281,12 +452,30 @@ export default {
         }
       })
     },
-    handleAddOpeStatusTime (param, type) {
-      const input = document.getElementById(type)
-      if (input) {
-        input.blur()
+    handleAddOpeStatusTime (param) {
+      console.log(param)
+      if (param.conName === '入手术室') {
+        this.searchOperationBindEquipmentIpWhenInRoom(param)
+      } else {
+        if (param.conName === '手术结束') {
+          this.mazuiEnd.time = param.time
+        }
+        this.addStatusTimePoint(param)
       }
-      this.addStatusTimePoint(param)
+    },
+    // 判断手术开始是否绑定监护仪
+    searchOperationBindEquipmentIpWhenInRoom (param) {
+      request({
+        method: 'get',
+        url: getOperationBindEquipmentIpWhenInRoom + '/' + this.operationId
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.addStatusTimePoint(param)
+        } else {
+          this.$message.error('请先绑定监护仪')
+          param.time = ''
+        }
+      })
     },
     // 展示复苏床位
     showResuscitationBed () {
@@ -459,7 +648,7 @@ export default {
         padding: 0 9px;
 
         li {
-          margin-right: 38px;
+          margin-right: 10px;
           // position: relative;
 
           &:last-child {

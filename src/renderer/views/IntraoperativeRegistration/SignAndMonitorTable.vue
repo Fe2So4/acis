@@ -125,39 +125,54 @@
     </div>
 
     <el-dialog
+      width="600px"
       append-to-body
       :before-close="handleClose"
       title="批量添加体征"
       :visible.sync="dialogFormVisible"
     >
       <el-form
+        :inline="true"
         size="mini"
-        label-width="160px"
+        label-width="120px"
       >
-        <el-form-item label="开始时间">
-          <el-date-picker
-            v-model="addForm.startTime"
-            type="datetime"
-            format="yyyy-MM-dd HH:mm"
-            value-format="yyyy-MM-dd HH:mm"
-            placeholder="选择日期时间"
-          />
-        </el-form-item>
-        <el-form-item label="结束时间">
-          <el-date-picker
-            v-model="addForm.endTime"
-            type="datetime"
-            format="yyyy-MM-dd HH:mm"
-            value-format="yyyy-MM-dd HH:mm"
-            placeholder="选择日期时间"
-          />
-        </el-form-item>
+        <row>
+          <el-form-item label="开始时间">
+            <div
+              style="position: absolute; width:100%; height:28px; z-index:1001"
+              @click="focusPicker(1)"
+            />
+            <el-date-picker
+              readonly
+              v-model="addForm.startTime"
+              type="datetime"
+              format="yyyy-MM-dd HH:mm"
+              value-format="yyyy-MM-dd HH:mm"
+              placeholder="选择日期时间"
+            />
+          </el-form-item>
+          <el-form-item label="结束时间">
+            <div
+              style="position: absolute; width:100%; height:28px; z-index:1001"
+              @click="focusPicker(2)"
+            />
+            <el-date-picker
+              readonly
+              v-model="addForm.endTime"
+              type="datetime"
+              format="yyyy-MM-dd HH:mm"
+              value-format="yyyy-MM-dd HH:mm"
+              placeholder="选择日期时间"
+            />
+          </el-form-item>
+        </row>
         <el-form-item
           :label="item.itemName"
           v-for="item in moreSignList"
           :key="item.itemCode"
         >
           <el-input
+            style="width:130px"
             v-model="item.itemValue"
             @input="inputValue"
           />
@@ -178,6 +193,57 @@
         </el-button>
       </div>
     </el-dialog>
+    <el-dialog
+      append-to-body
+      :close-on-click-modal="false"
+      title="请选择时间"
+      :visible.sync="dialogVisible"
+      width="350px"
+      :before-close="onCancel"
+    >
+      <el-form :inline="true">
+        <el-form-item>
+          <el-date-picker
+            style="width:130px"
+            size="mini"
+            format="MM-dd"
+            value-format="yyyy-MM-dd"
+            v-model="selectYear"
+            type="date"
+            placeholder="选择日期"
+          />
+        </el-form-item>
+        <el-form-item>
+          <div
+            class="el-date-editor el-input el-input--mini el-input--prefix el-input--suffix el-date-editor--date"
+            style="width:130px"
+          >
+            <input
+              style="width:130px;height:28px;fontSize:14px"
+              class="el-input__inner"
+              size="mini"
+              maxlength="5"
+              v-model="selectTime"
+              type="time"
+            >
+          </div>
+        </el-form-item>
+      </el-form>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          size="mini"
+          @click="onCancel"
+        >取 消</el-button>
+        <el-button
+          size="mini"
+          type="primary"
+          @click="onSaveTime"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -187,6 +253,7 @@ import {
   getSignData,
   batchAddIntraoMonitorData
 } from '@/api/medicalDocument'
+import getNowFormatDate from '@/utils/utilsNewTime'
 import {
   getMonitorData,
   addSignOrMonitorItem,
@@ -208,6 +275,11 @@ export default {
   },
   data () {
     return {
+      type: 1,
+      selectYear: '',
+      selectTime: '',
+      selectItem: {},
+      dialogVisible: false,
       addForm: {
         startTime: '',
         endTime: ''
@@ -241,6 +313,48 @@ export default {
     this.getSignList()
   },
   methods: {
+    onCancel () {
+      this.dialogVisible = false
+    },
+    onSaveTime () {
+      if (
+        this.selectYear === '' ||
+        this.selectYear === undefined ||
+        this.selectYear === null
+      ) {
+        this.$message.warning('请输入正确的日期')
+        return false
+      }
+      if (
+        this.selectTime === '' ||
+        this.selectTime === undefined ||
+        this.selectTime === null
+      ) {
+        this.$message.warning('请输入正确的时间')
+        return false
+      }
+      const time = this.selectYear + ' ' + this.selectTime
+      console.log(this.type)
+      if (this.type === 1) {
+        this.addForm.startTime = time
+      } else {
+        this.addForm.endTime = time
+      }
+      this.onCancel()
+    },
+    focusPicker (type) {
+      this.type = type
+      if (type === 1) {
+        this.selectYear = String(getNowFormatDate().split(' ')[0])
+        const time = String(getNowFormatDate().split(' ')[1])
+        this.selectTime = time.substring(0, 5)
+      } else {
+        this.selectYear = String(getNowFormatDate().split(' ')[0])
+        const time = String(getNowFormatDate().split(' ')[1])
+        this.selectTime = time.substring(0, 5)
+      }
+      this.dialogVisible = true
+    },
     inputValue (e) {
       this.$forceUpdate()
     },

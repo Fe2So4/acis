@@ -59,6 +59,10 @@ export default {
         name: 'widget-textarea'
       },
       {
+        label: '福建多行文本',
+        name: 'widget-textarea-fj'
+      },
+      {
         label: '多选框组',
         name: 'widget-checkbox-group'
       },

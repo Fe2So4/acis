@@ -157,7 +157,7 @@ export default {
           operState: this.opePhase
         }
       }).then(res => {
-        const { startTime, endTime, totalPage, pageIndex } = res.data.data
+        const { startTime, endTime, totalPage, pageIndex, integralPointList} = res.data.data
         // this.startTime = startTime
         // this.endTime = endTime
         // this.totalPage = totalPage
@@ -166,9 +166,11 @@ export default {
         this.arrPathSetting.endTime = endTime
         this.arrPathSetting.totalPage = totalPage
         this.arrPathSetting.pageIndex = pageIndex
+        this.integralPointList = integralPointList
         this.arrPathSetting.tempList.forEach(widget => {
           // x轴起止时间更改
           if (widget.xAxis) {
+            widget.xAxis.boldTimeList = integralPointList
             widget.xAxis.startTime = startTime
             widget.xAxis.endTime = endTime
           }
