@@ -722,7 +722,7 @@ export default {
             zIndex: -2,
             pos: [0, Math.round(index * yScale) - 0.5],
             points: [0, 0, width, 0],
-            strokeColor: 'lightgrey',
+            strokeColor: 'darkgray',
             lineWidth: 1
           })
           grid.append(mainLine)
@@ -786,6 +786,21 @@ export default {
         })
           .then(res => {
             const requestData = res.data.data
+            // const arr = []
+            // for (let i = requestData.length - 1; i >= 0; i--) {
+            //   if (
+            //     requestData[i].codeName === '控制呼吸' ||
+            //     requestData[i].codeName === '辅助呼吸'
+            //   ) {
+            //     requestData.splice(i, 1)
+            //   } else {
+            //     if (arr.length > 0 && requestData[i].itemName.includes(arr)) {
+            //       requestData.splice(i, 1)
+            //     } else {
+            //       arr.push(requestData[i].itemName)
+            //     }
+            //   }
+            // }
             this.lineList = requestData
             const copyList = JSON.parse(JSON.stringify(res.data.data))
             copyList.forEach(item => {
@@ -953,7 +968,23 @@ export default {
     },
     drawLineLegends () {
       if (Array.isArray(this.lineList)) {
-        this.lineList.forEach(item => {
+        const copyLineList = JSON.parse(JSON.stringify(this.lineList))
+        const arr = []
+        for (let i = copyLineList.length - 1; i >= 0; i--) {
+          if (
+            copyLineList[i].codeName === '控制呼吸' ||
+            copyLineList[i].codeName === '辅助呼吸'
+          ) {
+            copyLineList.splice(i, 1)
+          } else {
+            if (arr.length > 0 && copyLineList[i].itemName.includes(arr)) {
+              copyLineList.splice(i, 1)
+            } else {
+              arr.push(copyLineList[i].itemName)
+            }
+          }
+        }
+        copyLineList.forEach(item => {
           if (item.drawIcon) {
             this.legends.addLegend({
               label: item.drawIcon,

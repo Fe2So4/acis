@@ -68,8 +68,8 @@ export class PhysicalSignLine {
       fontSize = 16
       newy = position[1] - height / 2
     }
+    // strokeColor: this._color,
     label.attr({
-
       anchor: [0, 0],
       width,
       height,

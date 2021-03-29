@@ -13,6 +13,7 @@
       @[showSelectEvent]="showSelect"
     />
     <el-select
+      popper-class="selectOption"
       v-if="selectVisible"
       ref="select"
       class="select"
@@ -70,6 +71,11 @@ export default {
         this.setStyle()
       }
     }
+    // selectValue: {
+    //   handler: function (val) {
+    //     this.selectVisible = false
+    //   }
+    // }
   },
   data () {
     return {
@@ -129,6 +135,7 @@ export default {
       }
     },
     onSelectChange (val) {
+      this.selectVisible = false
       // 标志已被修改过
       this.configuration.dirty = true
       if (this.configuration.multiSelect) {
@@ -181,5 +188,13 @@ export default {
     border: none;
     resize: none;
   }
+  .el-select {
+    opacity: 0;
+  }
+}
+</style>
+<style>
+.selectOption {
+  max-width: 400px !important;
 }
 </style>

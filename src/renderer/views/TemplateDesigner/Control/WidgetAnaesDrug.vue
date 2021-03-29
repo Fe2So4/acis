@@ -484,7 +484,7 @@ export default {
         const line = new Polyline({
           pos: [0, Math.round(lineHeight * (i + 1)) - 0.5],
           points: [0, 0, width, 0],
-          strokeColor: 'lightgrey',
+          strokeColor: 'darkgray',
           lineWidth: 1
         })
         drugList.append(line)
@@ -593,7 +593,7 @@ export default {
           const mainLine = new Polyline({
             pos: [0, Math.round(index * yScale) - 0.5],
             points: [0, 0, width, 0],
-            strokeColor: 'lightgrey',
+            strokeColor: 'darkgray',
             lineWidth: 1
           })
           legend.append(mainLine)
@@ -648,7 +648,7 @@ export default {
           const mainLine = new Polyline({
             pos: [Math.round(index * xScale) - 0.5, 0],
             points: [0, 0, 0, height],
-            strokeColor: 'lightgrey',
+            strokeColor: 'darkgray',
             lineWidth: 1
           })
           grid.append(mainLine)
@@ -663,7 +663,7 @@ export default {
               0
             ],
             points: [0, 0, 0, height],
-            strokeColor: 'lightgrey',
+            strokeColor: 'darkgray',
             lineWidth: 1,
             lineDash: [2]
           })
@@ -676,7 +676,7 @@ export default {
           const mainLine = new Polyline({
             pos: [0, Math.round(index * yScale) - 0.5],
             points: [0, 0, width, 0],
-            strokeColor: 'lightgrey',
+            strokeColor: 'darkgray',
             lineWidth: 1
           })
           grid.append(mainLine)

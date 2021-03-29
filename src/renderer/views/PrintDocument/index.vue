@@ -64,7 +64,7 @@ export default {
     this.opePhase = this.$route.params.opePhase
     this.pageInfo = this.$route.params.pageInfo
     this.totalPageNum = this.$route.params.totalPageNum
-    console.log(this.totalPageNum)
+    // console.log(this.totalPageNum)
     // this.flag = this.$route.params.flag || ''
     this.isRescueMode = this.$route.params.isRescueMode === 'true'
     this.getData(0)
@@ -133,7 +133,7 @@ export default {
         // this.paperSetting = paperSetting
         widgetList.splice(paperSettingIndex, 1)
         // this.tempList = widgetList
-        console.log(widgetList)
+        // console.log(widgetList)
         this.arrPathSetting.tempList = widgetList
       })
     },
@@ -212,7 +212,7 @@ export default {
           this.arrPathSetting.widgetList[i].tagName &&
           this.arrPathSetting.widgetList[i].tagName.includes('ifOperText')
         ) {
-          console.log(this.arrPathSetting.widgetList[i])
+          // console.log(this.arrPathSetting.widgetList[i])
           this.arrPathSetting.widgetList.splice(i, 1)
         }
       }
@@ -236,7 +236,7 @@ export default {
       }, [])
     },
     onWidgetFinish (widgetName) {
-      console.log('进入=====', widgetName)
+      // console.log('进入=====', widgetName)
       if (this.timer) {
         clearTimeout(this.timer)
       }

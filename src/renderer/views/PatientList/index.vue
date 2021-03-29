@@ -354,6 +354,7 @@
 </template>
 <script>
 // 首页
+import utilsDebounce from '@/utils/utilsDebounce'
 import moment from 'moment'
 import request from '../../utils/requestForMock'
 import {
@@ -697,58 +698,60 @@ export default {
       })
     },
     getPatientList (param) {
-      if (param === '') {
-        this.currentPage = 1
-      }
-      const obj = {}
-      const search = {}
-      obj.start = this.currentPage
-      obj.pageSize = this.pageSize
-      obj.opeState = this.opeState
-      obj.roomNo = this.opeRoom
-      search.patientId = this.searchForm.id
-      search.name = this.searchForm.name
-      search.date = this.searchForm.date
-      search.anesMethod = this.searchForm.anaesMethod
-      search.anesDoc = this.searchForm.anaesDoc
-      search.dept = this.searchForm.dept
-      search.opeName = this.searchForm.opeName
-      search.deadLine = this.searchForm.endDate
-      Object.assign(obj, search)
-      request({
-        method: 'GET',
-        url: opeList,
-        params: obj
-      }).then(res => {
-        if (res.data.code === 200) {
-          this.getoOpeList()
-          this.operationStatus = []
-          this.activeIndex = null
-          this.clearBaseInfo()
-          const data = res.data.data.list || []
-          this.totalPages = res.data.data.pages
-          data.forEach(value => {
-            if (value.opeScheduleTime) {
-              // value.opeTime = moment(value.opeScheduleTime).format('yyyy-MM-DD HH:mm')
-              value.opeTime = value.opeScheduleTime
-            } else {
-              value.opeTime = ''
-            }
-            if (value.isEmergency === 0) {
-              value.emergency = true
-            } else {
-              value.emergency = false
-            }
-          })
-          if (param === 'scroll') {
-            this.cardList = this.cardList.concat(data)
-            this.dataList = this.dataList.concat(data)
-          } else {
-            this.cardList = data
-            this.dataList = data
-          }
+      utilsDebounce(() => {
+        if (param === '') {
+          this.currentPage = 1
         }
-      })
+        const obj = {}
+        const search = {}
+        obj.start = this.currentPage
+        obj.pageSize = this.pageSize
+        obj.opeState = this.opeState
+        obj.roomNo = this.opeRoom
+        search.patientId = this.searchForm.id
+        search.name = this.searchForm.name
+        search.date = this.searchForm.date
+        search.anesMethod = this.searchForm.anaesMethod
+        search.anesDoc = this.searchForm.anaesDoc
+        search.dept = this.searchForm.dept
+        search.opeName = this.searchForm.opeName
+        search.deadLine = this.searchForm.endDate
+        Object.assign(obj, search)
+        request({
+          method: 'GET',
+          url: opeList,
+          params: obj
+        }).then(res => {
+          if (res.data.code === 200) {
+            this.getoOpeList()
+            this.operationStatus = []
+            this.activeIndex = null
+            this.clearBaseInfo()
+            const data = res.data.data.list || []
+            this.totalPages = res.data.data.pages
+            data.forEach(value => {
+              if (value.opeScheduleTime) {
+                // value.opeTime = moment(value.opeScheduleTime).format('yyyy-MM-DD HH:mm')
+                value.opeTime = value.opeScheduleTime
+              } else {
+                value.opeTime = ''
+              }
+              if (value.isEmergency === 0) {
+                value.emergency = true
+              } else {
+                value.emergency = false
+              }
+            })
+            if (param === 'scroll') {
+              this.cardList = this.cardList.concat(data)
+              this.dataList = this.dataList.concat(data)
+            } else {
+              this.cardList = data
+              this.dataList = data
+            }
+          }
+        })
+      }, 1000)
     },
     // 获取分别事件
     getoOpeList () {
