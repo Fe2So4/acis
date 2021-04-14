@@ -379,7 +379,8 @@ export default {
     },
     logoSource () {
       // return require(`@/assets/lan_${this.theme}.png`)
-      return require(`@/assets/fj_${this.theme}.png`)
+      // return require(`@/assets/fj_${this.theme}.png`)
+      return require(`@/assets/pf_${this.theme}.png`)
     },
     menuBackground () {
       switch (this.theme) {
@@ -579,7 +580,8 @@ export default {
   @include theme-property('background', $color-background-aside);
   .img {
     height: 48px;
-    margin: 14px 0;
+    // margin: 14px 0;
+    margin: 14px; // 皮肤病
     display: flex;
     align-items: center;
     // background:#fff;

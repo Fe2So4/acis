@@ -28,7 +28,7 @@ const isWin7 = os.release().startsWith('6.1')
 // win7 下关闭硬件加速
 if (isWin7) app.disableHardwareAcceleration()
 
-function createInitialWindow() {
+function createInitialWindow () {
   initialWindow = new BrowserWindow({
     width: 880,
     height: 560,
@@ -46,7 +46,7 @@ function createInitialWindow() {
   })
   initialWindow.loadURL(Path.resolve(__static, './loading/index.html'))
 }
-function createWindow() {
+function createWindow () {
   /**
    * Initial window options
    */
@@ -128,7 +128,7 @@ function createWindow() {
     autoUpdater.checkForUpdates()
   }
   // 主进程主动发送消息给渲染进程函数
-  function sendUpdateMessage(message, data) {
+  function sendUpdateMessage (message, data) {
     mainWindow.webContents.send('message', { message, data })
   }
   mainWindow.on('closed', () => {

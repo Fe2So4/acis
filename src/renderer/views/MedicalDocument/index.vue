@@ -465,20 +465,28 @@ export default {
         flag = 0
       } else if (this.buttonConfig.includes('ANAB')) {
         flag = 1
+      } else {
+        flag = 2
       }
-      return request({
-        url: getsThePageThatCurrently + `/${this.operationId}/${flag}`,
-        method: 'get'
-      }).then(res => {
-        if (res.data.code === 200) {
-          const totalPageNum = res.data.data
-          utilsDebounce(() => {
-            this.$electron.ipcRenderer.send('print-document', {
-              path: `/printDocument/${this.templateId}/${this.operationId}/${this.patientId}/${this.pageIndex}/${this.isRescueMode}/${this.opePhase}/${this.pageInfo}/${totalPageNum}/${flag}`
-            })
-          }, 1000)
-        }
-      })
+      if (flag !== 2) {
+        return request({
+          url: getsThePageThatCurrently + `/${this.operationId}/${flag}`,
+          method: 'get'
+        }).then(res => {
+          if (res.data.code === 200) {
+            const totalPageNum = res.data.data
+            utilsDebounce(() => {
+              this.$electron.ipcRenderer.send('print-document', {
+                path: `/printDocument/${this.templateId}/${this.operationId}/${this.patientId}/${this.pageIndex}/${this.isRescueMode}/${this.opePhase}/${this.pageInfo}/${totalPageNum}/${flag}`
+              })
+            }, 1000)
+          }
+        })
+      } else {
+        this.$electron.ipcRenderer.send('print-document', {
+          path: `/printDocument/${this.templateId}/${this.operationId}/${this.patientId}/${this.pageIndex}/${this.isRescueMode}/${this.opePhase}/${this.pageInfo}`
+        })
+      }
     },
 
     onLoad () {
