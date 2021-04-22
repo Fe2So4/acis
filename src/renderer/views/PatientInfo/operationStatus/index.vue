@@ -362,14 +362,15 @@ export default {
         url: `${patientStatus}/${this.operationId}`
       }).then(res => {
         if (res.data && res.data.success) {
-          if (res.data.data) {
-            res.data.data.forEach((item, index) => {
-              if (item.conName === '麻醉结束') {
-                this.mazuiEnd = item
-                res.data.data.splice(index, 1)
-              }
-            })
-          }
+          // 去除 去除麻醉结束逻辑
+          // if (res.data.data) {
+          //   res.data.data.forEach((item, index) => {
+          //     if (item.conName === '麻醉结束') {
+          //       this.mazuiEnd = item
+          //       res.data.data.splice(index, 1)
+          //     }
+          //   })
+          // }
 
           this.opeStatusList = res.data.data
           this.setOperationStateList(res.data.data)
@@ -422,9 +423,10 @@ export default {
         data: formData
       }).then(res => {
         if (res.data && res.data.success) {
-          if (param.conName === '手术结束') {
-            this.addStatusTimePoint(this.mazuiEnd)
-          }
+          // 去除 去除麻醉结束逻辑
+          // if (param.conName === '手术结束') {
+          //   this.addStatusTimePoint(this.mazuiEnd)
+          // }
           this.setProcedureState(res.data.data)
           this.getStatusList()
           this.scrollEffect(this.$refs.scrollbar.wrap, 168)
